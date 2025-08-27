@@ -47,15 +47,22 @@
 
         <main id="assessment-container" class="space-y-12">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 space-y-8">
-                <!-- Email Input -->
-                <div>
-                    <label for="student-email" class="block font-semibold mb-2">Your Email Address:</label>
-                    <input type="email" id="student-email" name="student-email" class="w-full px-3 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="you@example.com">
-                    <p id="email-error" class="text-red-600 text-sm mt-2 hidden">Please enter a valid email address.</p>
+                <!-- Student Info Inputs -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="student-name" class="block font-semibold mb-2">Your Name:</label>
+                        <input type="text" id="student-name" name="student-name" class="w-full px-3 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Alex Ray">
+                        <p id="name-error" class="text-red-600 text-sm mt-2 hidden">Please enter your name.</p>
+                    </div>
+                    <div>
+                        <label for="student-email" class="block font-semibold mb-2">Your Email Address:</label>
+                        <input type="email" id="student-email" name="student-email" class="w-full px-3 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="you@example.com">
+                        <p id="email-error" class="text-red-600 text-sm mt-2 hidden">Please enter a valid email address.</p>
+                    </div>
                 </div>
                 
                 <!-- Question 1 -->
-                <div class="quiz-question" data-correct="all">
+                <div class="quiz-question pt-4 border-t" data-correct="all">
                     <p class="font-semibold mb-4">1. A well-structured prompt should include which of the following components?</p>
                     <div class="space-y-3">
                         <div class="quiz-option"><input type="radio" id="q1a1" name="q1" value="role" class="hidden"><label for="q1a1">Role</label></div>
@@ -131,7 +138,9 @@
             const modalSuccessContent = document.getElementById('modal-success-content');
             const modalErrorContent = document.getElementById('modal-error-content');
             const questions = document.querySelectorAll('.quiz-question');
+            const studentNameEl = document.getElementById('student-name');
             const studentEmailEl = document.getElementById('student-email');
+            const nameErrorEl = document.getElementById('name-error');
             const emailErrorEl = document.getElementById('email-error');
 
             const validateEmail = (email) => {
@@ -139,14 +148,27 @@
             };
 
             submitBtn.addEventListener('click', async () => {
+                const studentName = studentNameEl.value;
                 const studentEmail = studentEmailEl.value;
+                let isValid = true;
 
+                // Validate name
+                if (studentName.trim() === '') {
+                    nameErrorEl.classList.remove('hidden');
+                    isValid = false;
+                } else {
+                    nameErrorEl.classList.add('hidden');
+                }
+
+                // Validate email
                 if (!validateEmail(studentEmail)) {
                     emailErrorEl.classList.remove('hidden');
-                    return;
+                    isValid = false;
                 } else {
                     emailErrorEl.classList.add('hidden');
                 }
+
+                if (!isValid) return;
 
                 let allAnswered = true;
                 questions.forEach(q => {
@@ -173,13 +195,12 @@
                 });
 
                 const emailPayload = {
-                    student: { name: "Alex Ray", email: studentEmail },
+                    student: { name: studentName, email: studentEmail },
                     instructor: { email: "instructor@example.com" },
                     assessment: { title: "Module 1 Summative Assessment", score: `${score} / 4`, passed: score >= 3 }
                 };
 
                 try {
-                    // This is where the call to the serverless function happens.
                     const response = await fetch('/api/send-results', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -190,7 +211,6 @@
                         throw new Error('Network response was not ok');
                     }
                     
-                    // If the fetch is successful, show the success modal.
                     modalTitle.textContent = 'Assessment Complete!';
                     modalSuccessContent.classList.remove('hidden');
                     modalErrorContent.classList.add('hidden');
@@ -201,16 +221,13 @@
 
                 } catch (error) {
                     console.error('Submission failed:', error);
-                    // If the fetch fails, show an error message in the modal.
                     modalTitle.textContent = 'Submission Failed';
                     modalSuccessContent.classList.add('hidden');
                     modalErrorContent.classList.remove('hidden');
                 } finally {
-                    // This code runs whether the fetch succeeded or failed.
                     resultsModal.style.display = 'flex';
-                    submitBtn.textContent = 'Submit and Email Results'; // Reset button text
+                    submitBtn.textContent = 'Submit and Email Results';
                     
-                    // Grade the questions visually after attempting submission
                     questions.forEach(question => {
                         const correctAnswer = question.dataset.correct;
                         const selectedOption = question.querySelector('input[type="radio"]:checked');
