@@ -1,0 +1,13 @@
+{
+  "name": "lms-module-assessment",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Summative assessment with email results for the LMS learning module.",
+  "main": "index.html",
+  "scripts": {
+    "start": "echo \"No start script configured for static site. Open index.html directly.\""
+  },
+  "dependencies": {
+    "resend": "^3.2.0"
+  }
+}
