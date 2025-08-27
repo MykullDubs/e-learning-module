@@ -38,7 +38,7 @@ export default async function handler(req, res) {
 
     // --- 2. Send a confirmation email to the STUDENT ---
     await resend.emails.send({
-      from: 'onboarding@resend.dev',
+      from: 'results@commonwealthlingustics.org',
       to: student.email, // The student's email, captured from the form.
       subject: `Your Results for: ${assessment.title}`,
       html: `
@@ -59,4 +59,5 @@ export default async function handler(req, res) {
     res.status(500).json({ error: 'Failed to send emails.' });
   }
 }
+
 
