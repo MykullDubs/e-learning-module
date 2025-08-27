@@ -42,78 +42,70 @@
         </div>
     </div>
 
-    <!-- Firebase SDK Scripts -->
-    <!-- Replace this with your project's Firebase configuration -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <!-- Firebase SDK Scripts (Modern Modular Version) -->
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+      
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
+        authDomain: "elearning-e83cb.firebaseapp.com",
+        projectId: "elearning-e83cb",
+        storageBucket: "elearning-e83cb.appspot.com",
+        messagingSenderId: "25473938624",
+        appId: "1:25473938624:web:5b56738933543f32a7e925",
+        measurementId: "G-R713G5DD1S"
+      };
 
-    <script>
-        // --- IMPORTANT ---
-        // Replace this with your actual Firebase project configuration.
-        // This should be the same configuration as your sign-up page.
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
+      // --- Form Handling ---
+      const loginForm = document.getElementById('login-form');
+      const submitBtn = document.getElementById('submit-btn');
+      const errorMessage = document.getElementById('error-message');
 
-        // --- Form Handling ---
-        const loginForm = document.getElementById('login-form');
-        const submitBtn = document.getElementById('submit-btn');
-        const errorMessage = document.getElementById('error-message');
+      loginForm.addEventListener('submit', (e) => {
+          e.preventDefault();
 
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
+          const email = loginForm.email.value;
+          const password = loginForm.password.value;
 
-            // Get user input
-            const email = loginForm.email.value;
-            const password = loginForm.password.value;
+          errorMessage.textContent = '';
+          errorMessage.classList.add('hidden');
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Logging In...';
 
-            // Reset messages and disable button
-            errorMessage.textContent = '';
-            errorMessage.classList.add('hidden');
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Logging In...';
+          // Sign in user with the new modular function
+          signInWithEmailAndPassword(auth, email, password)
+              .then((userCredential) => {
+                  const user = userCredential.user;
+                  console.log('User logged in:', user);
 
-            // Sign in user with Firebase
-            auth.signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    // Signed in 
-                    const user = userCredential.user;
-                    console.log('User logged in:', user);
-
-                    // --- SUCCESS ---
-                    // Here you would redirect to the main course dashboard.
-                    // For example:
-                    // window.location.href = '/dashboard.html'; 
-                    alert('Login successful! Redirecting to the course...');
-                })
-                .catch((error) => {
-                    // Handle Errors here.
-                    let message = 'An unknown error occurred.';
-                    if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-                        message = 'Invalid email or password. Please try again.';
-                    } else {
-                        message = error.message;
-                    }
-                    errorMessage.textContent = message;
-                    errorMessage.classList.remove('hidden');
-                })
-                .finally(() => {
-                    // Re-enable the button
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Log In';
-                });
-        });
+                  // --- SUCCESS ---
+                  // Redirect to the main course dashboard page.
+                  window.location.href = '/index.html'; // Replace with your dashboard page, e.g., '/dashboard.html'
+              })
+              .catch((error) => {
+                  let message = 'An unknown error occurred.';
+                  // Use the new error codes for v9+
+                  if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                      message = 'Invalid email or password. Please try again.';
+                  } else {
+                      message = error.message;
+                  }
+                  errorMessage.textContent = message;
+                  errorMessage.classList.remove('hidden');
+              })
+              .finally(() => {
+                  submitBtn.disabled = false;
+                  submitBtn.textContent = 'Log In';
+              });
+      });
     </script>
 
 </body>
 </html>
-
