@@ -7,7 +7,7 @@ import { Resend } from 'resend';
 // Initialize Resend with your API key.
 // CRITICAL: This securely accesses the API key from your hosting platform's environment variables.
 // It prevents your secret key from being exposed in your public GitHub repository.
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.re_VsbFGbqb_HhsaaPMbwNvmS7i6J14z5UG2);
 
 // This is the main serverless function. It's often called a "handler".
 // It takes an incoming request (req) and sends back a response (res).
@@ -59,3 +59,4 @@ export default async function handler(req, res) {
     res.status(500).json({ error: 'Failed to send emails.' });
   }
 }
+
