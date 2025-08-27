@@ -47,93 +47,82 @@
         </div>
     </div>
 
-    <!-- Firebase SDK Scripts -->
-    <!-- Replace this with your project's Firebase configuration -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <!-- Firebase SDK Scripts (Modern Modular Version) -->
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+      
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
+        authDomain: "elearning-e83cb.firebaseapp.com",
+        projectId: "elearning-e83cb",
+        storageBucket: "elearning-e83cb.appspot.com",
+        messagingSenderId: "25473938624",
+        appId: "1:25473938624:web:5b56738933543f32a7e925",
+        measurementId: "G-R713G5DD1S"
+      };
 
-    <script>
-        // --- IMPORTANT ---
-        // Replace this with your actual Firebase project configuration.
-        // You can find this in your Firebase project settings.
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
+      // --- Form Handling ---
+      const signupForm = document.getElementById('signup-form');
+      const submitBtn = document.getElementById('submit-btn');
+      const errorMessage = document.getElementById('error-message');
+      const successMessage = document.getElementById('success-message');
 
-        // --- Form Handling ---
-        const signupForm = document.getElementById('signup-form');
-        const submitBtn = document.getElementById('submit-btn');
-        const errorMessage = document.getElementById('error-message');
-        const successMessage = document.getElementById('success-message');
+      signupForm.addEventListener('submit', (e) => {
+          e.preventDefault();
 
-        signupForm.addEventListener('submit', (e) => {
-            e.preventDefault();
+          const email = signupForm.email.value;
+          const password = signupForm.password.value;
+          const name = signupForm.name.value;
 
-            // Get user input
-            const email = signupForm.email.value;
-            const password = signupForm.password.value;
-            const name = signupForm.name.value; // Although not stored in auth, you might want it for a database later
+          errorMessage.textContent = '';
+          errorMessage.classList.add('hidden');
+          successMessage.textContent = '';
+          successMessage.classList.add('hidden');
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Creating Account...';
 
-            // Reset messages and disable button
-            errorMessage.textContent = '';
-            errorMessage.classList.add('hidden');
-            successMessage.textContent = '';
-            successMessage.classList.add('hidden');
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Creating Account...';
+          // Create user with the new modular function
+          createUserWithEmailAndPassword(auth, email, password)
+              .then((userCredential) => {
+                  const user = userCredential.user;
+                  console.log('User created:', user);
 
-            // Create user with Firebase
-            auth.createUserWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    // Signed in 
-                    const user = userCredential.user;
-                    console.log('User created:', user);
-
-                    // Show success message
-                    successMessage.textContent = 'Account created successfully! You can now log in.';
-                    successMessage.classList.remove('hidden');
-                    signupForm.reset();
-                    
-                    // Here you would typically redirect to the login page or the course dashboard
-                    // window.location.href = '/login.html';
-                })
-                .catch((error) => {
-                    // Handle Errors here.
-                    let message = 'An unknown error occurred.';
-                    switch (error.code) {
-                        case 'auth/email-already-in-use':
-                            message = 'This email address is already in use.';
-                            break;
-                        case 'auth/invalid-email':
-                            message = 'Please enter a valid email address.';
-                            break;
-                        case 'auth/weak-password':
-                            message = 'Password should be at least 6 characters long.';
-                            break;
-                        default:
-                            message = error.message;
-                            break;
-                    }
-                    errorMessage.textContent = message;
-                    errorMessage.classList.remove('hidden');
-                })
-                .finally(() => {
-                    // Re-enable the button
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Create Account';
-                });
-        });
+                  successMessage.textContent = 'Account created successfully! You can now log in.';
+                  successMessage.classList.remove('hidden');
+                  signupForm.reset();
+              })
+              .catch((error) => {
+                  let message = 'An unknown error occurred.';
+                  switch (error.code) {
+                      case 'auth/email-already-in-use':
+                          message = 'This email address is already in use.';
+                          break;
+                      case 'auth/invalid-email':
+                          message = 'Please enter a valid email address.';
+                          break;
+                      case 'auth/weak-password':
+                          message = 'Password should be at least 6 characters long.';
+                          break;
+                      default:
+                          message = error.message;
+                          break;
+                  }
+                  errorMessage.textContent = message;
+                  errorMessage.classList.remove('hidden');
+              })
+              .finally(() => {
+                  submitBtn.disabled = false;
+                  submitBtn.textContent = 'Create Account';
+              });
+      });
     </script>
 
 </body>
 </html>
-
