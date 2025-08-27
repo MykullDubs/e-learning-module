@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 1: Summative Assessment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .code-block { background-color: #1e293b; color: #e2e8f0; }
+        .quiz-option label.correct { background-color: #dcfce7 !important; border-color: #22c55e !important; color: #166534 !important; }
+        .quiz-option label.incorrect { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
+        .quiz-option label {
+            display: block;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .quiz-option input[type="radio"]:checked + label {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        .results-modal-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 40;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
+        
+        <header class="mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-stone-900">Module 1 Summative Assessment</h1>
+            <p class="text-stone-500 mt-2 text-lg">Test your knowledge of AI-powered frontend development.</p>
+        </header>
+
+        <main id="assessment-container" class="space-y-12">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 space-y-8">
+                <!-- Email Input -->
+                <div>
+                    <label for="student-email" class="block font-semibold mb-2">Your Email Address:</label>
+                    <input type="email" id="student-email" name="student-email" class="w-full px-3 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="you@example.com">
+                    <p id="email-error" class="text-red-600 text-sm mt-2 hidden">Please enter a valid email address.</p>
+                </div>
+                
+                <!-- Question 1 -->
+                <div class="quiz-question" data-correct="all">
+                    <p class="font-semibold mb-4">1. A well-structured prompt should include which of the following components?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q1a1" name="q1" value="role" class="hidden"><label for="q1a1">Role</label></div>
+                        <div class="quiz-option"><input type="radio" id="q1a2" name="q1" value="task" class="hidden"><label for="q1a2">Task</label></div>
+                        <div class="quiz-option"><input type="radio" id="q1a3" name="q1" value="constraints" class="hidden"><label for="q1a3">Constraints & Details</label></div>
+                        <div class="quiz-option"><input type="radio" id="q1a4" name="q1" value="all" class="hidden"><label for="q1a4">All of the above</label></div>
+                    </div>
+                </div>
+                <!-- Question 2 -->
+                <div class="quiz-question" data-correct="flexbox">
+                    <p class="font-semibold mb-4">2. To arrange three items in a single horizontal row, which layout system should you ask the AI to use?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q2a1" name="q2" value="grid" class="hidden"><label for="q2a1">Grid</label></div>
+                        <div class="quiz-option"><input type="radio" id="q2a2" name="q2" value="flexbox" class="hidden"><label for="q2a2">Flexbox</label></div>
+                        <div class="quiz-option"><input type="radio" id="q2a3" name="q2" value="table" class="hidden"><label for="q2a3">Table</label></div>
+                    </div>
+                </div>
+                <!-- Question 3 -->
+                <div class="quiz-question" data-correct="container">
+                    <p class="font-semibold mb-4">3. When prompting for a chart, what is the best practice for ensuring it is responsive?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q3a1" name="q3" value="fixed" class="hidden"><label for="q3a1">Give it a fixed width and height in pixels.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q3a2" name="q3" value="container" class="hidden"><label for="q3a2">Place the canvas in a div container.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q3a3" name="q3" value="svg" class="hidden"><label for="q3a3">Use an SVG instead of a canvas.</label></div>
+                    </div>
+                </div>
+                <!-- Question 4 -->
+                <div class="quiz-question" data-correct="event-listener">
+                    <p class="font-semibold mb-4">4. What is the key JavaScript feature you need to prompt for to make a button clickable?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q4a1" name="q4" value="event-listener" class="hidden"><label for="q4a1">An event listener</label></div>
+                        <div class="quiz-option"><input type="radio" id="q4a2" name="q4" value="css" class="hidden"><label for="q4a2">A CSS hover state</label></div>
+                        <div class="quiz-option"><input type="radio" id="q4a3" name="q4" value="function" class="hidden"><label for="q4a3">A function declaration</label></div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center py-6">
+                <button id="submit-assessment-btn" class="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition text-lg w-full sm:w-auto">
+                    Submit and Email Results
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Results Modal -->
+    <div id="results-modal" class="results-modal-backdrop">
+        <div class="bg-white w-11/12 md:max-w-2xl rounded-lg shadow-2xl p-6 text-center">
+            <h2 id="modal-title" class="text-2xl font-bold mb-4">Assessment Complete!</h2>
+            <div id="modal-success-content">
+                <p class="text-lg">You scored <span id="final-score" class="font-bold"></span> out of 4.</p>
+                <p id="passing-message" class="mt-2 text-green-600 font-semibold"></p>
+                <p id="failing-message" class="mt-2 text-red-600 font-semibold"></p>
+                <div class="mt-6 text-left bg-stone-100 p-4 rounded text-sm text-stone-700">
+                    <p class="font-semibold mb-2">An email with your results has been sent.</p>
+                </div>
+            </div>
+             <div id="modal-error-content" class="hidden">
+                <p class="text-lg text-red-700">There was an error submitting your results. Please try again later.</p>
+            </div>
+            <button id="close-modal-btn" class="mt-6 w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">Close</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const submitBtn = document.getElementById('submit-assessment-btn');
+            const resultsModal = document.getElementById('results-modal');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const finalScoreEl = document.getElementById('final-score');
+            const passingMessageEl = document.getElementById('passing-message');
+            const failingMessageEl = document.getElementById('failing-message');
+            const modalTitle = document.getElementById('modal-title');
+            const modalSuccessContent = document.getElementById('modal-success-content');
+            const modalErrorContent = document.getElementById('modal-error-content');
+            const questions = document.querySelectorAll('.quiz-question');
+            const studentEmailEl = document.getElementById('student-email');
+            const emailErrorEl = document.getElementById('email-error');
+
+            const validateEmail = (email) => {
+                return String(email).toLowerCase().match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+            };
+
+            submitBtn.addEventListener('click', async () => {
+                const studentEmail = studentEmailEl.value;
+
+                if (!validateEmail(studentEmail)) {
+                    emailErrorEl.classList.remove('hidden');
+                    return;
+                } else {
+                    emailErrorEl.classList.add('hidden');
+                }
+
+                let allAnswered = true;
+                questions.forEach(q => {
+                    if (!q.querySelector('input[type="radio"]:checked')) {
+                        allAnswered = false;
+                    }
+                });
+
+                if (!allAnswered) {
+                    alert('Please answer all questions before submitting.');
+                    return;
+                }
+                
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Submitting...';
+
+                let score = 0;
+                questions.forEach(question => {
+                    const correctAnswer = question.dataset.correct;
+                    const selectedOption = question.querySelector('input[type="radio"]:checked');
+                    if (selectedOption.value === correctAnswer) {
+                        score++;
+                    }
+                });
+
+                const emailPayload = {
+                    student: { name: "Alex Ray", email: studentEmail },
+                    instructor: { email: "instructor@example.com" },
+                    assessment: { title: "Module 1 Summative Assessment", score: `${score} / 4`, passed: score >= 3 }
+                };
+
+                try {
+                    // This is where the call to the serverless function happens.
+                    const response = await fetch('/api/send-results', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(emailPayload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    
+                    // If the fetch is successful, show the success modal.
+                    modalTitle.textContent = 'Assessment Complete!';
+                    modalSuccessContent.classList.remove('hidden');
+                    modalErrorContent.classList.add('hidden');
+                    
+                    finalScoreEl.textContent = score;
+                    passingMessageEl.textContent = score >= 3 ? "Congratulations, you passed!" : "";
+                    failingMessageEl.textContent = score < 3 ? "You did not pass. Please review the module and try again." : "";
+
+                } catch (error) {
+                    console.error('Submission failed:', error);
+                    // If the fetch fails, show an error message in the modal.
+                    modalTitle.textContent = 'Submission Failed';
+                    modalSuccessContent.classList.add('hidden');
+                    modalErrorContent.classList.remove('hidden');
+                } finally {
+                    // This code runs whether the fetch succeeded or failed.
+                    resultsModal.style.display = 'flex';
+                    submitBtn.textContent = 'Submit and Email Results'; // Reset button text
+                    
+                    // Grade the questions visually after attempting submission
+                    questions.forEach(question => {
+                        const correctAnswer = question.dataset.correct;
+                        const selectedOption = question.querySelector('input[type="radio"]:checked');
+                        
+                        const parentLabel = selectedOption.parentElement.querySelector('label');
+                        if (selectedOption.value === correctAnswer) {
+                            parentLabel.classList.add('correct');
+                        } else {
+                            parentLabel.classList.add('incorrect');
+                        }
+
+                        const correctInput = question.querySelector(`input[value="${correctAnswer}"]`);
+                        if (correctInput && selectedOption.value !== correctAnswer) {
+                            correctInput.parentElement.querySelector('label').classList.add('correct');
+                        }
+                        
+                        question.querySelectorAll('input[type="radio"]').forEach(radio => {
+                            radio.disabled = true;
+                        });
+                    });
+                }
+            });
+
+            closeModalBtn.addEventListener('click', () => {
+                resultsModal.style.display = 'none';
+            });
+        });
+    </script>
+
+</body>
+</html>
