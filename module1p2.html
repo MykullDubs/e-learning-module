@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 1: Specifying Layout & Style</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .code-block { background-color: #1e293b; color: #e2e8f0; }
+        .code-highlight { background-color: #475569; padding: 1px 4px; border-radius: 4px; font-family: monospace; }
+        .quiz-option label.correct { background-color: #dcfce7; border-color: #22c55e; color: #166534; }
+        .quiz-option label.incorrect { background-color: #fee2e2; border-color: #ef4444; color: #991b1b; }
+        .quiz-option label {
+            display: block;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .quiz-option input[type="radio"]:checked + label {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
+        
+        <header class="mb-10">
+            <a href="#" class="text-blue-600 hover:underline mb-4 block">&larr; Back to Prompt Structure</a>
+            <h1 class="text-3xl md:text-4xl font-bold text-stone-900">Specifying Layout & Style</h1>
+            <p class="text-stone-500 mt-2 text-lg">Turn a basic structure into a polished design by telling the AI how to arrange and style elements.</p>
+        </header>
+
+        <main class="space-y-12">
+            
+            <section>
+                <h2 class="text-2xl font-bold mb-4">The Power of Utility-First CSS</h2>
+                <p class="text-stone-600 mb-6">We use **Tailwind CSS**, a "utility-first" framework. Instead of writing custom CSS files, you build designs by applying pre-existing classes directly in your HTML. This is perfect for AI generation because you can describe the styling in plain language.</p>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                    <p class="text-stone-600">For example, to create a centered, bold heading with a bottom margin, you would tell the AI to generate this:</p>
+                    <div class="code-block p-4 rounded-lg mt-4">
+                        <pre><code class="text-sm">&lt;h1 class="<span class="text-yellow-400">text-center</span> <span class="text-green-400">font-bold</span> <span class="text-blue-400">mb-4</span>"&gt;My Title&lt;/h1&gt;</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-bold mb-4">Controlling Layout with Flexbox & Grid</h2>
+                <p class="text-stone-600 mb-6">The two most important tools for layout are Flexbox and Grid. You don't need to be an expert, but knowing what to ask for is key.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-lg">
+                        <h3 class="font-bold text-lg">Flexbox</h3>
+                        <p class="text-stone-600 mt-2">Use for arranging items in a **single row or column**. Ask for things like <code class="code-highlight">flex</code>, <code class="code-highlight">justify-between</code> (to space items out), or <code class="code-highlight">items-center</code> (to align them vertically).</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg">
+                        <h3 class="font-bold text-lg">Grid</h3>
+                        <p class="text-stone-600 mt-2">Use for arranging items in a **two-dimensional grid** (rows AND columns). Ask for <code class="code-highlight">grid</code> and specify the number of columns, like <code class="code-highlight">grid-cols-3</code> for three columns.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-bold mb-4">Layout in Action: An Example</h2>
+                <p class="text-stone-600 mb-6">Let's ask the AI to create a simple user profile card. First, we'll give it a prompt with no layout instructions, then we'll add them.</p>
+                
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                    <!-- Tabs -->
+                    <div class="border-b border-stone-200">
+                        <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                            <button id="tab-no-layout" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-blue-500 text-blue-600">No Layout Instructions</button>
+                            <button id="tab-with-layout" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-stone-500 hover:text-stone-700 hover:border-stone-300">With Layout Instructions</button>
+                        </nav>
+                    </div>
+
+                    <!-- No Layout Content -->
+                    <div id="content-no-layout" class="py-6">
+                        <h3 class="font-semibold mb-2">The Prompt:</h3>
+                        <div class="code-block p-4 rounded-lg"><pre><code class="text-sm">TASK: Create a user profile card.
+CONSTRAINTS: It should have a placeholder for an avatar, a name, a username, and a follow button. Use Tailwind CSS.</code></pre></div>
+                        <h3 class="font-semibold mt-6 mb-2">The Result:</h3>
+                        <div class="p-4 border border-stone-200 rounded-lg">
+                            <div class="p-4 bg-slate-100 rounded-lg">
+                                <span class="inline-block h-12 w-12 rounded-full bg-gray-300"></span>
+                                <h3>Alex Ray</h3>
+                                <p>@alexray</p>
+                                <button class="bg-blue-500 text-white p-2">Follow</button>
+                            </div>
+                        </div>
+                        <p class="mt-4 text-sm text-stone-600">The elements are all there, but they're just stacked on top of each other. It's not a usable design.</p>
+                    </div>
+
+                    <!-- With Layout Content -->
+                    <div id="content-with-layout" class="hidden py-6">
+                        <h3 class="font-semibold mb-2">The Prompt:</h3>
+                        <div class="code-block p-4 rounded-lg"><pre><code class="text-sm">TASK: Create a user profile card.
+CONSTRAINTS: It should have a placeholder for an avatar, a name, a username, and a follow button. Use Tailwind CSS.
+LAYOUT: Use flexbox to align the items. The avatar and the text block (name/username) should be on the left, and the follow button should be on the right. Vertically center all items. The container should have padding and a shadow.</code></pre></div>
+                        <h3 class="font-semibold mt-6 mb-2">The Result:</h3>
+                        <div class="p-4 border border-stone-200 rounded-lg">
+                            <div class="p-4 bg-slate-100 rounded-lg shadow-md flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <span class="inline-block h-12 w-12 rounded-full bg-gray-300"></span>
+                                    <div class="ml-4">
+                                        <h3 class="font-bold text-lg">Alex Ray</h3>
+                                        <p class="text-gray-500">@alexray</p>
+                                    </div>
+                                </div>
+                                <button class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition">Follow</button>
+                            </div>
+                        </div>
+                        <p class="mt-4 text-sm text-stone-600">By adding a few key layout instructions, we get a polished, professional-looking component.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quiz Section -->
+            <section id="quiz">
+                <h2 class="text-2xl font-bold mb-4">Check Your Understanding</h2>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 space-y-8">
+                    <!-- Question 1 -->
+                    <div class="quiz-question" data-correct="flex">
+                        <p class="font-semibold mb-4">1. To arrange items in a single row with space between them, which layout tool would you ask for in your prompt?</p>
+                        <div class="space-y-3">
+                            <div class="quiz-option"><input type="radio" id="q1a1" name="q1" value="grid" class="hidden"><label for="q1a1">Grid</label></div>
+                            <div class="quiz-option"><input type="radio" id="q1a2" name="q1" value="table" class="hidden"><label for="q1a2">Table</label></div>
+                            <div class="quiz-option"><input type="radio" id="q1a3" name="q1" value="flex" class="hidden"><label for="q1a3">Flexbox</label></div>
+                        </div>
+                    </div>
+                    <!-- Question 2 -->
+                    <div class="quiz-question" data-correct="grid-cols-3">
+                        <p class="font-semibold mb-4">2. Which Tailwind CSS class would you ask for to create a three-column grid?</p>
+                        <div class="space-y-3">
+                            <div class="quiz-option"><input type="radio" id="q2a1" name="q2" value="flex-3" class="hidden"><label for="q2a1">flex-3</label></div>
+                            <div class="quiz-option"><input type="radio" id="q2a2" name="q2" value="grid-cols-3" class="hidden"><label for="q2a2">grid-cols-3</label></div>
+                            <div class="quiz-option"><input type="radio" id="q2a3" name="q2" value="col-3" class="hidden"><label for="q2a3">col-3</label></div>
+                        </div>
+                    </div>
+
+                    <div class="pt-4">
+                        <button id="check-answers-btn" class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">Check Answers</button>
+                    </div>
+
+                    <div id="quiz-results" class="hidden text-center pt-4">
+                        <p class="text-lg font-bold">You scored <span id="quiz-score"></span> out of 2.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="text-center py-10">
+                 <a href="module1p3.html" class="px-8 py-4 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition text-lg">
+                    Next →
+                </a>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const noLayoutTab = document.getElementById('tab-no-layout');
+            const withLayoutTab = document.getElementById('tab-with-layout');
+            const noLayoutContent = document.getElementById('content-no-layout');
+            const withLayoutContent = document.getElementById('content-with-layout');
+
+            noLayoutTab.addEventListener('click', () => {
+                noLayoutContent.classList.remove('hidden');
+                withLayoutContent.classList.add('hidden');
+                noLayoutTab.classList.add('border-blue-500', 'text-blue-600');
+                noLayoutTab.classList.remove('border-transparent', 'text-stone-500');
+                withLayoutTab.classList.add('border-transparent', 'text-stone-500');
+                withLayoutTab.classList.remove('border-blue-500', 'text-blue-600');
+            });
+
+            withLayoutTab.addEventListener('click', () => {
+                withLayoutContent.classList.remove('hidden');
+                noLayoutContent.classList.add('hidden');
+                withLayoutTab.classList.add('border-blue-500', 'text-blue-600');
+                withLayoutTab.classList.remove('border-transparent', 'text-stone-500');
+                noLayoutTab.classList.add('border-transparent', 'text-stone-500');
+                noLayoutTab.classList.remove('border-blue-500', 'text-blue-600');
+            });
+
+            // Quiz functionality
+            const checkAnswersBtn = document.getElementById('check-answers-btn');
+            const quizResults = document.getElementById('quiz-results');
+            const quizScore = document.getElementById('quiz-score');
+            const questions = document.querySelectorAll('.quiz-question');
+
+            checkAnswersBtn.addEventListener('click', () => {
+                let score = 0;
+                
+                questions.forEach(question => {
+                    const correctAnswer = question.dataset.correct;
+                    const selectedOption = question.querySelector('input[type="radio"]:checked');
+                    
+                    if (selectedOption) {
+                        const parentLabel = selectedOption.parentElement.querySelector('label');
+                        if (selectedOption.value === correctAnswer) {
+                            score++;
+                            parentLabel.classList.add('correct');
+                        } else {
+                            parentLabel.classList.add('incorrect');
+                        }
+                    }
+
+                    // Highlight the correct answer regardless
+                    const correctInput = question.querySelector(`input[value="${correctAnswer}"]`);
+                    if (correctInput) {
+                        correctInput.parentElement.querySelector('label').classList.add('correct');
+                    }
+                });
+
+                quizScore.textContent = score;
+                quizResults.classList.remove('hidden');
+                checkAnswersBtn.disabled = true;
+                checkAnswersBtn.textContent = 'Answers Checked';
+                checkAnswersBtn.classList.add('bg-gray-400', 'hover:bg-gray-400');
+
+                // Disable all radio buttons
+                questions.forEach(question => {
+                    question.querySelectorAll('input[type="radio"]').forEach(radio => {
+                        radio.disabled = true;
+                    });
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

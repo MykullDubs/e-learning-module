@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 1: Generating Interactive Charts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .code-block { background-color: #1e293b; color: #e2e8f0; }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 350px; }
+        .quiz-option label.correct { background-color: #dcfce7; border-color: #22c55e; color: #166534; }
+        .quiz-option label.incorrect { background-color: #fee2e2; border-color: #ef4444; color: #991b1b; }
+        .quiz-option label {
+            display: block;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .quiz-option input[type="radio"]:checked + label {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
+        
+        <header class="mb-10">
+            <a href="#" class="text-blue-600 hover:underline mb-4 block">&larr; Back to Layout & Style</a>
+            <h1 class="text-3xl md:text-4xl font-bold text-stone-900">Generating Interactive Charts</h1>
+            <p class="text-stone-500 mt-2 text-lg">Bring data to life by telling the AI to create dynamic visualizations.</p>
+        </header>
+
+        <main class="space-y-12">
+            
+            <section>
+                <h2 class="text-2xl font-bold mb-4">Why Use a Chart Library?</h2>
+                <p class="text-stone-600 mb-6">While you could theoretically ask an AI to write a chart from scratch, it's incredibly inefficient. Charting libraries like **Chart.js** do all the heavy lifting for drawing, animating, and handling interactions. Your job is to tell the AI how to use that library.</p>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-bold mb-4">Key Prompt Components for Charts</h2>
+                <p class="text-stone-600 mb-6">When asking for a chart, you need to be very specific. In addition to the core components we've already learned, you must include:</p>
+                <div class="space-y-4">
+                    <div class="bg-white p-6 rounded-lg">
+                        <h3 class="font-bold text-lg">1. The Library</h3>
+                        <p class="text-stone-600 mt-2">Explicitly state which library to use. For example: "Use Chart.js to create a bar chart."</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg">
+                        <h3 class="font-bold text-lg">2. The Chart Type</h3>
+                        <p class="text-stone-600 mt-2">Be specific about the visualization you want, such as 'bar', 'line', 'doughnut', or 'pie'.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg">
+                        <h3 class="font-bold text-lg">3. The Data</h3>
+                        <p class="text-stone-600 mt-2">Provide the data directly in the prompt. Give it the labels for the axes and the numerical data points to plot.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg">
+                        <h3 class="font-bold text-lg">4. The HTML Container</h3>
+                        <p class="text-stone-600 mt-2">This is critical for responsiveness. Instruct the AI to place the `<canvas>` element inside a `<div>` container. This allows the chart to resize properly.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-bold mb-4">Chart Generation in Action</h2>
+                <p class="text-stone-600 mb-6">Here's a complete prompt that puts all these pieces together to create a simple bar chart showing weekly user engagement.</p>
+                
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                    <h3 class="font-semibold mb-2">The Prompt:</h3>
+                    <div class="code-block p-4 rounded-lg"><pre><code class="text-sm">TASK: Create a vertical bar chart showing user engagement for the last 7 days.
+LIBRARY: Use Chart.js.
+DATA:
+- Labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+- Data Points: [120, 190, 150, 210, 180, 220, 250]
+- Label for the dataset: 'Active Users'
+HTML STRUCTURE:
+- Create a `div` with a class of 'chart-container'.
+- Inside the div, create a `canvas` element with an id of 'engagementChart'.
+JAVASCRIPT:
+- Write the JavaScript to initialize the chart on the canvas with the provided data.
+- Ensure the chart is responsive.</code></pre></div>
+                    <h3 class="font-semibold mt-6 mb-2">The Result:</h3>
+                    <div class="p-4 border border-stone-200 rounded-lg">
+                        <div class="chart-container">
+                            <canvas id="engagementChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quiz Section -->
+            <section id="quiz">
+                <h2 class="text-2xl font-bold mb-4">Check Your Understanding</h2>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 space-y-8">
+                    <!-- Question 1 -->
+                    <div class="quiz-question" data-correct="library">
+                        <p class="font-semibold mb-4">1. What is the most important piece of information to give the AI when you want it to generate a chart using a tool like Chart.js?</p>
+                        <div class="space-y-3">
+                            <div class="quiz-option"><input type="radio" id="q1a1" name="q1" value="colors" class="hidden"><label for="q1a1">The desired colors for the chart.</label></div>
+                            <div class="quiz-option"><input type="radio" id="q1a2" name="q1" value="library" class="hidden"><label for="q1a2">The specific JavaScript library to use (e.g., Chart.js).</label></div>
+                            <div class="quiz-option"><input type="radio" id="q1a3" name="q1" value="animation" class="hidden"><label for="q1a3">The desired animation style.</label></div>
+                        </div>
+                    </div>
+                    <!-- Question 2 -->
+                    <div class="quiz-question" data-correct="container">
+                        <p class="font-semibold mb-4">2. To ensure a chart is responsive and resizes correctly, you should instruct the AI to place the `<canvas>` element inside what?</p>
+                        <div class="space-y-3">
+                            <div class="quiz-option"><input type="radio" id="q2a1" name="q2" value="container" class="hidden"><label for="q2a1">A `div` container.</label></div>
+                            <div class="quiz-option"><input type="radio" id="q2a2" name="q2" value="header" class="hidden"><label for="q2a2">A `<header>` element.</label></div>
+                            <div class="quiz-option"><input type="radio" id="q2a3" name="q2" value="span" class="hidden"><label for="q2a3">A `<span>` element.</label></div>
+                        </div>
+                    </div>
+                     <!-- Question 3 -->
+                    <div class="quiz-question" data-correct="prompt">
+                        <p class="font-semibold mb-4">3. Where is the best place to define the labels and data points for the chart?</p>
+                        <div class="space-y-3">
+                            <div class="quiz-option"><input type="radio" id="q3a1" name="q3" value="prompt" class="hidden"><label for="q3a1">Directly within the prompt itself.</label></div>
+                            <div class="quiz-option"><input type="radio" id="q3a2" name="q3" value="css" class="hidden"><label for="q3a2">In a separate CSS file.</label></div>
+                            <div class="quiz-option"><input type="radio" id="q3a3" name="q3" value="html" class="hidden"><label for="q3a3">As attributes in the HTML tag.</label></div>
+                        </div>
+                    </div>
+
+                    <div class="pt-4">
+                        <button id="check-answers-btn" class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">Check Answers</button>
+                    </div>
+
+                    <div id="quiz-results" class="hidden text-center pt-4">
+                        <p class="text-lg font-bold">You scored <span id="quiz-score"></span> out of 3.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="text-center py-10">
+                 <a href="module1p4.html" class="px-8 py-4 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition text-lg">
+                    Next →
+                </a>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Chart.js implementation
+            const ctx = document.getElementById('engagementChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Active Users',
+                        data: [120, 190, 150, 210, 180, 220, 250],
+                        backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Quiz functionality
+            const checkAnswersBtn = document.getElementById('check-answers-btn');
+            const quizResults = document.getElementById('quiz-results');
+            const quizScore = document.getElementById('quiz-score');
+            const questions = document.querySelectorAll('.quiz-question');
+
+            checkAnswersBtn.addEventListener('click', () => {
+                let score = 0;
+                
+                questions.forEach(question => {
+                    const correctAnswer = question.dataset.correct;
+                    const selectedOption = question.querySelector('input[type="radio"]:checked');
+                    
+                    if (selectedOption) {
+                        const parentLabel = selectedOption.parentElement.querySelector('label');
+                        if (selectedOption.value === correctAnswer) {
+                            score++;
+                            parentLabel.classList.add('correct');
+                        } else {
+                            parentLabel.classList.add('incorrect');
+                        }
+                    }
+
+                    // Highlight the correct answer regardless
+                    const correctInput = question.querySelector(`input[value="${correctAnswer}"]`);
+                    if (correctInput) {
+                        correctInput.parentElement.querySelector('label').classList.add('correct');
+                    }
+                });
+
+                quizScore.textContent = score;
+                quizResults.classList.remove('hidden');
+                checkAnswersBtn.disabled = true;
+                checkAnswersBtn.textContent = 'Answers Checked';
+                checkAnswersBtn.classList.add('bg-gray-400', 'hover:bg-gray-400');
+
+                // Disable all radio buttons
+                questions.forEach(question => {
+                    question.querySelectorAll('input[type="radio"]').forEach(radio => {
+                        radio.disabled = true;
+                    });
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

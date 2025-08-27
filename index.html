@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Introduction: AI-Powered Web Development</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .code-icon {
+            font-size: 2.5rem;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: A single-page, vertical "scrollytelling" layout is the most effective structure for this introductory content. It guides the user through a linear narrative: Hero, Challenge, Solution, and Outcome. This structure is intuitive and mirrors the flow of a presentation, making the concepts easy to digest. The key interaction is the scroll-based fade-in animation for each section, which adds a layer of engagement and focuses the user's attention on one concept at a time. -->
+    <!-- Visualization & Content Choices: 
+        - The Challenge (Visual Diagram): Report Info -> The complexity of HTML/CSS/JS. Goal -> Inform. Viz -> Three styled cards using HTML/CSS representing the three technologies. Interaction -> Static visual, appears on scroll. Justification -> Visually separates the technologies to emphasize the complexity of combining them manually.
+        - The AI Solution (Visual Diagram): Report Info -> The simplicity of using an AI prompt. Goal -> Inform/Organize. Viz -> A simple flow diagram (Prompt -> AI -> Dashboard) made with HTML/CSS. Interaction -> Static visual, appears on scroll. Justification -> Creates a clear visual metaphor for the AI's role as a powerful intermediary, simplifying the development process.
+        - Learning Outcome (Styled Text): Report Info -> The final learning goal. Goal -> Inform. Viz -> A styled text block with a prominent callout. Interaction -> Static, appears on scroll. Justification -> Clearly and concisely states the value proposition of the course to the learner.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <div class="container mx-auto px-4 py-16 sm:py-24 max-w-4xl">
+
+        <!-- Hero Section -->
+        <section class="text-center min-h-[60vh] flex flex-col justify-center items-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-stone-900 leading-tight">Welcome to AI-Powered Web Development</h1>
+            <p class="mt-4 text-lg text-stone-600 max-w-2xl">Discover how to use Large Language Models (LLMs) to generate the code for a complete user dashboard for an online course.</p>
+            <a href="#challenge" class="mt-8 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition">Let's Get Started</a>
+        </section>
+
+        <!-- The Challenge Section -->
+        <section id="challenge" class="fade-in-section py-20">
+            <h2 class="text-3xl font-bold text-center mb-4">The Challenge</h2>
+            <p class="text-center text-stone-600 mb-12 max-w-3xl mx-auto">Building a student dashboard from scratch requires significant knowledge of HTML for structure, CSS for styling, and JavaScript for interactivity. You need to manually weave them all together.</p>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 text-center w-full md:w-1/3">
+                    <div class="code-icon text-orange-500 mb-2">&lt;/&gt;</div>
+                    <h3 class="font-bold text-lg">HTML</h3>
+                    <p class="text-sm text-stone-500">The Structure</p>
+                </div>
+                <div class="text-4xl text-stone-300 font-light">+</div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 text-center w-full md:w-1/3">
+                    <div class="code-icon text-blue-500 mb-2">{}</div>
+                    <h3 class="font-bold text-lg">CSS</h3>
+                    <p class="text-sm text-stone-500">The Style</p>
+                </div>
+                <div class="text-4xl text-stone-300 font-light">+</div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 text-center w-full md:w-1/3">
+                    <div class="code-icon text-yellow-500 mb-2">JS</div>
+                    <h3 class="font-bold text-lg">JavaScript</h3>
+                    <p class="text-sm text-stone-500">The Interactivity</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- The AI Solution Section -->
+        <section class="fade-in-section py-20">
+            <h2 class="text-3xl font-bold text-center mb-4">The AI Solution</h2>
+            <p class="text-center text-stone-600 mb-12 max-w-3xl mx-auto">Instead of writing all that code by hand, you can instruct an AI to generate it for you. This is a powerful skill that can dramatically speed up your development process.</p>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4">
+                <div class="diagram-box text-center">
+                    <div class="text-4xl">✍️</div>
+                    <h3 class="font-bold mt-2">Your Prompt</h3>
+                </div>
+                <div class="text-4xl text-stone-300 transform md:rotate-0 rotate-90 my-4 md:my-0">→</div>
+                <div class="diagram-box text-center bg-blue-100 p-6 rounded-full">
+                    <div class="text-4xl">🤖</div>
+                    <h3 class="font-bold mt-2">AI Model</h3>
+                </div>
+                <div class="text-4xl text-stone-300 transform md:rotate-0 rotate-90 my-4 md:my-0">→</div>
+                <div class="diagram-box text-center">
+                    <div class="text-4xl">🖥️</div>
+                    <h3 class="font-bold mt-2">Functional Dashboard</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- Learning Outcome Section -->
+        <section class="fade-in-section py-20">
+            <h2 class="text-3xl font-bold text-center mb-4">Learning Outcome</h2>
+            <p class="text-center text-stone-600 mb-8 max-w-3xl mx-auto">By the end of this module, you will learn how to craft a detailed request to get a high-quality, functional, and aesthetically pleasing result from the AI.</p>
+            <div class="bg-white p-8 rounded-xl shadow-sm border border-stone-200 text-center">
+                <p class="text-stone-500 mb-2">You will be able to:</p>
+                <p class="text-xl md:text-2xl font-semibold text-blue-600">Prompt an AI to generate the HTML, CSS, and JavaScript for a user dashboard.</p>
+            </div>
+        </section>
+
+        <!-- Navigation to Next Module -->
+        <section class="text-center py-16">
+            <a href="e://module1.html" class="px-8 py-4 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition text-lg">
+                Next Module: Understanding Prompt Structure →
+            </a>
+        </section>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('.fade-in-section');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 1: Implementing JavaScript Logic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .code-block { background-color: #1e293b; color: #e2e8f0; }
+        .quiz-option label.correct { background-color: #dcfce7; border-color: #22c55e; color: #166534; }
+        .quiz-option label.incorrect { background-color: #fee2e2; border-color: #ef4444; color: #991b1b; }
+        .quiz-option label {
+            display: block;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .quiz-option input[type="radio"]:checked + label {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        #details-content {
+            transition: opacity 0.3s ease-out, max-height 0.3s ease-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        #details-content.shown {
+            max-height: 200px; /* Adjust as needed */
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
+        
+        <header class="mb-10">
+            <a href="#" class="text-blue-600 hover:underline mb-4 block">&larr; Back to Interactive Charts</a>
+            <h1 class="text-3xl md:text-4xl font-bold text-stone-900">Implementing JavaScript Logic</h1>
+            <p class="text-stone-500 mt-2 text-lg">Make your pages respond to user actions like clicks and hovers.</p>
+        </header>
+
+        <main class="space-y-12">
+            
+            <section>
+                <h2 class="text-2xl font-bold mb-4">What is JavaScript Logic?</h2>
+                <p class="text-stone-600 mb-6">If HTML is the skeleton and CSS is the skin, then **JavaScript (JS)** is the nervous system. It's the code that listens for user actions and makes the page react. The most common way to do this is with **event listeners**.</p>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-bold mb-4">Prompting for Event Listeners</h2>
+                <p class="text-stone-600 mb-6">When you want an element to do something when clicked, you need to tell the AI to add an `addEventListener`. Your prompt should specify three things:</p>
+                <div class="space-y-4">
+                    <div class="bg-white p-6 rounded-lg">
+                        <h3 class="font-bold text-lg">1. The Target Element</h3>
+                        <p class="text-stone-600 mt-2">Which HTML element should be listening? Be specific (e.g., "the button with an id of 'toggle-btn'").</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg">
+                        <h3 class="font-bold text-lg">2. The Event</h3>
+                        <p class="text-stone-600 mt-2">What action should the user take? The most common is `'click'`, but others include `'mouseover'`, `'keydown'`, etc.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg">
+                        <h3 class="font-bold text-lg">3. The Action</h3>
+                        <p class="text-stone-600 mt-2">What should happen when the event occurs? For example, "toggle the visibility of the div with an id of 'details-content'."</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-bold mb-4">JavaScript in Action: A Toggle Component</h2>
+                <p class="text-stone-600 mb-6">Let's see how a detailed prompt can generate a fully interactive "Show/Hide" component.</p>
+                
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                    <h3 class="font-semibold mb-2">The Prompt:</h3>
+                    <div class="code-block p-4 rounded-lg"><pre><code class="text-sm">TASK: Create a "Show/Hide" component.
+HTML:
+- A button with the id 'toggle-btn' and text "Show Details".
+- A div with the id 'details-content' containing some placeholder text. This div should be hidden by default.
+JAVASCRIPT:
+- Add a 'click' event listener to the button.
+- When the button is clicked, toggle a 'shown' class on the 'details-content' div.
+- Also, change the button's text to "Hide Details" when the content is visible, and back to "Show Details" when it's hidden.
+CSS:
+- Add CSS to smoothly transition the visibility of the 'details-content' div when the 'shown' class is added or removed.</code></pre></div>
+                    <h3 class="font-semibold mt-6 mb-2">The Result:</h3>
+                    <div class="p-4 border border-stone-200 rounded-lg">
+                        <button id="toggle-btn" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition">Show Details</button>
+                        <div id="details-content" class="mt-4 p-4 bg-stone-100 rounded-lg">
+                            <p>This is the hidden content that is now visible! You can prompt the AI to create all sorts of interactive elements like this.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quiz Section -->
+            <section id="quiz">
+                <h2 class="text-2xl font-bold mb-4">Check Your Understanding</h2>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 space-y-8">
+                    <!-- Question 1 -->
+                    <div class="quiz-question" data-correct="event-listener">
+                        <p class="font-semibold mb-4">1. What is the JavaScript feature used to listen for user actions like clicks?</p>
+                        <div class="space-y-3">
+                            <div class="quiz-option"><input type="radio" id="q1a1" name="q1" value="css-class" class="hidden"><label for="q1a1">A CSS Class</label></div>
+                            <div class="quiz-option"><input type="radio" id="q1a2" name="q1" value="html-tag" class="hidden"><label for="q1a2">An HTML Tag</label></div>
+                            <div class="quiz-option"><input type="radio" id="q1a3" name="q1" value="event-listener" class="hidden"><label for="q1a3">An Event Listener</label></div>
+                        </div>
+                    </div>
+                    <!-- Question 2 -->
+                    <div class="quiz-question" data-correct="action">
+                        <p class="font-semibold mb-4">2. When prompting for interactivity, which of these is NOT one of the three required pieces of information?</p>
+                        <div class="space-y-3">
+                            <div class="quiz-option"><input type="radio" id="q2a1" name="q2" value="target" class="hidden"><label for="q2a1">The Target Element</label></div>
+                            <div class="quiz-option"><input type="radio" id="q2a2" name="q2" value="action" class="hidden"><label for="q2a2">The Color of the Button</label></div>
+                            <div class="quiz-option"><input type="radio" id="q2a3" name="q2" value="event" class="hidden"><label for="q2a3">The Event (e.g., 'click')</label></div>
+                        </div>
+                    </div>
+
+                    <div class="pt-4">
+                        <button id="check-answers-btn" class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">Check Answers</button>
+                    </div>
+
+                    <div id="quiz-results" class="hidden text-center pt-4">
+                        <p class="text-lg font-bold">You scored <span id="quiz-score"></span> out of 2.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="text-center py-10">
+                 <a href="#" class="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition text-lg">
+                    Take Summative Assessment
+                </a>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Interactive Toggle Component
+            const toggleBtn = document.getElementById('toggle-btn');
+            const detailsContent = document.getElementById('details-content');
+
+            toggleBtn.addEventListener('click', () => {
+                const isShown = detailsContent.classList.toggle('shown');
+                if (isShown) {
+                    toggleBtn.textContent = 'Hide Details';
+                } else {
+                    toggleBtn.textContent = 'Show Details';
+                }
+            });
+
+            // Quiz functionality
+            const checkAnswersBtn = document.getElementById('check-answers-btn');
+            const quizResults = document.getElementById('quiz-results');
+            const quizScore = document.getElementById('quiz-score');
+            const questions = document.querySelectorAll('.quiz-question');
+
+            checkAnswersBtn.addEventListener('click', () => {
+                let score = 0;
+                
+                questions.forEach(question => {
+                    const correctAnswer = question.dataset.correct;
+                    const selectedOption = question.querySelector('input[type="radio"]:checked');
+                    
+                    if (selectedOption) {
+                        const parentLabel = selectedOption.parentElement.querySelector('label');
+                        if (selectedOption.value === correctAnswer) {
+                            score++;
+                            parentLabel.classList.add('correct');
+                        } else {
+                            parentLabel.classList.add('incorrect');
+                        }
+                    }
+
+                    // Highlight the correct answer regardless
+                    const correctInput = question.querySelector(`input[value="${correctAnswer}"]`);
+                    if (correctInput) {
+                        correctInput.parentElement.querySelector('label').classList.add('correct');
+                    }
+                });
+
+                quizScore.textContent = score;
+                quizResults.classList.remove('hidden');
+                checkAnswersBtn.disabled = true;
+                checkAnswersBtn.textContent = 'Answers Checked';
+                checkAnswersBtn.classList.add('bg-gray-400', 'hover:bg-gray-400');
+
+                // Disable all radio buttons
+                questions.forEach(question => {
+                    question.querySelectorAll('input[type="radio"]').forEach(radio => {
+                        radio.disabled = true;
+                    });
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
