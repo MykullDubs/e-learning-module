@@ -122,7 +122,19 @@
                 <!-- Part 1: Prompt Structure -->
                 <section>
                     <h2 class="text-2xl font-bold mb-4">Part 1: The Core Components of a Great Prompt</h2>
-                    <p class="text-stone-600 mb-6">To leverage AI for rapid prototyping, your prompts must be clear and structured. Click each card to reveal its meaning.</p>
+                    <p class="text-stone-600 mb-6">To leverage AI for rapid prototyping within the SAM model, your prompts must be clear, structured, and pedagogically sound. Think of a prompt not just as a command, but as a detailed **design document** you're giving to an infinitely fast developer who is also your instructional design partner. A vague idea leads to a vague prototype, wasting valuable time in your iterative cycle. A well-crafted prompt, however, can produce a surprisingly effective first version of a learning experience in minutes.</p>
+                    <p class="text-stone-600 mb-6">The synergy between **Role** and **Task** is where the magic begins. When you tell the AI to act as an *instructional designer*, you're priming it to think about learning objectives, engagement, and clarity. A simple "developer" might create a list of facts. An "instructional designer," on the other hand, will turn that list into an interactive sorting activity or a scenario-based challenge when given the right **Task**. This is the crucial shift from generating simple web content to prototyping genuine instructional experiences.</p>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 mb-6">
+                        <p class="text-stone-600">Consider **Constraints** and **Details** as your way of embedding learning science directly into the prototype. This is where you can be incredibly specific about the educational experience. For example, you can provide constraints like:</p>
+                        <ul class="list-disc list-inside text-stone-600 mt-4 space-y-2">
+                            <li>"The feedback for incorrect answers must be corrective and provide a hint, not just the right answer."</li>
+                            <li>"Ensure the reading level is appropriate for a 9th-grade audience."</li>
+                            <li>"The scenario must include a clear decision point that tests the learner's judgment."</li>
+                        </ul>
+                    </div>
+                    <p class="text-stone-600 mb-6">Finally, the **Format** you request is a strategic choice that directly supports the SAM model. Asking for a "single, self-contained HTML file" is powerful because it gives you an instant, testable artifact. This isn't just a picture or a wireframe; it's a functional prototype that a learner or stakeholder can immediately interact with. This allows you to get meaningful feedback and begin the next loop of your "design, prototype, review" cycle almost immediately.</p>
+                    
+                    <p class="text-stone-600 mb-6">Click each card below to review the four core components.</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Flashcard 1: Role -->
                         <div class="flashcard-container">
@@ -132,7 +144,6 @@
                                 </div>
                                 <div class="flashcard-back">
                                     <p class="text-center text-stone-600">"Act as an expert **instructional designer**." This sets the context for creating educational content.</p>
-                                    
                                 </div>
                             </div>
                         </div>
@@ -170,28 +181,6 @@
                             </div>
                         </div>
                     </div>
-                    <p class="text-stone-600 mb-6">
-    To leverage AI for rapid prototyping within the SAM model, your prompts must be clear, structured, and pedagogically sound. Think of a prompt not just as a command, but as a detailed **design document** you're giving to an infinitely fast developer who is also your instructional design partner. A vague idea leads to a vague prototype, wasting valuable time in your iterative cycle. A well-crafted prompt, however, can produce a surprisingly effective first version of a learning experience in minutes.
-</p>
-
-<p class="text-stone-600 mb-6">
-    The synergy between **Role** and **Task** is where the magic begins. When you tell the AI to act as an *instructional designer*, you're priming it to think about learning objectives, engagement, and clarity. A simple "developer" might create a list of facts. An "instructional designer," on the other hand, will turn that list into an interactive sorting activity or a scenario-based challenge when given the right **Task**. This is the crucial shift from generating simple web content to prototyping genuine instructional experiences.
-</p>
-
-<div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 mb-6">
-    <p class="text-stone-600">
-        Consider **Constraints** and **Details** as your way of embedding learning science directly into the prototype. This is where you can be incredibly specific about the educational experience. For example, you can provide constraints like:
-    </p>
-    <ul class="list-disc list-inside text-stone-600 mt-4 space-y-2">
-        <li>"The feedback for incorrect answers must be corrective and provide a hint, not just the right answer."</li>
-        <li>"Ensure the reading level is appropriate for a 9th-grade audience."</li>
-        <li>"The scenario must include a clear decision point that tests the learner's judgment."</li>
-    </ul>
-</div>
-
-<p class="text-stone-600 mb-6">
-    Finally, the **Format** you request is a strategic choice that directly supports the SAM model. Asking for a "single, self-contained HTML file" is powerful because it gives you an instant, testable artifact. This isn't just a picture or a wireframe; it's a functional prototype that a learner or stakeholder can immediately interact with. This allows you to get meaningful feedback and begin the next loop of your "design, prototype, review" cycle almost immediately.
-</p>
                 </section>
 
                 <!-- Part 2: Layout & Style -->
@@ -372,4 +361,132 @@ STYLING: The container should have a light blue background, a blue left border, 
     </script>
 </body>
 </html>
+                    <h2 class="text-2xl font-bold mb-4">Check Your Understanding</h2>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 space-y-8">
+                        <div id="quiz-questions-container" class="space-y-8"></div>
+                        <div class="pt-4">
+                            <button id="check-answers-btn" class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">Check Answers</button>
+                        </div>
+                        <div id="quiz-results" class="hidden text-center pt-4">
+                            <p class="text-lg font-bold">You scored <span id="quiz-score"></span>.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="text-center py-10">
+                     <a href="fa1.html" class="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition text-lg">
+                        Take Summative Assessment
+                    </a>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+      
+      const firebaseConfig = { apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM", authDomain: "elearning-e83cb.firebaseapp.com", projectId: "elearning-e83cb", storageBucket: "elearning-e83cb.appspot.com", messagingSenderId: "25473938624", appId: "1:25473938624:web:5b56738933543f32a7e925", measurementId: "G-R713G5DD1S" };
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+
+      // --- Auth Guard ---
+      const loader = document.getElementById('loader');
+      const appContent = document.getElementById('app-content');
+      const userEmailEl = document.getElementById('user-email');
+      const logoutBtn = document.getElementById('logout-btn');
+      const profileBtn = document.getElementById('profile-btn');
+      const profileDropdown = document.getElementById('profile-dropdown');
+
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          userEmailEl.textContent = user.email;
+          loader.style.display = 'none';
+          appContent.classList.remove('hidden');
+        } else {
+          window.location.href = '/login.html';
+        }
+      });
+
+      profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
+      window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
+      logoutBtn.addEventListener('click', () => { signOut(auth).then(() => window.location.href = '/login.html'); });
+
+      // --- Interactive Components ---
+      // Flashcards
+      const flashcards = document.querySelectorAll('.flashcard');
+      flashcards.forEach(card => {
+          card.addEventListener('click', () => {
+              card.classList.toggle('is-flipped');
+          });
+      });
+
+      // Chart.js
+      const ctx = document.getElementById('engagementChart').getContext('2d');
+      new Chart(ctx, { type: 'bar', data: { labels: ['0-59%', '60-69%', '70-79%', '80-89%', '90-100%'], datasets: [{ label: 'Number of Students', data: [3, 5, 12, 18, 9], backgroundColor: 'rgba(59, 130, 246, 0.5)', borderColor: 'rgba(59, 130, 246, 1)', borderWidth: 1 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: 'Number of Students' } }, x: { title: { display: true, text: 'Score Range' } } }, plugins: { title: { display: true, text: 'Quiz Score Distribution' } } } });
+
+      // Toggle Component
+      const toggleBtn = document.getElementById('toggle-btn');
+      const detailsContent = document.getElementById('details-content');
+      toggleBtn.addEventListener('click', () => {
+          const isShown = detailsContent.classList.toggle('shown');
+          toggleBtn.textContent = isShown ? 'Hide the Answer' : 'Reveal the Answer';
+      });
+
+      // --- Quiz ---
+      const quizData = [
+          { question: "1. The main advantage of using AI with the SAM model is to accelerate which phase?", options: ["Prepare", "Iterate", "Deploy"], correct: "Iterate" },
+          { question: "2. To create an interactive 'drag-and-drop' exercise, which part of the prompt is most critical?", options: ["The Role", "The JavaScript Logic", "The Styling"], correct: "The JavaScript Logic" },
+          { question: "3. Which layout tool is best for creating a two-dimensional grid of learning resources?", options: ["Grid", "Table", "Flexbox"], correct: "Grid" },
+          { question: "4. When prompting for a chart to display learner analytics, what must you provide?", options: ["Only the chart type", "The library, chart type, and data", "Only the data"], correct: "The library, chart type, and data" }
+      ];
+
+      const quizContainer = document.getElementById('quiz-questions-container');
+      quizData.forEach((q, index) => {
+          const questionEl = document.createElement('div');
+          questionEl.className = 'quiz-question';
+          questionEl.dataset.correct = q.correct;
+          let optionsHtml = q.options.map((opt, i) => `
+              <div class="quiz-option">
+                  <input type="radio" id="q${index}o${i}" name="q${index}" value="${opt}" class="hidden">
+                  <label for="q${index}o${i}">${opt}</label>
+              </div>`).join('');
+          questionEl.innerHTML = `<p class="font-semibold mb-4">${q.question}</p><div class="space-y-3">${optionsHtml}</div>`;
+          quizContainer.appendChild(questionEl);
+      });
+
+      const checkAnswersBtn = document.getElementById('check-answers-btn');
+      const quizResults = document.getElementById('quiz-results');
+      const quizScore = document.getElementById('quiz-score');
+      
+      checkAnswersBtn.addEventListener('click', () => {
+          let score = 0;
+          const questions = document.querySelectorAll('.quiz-question');
+          questions.forEach(question => {
+              const correctAnswer = question.dataset.correct;
+              const selectedOption = question.querySelector('input:checked');
+              if (selectedOption) {
+                  const parentLabel = selectedOption.parentElement.querySelector('label');
+                  if (selectedOption.value === correctAnswer) {
+                      score++;
+                      parentLabel.classList.add('correct');
+                  } else {
+                      parentLabel.classList.add('incorrect');
+                  }
+              }
+              const correctInput = question.querySelector(`input[value="${correctAnswer}"]`);
+              if (correctInput) correctInput.parentElement.querySelector('label').classList.add('correct');
+          });
+
+          quizScore.textContent = `${score} out of ${questions.length}`;
+          quizResults.classList.remove('hidden');
+          checkAnswersBtn.disabled = true;
+          checkAnswersBtn.textContent = 'Answers Checked';
+          checkAnswersBtn.classList.add('bg-gray-400', 'hover:bg-gray-400');
+          questions.forEach(q => q.querySelectorAll('input').forEach(radio => radio.disabled = true));
+      });
+    </script>
+</body>
+</html>
+
 
