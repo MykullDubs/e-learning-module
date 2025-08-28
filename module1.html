@@ -187,13 +187,9 @@
                 <section>
                     <h2 class="text-2xl font-bold mb-4">Part 2: Designing the Learning Environment</h2>
                     <p class="text-stone-600 mb-6">The visual design of your instructional materials is crucial for learner engagement. You can direct the AI to create specific layouts and styles using Tailwind CSS.</p>
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
-                        <h3 class="font-semibold mb-2">Example: Creating a "Learning Tip" Callout</h3>
-                        <p class="text-stone-600 mb-4">Let's ask the AI to create a styled callout box, a common element in e-learning modules.</p>
-                        <div class="code-block p-4 rounded-lg"><pre><code class="text-sm">TASK: Create a "Learning Tip" callout box.
-LAYOUT: Use flexbox. It should have a lightbulb icon on the left and a text block on the right.
-STYLING: The container should have a light blue background, a blue left border, rounded corners, and padding. Use Tailwind CSS.</code></pre></div>
-                        <h3 class="font-semibold mt-6 mb-2">The Result:</h3>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 mb-8">
+                        <h3 class="font-semibold mb-2">Example 1: Creating a "Learning Tip" Callout</h3>
+                        <p class="text-stone-600 mb-4">A simple but effective way to highlight key information.</p>
                         <div class="p-4 border border-stone-200 rounded-lg">
                             <div class="bg-blue-50 border-l-4 border-blue-400 text-blue-700 p-4 rounded-r-lg flex items-center">
                                 <div class="text-2xl mr-4">💡</div>
@@ -201,6 +197,20 @@ STYLING: The container should have a light blue background, a blue left border, 
                                     <p class="font-bold">Learning Tip</p>
                                     <p>Consistent practice is the key to mastering any new skill.</p>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                        <h3 class="font-semibold mb-2">Example 2: A Scenario-Based Learning Component</h3>
+                        <p class="text-stone-600 mb-4">Use prompts to build interactive scenarios that test a learner's judgment and provide immediate feedback.</p>
+                        <div class="p-4 border border-stone-200 rounded-lg">
+                            <div id="scenario-container">
+                                <p class="bg-stone-100 p-4 rounded-lg"><strong>Scenario:</strong> A learner submits a vague prompt like "make a quiz" to the AI. As an instructional designer, what is the most important clarifying question you should ask them?</p>
+                                <div id="scenario-options" class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <button class="scenario-btn p-4 border rounded-lg hover:bg-stone-50 text-left">"What color should the buttons be?"</button>
+                                    <button class="scenario-btn p-4 border rounded-lg hover:bg-stone-50 text-left">"What is the learning objective of the quiz?"</button>
+                                </div>
+                                <div id="scenario-feedback" class="mt-4 p-4 rounded-lg hidden"></div>
                             </div>
                         </div>
                     </div>
@@ -293,132 +303,23 @@ STYLING: The container should have a light blue background, a blue left border, 
               card.classList.toggle('is-flipped');
           });
       });
-
-      // Chart.js
-      const ctx = document.getElementById('engagementChart').getContext('2d');
-      new Chart(ctx, { type: 'bar', data: { labels: ['0-59%', '60-69%', '70-79%', '80-89%', '90-100%'], datasets: [{ label: 'Number of Students', data: [3, 5, 12, 18, 9], backgroundColor: 'rgba(59, 130, 246, 0.5)', borderColor: 'rgba(59, 130, 246, 1)', borderWidth: 1 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: 'Number of Students' } }, x: { title: { display: true, text: 'Score Range' } } }, plugins: { title: { display: true, text: 'Quiz Score Distribution' } } } });
-
-      // Toggle Component
-      const toggleBtn = document.getElementById('toggle-btn');
-      const detailsContent = document.getElementById('details-content');
-      toggleBtn.addEventListener('click', () => {
-          const isShown = detailsContent.classList.toggle('shown');
-          toggleBtn.textContent = isShown ? 'Hide the Answer' : 'Reveal the Answer';
-      });
-
-      // --- Quiz ---
-      const quizData = [
-          { question: "1. The main advantage of using AI with the SAM model is to accelerate which phase?", options: ["Prepare", "Iterate", "Deploy"], correct: "Iterate" },
-          { question: "2. To create an interactive 'drag-and-drop' exercise, which part of the prompt is most critical?", options: ["The Role", "The JavaScript Logic", "The Styling"], correct: "The JavaScript Logic" },
-          { question: "3. Which layout tool is best for creating a two-dimensional grid of learning resources?", options: ["Grid", "Table", "Flexbox"], correct: "Grid" },
-          { question: "4. When prompting for a chart to display learner analytics, what must you provide?", options: ["Only the chart type", "The library, chart type, and data", "Only the data"], correct: "The library, chart type, and data" }
-      ];
-
-      const quizContainer = document.getElementById('quiz-questions-container');
-      quizData.forEach((q, index) => {
-          const questionEl = document.createElement('div');
-          questionEl.className = 'quiz-question';
-          questionEl.dataset.correct = q.correct;
-          let optionsHtml = q.options.map((opt, i) => `
-              <div class="quiz-option">
-                  <input type="radio" id="q${index}o${i}" name="q${index}" value="${opt}" class="hidden">
-                  <label for="q${index}o${i}">${opt}</label>
-              </div>`).join('');
-          questionEl.innerHTML = `<p class="font-semibold mb-4">${q.question}</p><div class="space-y-3">${optionsHtml}</div>`;
-          quizContainer.appendChild(questionEl);
-      });
-
-      const checkAnswersBtn = document.getElementById('check-answers-btn');
-      const quizResults = document.getElementById('quiz-results');
-      const quizScore = document.getElementById('quiz-score');
       
-      checkAnswersBtn.addEventListener('click', () => {
-          let score = 0;
-          const questions = document.querySelectorAll('.quiz-question');
-          questions.forEach(question => {
-              const correctAnswer = question.dataset.correct;
-              const selectedOption = question.querySelector('input:checked');
-              if (selectedOption) {
-                  const parentLabel = selectedOption.parentElement.querySelector('label');
-                  if (selectedOption.value === correctAnswer) {
-                      score++;
-                      parentLabel.classList.add('correct');
-                  } else {
-                      parentLabel.classList.add('incorrect');
-                  }
+      // Scenario-Based Learning
+      const scenarioOptions = document.getElementById('scenario-options');
+      const scenarioFeedback = document.getElementById('scenario-feedback');
+      scenarioOptions.addEventListener('click', (e) => {
+          if (e.target.tagName === 'BUTTON') {
+              const choiceText = e.target.textContent;
+              scenarioOptions.classList.add('hidden');
+              scenarioFeedback.classList.remove('hidden');
+              if (choiceText.includes('learning objective')) {
+                  scenarioFeedback.innerHTML = `<p class="font-bold text-green-700">Correct!</p><p>Understanding the learning objective is the most critical first step. It informs every other aspect of the quiz design, from question type to difficulty.</p>`;
+                  scenarioFeedback.classList.add('bg-green-50', 'text-green-700');
+              } else {
+                  scenarioFeedback.innerHTML = `<p class="font-bold text-red-700">Good question, but not the most important.</p><p>While aesthetics are important, the primary goal of an instructional resource is to meet a learning objective. Always start there.</p>`;
+                  scenarioFeedback.classList.add('bg-red-50', 'text-red-700');
               }
-              const correctInput = question.querySelector(`input[value="${correctAnswer}"]`);
-              if (correctInput) correctInput.parentElement.querySelector('label').classList.add('correct');
-          });
-
-          quizScore.textContent = `${score} out of ${questions.length}`;
-          quizResults.classList.remove('hidden');
-          checkAnswersBtn.disabled = true;
-          checkAnswersBtn.textContent = 'Answers Checked';
-          checkAnswersBtn.classList.add('bg-gray-400', 'hover:bg-gray-400');
-          questions.forEach(q => q.querySelectorAll('input').forEach(radio => radio.disabled = true));
-      });
-    </script>
-</body>
-</html>
-                    <h2 class="text-2xl font-bold mb-4">Check Your Understanding</h2>
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 space-y-8">
-                        <div id="quiz-questions-container" class="space-y-8"></div>
-                        <div class="pt-4">
-                            <button id="check-answers-btn" class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">Check Answers</button>
-                        </div>
-                        <div id="quiz-results" class="hidden text-center pt-4">
-                            <p class="text-lg font-bold">You scored <span id="quiz-score"></span>.</p>
-                        </div>
-                    </div>
-                </section>
-
-                <section class="text-center py-10">
-                     <a href="fa1.html" class="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition text-lg">
-                        Take Summative Assessment
-                    </a>
-                </section>
-            </main>
-        </div>
-    </div>
-
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-      import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-      
-      const firebaseConfig = { apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM", authDomain: "elearning-e83cb.firebaseapp.com", projectId: "elearning-e83cb", storageBucket: "elearning-e83cb.appspot.com", messagingSenderId: "25473938624", appId: "1:25473938624:web:5b56738933543f32a7e925", measurementId: "G-R713G5DD1S" };
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-
-      // --- Auth Guard ---
-      const loader = document.getElementById('loader');
-      const appContent = document.getElementById('app-content');
-      const userEmailEl = document.getElementById('user-email');
-      const logoutBtn = document.getElementById('logout-btn');
-      const profileBtn = document.getElementById('profile-btn');
-      const profileDropdown = document.getElementById('profile-dropdown');
-
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          userEmailEl.textContent = user.email;
-          loader.style.display = 'none';
-          appContent.classList.remove('hidden');
-        } else {
-          window.location.href = '/login.html';
-        }
-      });
-
-      profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
-      window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
-      logoutBtn.addEventListener('click', () => { signOut(auth).then(() => window.location.href = '/login.html'); });
-
-      // --- Interactive Components ---
-      // Flashcards
-      const flashcards = document.querySelectorAll('.flashcard');
-      flashcards.forEach(card => {
-          card.addEventListener('click', () => {
-              card.classList.toggle('is-flipped');
-          });
+          }
       });
 
       // Chart.js
@@ -488,5 +389,3 @@ STYLING: The container should have a light blue background, a blue left border, 
     </script>
 </body>
 </html>
-
-
