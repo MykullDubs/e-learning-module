@@ -57,6 +57,12 @@
             background-color: #f3f4f6; /* bg-gray-100 */
             transform: rotateY(180deg);
         }
+        .star-rating {
+            color: #d1d5db; /* gray-300 */
+        }
+        .star-rating .filled {
+            color: #f59e0b; /* amber-500 */
+        }
     </style>
 </head>
 <body class="bg-stone-50 text-stone-800">
@@ -232,12 +238,32 @@
                 <section>
                     <h2 class="text-2xl font-bold mb-4">Part 4: Prompting for JavaScript Logic</h2>
                     <p class="text-stone-600 mb-6">Interactivity is at the heart of engaging e-learning. You can prompt the AI to add JavaScript to create interactive components like "click to reveal" definitions or interactive scenarios.</p>
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
-                        <h3 class="font-semibold mb-2">Example: A "Click to Reveal" Interaction</h3>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 mb-8">
+                        <h3 class="font-semibold mb-2">Example 1: A "Click to Reveal" Interaction</h3>
                         <div class="p-4 border border-stone-200 rounded-lg">
                             <p class="mb-2 font-semibold">What is the SAM model?</p>
                             <button id="toggle-btn" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition">Reveal the Answer</button>
                             <div id="details-content" class="mt-4 p-4 bg-stone-100 rounded-lg"><p>The Successive Approximation Model is an iterative instructional design process focused on rapid prototyping and evaluation.</p></div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                        <h3 class="font-semibold mb-2">Example 2: Gamified Prompt-Tuning Simulator</h3>
+                        <p class="text-stone-600 mb-4">This is an authentic assessment. Your task is to edit the vague prompt below to include all four key components: **Role, Task, Constraints, and Format**. The AI simulator will give you feedback until you get a 5-star rating.</p>
+                        <div class="p-4 border border-stone-200 rounded-lg">
+                            <label for="prompt-input" class="font-semibold block mb-2">Your Prompt:</label>
+                            <textarea id="prompt-input" rows="4" class="w-full p-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">Make an interactive learning thing about history.</textarea>
+                            <button id="prompt-submit-btn" class="mt-4 px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-semibold">Submit to AI Simulator</button>
+                            <div id="prompt-feedback-container" class="mt-4">
+                                <div class="flex items-center gap-4">
+                                    <p class="font-semibold">AI Quality Score:</p>
+                                    <div id="star-rating" class="text-2xl star-rating">
+                                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                                    </div>
+                                </div>
+                                <div id="prompt-feedback" class="mt-2 p-4 bg-stone-100 rounded-lg text-sm">
+                                    <p>Your prompt is ready for tuning. Click "Submit" to get your first round of feedback.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -332,6 +358,62 @@
       toggleBtn.addEventListener('click', () => {
           const isShown = detailsContent.classList.toggle('shown');
           toggleBtn.textContent = isShown ? 'Hide the Answer' : 'Reveal the Answer';
+      });
+
+      // Prompt-Tuning Simulator
+      const promptInput = document.getElementById('prompt-input');
+      const promptSubmitBtn = document.getElementById('prompt-submit-btn');
+      const starRating = document.getElementById('star-rating');
+      const promptFeedback = document.getElementById('prompt-feedback');
+
+      promptSubmitBtn.addEventListener('click', () => {
+          const text = promptInput.value.toLowerCase();
+          let score = 1;
+          let feedback = '<ul>';
+
+          // Check for Role
+          if (text.includes('act as') || text.includes('you are')) {
+              score++;
+              feedback += '<li class="text-green-700">✓ Great! You\'ve defined a <b>Role</b> for the AI.</li>';
+          } else {
+              feedback += '<li class="text-orange-700">→ Try adding a <b>Role</b>. Start with "Act as an instructional designer..."</li>';
+          }
+
+          // Check for Task
+          if (text.includes('create') || text.includes('build') || text.includes('generate')) {
+              score++;
+              feedback += '<li class="text-green-700">✓ Excellent! You\'ve given the AI a specific <b>Task</b>.</li>';
+          } else {
+              feedback += '<li class="text-orange-700">→ Your prompt needs a clear <b>Task</b>. What should the AI do? (e.g., "Create a timeline...")</li>';
+          }
+
+          // Check for Constraints
+          if (text.includes('tailwind') || text.includes('javascript') || text.includes('interactive') || text.includes('feedback')) {
+              score++;
+              feedback += '<li class="text-green-700">✓ Perfect! You\'ve included specific <b>Constraints</b> and details.</li>';
+          } else {
+              feedback += '<li class="text-orange-700">→ Add some <b>Constraints</b>. What technology should it use? How should it behave?</li>';
+          }
+
+          // Check for Format
+          if (text.includes('html file') || text.includes('single page')) {
+              score++;
+              feedback += '<li class="text-green-700">✓ Good! You specified the output <b>Format</b>.</li>';
+          } else {
+              feedback += '<li class="text-orange-700">→ Don\'t forget the <b>Format</b>. How should the AI deliver the code? (e.g., "...in a single HTML file.")</li>';
+          }
+
+          feedback += '</ul>';
+          if (score === 5) {
+              feedback = '<p class="font-bold text-green-700">Excellent! This is a high-quality, structured prompt that would generate a great prototype.</p>';
+          }
+
+          // Update UI
+          promptFeedback.innerHTML = feedback;
+          const stars = starRating.querySelectorAll('span');
+          stars.forEach((star, index) => {
+              star.classList.toggle('filled', index < score);
+          });
       });
 
       // --- Quiz ---
