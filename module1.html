@@ -9,7 +9,6 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
         .code-block { background-color: #1e293b; color: #e2e8f0; }
-        .prompt-component { border-left: 4px solid; transition: background-color 0.3s; }
         .code-highlight { background-color: #475569; padding: 1px 4px; border-radius: 4px; font-family: monospace; }
         .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 350px; }
         .quiz-option label.correct { background-color: #dcfce7 !important; border-color: #22c55e !important; color: #166534 !important; }
@@ -20,6 +19,44 @@
         #details-content.shown { max-height: 200px; opacity: 1; }
         .sam-step { border: 2px solid #e5e7eb; padding: 1rem; border-radius: 0.75rem; text-align: center; }
         .sam-arrow { display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #9ca3af; margin: 0 1rem; }
+        
+        /* Flashcard Styles */
+        .flashcard-container {
+            perspective: 1000px;
+            height: 180px;
+        }
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+        }
+        .flashcard.is-flipped {
+            transform: rotateY(180deg);
+        }
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        }
+        .flashcard-front {
+            background-color: white;
+        }
+        .flashcard-back {
+            background-color: #f3f4f6; /* bg-gray-100 */
+            transform: rotateY(180deg);
+        }
     </style>
 </head>
 <body class="bg-stone-50 text-stone-800">
@@ -85,12 +122,52 @@
                 <!-- Part 1: Prompt Structure -->
                 <section>
                     <h2 class="text-2xl font-bold mb-4">Part 1: The Core Components of a Great Prompt</h2>
-                    <p class="text-stone-600 mb-6">To leverage AI for rapid prototyping, your prompts must be clear and structured. Think of them as a blueprint for the learning experience you want to build.</p>
+                    <p class="text-stone-600 mb-6">To leverage AI for rapid prototyping, your prompts must be clear and structured. Click each card to reveal its meaning.</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="prompt-component bg-white p-6 rounded-lg border-l-blue-500"><h3 class="font-bold text-lg">1. Role</h3><p class="text-stone-600">"Act as an expert **instructional designer** and frontend developer." This sets the context for creating educational content.</p></div>
-                        <div class="prompt-component bg-white p-6 rounded-lg border-l-green-500"><h3 class="font-bold text-lg">2. Task</h3><p class="text-stone-600">"Create an **interactive flashcard component** for learning vocabulary." This defines a specific instructional task.</p></div>
-                        <div class="prompt-component bg-white p-6 rounded-lg border-l-yellow-500"><h3 class="font-bold text-lg">3. Constraints & Details</h3><p class="text-stone-600">"The flashcard should flip over when clicked. Use Tailwind CSS for styling." These are the rules for the learning interaction.</p></div>
-                        <div class="prompt-component bg-white p-6 rounded-lg border-l-red-500"><h3 class="font-bold text-lg">4. Format</h3><p class="text-stone-600">"Provide the complete code in a single HTML file." This ensures you get a ready-to-test prototype.</p></div>
+                        <!-- Flashcard 1: Role -->
+                        <div class="flashcard-container">
+                            <div class="flashcard">
+                                <div class="flashcard-front border-l-4 border-blue-500">
+                                    <h3 class="font-bold text-2xl">Role</h3>
+                                </div>
+                                <div class="flashcard-back">
+                                    <p class="text-center text-stone-600">"Act as an expert **instructional designer**." This sets the context for creating educational content.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Flashcard 2: Task -->
+                        <div class="flashcard-container">
+                            <div class="flashcard">
+                                <div class="flashcard-front border-l-4 border-green-500">
+                                    <h3 class="font-bold text-2xl">Task</h3>
+                                </div>
+                                <div class="flashcard-back">
+                                    <p class="text-center text-stone-600">"Create an **interactive flashcard component**." This defines a specific instructional task.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Flashcard 3: Constraints -->
+                        <div class="flashcard-container">
+                            <div class="flashcard">
+                                <div class="flashcard-front border-l-4 border-yellow-500">
+                                    <h3 class="font-bold text-2xl">Constraints</h3>
+                                </div>
+                                <div class="flashcard-back">
+                                    <p class="text-center text-stone-600">"The flashcard should flip over when clicked. Use Tailwind CSS." These are the rules for the interaction.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Flashcard 4: Format -->
+                        <div class="flashcard-container">
+                            <div class="flashcard">
+                                <div class="flashcard-front border-l-4 border-red-500">
+                                    <h3 class="font-bold text-2xl">Format</h3>
+                                </div>
+                                <div class="flashcard-back">
+                                    <p class="text-center text-stone-600">"Provide the complete code in a single HTML file." This ensures you get a ready-to-test prototype.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
@@ -197,6 +274,14 @@ STYLING: The container should have a light blue background, a blue left border, 
       logoutBtn.addEventListener('click', () => { signOut(auth).then(() => window.location.href = '/login.html'); });
 
       // --- Interactive Components ---
+      // Flashcards
+      const flashcards = document.querySelectorAll('.flashcard');
+      flashcards.forEach(card => {
+          card.addEventListener('click', () => {
+              card.classList.toggle('is-flipped');
+          });
+      });
+
       // Chart.js
       const ctx = document.getElementById('engagementChart').getContext('2d');
       new Chart(ctx, { type: 'bar', data: { labels: ['0-59%', '60-69%', '70-79%', '80-89%', '90-100%'], datasets: [{ label: 'Number of Students', data: [3, 5, 12, 18, 9], backgroundColor: 'rgba(59, 130, 246, 0.5)', borderColor: 'rgba(59, 130, 246, 1)', borderWidth: 1 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: 'Number of Students' } }, x: { title: { display: true, text: 'Score Range' } } }, plugins: { title: { display: true, text: 'Quiz Score Distribution' } } } });
