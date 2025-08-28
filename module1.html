@@ -11,239 +11,77 @@
         .prompt-component { border-left: 4px solid; transition: background-color 0.3s; }
         .quiz-option label.correct { background-color: #dcfce7; border-color: #22c55e; color: #166534; }
         .quiz-option label.incorrect { background-color: #fee2e2; border-color: #ef4444; color: #991b1b; }
-        .quiz-option label {
-            display: block;
-            padding: 0.75rem 1rem;
-            border: 1px solid #e5e7eb;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            transition: background-color 0.2s, border-color 0.2s;
-        }
-        .quiz-option input[type="radio"]:checked + label {
-            border-color: #3b82f6;
-            background-color: #eff6ff;
-        }
+        .quiz-option label { display: block; padding: 0.75rem 1rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; cursor: pointer; transition: background-color 0.2s, border-color 0.2s; }
+        .quiz-option input[type="radio"]:checked + label { border-color: #3b82f6; background-color: #eff6ff; }
     </style>
 </head>
 <body class="bg-stone-50 text-stone-800">
 
-    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
-        
-        <header class="mb-10">
-            <a href="#" class="text-blue-600 hover:underline mb-4 block">&larr; Back to Introduction</a>
-            <h1 class="text-3xl md:text-4xl font-bold text-stone-900">Week 1: Understanding Prompt Structure</h1>
-            <p class="text-stone-500 mt-2 text-lg">Giving the AI good directions is the key to getting good results.</p>
-        </header>
-
-        <main class="space-y-12">
-            
-            <section>
-                <h2 class="text-2xl font-bold mb-4">The Core Components of a Great Prompt</h2>
-                <p class="text-stone-600 mb-6">Think of a prompt as a recipe you're giving to a chef. The more precise and detailed the recipe, the better the final dish. A great prompt for code generation typically includes four key ingredients:</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="prompt-component bg-white p-6 rounded-lg border-l-blue-500">
-                        <h3 class="font-bold text-lg">1. Role</h3>
-                        <p class="text-stone-600">Tell the AI who it should be. "Act as an expert frontend developer" sets the context and influences the style and quality of the response.</p>
-                    </div>
-                    <div class="prompt-component bg-white p-6 rounded-lg border-l-green-500">
-                        <h3 class="font-bold text-lg">2. Task</h3>
-                        <p class="text-stone-600">Clearly state what you want it to do. "Create a single-page interactive dashboard" is a specific, actionable command.</p>
-                    </div>
-                    <div class="prompt-component bg-white p-6 rounded-lg border-l-yellow-500">
-                        <h3 class="font-bold text-lg">3. Constraints & Details</h3>
-                        <p class="text-stone-600">Provide the specific rules and requirements. This includes technologies ("Use Tailwind CSS"), styling ("Use a warm, neutral color palette"), and content details.</p>
-                    </div>
-                    <div class="prompt-component bg-white p-6 rounded-lg border-l-red-500">
-                        <h3 class="font-bold text-lg">4. Format</h3>
-                        <p class="text-stone-600">Specify the desired output format. "Provide the code in a single HTML file" ensures you get exactly what you need.</p>
-                    </div>
-                </div>
-            </section>
-
-            <section>
-                <h2 class="text-2xl font-bold mb-4">Vague vs. Structured: An Example</h2>
-                <p class="text-stone-600 mb-6">Let's see the difference in action. We'll ask the AI to create a simple "Contact Us" button. Click the tabs below to see how a vague prompt compares to a structured one.</p>
-                
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
-                    <!-- Tabs -->
-                    <div class="border-b border-stone-200">
-                        <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-                            <button id="tab-vague" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-blue-500 text-blue-600">Vague Prompt</button>
-                            <button id="tab-structured" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-stone-500 hover:text-stone-700 hover:border-stone-300">Structured Prompt</button>
-                        </nav>
-                    </div>
-
-                    <!-- Vague Prompt Content -->
-                    <div id="content-vague" class="py-6">
-                        <h3 class="font-semibold mb-2">The Prompt:</h3>
-                        <div class="code-block p-4 rounded-lg"><pre><code class="text-sm">Make a button.</code></pre></div>
-                        <h3 class="font-semibold mt-6 mb-2">The Result:</h3>
-                        <div class="p-4 border border-stone-200 rounded-lg">
-                            <button>Button</button>
-                        </div>
-                        <p class="mt-4 text-sm text-stone-600">This is functional, but it's unstyled and doesn't fit any design aesthetic. It's the bare minimum.</p>
-                    </div>
-
-                    <!-- Structured Prompt Content -->
-                    <div id="content-structured" class="hidden py-6">
-                        <h3 class="font-semibold mb-2">The Prompt:</h3>
-                        <div class="code-block p-4 rounded-lg"><pre><code class="text-sm">ROLE: Act as a UI developer.
-TASK: Create an HTML button element for a "Contact Us" call to action.
-CONSTRAINTS: Use Tailwind CSS for styling. The button should have a blue background, white text, rounded corners, padding, and a subtle shadow. It should have a slightly darker blue background on hover.</code></pre></div>
-                        <h3 class="font-semibold mt-6 mb-2">The Result:</h3>
-                        <div class="p-4 border border-stone-200 rounded-lg">
-                            <button class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 transition">Contact Us</button>
-                        </div>
-                        <p class="mt-4 text-sm text-stone-600">This result is exactly what we asked for: styled, interactive, and ready to be used in a real project.</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Quiz Section -->
-            <section id="quiz">
-                <h2 class="text-2xl font-bold mb-4">Check Your Understanding</h2>
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 space-y-8">
-                    <!-- Question 1 -->
-                    <div class="quiz-question" data-correct="role">
-                        <p class="font-semibold mb-4">1. Which prompt component tells the AI "who to be," such as "Act as an expert frontend developer"?</p>
-                        <div class="space-y-3">
-                            <div class="quiz-option"><input type="radio" id="q1a1" name="q1" value="task" class="hidden"><label for="q1a1">Task</label></div>
-                            <div class="quiz-option"><input type="radio" id="q1a2" name="q1" value="role" class="hidden"><label for="q1a2">Role</label></div>
-                            <div class="quiz-option"><input type="radio" id="q1a3" name="q1" value="format" class="hidden"><label for="q1a3">Format</label></div>
-                        </div>
-                    </div>
-                    <!-- Question 2 -->
-                    <div class="quiz-question" data-correct="constraints">
-                        <p class="font-semibold mb-4">2. The instruction "Use Tailwind CSS" is an example of which prompt component?</p>
-                        <div class="space-y-3">
-                            <div class="quiz-option"><input type="radio" id="q2a1" name="q2" value="role" class="hidden"><label for="q2a1">Role</label></div>
-                            <div class="quiz-option"><input type="radio" id="q2a2" name="q2" value="task" class="hidden"><label for="q2a2">Task</label></div>
-                            <div class="quiz-option"><input type="radio" id="q2a3" name="q2" value="constraints" class="hidden"><label for="q2a3">Constraints & Details</label></div>
-                        </div>
-                    </div>
-                    <!-- Question 3 -->
-                    <div class="quiz-question" data-correct="vague">
-                        <p class="font-semibold mb-4">3. A prompt like "make a website" is considered a poor prompt primarily because it is too...?</p>
-                        <div class="space-y-3">
-                            <div class="quiz-option"><input type="radio" id="q3a1" name="q3" value="vague" class="hidden"><label for="q3a1">Vague and lacks detail</label></div>
-                            <div class="quiz-option"><input type="radio" id="q3a2" name="q3" value="long" class="hidden"><label for="q3a2">Long and complicated</label></div>
-                            <div class="quiz-option"><input type="radio" id="q3a3" name="q3" value="specific" class="hidden"><label for="q3a3">Too specific</label></div>
-                        </div>
-                    </div>
-
-                    <div class="pt-4">
-                        <button id="check-answers-btn" class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">Check Answers</button>
-                    </div>
-
-                    <div id="quiz-results" class="hidden text-center pt-4">
-                        <p class="text-lg font-bold">You scored <span id="quiz-score"></span> out of 3.</p>
-                    </div>
-                </div>
-            </section>
-
-            <section class="text-center py-10">
-                 <a href="module1p2.html" class="px-8 py-4 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition text-lg">
-                    Next →
-                </a>
-            </section>
-        </main>
+    <div id="loader" class="fixed inset-0 bg-white flex items-center justify-center z-50">
+        <p class="text-lg">Loading...</p>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Tab functionality
-            const vagueTab = document.getElementById('tab-vague');
-            const structuredTab = document.getElementById('tab-structured');
-            const vagueContent = document.getElementById('content-vague');
-            const structuredContent = document.getElementById('content-structured');
+    <div id="app-content" class="hidden">
+        <header class="bg-white shadow-sm border-b border-stone-200 sticky top-0 z-40">
+            <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
+                <a href="dashboard.html" class="text-xl font-bold text-stone-900">AI-Powered Web Dev</a>
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <button id="profile-btn" class="flex items-center gap-2">
+                            <span id="user-email" class="text-sm text-stone-600 hidden sm:block"></span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
+                        </button>
+                        <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-stone-200 overflow-hidden">
+                            <a href="grades.html" class="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100">My Grades</a>
+                            <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100">Settings</a>
+                            <div class="border-t border-stone-200"></div>
+                            <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100">Log Out</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
 
-            vagueTab.addEventListener('click', () => {
-                vagueContent.classList.remove('hidden');
-                structuredContent.classList.add('hidden');
-                vagueTab.classList.add('border-blue-500', 'text-blue-600');
-                vagueTab.classList.remove('border-transparent', 'text-stone-500');
-                structuredTab.classList.add('border-transparent', 'text-stone-500');
-                structuredTab.classList.remove('border-blue-500', 'text-blue-600');
-            });
+        <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
+            <header class="mb-10">
+                <a href="dashboard.html" class="text-blue-600 hover:underline mb-4 block">&larr; Back to Dashboard</a>
+                <h1 class="text-3xl md:text-4xl font-bold text-stone-900">Week 1: Understanding Prompt Structure</h1>
+                <p class="text-stone-500 mt-2 text-lg">Giving the AI good directions is the key to getting good results.</p>
+            </header>
+            <main class="space-y-12">
+                <!-- Page Content Here -->
+            </main>
+        </div>
+    </div>
 
-            structuredTab.addEventListener('click', () => {
-                structuredContent.classList.remove('hidden');
-                vagueContent.classList.add('hidden');
-                structuredTab.classList.add('border-blue-500', 'text-blue-600');
-                structuredTab.classList.remove('border-transparent', 'text-stone-500');
-                vagueTab.classList.add('border-transparent', 'text-stone-500');
-                vagueTab.classList.remove('border-blue-500', 'text-blue-600');
-            });
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+      
+      const firebaseConfig = { apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM", authDomain: "elearning-e83cb.firebaseapp.com", projectId: "elearning-e83cb", storageBucket: "elearning-e83cb.appspot.com", messagingSenderId: "25473938624", appId: "1:25473938624:web:5b56738933543f32a7e925", measurementId: "G-R713G5DD1S" };
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
 
-            // Quiz functionality
-            const checkAnswersBtn = document.getElementById('check-answers-btn');
-            const quizResults = document.getElementById('quiz-results');
-            const quizScore = document.getElementById('quiz-score');
-            const questions = document.querySelectorAll('.quiz-question');
+      const loader = document.getElementById('loader');
+      const appContent = document.getElementById('app-content');
+      const userEmailEl = document.getElementById('user-email');
+      const logoutBtn = document.getElementById('logout-btn');
+      const profileBtn = document.getElementById('profile-btn');
+      const profileDropdown = document.getElementById('profile-dropdown');
 
-            checkAnswersBtn.addEventListener('click', () => {
-                let score = 0;
-                
-                questions.forEach(question => {
-                    const correctAnswer = question.dataset.correct;
-                    const selectedOption = question.querySelector('input[type="radio"]:checked');
-                    
-                    if (selectedOption) {
-                        const parentLabel = selectedOption.parentElement.querySelector('label');
-                        if (selectedOption.value === correctAnswer) {
-                            score++;
-                            parentLabel.classList.add('correct');
-                        } else {
-                            parentLabel.classList.add('incorrect');
-                        }
-                    }
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          userEmailEl.textContent = user.email;
+          loader.style.display = 'none';
+          appContent.classList.remove('hidden');
+        } else {
+          window.location.href = '/login.html';
+        }
+      });
 
-                    // Highlight the correct answer regardless
-                    const correctInput = question.querySelector(`input[value="${correctAnswer}"]`);
-                    if (correctInput) {
-                        correctInput.parentElement.querySelector('label').classList.add('correct');
-                    }
-                });
-
-                quizScore.textContent = score;
-                quizResults.classList.remove('hidden');
-                checkAnswersBtn.disabled = true;
-                checkAnswersBtn.textContent = 'Answers Checked';
-                checkAnswersBtn.classList.add('bg-gray-400', 'hover:bg-gray-400');
-
-                // Disable all radio buttons
-                questions.forEach(question => {
-                    question.querySelectorAll('input[type="radio"]').forEach(radio => {
-                        radio.disabled = true;
-                    });
-                });
-            });
-        });
+      profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
+      window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
+      logoutBtn.addEventListener('click', () => { signOut(auth).then(() => window.location.href = '/login.html'); });
     </script>
-<script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
-    authDomain: "elearning-e83cb.firebaseapp.com",
-    projectId: "elearning-e83cb",
-    storageBucket: "elearning-e83cb.firebasestorage.app",
-    messagingSenderId: "25473938624",
-    appId: "1:25473938624:web:5b56738933543f32a7e925",
-    measurementId: "G-R713G5DD1S"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
 </body>
 </html>
-
-
