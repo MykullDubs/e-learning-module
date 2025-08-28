@@ -26,12 +26,53 @@
     </div>
 
     <div id="app-content" class="hidden">
-        <header class="bg-white shadow-sm border-b border-stone-200">
+        <header class="bg-white shadow-sm border-b border-stone-200 sticky top-0 z-40">
             <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
                 <h1 class="text-xl font-bold text-stone-900">AI-Powered Web Dev</h1>
                 <div class="flex items-center gap-4">
-                    <p id="user-email" class="text-sm text-stone-600 hidden sm:block"></p>
-                    <button id="logout-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-semibold text-sm">Log Out</button>
+                    <!-- Notifications -->
+                    <div class="relative">
+                        <button id="notifications-btn" class="relative text-stone-500 hover:text-stone-800">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 00-5-5.917V5a1 1 0 00-2 0v.083A6 6 0 006 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                            </svg>
+                            <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                            </span>
+                        </button>
+                        <!-- Notifications Dropdown -->
+                        <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-stone-200 overflow-hidden">
+                            <div class="p-4 font-semibold border-b">Notifications</div>
+                            <div class="divide-y">
+                                <a href="#" class="block p-4 hover:bg-stone-50">
+                                    <p class="font-semibold">New Grade Posted</p>
+                                    <p class="text-sm text-stone-500">Your summative assessment has been graded.</p>
+                                </a>
+                                <a href="#" class="block p-4 hover:bg-stone-50">
+                                    <p class="font-semibold">Module 2 Unlocked</p>
+                                    <p class="text-sm text-stone-500">You can now begin the next module.</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Profile Dropdown -->
+                    <div class="relative">
+                        <button id="profile-btn" class="flex items-center gap-2">
+                            <span id="user-email" class="text-sm text-stone-600 hidden sm:block"></span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                            </svg>
+                        </button>
+                        <!-- Profile Dropdown Menu -->
+                        <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-stone-200 overflow-hidden">
+                            <a href="#" class="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100">Profile</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100">Settings</a>
+                            <div class="border-t border-stone-200"></div>
+                            <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100">Log Out</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </header>
@@ -141,34 +182,49 @@
       const userNameEl = document.getElementById('user-name');
       const userEmailEl = document.getElementById('user-email');
       const logoutBtn = document.getElementById('logout-btn');
+      const notificationsBtn = document.getElementById('notifications-btn');
+      const notificationsDropdown = document.getElementById('notifications-dropdown');
+      const profileBtn = document.getElementById('profile-btn');
+      const profileDropdown = document.getElementById('profile-dropdown');
 
       // --- Authentication Guard ---
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          // User is signed in.
           console.log("User is logged in:", user);
-          
-          // Use display name if available, otherwise use email
           const name = user.displayName || user.email.split('@')[0];
           userNameEl.textContent = name;
           userEmailEl.textContent = user.email;
-
-          // Show the app content and hide the loader
           loader.style.display = 'none';
           appContent.classList.remove('hidden');
         } else {
-          // No user is signed in.
           console.log("No user logged in, redirecting...");
-          // Redirect to the login page
-          window.location.href = '/login.html'; // Make sure you have a login.html file
+          window.location.href = '/login.html';
         }
+      });
+
+      // --- Dropdown Logic ---
+      notificationsBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        profileDropdown.classList.add('hidden');
+        notificationsDropdown.classList.toggle('hidden');
+      });
+
+      profileBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        notificationsDropdown.classList.add('hidden');
+        profileDropdown.classList.toggle('hidden');
+      });
+
+      // Close dropdowns if clicking outside
+      window.addEventListener('click', () => {
+        notificationsDropdown.classList.add('hidden');
+        profileDropdown.classList.add('hidden');
       });
 
       // --- Logout Functionality ---
       logoutBtn.addEventListener('click', () => {
         signOut(auth).then(() => {
           console.log('User signed out');
-          // Redirect to login page after sign out
           window.location.href = '/login.html';
         }).catch((error) => {
           console.error('Sign out error', error);
@@ -190,7 +246,6 @@
         progressText.textContent = `${percent}%`;
       }
 
-      // Set initial progress (this would come from a database)
       setProgress(33);
 
     </script>
