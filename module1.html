@@ -3,16 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Module 1: Understanding Prompt Structure</title>
+    <title>Module 1: AI Prompting Fundamentals</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
         .code-block { background-color: #1e293b; color: #e2e8f0; }
         .prompt-component { border-left: 4px solid; transition: background-color 0.3s; }
-        .quiz-option label.correct { background-color: #dcfce7; border-color: #22c55e; color: #166534; }
-        .quiz-option label.incorrect { background-color: #fee2e2; border-color: #ef4444; color: #991b1b; }
+        .code-highlight { background-color: #475569; padding: 1px 4px; border-radius: 4px; font-family: monospace; }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 350px; }
+        .quiz-option label.correct { background-color: #dcfce7 !important; border-color: #22c55e !important; color: #166534 !important; }
+        .quiz-option label.incorrect { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
         .quiz-option label { display: block; padding: 0.75rem 1rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; cursor: pointer; transition: background-color 0.2s, border-color 0.2s; }
         .quiz-option input[type="radio"]:checked + label { border-color: #3b82f6; background-color: #eff6ff; }
+        #details-content { transition: opacity 0.3s ease-out, max-height 0.3s ease-out; max-height: 0; opacity: 0; overflow: hidden; }
+        #details-content.shown { max-height: 200px; opacity: 1; }
     </style>
 </head>
 <body class="bg-stone-50 text-stone-800">
@@ -45,11 +50,78 @@
         <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
             <header class="mb-10">
                 <a href="dashboard.html" class="text-blue-600 hover:underline mb-4 block">&larr; Back to Dashboard</a>
-                <h1 class="text-3xl md:text-4xl font-bold text-stone-900">Week 1: Understanding Prompt Structure</h1>
+                <h1 class="text-3xl md:text-4xl font-bold text-stone-900">Module 1: AI Prompting Fundamentals</h1>
                 <p class="text-stone-500 mt-2 text-lg">Giving the AI good directions is the key to getting good results.</p>
             </header>
-            <main class="space-y-12">
-                <!-- Page Content Here -->
+
+            <main class="space-y-16">
+                <!-- Part 1: Prompt Structure -->
+                <section>
+                    <h2 class="text-2xl font-bold mb-4">Part 1: The Core Components of a Great Prompt</h2>
+                    <p class="text-stone-600 mb-6">A great prompt for code generation typically includes four key ingredients:</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="prompt-component bg-white p-6 rounded-lg border-l-blue-500"><h3 class="font-bold text-lg">1. Role</h3><p class="text-stone-600">Tell the AI who it should be. "Act as an expert frontend developer" sets the context.</p></div>
+                        <div class="prompt-component bg-white p-6 rounded-lg border-l-green-500"><h3 class="font-bold text-lg">2. Task</h3><p class="text-stone-600">Clearly state what you want. "Create a single-page interactive dashboard" is a specific command.</p></div>
+                        <div class="prompt-component bg-white p-6 rounded-lg border-l-yellow-500"><h3 class="font-bold text-lg">3. Constraints & Details</h3><p class="text-stone-600">Provide the rules, like technologies ("Use Tailwind CSS") and styling.</p></div>
+                        <div class="prompt-component bg-white p-6 rounded-lg border-l-red-500"><h3 class="font-bold text-lg">4. Format</h3><p class="text-stone-600">Specify the output. "Provide the code in a single HTML file" ensures you get what you need.</p></div>
+                    </div>
+                </section>
+
+                <!-- Part 2: Layout & Style -->
+                <section>
+                    <h2 class="text-2xl font-bold mb-4">Part 2: Specifying Layout & Style</h2>
+                    <p class="text-stone-600 mb-6">Use **Tailwind CSS**, a "utility-first" framework, to describe styling in plain language. The two most important tools for layout are Flexbox and Grid.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-lg"><h3 class="font-bold text-lg">Flexbox</h3><p class="text-stone-600 mt-2">Use for arranging items in a **single row or column**. Ask for things like <code class="code-highlight">flex</code> or <code class="code-highlight">justify-between</code>.</p></div>
+                        <div class="bg-white p-6 rounded-lg"><h3 class="font-bold text-lg">Grid</h3><p class="text-stone-600 mt-2">Use for arranging items in a **two-dimensional grid**. Ask for <code class="code-highlight">grid</code> and specify columns, like <code class="code-highlight">grid-cols-3</code>.</p></div>
+                    </div>
+                </section>
+
+                <!-- Part 3: Interactive Charts -->
+                <section>
+                    <h2 class="text-2xl font-bold mb-4">Part 3: Generating Interactive Charts</h2>
+                    <p class="text-stone-600 mb-6">Use a library like **Chart.js** to create data visualizations. Your prompt must specify the library, chart type, data, and the HTML container.</p>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                        <h3 class="font-semibold mb-2">Example Result:</h3>
+                        <div class="p-4 border border-stone-200 rounded-lg">
+                            <div class="chart-container"><canvas id="engagementChart"></canvas></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Part 4: JavaScript Logic -->
+                <section>
+                    <h2 class="text-2xl font-bold mb-4">Part 4: Implementing JavaScript Logic</h2>
+                    <p class="text-stone-600 mb-6">Make your pages interactive by prompting the AI to add **event listeners**. You need to specify the **target element**, the **event** (like 'click'), and the **action** to perform.</p>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                        <h3 class="font-semibold mb-2">Example Result:</h3>
+                        <div class="p-4 border border-stone-200 rounded-lg">
+                            <button id="toggle-btn" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition">Show Details</button>
+                            <div id="details-content" class="mt-4 p-4 bg-stone-100 rounded-lg"><p>This is the hidden content!</p></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Quiz Section -->
+                <section id="quiz">
+                    <h2 class="text-2xl font-bold mb-4">Check Your Understanding</h2>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 space-y-8">
+                        <!-- Questions will be dynamically inserted here -->
+                        <div id="quiz-questions-container" class="space-y-8"></div>
+                        <div class="pt-4">
+                            <button id="check-answers-btn" class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">Check Answers</button>
+                        </div>
+                        <div id="quiz-results" class="hidden text-center pt-4">
+                            <p class="text-lg font-bold">You scored <span id="quiz-score"></span>.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="text-center py-10">
+                     <a href="fa1.html" class="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition text-lg">
+                        Take Summative Assessment
+                    </a>
+                </section>
             </main>
         </div>
     </div>
@@ -62,6 +134,7 @@
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
 
+      // --- Auth Guard ---
       const loader = document.getElementById('loader');
       const appContent = document.getElementById('app-content');
       const userEmailEl = document.getElementById('user-email');
@@ -82,6 +155,73 @@
       profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
       window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
       logoutBtn.addEventListener('click', () => { signOut(auth).then(() => window.location.href = '/login.html'); });
+
+      // --- Interactive Components ---
+      // Chart.js
+      const ctx = document.getElementById('engagementChart').getContext('2d');
+      new Chart(ctx, { type: 'bar', data: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ label: 'Active Users', data: [120, 190, 150, 210, 180, 220, 250], backgroundColor: 'rgba(59, 130, 246, 0.5)', borderColor: 'rgba(59, 130, 246, 1)', borderWidth: 1 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } } });
+
+      // Toggle Component
+      const toggleBtn = document.getElementById('toggle-btn');
+      const detailsContent = document.getElementById('details-content');
+      toggleBtn.addEventListener('click', () => {
+          const isShown = detailsContent.classList.toggle('shown');
+          toggleBtn.textContent = isShown ? 'Hide Details' : 'Show Details';
+      });
+
+      // --- Quiz ---
+      const quizData = [
+          { question: "1. Which prompt component tells the AI 'who to be'?", options: ["Task", "Role", "Format"], correct: "Role" },
+          { question: "2. The instruction 'Use Tailwind CSS' is an example of which component?", options: ["Role", "Task", "Constraints & Details"], correct: "Constraints & Details" },
+          { question: "3. To arrange items in a single row, which layout tool is best?", options: ["Grid", "Table", "Flexbox"], correct: "Flexbox" },
+          { question: "4. To ensure a chart is responsive, you should place the `<canvas>` inside a...?", options: ["`div` container", "`header` element", "`span` element"], correct: "`div` container" },
+          { question: "5. What is the key JS feature to make a button clickable?", options: ["A CSS Class", "An HTML Tag", "An Event Listener"], correct: "An Event Listener" }
+      ];
+
+      const quizContainer = document.getElementById('quiz-questions-container');
+      quizData.forEach((q, index) => {
+          const questionEl = document.createElement('div');
+          questionEl.className = 'quiz-question';
+          questionEl.dataset.correct = q.correct;
+          let optionsHtml = q.options.map((opt, i) => `
+              <div class="quiz-option">
+                  <input type="radio" id="q${index}o${i}" name="q${index}" value="${opt}" class="hidden">
+                  <label for="q${index}o${i}">${opt}</label>
+              </div>`).join('');
+          questionEl.innerHTML = `<p class="font-semibold mb-4">${q.question}</p><div class="space-y-3">${optionsHtml}</div>`;
+          quizContainer.appendChild(questionEl);
+      });
+
+      const checkAnswersBtn = document.getElementById('check-answers-btn');
+      const quizResults = document.getElementById('quiz-results');
+      const quizScore = document.getElementById('quiz-score');
+      
+      checkAnswersBtn.addEventListener('click', () => {
+          let score = 0;
+          const questions = document.querySelectorAll('.quiz-question');
+          questions.forEach(question => {
+              const correctAnswer = question.dataset.correct;
+              const selectedOption = question.querySelector('input:checked');
+              if (selectedOption) {
+                  const parentLabel = selectedOption.parentElement.querySelector('label');
+                  if (selectedOption.value === correctAnswer) {
+                      score++;
+                      parentLabel.classList.add('correct');
+                  } else {
+                      parentLabel.classList.add('incorrect');
+                  }
+              }
+              const correctInput = question.querySelector(`input[value="${correctAnswer}"]`);
+              if (correctInput) correctInput.parentElement.querySelector('label').classList.add('correct');
+          });
+
+          quizScore.textContent = `${score} out of ${questions.length}`;
+          quizResults.classList.remove('hidden');
+          checkAnswersBtn.disabled = true;
+          checkAnswersBtn.textContent = 'Answers Checked';
+          checkAnswersBtn.classList.add('bg-gray-400', 'hover:bg-gray-400');
+          questions.forEach(q => q.querySelectorAll('input').forEach(radio => radio.disabled = true));
+      });
     </script>
 </body>
 </html>
