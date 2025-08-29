@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 2: Summative Assessment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .quiz-option label.correct { background-color: #dcfce7 !important; border-color: #22c55e !important; color: #166534 !important; }
+        .quiz-option label.incorrect { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
+        .quiz-option label {
+            display: block;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .quiz-option input[type="radio"]:checked + label {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        .results-modal-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 50;
+            justify-content: center;
+            align-items: center;
+        }
+        .code-block { background-color: #1e293b; color: #e2e8f0; font-family: monospace; }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <header class="bg-white shadow-sm border-b border-stone-200 sticky top-0 z-40">
+        <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
+             <a href="dashboard.html" class="text-xl font-bold text-stone-900">Learning Experience Forge</a>
+             <nav class="flex items-center gap-4">
+                <a href="dashboard.html" class="text-sm font-medium text-stone-600 hover:text-indigo-600">Dashboard</a>
+             </nav>
+        </div>
+    </header>
+
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
+        
+        <header class="mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-stone-900">Module 2 Summative Assessment</h1>
+            <p class="text-stone-500 mt-2 text-lg">Test your knowledge of the serverless backend.</p>
+        </header>
+
+        <main id="assessment-container" class="space-y-12">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 space-y-8">
+                
+                <!-- Questions 1-15 -->
+                <div class="quiz-question" data-correct="persistence">
+                    <p class="font-semibold mb-4">1. What is the primary role of a database like Firestore in an e-learning application?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q1a1" name="q1" value="styling" class="hidden"><label for="q1a1">Styling the visual appearance of the course.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q1a2" name="q1" value="persistence" class="hidden"><label for="q1a2">Providing persistence by storing user data like grades and progress.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q1a3" name="q1" value="animation" class="hidden"><label for="q1a3">Handling animations and user interface transitions.</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="backend">
+                    <p class="font-semibold mb-4">2. Where should a secret API key for a service like Resend be stored and used?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q2a1" name="q2" value="frontend" class="hidden"><label for="q2a1">In the frontend JavaScript file for easy access.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q2a2" name="q2" value="backend" class="hidden"><label for="q2a2">In a secure backend environment, like a serverless function.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q2a3" name="q2" value="css" class="hidden"><label for="q2a3">In the CSS file, where it is unlikely to be found.</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="hashing">
+                    <p class="font-semibold mb-4">3. When a user creates an account, what security process does Firebase use to protect their password?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q3a1" name="q3" value="encryption" class="hidden"><label for="q3a1">Encryption</label></div>
+                        <div class="quiz-option"><input type="radio" id="q3a2" name="q3" value="hashing" class="hidden"><label for="q3a2">Hashing</label></div>
+                        <div class="quiz-option"><input type="radio" id="q3a3" name="q3" value="plain-text" class="hidden"><label for="q3a3">Storing it as plain text</label></div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question" data-correct="token">
+                    <p class="font-semibold mb-4">4. After a user successfully logs in, what does Firebase give their browser to prove their identity for future requests?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q4a1" name="q4" value="password" class="hidden"><label for="q4a1">Their original password</label></div>
+                        <div class="quiz-option"><input type="radio" id="q4a2" name="q4" value="cookie" class="hidden"><label for="q4a2">A permanent cookie</label></div>
+                        <div class="quiz-option"><input type="radio" id="q4a3" name="q4" value="token" class="hidden"><label for="q4a3">A secure token (JWT)</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="rules">
+                    <p class="font-semibold mb-4">5. In Firestore, what feature is used to control which users can read or write specific data?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q5a1" name="q5" value="rules" class="hidden"><label for="q5a1">Security Rules</label></div>
+                        <div class="quiz-option"><input type="radio" id="q5a2" name="q5" value="passwords" class="hidden"><label for="q5a2">Document Passwords</label></div>
+                        <div class="quiz-option"><input type="radio" id="q5a3" name="q5" value="functions" class="hidden"><label for="q5a3">Serverless Functions</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="superset">
+                    <p class="font-semibold mb-4">6. The skills learned in this course for building web apps make a developer...</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q6a1" name="q6" value="unable" class="hidden"><label for="q6a1">...unable to work with older standards like SCORM.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q6a2" name="q6" value="superset" class="hidden"><label for="q6a2">...more than competent with SCORM, as they understand the underlying web technologies.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q6a3" name="q6" value="dependent" class="hidden"><label for="q6a3">...dependent on SCORM for all e-learning projects.</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="richer-data">
+                    <p class="font-semibold mb-4">7. What is the primary advantage of using a modern backend like Firebase over traditional SCORM tracking?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q7a1" name="q7" value="simplicity" class="hidden"><label for="q7a1">It is simpler and requires less code.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q7a2" name="q7" value="richer-data" class="hidden"><label for="q7a2">The ability to track richer, more detailed learner interaction data.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q7a3" name="q7" value="offline" class="hidden"><label for="q7a3">It works better offline.</label></div>
+                    </div>
+                </div>
+
+                 <div class="quiz-question" data-correct="no">
+                    <p class="font-semibold mb-4">8. (Scenario) An instructional designer wants to build a simple drag-and-drop game. Do they need a backend to make the game itself function in the browser?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q8a1" name="q8" value="yes" class="hidden"><label for="q8a1">Yes, all interactivity requires a backend.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q8a2" name="q8" value="no" class="hidden"><label for="q8a2">No, the game logic can run entirely on the frontend with JavaScript.</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="yes">
+                    <p class="font-semibold mb-4">9. (Scenario) Following the last question, the designer now wants to save the player's high score so they can see it when they return. Do they need a backend for this?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q9a1" name="q9" value="yes" class="hidden"><label for="q9a1">Yes, saving data persistently requires a backend database.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q9a2" name="q9" value="no" class="hidden"><label for="q9a2">No, the high score can be saved in the HTML file.</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="third-party">
+                    <p class="font-semibold mb-4">10. For a small team building a new learning platform, what is the recommended approach for handling user logins?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q10a1" name="q10" value="build-own" class="hidden"><label for="q10a1">Build their own authentication system from scratch for maximum control.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q10a2" name="q10" value="third-party" class="hidden"><label for="q10a2">Use a trusted, secure third-party service like Firebase Authentication.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q10a3" name="q10" value="no-login" class="hidden"><label for="q10a3">Avoid logins altogether to reduce complexity.</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="index">
+                    <p class="font-semibold mb-4">11. To improve the performance of a Firestore query that filters by one field and sorts by another, what should you create?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q11a1" name="q11" value="function" class="hidden"><label for="q11a1">A new serverless function.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q11a2" name="q11" value="document" class="hidden"><label for="q11a2">A new document.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q11a3" name="q11" value="index" class="hidden"><label for="q11a3">A composite index.</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="frontend">
+                    <p class="font-semibold mb-4">12. Where does the Firebase Authentication logic (e.g., `createUserWithEmailAndPassword`) primarily run?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q12a1" name="q12" value="frontend" class="hidden"><label for="q12a1">On the frontend, communicating directly and securely with Firebase servers.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q12a2" name="q12" value="backend" class="hidden"><label for="q12a2">In your own serverless function.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q12a3" name="q12" value="database" class="hidden"><label for="q12a3">Inside the Firestore database itself.</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="insecure">
+                    <p class="font-semibold mb-4">13. (Code Review) What is the major security flaw in this Firestore security rule?</p>
+                    <div class="code-block p-4 rounded-lg mb-4 text-sm">
+                        <pre><code>match /grades/{userId} {
+  allow read, write: if true;
+}</code></pre>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q13a1" name="q13" value="typo" class="hidden"><label for="q13a1">There is a typo in "userId".</label></div>
+                        <div class="quiz-option"><input type="radio" id="q13a2" name="q13" value="insecure" class="hidden"><label for="q13a2">It allows anyone, logged in or not, to read and write all grades.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q13a3" name="q13" value="no-flaw" class="hidden"><label for="q13a3">There is no flaw; this is a standard rule.</label></div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question" data-correct="serverless-function">
+                     <p class="font-semibold mb-4">14. Which backend component is best suited for a task that happens infrequently and needs to use a secret API key?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q14a1" name="q14" value="database" class="hidden"><label for="q14a1">The Firestore Database</label></div>
+                        <div class="quiz-option"><input type="radio" id="q14a2" name="q14" value="authentication" class="hidden"><label for="q14a2">Firebase Authentication</label></div>
+                        <div class="quiz-option"><input type="radio" id="q14a3" name="q14" value="serverless-function" class="hidden"><label for="q14a3">A Serverless Function</label></div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question" data-correct="no">
+                     <p class="font-semibold mb-4">15. Does the SCORM API require an active internet connection to a backend server to function?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q15a1" name="q15" value="yes" class="hidden"><label for="q15a1">Yes, it must be connected to the internet at all times.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q15a2" name="q15" value="no" class="hidden"><label for="q15a2">No, it's a frontend JavaScript API that communicates with the LMS hosting it.</label></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="text-center py-6">
+                <button id="submit-assessment-btn" class="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition text-lg w-full sm:w-auto">
+                    Submit Final Assessment
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Results Modal -->
+    <div id="results-modal" class="results-modal-backdrop">
+        <div class="bg-white w-11/12 md:max-w-2xl rounded-lg shadow-2xl p-6 text-center">
+            <h2 id="modal-title" class="text-2xl font-bold mb-4">Assessment Complete!</h2>
+            <p class="text-lg">You scored <span id="final-score" class="font-bold"></span> out of 15.</p>
+            <p id="passing-message" class="mt-2 text-green-600 font-semibold"></p>
+            <p id="failing-message" class="mt-2 text-red-600 font-semibold"></p>
+            <button id="close-modal-btn" class="mt-6 w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">Back to Dashboard</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, setDoc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
+            authDomain: "elearning-e83cb.firebaseapp.com",
+            projectId: "elearning-e83cb",
+            storageBucket: "elearning-e83cb.appspot.com",
+            messagingSenderId: "25473938624",
+            appId: "1:25473938624:web:5b56738933543f32a7e925",
+            measurementId: "G-R713G5DD1S"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+            } else {
+                window.location.href = '/Login.html';
+            }
+        });
+
+        const submitBtn = document.getElementById('submit-assessment-btn');
+        const resultsModal = document.getElementById('results-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const finalScoreEl = document.getElementById('final-score');
+        const passingMessageEl = document.getElementById('passing-message');
+        const failingMessageEl = document.getElementById('failing-message');
+        const questions = document.querySelectorAll('.quiz-question');
+
+        async function saveGradeToFirestore(score, totalQuestions, passed) {
+            if (!currentUser) return;
+            const gradeRef = doc(db, "grades", currentUser.uid);
+            await setDoc(gradeRef, {
+                module2_score: `${score}/${totalQuestions}`,
+                module2_passed: passed,
+                lastUpdated: new Date()
+            }, { merge: true });
+        }
+
+        async function updateUserProgress() {
+            if (!currentUser) return;
+            const progressRef = doc(db, "progress", currentUser.uid);
+            await updateDoc(progressRef, {
+                module2_completed: true,
+                module3_unlocked: true,
+                overall_progress: (2 / 8) * 100 
+            });
+        }
+
+        submitBtn.addEventListener('click', async () => {
+            let allAnswered = true;
+            questions.forEach((q, i) => {
+                if (!q.querySelector(`input[name="q${i+1}"]:checked`)) {
+                    allAnswered = false;
+                }
+            });
+
+            if (!allAnswered) {
+                alert('Please answer all questions before submitting.');
+                return;
+            }
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Grading...';
+
+            let score = 0;
+            questions.forEach(question => {
+                const correctAnswer = question.dataset.correct;
+                const selectedOption = question.querySelector('input[type="radio"]:checked');
+                if (selectedOption.value === correctAnswer) {
+                    score++;
+                }
+            });
+
+            const passed = score >= 12; // Passing score is 80%
+
+            try {
+                await saveGradeToFirestore(score, questions.length, passed);
+                if (passed) {
+                    await updateUserProgress();
+                }
+
+                finalScoreEl.textContent = `${score} / ${questions.length}`;
+                passingMessageEl.textContent = passed ? "Congratulations, you passed! Module 3 is now unlocked." : "";
+                failingMessageEl.textContent = !passed ? "You did not pass. Please review the module and try again." : "";
+
+                resultsModal.style.display = 'flex';
+                
+            } catch (error) {
+                console.error("Error saving progress:", error);
+                alert("There was an error saving your results. Please try again.");
+            } finally {
+                submitBtn.textContent = 'Submit Final Assessment';
+            }
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            window.location.href = '/dashboard.html';
+        });
+    </script>
+</body>
+</html>
