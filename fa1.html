@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
-        .code-block { background-color: #1e293b; color: #e2e8f0; }
         .quiz-option label.correct { background-color: #dcfce7 !important; border-color: #22c55e !important; color: #166534 !important; }
         .quiz-option label.incorrect { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
         .quiz-option label {
@@ -30,51 +29,168 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.6);
-            z-index: 40;
+            z-index: 50;
             justify-content: center;
             align-items: center;
+        }
+        .code-block { background-color: #1e293b; color: #e2e8f0; font-family: monospace; }
+        .prompt-input {
+            width: 100%;
+            min-height: 150px;
+            background-color: #0f172a;
+            color: #e2e8f0;
+            border: 1px solid #334155;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            font-family: monospace;
         }
     </style>
 </head>
 <body class="bg-stone-50 text-stone-800">
 
+     <header class="bg-white shadow-sm border-b border-stone-200 sticky top-0 z-40">
+        <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
+             <a href="dashboard.html" class="text-xl font-bold text-stone-900">Learning Experience Forge</a>
+             <nav class="flex items-center gap-4">
+                <a href="dashboard.html" class="text-sm font-medium text-stone-600 hover:text-indigo-600">Dashboard</a>
+             </nav>
+        </div>
+    </header>
+
     <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
         
         <header class="mb-10">
             <h1 class="text-3xl md:text-4xl font-bold text-stone-900">Module 1 Summative Assessment</h1>
-            <p class="text-stone-500 mt-2 text-lg">Test your knowledge of AI-powered instructional design.</p>
+            <p class="text-stone-500 mt-2 text-lg">Test your knowledge of prompting and prototyping.</p>
         </header>
 
         <main id="assessment-container" class="space-y-12">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 space-y-8">
-                <!-- User Info -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="student-name" class="block font-semibold mb-2">Your Name:</label>
-                        <input type="text" id="student-name" class="w-full px-3 py-2 border border-stone-300 rounded-lg" placeholder="Alex Ray">
-                        <p id="name-error" class="text-red-600 text-sm mt-2 hidden">Please enter your name.</p>
+                 <!-- Questions 1-14 -->
+                <div class="quiz-question" data-correct="sam">
+                    <p class="font-semibold mb-4">1. What instructional design model, focused on iterative prototyping, is a perfect match for AI-powered development?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q1a1" name="q1" value="addie" class="hidden"><label for="q1a1">ADDIE</label></div>
+                        <div class="quiz-option"><input type="radio" id="q1a2" name="q1" value="sam" class="hidden"><label for="q1a2">SAM (Successive Approximation Model)</label></div>
+                        <div class="quiz-option"><input type="radio" id="q1a3" name="q1" value="gagne" class="hidden"><label for="q1a3">Gagné's Nine Events of Instruction</label></div>
                     </div>
-                    <div>
-                        <label for="student-email" class="block font-semibold mb-2">Your Email:</label>
-                        <input type="email" id="student-email" class="w-full px-3 py-2 border border-stone-300 rounded-lg bg-stone-100" disabled>
+                </div>
+                <div class="quiz-question" data-correct="role">
+                    <p class="font-semibold mb-4">2. When you tell an AI to "Act as an expert instructional designer," which core prompt component are you providing?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q2a1" name="q2" value="task" class="hidden"><label for="q2a1">Task</label></div>
+                        <div class="quiz-option"><input type="radio" id="q2a2" name="q2" value="role" class="hidden"><label for="q2a2">Role</label></div>
+                        <div class="quiz-option"><input type="radio" id="q2a3" name="q2" value="format" class="hidden"><label for="q2a3">Format</label></div>
+                    </div>
+                </div>
+                <div class="quiz-question" data-correct="grid">
+                    <p class="font-semibold mb-4">3. (Scenario) You need to prototype a page layout that shows three different case studies side-by-side in columns. Which layout system should you ask the AI to use?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q3a1" name="q3" value="flex" class="hidden"><label for="q3a1">Flexbox</label></div>
+                        <div class="quiz-option"><input type="radio" id="q3a2" name="q3" value="table" class="hidden"><label for="q3a2">Table</label></div>
+                        <div class="quiz-option"><input type="radio" id="q3a3" name="q3" value="grid" class="hidden"><label for="q3a3">Grid</label></div>
+                    </div>
+                </div>
+                <div class="quiz-question" data-correct="container">
+                    <p class="font-semibold mb-4">4. To create a responsive bar chart that adapts to different screen sizes, what is the most critical instruction to give the AI?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q4a1" name="q4" value="fixed" class="hidden"><label for="q4a1">"Give the chart a fixed width of 800 pixels."</label></div>
+                        <div class="quiz-option"><input type="radio" id="q4a2" name="q4" value="container" class="hidden"><label for="q4a2">"Place the chart's canvas inside a responsive div container."</label></div>
+                        <div class="quiz-option"><input type="radio" id="q4a3" name="q4" value="colors" class="hidden"><label for="q4a3">"Make the chart bars blue."</label></div>
+                    </div>
+                </div>
+                <div class="quiz-question" data-correct="event-listener">
+                    <p class="font-semibold mb-4">5. What is the key JavaScript concept you must prompt for to make an element interactive (e.g., clickable)?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q5a1" name="q5" value="variable" class="hidden"><label for="q5a1">A variable</label></div>
+                        <div class="quiz-option"><input type="radio" id="q5a2" name="q5" value="event-listener" class="hidden"><label for="q5a2">An event listener</label></div>
+                        <div class="quiz-option"><input type="radio" id="q5a3" name="q5" value="comment" class="hidden"><label for="q5a3">A comment</label></div>
+                    </div>
+                </div>
+                <div class="quiz-question" data-correct="feedback">
+                    <p class="font-semibold mb-4">6. (Scenario) You are prototyping a multiple-choice quiz. What is the most instructionally valuable detail to add to your prompt?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q6a1" name="q6" value="feedback" class="hidden"><label for="q6a1">"Add tailored feedback for each incorrect answer."</label></div>
+                        <div class="quiz-option"><input type="radio" id="q6a2" name="q6" value="logo" class="hidden"><label for="q6a2">"Add the company logo to the top of the page."</label></div>
+                        <div class="quiz-option"><input type="radio" id="q6a3" name="q6" value="font" class="hidden"><label for="q6a3">"Use the 'Roboto' font."</label></div>
+                    </div>
+                </div>
+                <div class="quiz-question" data-correct="single-file">
+                    <p class="font-semibold mb-4">7. For rapid prototyping in the SAM model, asking the AI for what format is most effective?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q7a1" name="q7" value="multiple-files" class="hidden"><label for="q7a1">Separate HTML, CSS, and JS files.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q7a2" name="q7" value="text-description" class="hidden"><label for="q7a2">A text description of the code.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q7a3" name="q7" value="single-file" class="hidden"><label for="q7a3">A single, self-contained HTML file.</label></div>
+                    </div>
+                </div>
+                <div class="quiz-question" data-correct="target-event-action">
+                    <p class="font-semibold mb-4">8. To make a button interactive, what three pieces of information must your prompt provide for the JavaScript logic?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q8a1" name="q8" value="color-size-shape" class="hidden"><label for="q8a1">Color, size, and shape</label></div>
+                        <div class="quiz-option"><input type="radio" id="q8a2" name="q8" value="target-event-action" class="hidden"><label for="q8a2">The target element, the event, and the action</label></div>
+                        <div class="quiz-option"><input type="radio" id="q8a3" name="q8" value="font-padding-margin" class="hidden"><label for="q8a3">Font, padding, and margin</label></div>
+                    </div>
+                </div>
+                <div class="quiz-question" data-correct="corrective-feedback">
+                    <p class="font-semibold mb-4">9. An effective learning scenario requires more than just a question and answer. What is a key element that makes a scenario-based interaction instructionally sound?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q9a1" name="q9" value="fun-animation" class="hidden"><label for="q9a1">A fun animation after every click.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q9a2" name="q9" value="long-text" class="hidden"><label for="q9a2">A very long, detailed description of the situation.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q9a3" name="q9" value="corrective-feedback" class="hidden"><label for="q9a3">Meaningful, corrective feedback for the choices made.</label></div>
+                    </div>
+                </div>
+                <div class="quiz-question" data-correct="false">
+                    <p class="font-semibold mb-4">10. True or False: You need to be an expert JavaScript developer to ask an AI to create interactive learning components.</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q10a1" name="q10" value="true" class="hidden"><label for="q10a1">True</label></div>
+                        <div class="quiz-option"><input type="radio" id="q10a2" name="q10" value="false" class="hidden"><label for="q10a2">False</label></div>
+                    </div>
+                </div>
+                <div class="quiz-question" data-correct="cognitive-load">
+                    <p class="font-semibold mb-4">11. By using clear headings, good visual hierarchy, and interactive elements like flashcards, you reduce the learner's...?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q11a1" name="q11" value="interest" class="hidden"><label for="q11a1">Interest</label></div>
+                        <div class="quiz-option"><input type="radio" id="q11a2" name="q11" value="cognitive-load" class="hidden"><label for="q11a2">Cognitive Load</label></div>
+                        <div class="quiz-option"><input type="radio" id="q11a3" name="q11" value="screen-time" class="hidden"><label for="q11a3">Screen Time</label></div>
+                    </div>
+                </div>
+                <div class="quiz-question" data-correct="data">
+                    <p class="font-semibold mb-4">12. When prompting for a chart, which of the following is essential to include directly in the prompt?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q12a1" name="q12" value="link" class="hidden"><label for="q12a1">A link to a separate spreadsheet file.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q12a2" name="q12" value="data" class="hidden"><label for="q12a2">The labels and data points for the chart.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q12a3" name="q12" value="image" class="hidden"><label for="q12a3">An image of what the chart should look like.</label></div>
+                    </div>
+                </div>
+                <div class="quiz-question" data-correct="constraints">
+                    <p class="font-semibold mb-4">13. The instruction, "Ensure the feedback for incorrect answers provides a hint, not just the correct answer," is an example of which prompt component?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q13a1" name="q13" value="role" class="hidden"><label for="q13a1">Role</label></div>
+                        <div class="quiz-option"><input type="radio" id="q13a2" name="q13" value="task" class="hidden"><label for="q13a2">Task</label></div>
+                        <div class="quiz-option"><input type="radio" id="q13a3" name="q13" value="constraints" class="hidden"><label for="q13a3">Constraints & Details</label></div>
+                    </div>
+                </div>
+                <div class="quiz-question" data-correct="authentic-assessment">
+                    <p class="font-semibold mb-4">14. The Prompt-Tuning Simulator, where you practice the actual skill of writing a prompt, is an example of what kind of assessment?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q14a1" name="q14" value="summative-exam" class="hidden"><label for="q14a1">A summative exam</label></div>
+                        <div class="quiz-option"><input type="radio" id="q14a2" name="q14" value="authentic-assessment" class="hidden"><label for="q14a2">An authentic assessment</label></div>
+                        <div class="quiz-option"><input type="radio" id="q14a3" name="q14" value="standardized-test" class="hidden"><label for="q14a3">A standardized test</label></div>
                     </div>
                 </div>
 
-                <!-- Questions -->
-                <div id="questions-container" class="space-y-8 pt-8 border-t">
-                    <!-- Questions will be dynamically inserted here -->
-                </div>
-
-                 <!-- Final Challenge -->
-                <div class="pt-8 border-t">
+                <!-- Final Challenge -->
+                <div>
                     <p class="font-semibold mb-4">15. Final Challenge: Fix the Prompt</p>
-                    <p class="text-stone-600 mb-4">A stakeholder gives you the following vague request. Rewrite it in the box below to be a high-quality, 5-star prompt that includes a clear **Role, Task, Constraints, and Format**.</p>
-                    <div class="bg-stone-100 p-4 rounded-lg mb-4">
-                        <p class="italic">"Hey, can you get the AI to make a fun history game for us?"</p>
+                    <p class="text-sm text-stone-600 mb-2">The following prompt is vague. Edit it in the box below to include a clear <strong>Role</strong>, <strong>Task</strong>, <strong>Constraints</strong>, and <strong>Format</strong> for an effective instructional component.</p>
+                    <div class="code-block p-4 rounded-lg mb-4 text-sm">
+                        <pre><code>Make a history quiz.</code></pre>
                     </div>
-                    <textarea id="final-challenge-input" rows="6" class="w-full p-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Your improved prompt goes here..."></textarea>
+                    <textarea id="prompt-challenge" class="prompt-input" rows="6">Make a history quiz.</textarea>
                 </div>
+
             </div>
+
             <div class="text-center py-6">
                 <button id="submit-assessment-btn" class="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition text-lg w-full sm:w-auto">
                     Submit Final Assessment
@@ -87,184 +203,130 @@
     <div id="results-modal" class="results-modal-backdrop">
         <div class="bg-white w-11/12 md:max-w-2xl rounded-lg shadow-2xl p-6 text-center">
             <h2 id="modal-title" class="text-2xl font-bold mb-4">Assessment Complete!</h2>
-            <div id="modal-success-content">
-                <p class="text-lg">You scored <span id="final-score" class="font-bold"></span> out of 15.</p>
-                <p id="passing-message" class="mt-2 text-green-600 font-semibold"></p>
-                <p id="failing-message" class="mt-2 text-red-600 font-semibold"></p>
-                <div class="mt-6 text-left bg-stone-100 p-4 rounded text-sm text-stone-700">
-                    <p class="font-semibold mb-2">An email with your results has been sent and your progress has been updated.</p>
-                </div>
-            </div>
-             <div id="modal-error-content" class="hidden">
-                <p class="text-lg text-red-700">There was an error submitting your results. Please try again later.</p>
-            </div>
-            <button id="close-modal-btn" class="mt-6 w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">Return to Dashboard</button>
+            <p class="text-lg">You scored <span id="final-score" class="font-bold"></span> out of 15.</p>
+            <p id="passing-message" class="mt-2 text-green-600 font-semibold"></p>
+            <p id="failing-message" class="mt-2 text-red-600 font-semibold"></p>
+            <button id="close-modal-btn" class="mt-6 w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">Back to Dashboard</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        const firebaseConfig = { apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM", authDomain: "elearning-e83cb.firebaseapp.com", projectId: "elearning-e83cb", storageBucket: "elearning-e83cb.appspot.com", messagingSenderId: "25473938624", appId: "1:25473938624:web:5b56738933543f32a7e925", measurementId: "G-R713G5DD1S" };
+        const firebaseConfig = {
+            apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
+            authDomain: "elearning-e83cb.firebaseapp.com",
+            projectId: "elearning-e83cb",
+            storageBucket: "elearning-e83cb.appspot.com",
+            messagingSenderId: "25473938624",
+            appId: "1:25473938624:web:5b56738933543f32a7e925",
+            measurementId: "G-R713G5DD1S"
+        };
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        const questionsContainer = document.getElementById('questions-container');
+        let currentUser = null;
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+            } else {
+                window.location.href = '/Login.html';
+            }
+        });
+
         const submitBtn = document.getElementById('submit-assessment-btn');
-        const studentNameEl = document.getElementById('student-name');
-        const studentEmailEl = document.getElementById('student-email');
-        const finalChallengeInput = document.getElementById('final-challenge-input');
         const resultsModal = document.getElementById('results-modal');
         const closeModalBtn = document.getElementById('close-modal-btn');
         const finalScoreEl = document.getElementById('final-score');
         const passingMessageEl = document.getElementById('passing-message');
         const failingMessageEl = document.getElementById('failing-message');
-        const modalTitle = document.getElementById('modal-title');
-        const modalSuccessContent = document.getElementById('modal-success-content');
-        const modalErrorContent = document.getElementById('modal-error-content');
+        const questions = document.querySelectorAll('.quiz-question');
+        const promptChallenge = document.getElementById('prompt-challenge');
 
-        let currentUser = null;
-
-        const assessmentQuestions = [
-            { question: "1. The primary advantage of using AI within the SAM instructional design model is...", options: ["To guarantee a perfect first prototype.", "To dramatically accelerate the 'Iterate' phase.", "To replace the need for human instructional designers."], correct: "To dramatically accelerate the 'Iterate' phase." },
-            { question: "2. You want to create a 'drag and drop' sorting activity for learners. Which prompt component is most critical for making this work?", options: ["The Role", "The JavaScript Logic", "The Color Palette"], correct: "The JavaScript Logic" },
-            { question: "3. A stakeholder asks you to prototype a new e-learning module. According to SAM, what is your first goal?", options: ["Build the complete, final version.", "Create a simple, testable prototype as quickly as possible.", "Write a detailed 50-page design document."], correct: "Create a simple, testable prototype as quickly as possible." },
-            { question: "4. When you specify 'Act as an expert instructional designer' in a prompt, what are you defining?", options: ["The Task", "The Format", "The Role"], correct: "The Role" },
-            { question: "5. You need to create a layout with a main content area and a sidebar. Which layout system is best suited for this?", options: ["Flexbox", "Grid", "Table"], correct: "Grid" },
-            { question: "6. Scenario: You prompted the AI to create a learning interaction, but it looks visually plain. What is the best next step?", options: ["Delete the code and start over.", "Manually rewrite all the CSS yourself.", "Refine the prompt with specific styling constraints using Tailwind CSS."], correct: "Refine the prompt with specific styling constraints using Tailwind CSS." },
-            { question: "7. To ensure a Chart.js chart is responsive, you must prompt the AI to place the `<canvas>` element inside a...", options: ["`<div>` container", "`<span>` element", "`<img>` tag"], correct: "`<div>` container" },
-            { question: "8. What is the purpose of an 'event listener' in JavaScript?", options: ["To style the page.", "To listen for user actions like clicks and trigger a response.", "To store user data."], correct: "To listen for user actions like clicks and trigger a response." },
-            { question: "9. You ask the AI to create a 'click to reveal' interaction. Which three things must you specify in your prompt?", options: ["Target element, event, and action.", "Font size, color, and background.", "Image, video, and audio."], correct: "Target element, event, and action." },
-            { question: "10. Why is asking for a 'single HTML file' a powerful Format constraint for rapid prototyping?", options: ["Because it's the only format AI can produce.", "Because it creates an instant, functional prototype that can be tested.", "Because it uses less memory."], correct: "Because it creates an instant, functional prototype that can be tested." },
-            { question: "11. Scenario: An AI generates a perfect-looking component, but the 'Next' button doesn't work. This is likely a failure in which part of the prompt?", options: ["The styling constraints.", "The JavaScript logic for the event listener.", "The Role definition."], correct: "The JavaScript logic for the event listener." },
-            { question: "12. What does the Tailwind CSS class `grid-cols-3` do?", options: ["Creates a flexbox with three items.", "Creates a grid with three columns.", "Makes the text three times larger."], correct: "Creates a grid with three columns." },
-            { question: "13. When providing data for a chart in a prompt, you should include...", options: ["Only the numbers.", "Labels for the data points and the numerical data itself.", "A link to a spreadsheet."], correct: "Labels for the data points and the numerical data itself." },
-            { question: "14. The 'F' in 'Format' (one of the four core components) refers to...", options: ["How the final code should be delivered.", "How fast the AI should work.", "How fancy the design should be."], correct: "How the final code should be delivered." }
-        ];
-
-        function renderQuestions() {
-            assessmentQuestions.forEach((q, index) => {
-                const questionEl = document.createElement('div');
-                questionEl.className = 'quiz-question pt-8 border-t';
-                questionEl.dataset.correct = q.correct;
-                let optionsHtml = q.options.map((opt, i) => `
-                    <div class="quiz-option">
-                        <input type="radio" id="q${index}o${i}" name="q${index}" value="${opt}" class="hidden">
-                        <label for="q${index}o${i}">${opt}</label>
-                    </div>`).join('');
-                questionEl.innerHTML = `<p class="font-semibold mb-4">${q.question}</p><div class="space-y-3">${optionsHtml}</div>`;
-                questionsContainer.appendChild(questionEl);
-            });
+        async function saveGradeToFirestore(score, totalQuestions, passed) {
+            if (!currentUser) return;
+            const gradeRef = doc(db, "grades", currentUser.uid);
+            await setDoc(gradeRef, {
+                module1_score: `${score}/${totalQuestions}`,
+                module1_passed: passed,
+                lastUpdated: new Date()
+            }, { merge: true }); // Use merge:true to avoid overwriting other grades
         }
-        renderQuestions();
 
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                currentUser = user;
-                studentNameEl.value = user.displayName || '';
-                studentEmailEl.value = user.email;
-            } else {
-                window.location.href = '/login.html';
+        async function updateUserProgress() {
+            if (!currentUser) return;
+            const progressRef = doc(db, "progress", currentUser.uid);
+            const docSnap = await getDoc(progressRef);
+            if(docSnap.exists() && docSnap.data().module1_completed) {
+                return; // Already completed, no need to update again
             }
-        });
-
-        async function saveGradeAndProgress(userId, scoreData) {
-            try {
-                const gradeRef = doc(db, 'grades', userId);
-                await setDoc(gradeRef, { module1_summative: scoreData }, { merge: true });
-                console.log("Grade saved successfully!");
-
-                const progressRef = doc(db, 'progress', userId);
-                await updateDoc(progressRef, {
-                    module1_completed: true,
-                    module2_unlocked: true,
-                    overall_progress: 12.5 // 1 of 8 modules
-                });
-                console.log("Progress updated successfully!");
-
-            } catch (error) {
-                console.error("Error saving data: ", error);
-                throw new Error("Could not save progress to the database.");
-            }
+            await updateDoc(progressRef, {
+                module1_completed: true,
+                module2_unlocked: true,
+                overall_progress: (1 / 8) * 100 
+            });
         }
 
         submitBtn.addEventListener('click', async () => {
-            if (!currentUser) return;
-
             let allAnswered = true;
-            document.querySelectorAll('.quiz-question').forEach(q => {
-                if (!q.querySelector('input:checked')) allAnswered = false;
+            questions.forEach((q, i) => {
+                if (!q.querySelector(`input[name="q${i+1}"]:checked`)) {
+                    allAnswered = false;
+                }
             });
 
-            if (!allAnswered || studentNameEl.value.trim() === '') {
-                alert('Please answer all questions and enter your name.');
+            if (!allAnswered || promptChallenge.value.trim() === 'Make a history quiz.' || promptChallenge.value.trim() === '') {
+                alert('Please answer all questions and complete the final challenge before submitting.');
                 return;
             }
-
+            
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Submitting...';
+            submitBtn.textContent = 'Grading...';
 
-            let mcqScore = 0;
-            document.querySelectorAll('.quiz-question').forEach(q => {
-                if (q.querySelector('input:checked').value === q.dataset.correct) mcqScore++;
+            let score = 0;
+            questions.forEach(question => {
+                const correctAnswer = question.dataset.correct;
+                const selectedOption = question.querySelector('input[type="radio"]:checked');
+                if (selectedOption.value === correctAnswer) {
+                    score++;
+                }
             });
-            
-            let finalChallengeScore = 0;
-            const challengeText = finalChallengeInput.value.toLowerCase();
-            if (challengeText.includes('act as') && challengeText.includes('create') && challengeText.includes('tailwind') && challengeText.includes('html file')) {
-                finalChallengeScore = 1;
+
+            // Grade the final challenge
+            const promptText = promptChallenge.value.toLowerCase();
+            const hasRole = promptText.includes('act as') || promptText.includes('you are');
+            const hasTask = promptText.includes('create') || promptText.includes('build') || promptText.includes('generate');
+            const hasConstraints = promptText.includes('tailwind') || promptText.includes('javascript') || promptText.includes('feedback');
+            const hasFormat = promptText.includes('html file') || promptText.includes('single page');
+            if (hasRole && hasTask && hasConstraints && hasFormat) {
+                score++;
             }
-            
-            const totalScore = mcqScore + finalChallengeScore;
-            const totalPossible = assessmentQuestions.length + 1;
-            const scorePercentage = Math.round((totalScore / totalPossible) * 100);
 
-            const payload = {
-                student: { name: studentNameEl.value, email: currentUser.email },
-                instructor: { email: "michaelwesleywilson@gmail.com" },
-                assessment: { title: "Module 1 Summative Assessment", score: `${totalScore} / ${totalPossible}`, passed: scorePercentage >= 80 }
-            };
-
-            const scoreData = { score: scorePercentage, timestamp: new Date() };
+            const totalQuestions = questions.length + 1;
+            const passed = score >= 12; // Passing score is 80% (12/15)
 
             try {
-                await saveGradeAndProgress(currentUser.uid, scoreData);
+                await saveGradeToFirestore(score, totalQuestions, passed);
+                if (passed) {
+                    await updateUserProgress();
+                }
 
-                const response = await fetch('/api/send-results', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                if (!response.ok) throw new Error('Email sending failed');
+                finalScoreEl.textContent = `${score} / ${totalQuestions}`;
+                passingMessageEl.textContent = passed ? "Congratulations, you passed! Module 2 is now unlocked." : "";
+                failingMessageEl.textContent = !passed ? "You did not pass. Please review the module and try again." : "";
 
-                modalTitle.textContent = 'Assessment Complete!';
-                modalSuccessContent.classList.remove('hidden');
-                modalErrorContent.classList.add('hidden');
-                finalScoreEl.textContent = `${totalScore} / ${totalPossible}`;
-                passingMessageEl.textContent = payload.assessment.passed ? "Congratulations, you passed!" : "";
-                failingMessageEl.textContent = !payload.assessment.passed ? "You did not pass. Please review the module and try again." : "";
-
-            } catch (error) {
-                console.error('Submission failed:', error);
-                modalTitle.textContent = 'Submission Failed';
-                modalSuccessContent.classList.add('hidden');
-                modalErrorContent.classList.remove('hidden');
-            } finally {
                 resultsModal.style.display = 'flex';
+                
+            } catch (error) {
+                console.error("Error saving progress:", error);
+                alert("There was an error saving your results. Please try again.");
+            } finally {
                 submitBtn.textContent = 'Submit Final Assessment';
-                document.querySelectorAll('.quiz-question').forEach(q => {
-                    const selected = q.querySelector('input:checked');
-                    const correctVal = q.dataset.correct;
-                    if(selected.value === correctVal) {
-                        selected.parentElement.querySelector('label').classList.add('correct');
-                    } else {
-                        selected.parentElement.querySelector('label').classList.add('incorrect');
-                        q.querySelector(`input[value="${correctVal}"]`).parentElement.querySelector('label').classList.add('correct');
-                    }
-                });
             }
         });
 
@@ -272,6 +334,5 @@
             window.location.href = '/dashboard.html';
         });
     </script>
-
 </body>
 </html>
