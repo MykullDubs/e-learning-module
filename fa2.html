@@ -260,12 +260,16 @@
                 module2_score: `${score}/${totalQuestions}`,
                 module2_passed: passed,
                 lastUpdated: new Date()
-            }, { merge: true });
+            }, { merge: true }); // Use merge:true to avoid overwriting other grades
         }
 
         async function updateUserProgress() {
             if (!currentUser) return;
             const progressRef = doc(db, "progress", currentUser.uid);
+             const docSnap = await getDoc(progressRef);
+            if(docSnap.exists() && docSnap.data().module2_completed) {
+                return; // Already completed, no need to update again
+            }
             await updateDoc(progressRef, {
                 module2_completed: true,
                 module3_unlocked: true,
@@ -326,3 +330,4 @@
     </script>
 </body>
 </html>
+
