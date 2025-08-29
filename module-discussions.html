@@ -50,7 +50,7 @@
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
       import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-      import { getFirestore, collection, doc, addDoc, query, where, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+      import { getFirestore, collection, doc, addDoc, query, where, orderBy, onSnapshot, serverTimestamp, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
@@ -75,11 +75,13 @@
       const discussionsContainer = document.getElementById('discussions-container');
       
       let currentUser = null;
+      let userProgress = null;
 
-      onAuthStateChanged(auth, (user) => {
+      onAuthStateChanged(auth, async (user) => {
         if (user) {
           currentUser = user;
           userEmailEl.textContent = user.email;
+          userProgress = await fetchUserProgress(user.uid);
           loader.style.display = 'none';
           appContent.classList.remove('hidden');
           listenForDiscussions();
@@ -87,9 +89,27 @@
           window.location.href = '/login.html';
         }
       });
+
+      async function fetchUserProgress(userId) {
+          const progressRef = doc(db, 'progress', userId);
+          const docSnap = await getDoc(progressRef);
+          if (docSnap.exists()) {
+              return docSnap.data();
+          }
+          return { module1_completed: false, module2_unlocked: false }; // default
+      }
       
       function listenForDiscussions() {
-          const q = query(collection(db, 'discussions'), where('isParent', '==', true), orderBy('createdAt', 'desc'));
+          const unlockedModules = ['welcome']; // Everyone gets the welcome message
+          if (userProgress.module1_completed || userProgress.module2_unlocked) {
+              unlockedModules.push('module1');
+          }
+           if (userProgress.module2_unlocked) {
+              unlockedModules.push('module2');
+          }
+          // Add more modules here as the user progresses
+
+          const q = query(collection(db, 'discussions'), where('isParent', '==', true), where('moduleId', 'in', unlockedModules), orderBy('createdAt', 'desc'));
           onSnapshot(q, (querySnapshot) => {
               discussionsContainer.innerHTML = '';
               querySnapshot.forEach((doc) => {
@@ -120,7 +140,6 @@
           `;
           discussionsContainer.appendChild(threadContainer);
 
-          // Listen for replies
           const repliesContainer = document.getElementById(`replies-${parentDoc.id}`);
           const repliesQuery = query(collection(db, 'discussions'), where('parentId', '==', parentDoc.id), orderBy('createdAt', 'asc'));
           onSnapshot(repliesQuery, (snapshot) => {
@@ -143,7 +162,6 @@
           });
       }
 
-      // Handle reply form submission
       discussionsContainer.addEventListener('submit', async (e) => {
           if (e.target.classList.contains('reply-form')) {
               e.preventDefault();
