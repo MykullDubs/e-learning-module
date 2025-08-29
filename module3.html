@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 3: Crafting the Learner's Journey</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .code-block { background-color: #1e293b; color: #e2e8f0; font-family: monospace; }
+        .quiz-option label.correct { background-color: #dcfce7 !important; border-color: #22c55e !important; color: #166534 !important; }
+        .quiz-option label.incorrect { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
+        .quiz-option label {
+            display: block;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .quiz-option input[type="radio"]:checked + label {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <header class="bg-white shadow-sm border-b border-stone-200 sticky top-0 z-40">
+        <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
+            <a href="dashboard.html" class="text-xl font-bold text-stone-900">Learning Experience Forge</a>
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <button id="notifications-btn" class="relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-stone-500 hover:text-stone-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                    </button>
+                    <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-stone-200 overflow-hidden">
+                        <div class="p-3 font-bold text-sm border-b">Notifications</div>
+                    </div>
+                </div>
+                <div class="relative">
+                    <button id="profile-btn" class="flex items-center gap-2">
+                        <span id="user-email" class="text-sm text-stone-600 hidden sm:block"></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
+                    </button>
+                    <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-stone-200 overflow-hidden">
+                        <a href="grades.html" class="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100">My Grades</a>
+                        <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100">Settings</a>
+                        <div class="border-t border-stone-200"></div>
+                        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100">Log Out</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
+        <header class="mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-stone-900">Module 3: Crafting the Learner's Journey</h1>
+            <p class="text-stone-500 mt-2 text-lg">Blueprint for Engagement</p>
+        </header>
+        
+        <div class="space-y-12">
+            <section>
+                <h2 class="text-2xl font-bold mb-4">The Dashboard as a Home Base</h2>
+                <p class="text-stone-600 mb-4">A learner needs a reliable starting point—a "home base" they can return to. This is the primary role of the dashboard. A well-designed dashboard isn't just a list of links; it's an orienting tool that answers three crucial questions for the learner at a glance:</p>
+                <ul class="list-disc list-inside text-stone-600 space-y-2 mb-4">
+                    <li><strong>Where am I?</strong> (e.g., "Welcome, [User Name]")</li>
+                    <li><strong>What should I do next?</strong> (e.g., "Continue Learning" button)</li>
+                    <li><strong>How am I progressing?</strong> (e.g., Progress charts and unlocked modules)</li>
+                </ul>
+                <p class="text-stone-600">By providing this clarity, you reduce cognitive load and anxiety, allowing the learner to focus their mental energy on the content, not on navigating the platform.</p>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-bold mb-4">Dynamic Elements: Personalizing the Path</h2>
+                 <p class="text-stone-600 mb-4">A static, one-size-fits-all course is a thing of the past. Modern learning experiences adapt to the user. The most fundamental way we do this is by showing and hiding content based on their progress. On our dashboard, modules are "locked" until the previous one is completed. This is a powerful motivational tool that creates a clear, scaffolded learning path.</p>
+                <p class="text-stone-600 mb-4">This is achieved by fetching the user's progress from Firestore and using simple JavaScript logic to apply different styles to the module links. This is a core skill in AI-powered development: prompting the AI to write JavaScript that conditionally renders HTML based on backend data.</p>
+                
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 mt-8">
+                    <h3 class="font-bold text-lg mb-4 text-center">Interactive Example: Simulating Progress</h3>
+                    <p class="text-center text-sm text-stone-600 mb-4">Toggle the switch to simulate a user completing Module 1 and see how the UI adapts.</p>
+                    <div class="flex justify-center items-center gap-4 mb-6">
+                        <span class="font-medium">New User</span>
+                        <label for="progress-toggle" class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="progress-toggle" class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                        </label>
+                        <span class="font-medium">Module 1 Complete</span>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div id="sim-module-1" class="p-4 rounded-lg border flex justify-between items-center bg-white">
+                            <span class="font-semibold">Module 1: Core Concepts</span>
+                            <span class="text-sm font-medium text-green-600">In Progress</span>
+                        </div>
+                        <div id="sim-module-2" class="p-4 rounded-lg border flex justify-between items-center transition-all">
+                            <span class="font-semibold">Module 2: The Backend</span>
+                            <span class="text-sm font-medium"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section>
+                <h2 class="text-2xl font-bold mb-4">Formative Quiz: Design Critique</h2>
+                <p class="text-stone-600 mb-4">A great instructional designer needs a sharp eye for user experience. Analyze the following mini-scenarios and identify the primary design flaw in each.</p>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 space-y-8">
+                    <!-- Critique 1 -->
+                    <div class="quiz-question" data-correct="clarity">
+                        <p class="font-semibold mb-2">1. Critique the button in this component:</p>
+                        <div class="border rounded-lg p-4 flex items-center justify-between bg-slate-50 mb-4">
+                            <p>Complete the final step to generate your certificate.</p>
+                            <button class="px-4 py-2 bg-gray-300 text-gray-800 rounded">Submit</button>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="quiz-option"><input type="radio" id="q1a1" name="q1" value="color" class="hidden"><label for="q1a1">The color is not engaging enough.</label></div>
+                            <div class="quiz-option"><input type="radio" id="q1a2" name="q1" value="clarity" class="hidden"><label for="q1a2">The button text "Submit" is vague and lacks a clear call-to-action.</label></div>
+                            <div class="quiz-option"><input type="radio" id="q1a3" name="q1" value="position" class="hidden"><label for="q1a3">The button should be on the left.</label></div>
+                        </div>
+                    </div>
+                    <!-- Critique 2 -->
+                    <div class="quiz-question" data-correct="consistency">
+                        <p class="font-semibold mb-2">2. What is the main navigation issue on this page?</p>
+                        <div class="border rounded-lg p-4 bg-slate-50 mb-4 space-y-4">
+                             <h3 class="font-bold">Course Content</h3>
+                             <a href="#" class="block text-indigo-600">Module 1: Introduction</a>
+                             <button class="w-full text-left text-indigo-600">Module 2: Backend Basics</button>
+                             <div class="text-indigo-600">Module 3: UI Design</div>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="quiz-option"><input type="radio" id="q2a1" name="q2" value="consistency" class="hidden"><label for="q2a1">Inconsistent elements are used for navigation (link, button, plain text).</label></div>
+                            <div class="quiz-option"><input type="radio" id="q2a2" name="q2" value="too-much" class="hidden"><label for="q2a2">There are too many modules listed.</label></div>
+                            <div class="quiz-option"><input type="radio" id="q2a3" name="q2" value="font" class="hidden"><label for="q2a3">The font size is too small.</label></div>
+                        </div>
+                    </div>
+                    <!-- Critique 3 -->
+                    <div class="quiz-question" data-correct="load">
+                         <p class="font-semibold mb-2">3. What is the primary usability problem with this dashboard design?</p>
+                        <div class="border rounded-lg p-4 bg-slate-50 mb-4">
+                             <h3 class="font-bold">Welcome, Alex!</h3>
+                             <p class="text-sm">Your overall progress is 25%. Your current grade is 88%. Your last login was yesterday. You have 3 notifications. The next module is "UI Design". Your learning streak is 5 days. You have completed 2 out of 8 modules. Your certificate will be available upon completion.</p>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="quiz-option"><input type="radio" id="q3a1" name="q3" value="boring" class="hidden"><label for="q3a1">The design is visually boring.</label></div>
+                            <div class="quiz-option"><input type="radio" id="q3a2" name="q3" value="load" class="hidden"><label for="q3a2">Cognitive Load: It presents too much information as a dense block of text.</label></div>
+                            <div class="quiz-option"><input type="radio" id="q3a3" name="q3" value="missing" class="hidden"><label for="q3a3">It is missing a log out button.</label></div>
+                        </div>
+                    </div>
+                    <div class="pt-4">
+                        <button id="check-answers-btn" class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">Check Answers</button>
+                        <p id="quiz-results" class="hidden text-center pt-4 font-bold"></p>
+                    </div>
+                </div>
+            </section>
+
+             <section class="text-center py-10">
+                 <a href="fa3.html" class="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition text-lg">
+                    Take Summative Assessment
+                </a>
+            </section>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        const firebaseConfig = {
+             apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
+            authDomain: "elearning-e83cb.firebaseapp.com",
+            projectId: "elearning-e83cb",
+            storageBucket: "elearning-e83cb.appspot.com",
+            messagingSenderId: "25473938624",
+            appId: "1:25473938624:web:5b56738933543f32a7e925",
+            measurementId: "G-R713G5DD1S"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        
+        // --- Auth Guard ---
+        onAuthStateChanged(auth, user => {
+            if (!user) {
+                window.location.href = '/Login.html';
+            } else {
+                 userEmailEl.textContent = user.email;
+            }
+        });
+        
+        // --- Navbar Logic ---
+        const userEmailEl = document.getElementById('user-email');
+        const logoutBtn = document.getElementById('logout-btn');
+        const profileBtn = document.getElementById('profile-btn');
+        const profileDropdown = document.getElementById('profile-dropdown');
+        const notificationsBtn = document.getElementById('notifications-btn');
+        const notificationsDropdown = document.getElementById('notifications-dropdown');
+        profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
+        notificationsBtn.addEventListener('click', (e) => { e.stopPropagation(); notificationsDropdown.classList.toggle('hidden'); });
+        window.addEventListener('click', () => { 
+            profileDropdown.classList.add('hidden'); 
+            notificationsDropdown.classList.add('hidden');
+        });
+        logoutBtn.addEventListener('click', () => { signOut(auth).then(() => window.location.href = '/index.html'); });
+
+        // --- Interactive Progress Simulator ---
+        const toggle = document.getElementById('progress-toggle');
+        const simModule1 = document.getElementById('sim-module-1');
+        const simModule2 = document.getElementById('sim-module-2');
+        const simModule2Status = simModule2.querySelector('span:last-child');
+
+        function updateSimulatedUI(isComplete) {
+            if (isComplete) {
+                // Module 1 becomes "Completed"
+                simModule1.classList.remove('bg-white');
+                simModule1.classList.add('bg-green-50');
+                simModule1.querySelector('span:last-child').textContent = 'Completed';
+                // Module 2 becomes "In Progress"
+                simModule2.classList.remove('bg-stone-100', 'text-stone-400');
+                simModule2.classList.add('bg-white');
+                simModule2Status.textContent = 'In Progress';
+                simModule2Status.className = 'text-sm font-medium text-green-600';
+            } else {
+                // Module 1 is "In Progress"
+                simModule1.classList.add('bg-white');
+                simModule1.classList.remove('bg-green-50');
+                simModule1.querySelector('span:last-child').textContent = 'In Progress';
+                // Module 2 is "Locked"
+                simModule2.classList.add('bg-stone-100', 'text-stone-400');
+                simModule2.classList.remove('bg-white');
+                simModule2Status.textContent = 'Locked';
+                simModule2Status.className = 'text-sm font-medium text-stone-500';
+            }
+        }
+        
+        toggle.addEventListener('change', (e) => updateSimulatedUI(e.target.checked));
+        updateSimulatedUI(false); // Initial state
+
+        // --- Quiz Logic ---
+        const checkAnswersBtn = document.getElementById('check-answers-btn');
+        const quizResultsEl = document.getElementById('quiz-results');
+        const questions = document.querySelectorAll('.quiz-question');
+
+        checkAnswersBtn.addEventListener('click', () => {
+            let score = 0;
+            questions.forEach(question => {
+                const correctAnswer = question.dataset.correct;
+                const selectedOption = question.querySelector('input[type="radio"]:checked');
+                
+                if (selectedOption) {
+                    const parentLabel = selectedOption.parentElement.querySelector('label');
+                    if (selectedOption.value === correctAnswer) {
+                        score++;
+                        parentLabel.classList.add('correct');
+                    } else {
+                        parentLabel.classList.add('incorrect');
+                    }
+                }
+            });
+
+            quizResultsEl.textContent = `You scored ${score} out of ${questions.length}.`;
+            quizResultsEl.classList.remove('hidden');
+            checkAnswersBtn.disabled = true;
+        });
+    </script>
+</body>
+</html>
