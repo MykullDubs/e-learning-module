@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 2: The Serverless Backend</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .diagram-box { border: 2px solid #e5e7eb; padding: 1rem; border-radius: 0.75rem; text-align: center; }
+        .diagram-arrow { display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #9ca3af; margin: 0 1rem; }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <div id="loader" class="fixed inset-0 bg-white flex items-center justify-center z-50">
+        <p class="text-lg">Loading...</p>
+    </div>
+
+    <div id="app-content" class="hidden">
+        <header class="bg-white shadow-sm border-b border-stone-200 sticky top-0 z-40">
+            <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
+                <a href="dashboard.html" class="text-xl font-bold text-stone-900">Learning Experience Forge</a>
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <button id="profile-btn" class="flex items-center gap-2">
+                            <span id="user-email" class="text-sm text-stone-600 hidden sm:block"></span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
+                        </button>
+                        <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-stone-200 overflow-hidden">
+                            <a href="grades.html" class="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100">My Grades</a>
+                            <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100">Settings</a>
+                            <div class="border-t border-stone-200"></div>
+                            <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100">Log Out</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
+            <header class="mb-10">
+                <a href="dashboard.html" class="text-blue-600 hover:underline mb-4 block">&larr; Back to Dashboard</a>
+                <h1 class="text-3xl md:text-4xl font-bold text-stone-900">Module 2: The Serverless Backend</h1>
+                <p class="text-stone-500 mt-2 text-lg">The Central Nervous System of Your Learning Experience</p>
+            </header>
+
+            <main class="space-y-16">
+                <section>
+                    <h2 class="text-2xl font-bold mb-4">Why a Backend is Essential for E-Learning</h2>
+                    <p class="text-stone-600 mb-6">In Module 1, we focused on the **frontend**—the visual, interactive part of our course that the learner sees. However, a truly dynamic learning experience needs a "brain" to handle everything that happens behind the scenes. This is the **backend**. A backend is what turns a simple webpage into a full-featured Learning Management System (LMS).</p>
+                    <p class="text-stone-600 mb-6">For this course, we use a modern approach called a **serverless backend**. This means we don't have to manage a traditional, always-on server. Instead, we use cloud functions that run only when needed, which is more efficient and cost-effective. Our backend acts as a secure intermediary between the learner and our key services.</p>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                        <div class="flex flex-col md:flex-row items-center justify-center">
+                            <div class="diagram-box">
+                                <span class="text-2xl">👩‍🎓</span>
+                                <h3 class="font-bold">Learner (Frontend)</h3>
+                            </div>
+                            <div class="diagram-arrow transform md:rotate-0 rotate-90 my-4 md:my-0">↔️</div>
+                            <div class="diagram-box bg-blue-50 border-blue-200">
+                                 <span class="text-2xl">🧠</span>
+                                <h3 class="font-bold">Serverless Backend (API)</h3>
+                            </div>
+                            <div class="diagram-arrow transform md:rotate-0 rotate-90 my-4 md:my-0">↔️</div>
+                            <div class="diagram-box">
+                                 <span class="text-2xl">📦</span>
+                                <h3 class="font-bold">Databases & Services</h3>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 class="text-2xl font-bold mb-4">Managing Your Learners: Authentication</h2>
+                    <p class="text-stone-600 mb-6">The first and most fundamental job of our backend is to manage user identity. When a student creates an account or logs in, the frontend sends their credentials to our backend. The backend, using **Firebase Authentication**, securely verifies their identity and establishes a logged-in session. This is the foundation of any personalized learning experience. Without it, the system has no way of knowing who is taking the course, and therefore cannot save their progress or grades.</p>
+                </section>
+
+                <section>
+                    <h2 class="text-2xl font-bold mb-4">Tracking Progress & Grades: The Database</h2>
+                    <p class="text-stone-600 mb-6">A learner's journey needs to be persistent. If they log out and come back later, their progress should be saved. Our backend handles this by communicating with a **Firestore Database**. When a learner completes a module or takes an assessment, the frontend sends this information to the backend. The backend then securely writes that data to the database, storing it under that specific user's ID. When the user returns to the dashboard or the grades page, the backend retrieves this data, ensuring a seamless and continuous learning experience.</p>
+                </section>
+
+                <section>
+                    <h2 class="text-2xl font-bold mb-4">Communication & Automation: External APIs</h2>
+                    <p class="text-stone-600 mb-6">Our backend can also communicate with other specialized services through APIs. A perfect example is our email notification system. The frontend doesn't send emails directly—that would be insecure. Instead, it tells our backend, "This student just finished their assessment." Our backend then securely uses its secret API key to tell the **Resend** service to send a formatted confirmation email. This allows us to automate actions and integrate powerful features without compromising security.</p>
+                </section>
+
+                <section>
+                    <h2 class="text-2xl font-bold mb-4">A Note on SCORM and the Modern Web</h2>
+                    <p class="text-stone-600 mb-6">You mentioned **SCORM** (Sharable Content Object Reference Model), and that's an excellent point. SCORM is a set of technical standards that allows e-learning content to work with various LMS platforms. Its primary job is to report on completion status and scores—exactly what our backend does!</p>
+                    <p class="text-stone-600 mb-6">While SCORM is a cornerstone of the traditional e-learning world, the modern web app approach we're building is more flexible and powerful. By using a custom backend with a database and APIs, we are essentially creating our own, more robust tracking system. This approach, often called an **xAPI-like** or **Experience API** model, allows us to track not just grades, but any interaction we can imagine—from time spent on a page to specific choices made in a scenario. We are achieving the goals of SCORM in a way that is perfectly tailored to our custom learning experience.</p>
+                </section>
+
+                <section class="text-center py-10">
+                     <a href="#" class="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition text-lg">
+                        Proceed to Module 2 Quiz
+                    </a>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+      
+      const firebaseConfig = { apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM", authDomain: "elearning-e83cb.firebaseapp.com", projectId: "elearning-e83cb", storageBucket: "elearning-e83cb.appspot.com", messagingSenderId: "25473938624", appId: "1:25473938624:web:5b56738933543f32a7e925", measurementId: "G-R713G5DD1S" };
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+
+      const loader = document.getElementById('loader');
+      const appContent = document.getElementById('app-content');
+      const userEmailEl = document.getElementById('user-email');
+      const logoutBtn = document.getElementById('logout-btn');
+      const profileBtn = document.getElementById('profile-btn');
+      const profileDropdown = document.getElementById('profile-dropdown');
+
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          userEmailEl.textContent = user.email;
+          loader.style.display = 'none';
+          appContent.classList.remove('hidden');
+        } else {
+          window.location.href = '/login.html';
+        }
+      });
+
+      profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
+      window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
+      logoutBtn.addEventListener('click', () => { signOut(auth).then(() => window.location.href = '/login.html'); });
+    </script>
+</body>
+</html>
