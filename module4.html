@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 4: User Authentication</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .code-block { background-color: #1e293b; color: #e2e8f0; font-family: monospace; }
+        .concept-card { transition: transform 0.2s, box-shadow 0.2s; }
+        .concept-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .interactive-tab { cursor: pointer; padding: 0.5rem 1rem; border-bottom: 2px solid transparent; }
+        .interactive-tab.active { border-color: #4f46e5; color: #4f46e5; font-weight: 600; }
+        /* Formative Quiz Styles */
+        .sortable-item { cursor: grab; }
+        .drop-zone { border: 2px dashed #9ca3af; min-height: 100px; transition: background-color 0.2s; }
+        .drop-zone.over { background-color: #e0e7ff; }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <header class="bg-white shadow-sm border-b border-stone-200 sticky top-0 z-40">
+        <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
+            <a href="dashboard.html" class="text-xl font-bold text-stone-900">Learning Experience Forge</a>
+            <div class="flex items-center gap-4">
+                 <div class="relative">
+                    <button id="profile-btn" class="flex items-center gap-2">
+                        <span id="user-email-nav" class="text-sm text-stone-600 hidden sm:block"></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
+                    </button>
+                    <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-stone-200 overflow-hidden">
+                        <a href="grades.html" class="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100">My Grades</a>
+                        <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100">Settings</a>
+                        <div class="border-t border-stone-200"></div>
+                        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100">Log Out</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
+        <header class="mb-12">
+            <h1 class="text-3xl md:text-5xl font-bold text-stone-900">Module 4: The Gateway to Learning</h1>
+            <p class="text-stone-500 mt-3 text-xl">Building Secure and Seamless User Authentication</p>
+        </header>
+
+        <div class="space-y-16">
+
+            <!-- Section 1: The Why -->
+            <section>
+                <h2 class="text-2xl md:text-3xl font-bold mb-4">Why Authentication is the Cornerstone of Modern E-Learning</h2>
+                <p class="text-stone-600 mb-6">In the past, e-learning was often a one-size-fits-all experience. Everyone saw the same content, and there was no sense of personal journey. Authentication—the process of verifying a user's identity—changes everything. It's the key that unlocks a world of personalized, secure, and engaging learning. Without it, our application is just a public website; with it, it becomes a dedicated learning environment.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 concept-card">
+                        <div class="text-3xl mb-3">🛡️</div>
+                        <h3 class="font-bold text-lg">Data Security</h3>
+                        <p class="text-stone-600 mt-2 text-sm">Protects sensitive user information like grades, progress, and personal details, ensuring privacy and building trust.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 concept-card">
+                        <div class="text-3xl mb-3"> personalize</div>
+                        <h3 class="font-bold text-lg">Personalized Paths</h3>
+                        <p class="text-stone-600 mt-2 text-sm">Allows the application to "remember" each user, tracking their progress and tailoring the experience to their specific needs.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 concept-card">
+                        <div class="text-3xl mb-3">👥</div>
+                        <h3 class="font-bold text-lg">Community Building</h3>
+                        <p class="text-stone-600 mt-2 text-sm">Forms the foundation for social features like discussion boards, enabling learners to interact with each other and the instructor.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: The How -->
+            <section>
+                <h2 class="text-2xl md:text-3xl font-bold mb-4">The "How": Building a Secure Front Door with Firebase</h2>
+                <p class="text-stone-600 mb-6">Building a secure login system from scratch is a monumental task fraught with security risks. That's why we leverage a service like **Firebase Authentication**. It acts as our expert security team, handling all the complex, high-stakes work of password hashing, session management, and protecting against attacks. Our job is to simply connect our sign-up and login forms to their service.</p>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                    <h3 class="font-semibold text-lg mb-4">Example 1: Anatomy of a Secure Login</h3>
+                    <p class="text-stone-600 mb-6 text-sm">This is what happens in the few seconds after a user clicks "Log In." Notice how your application never directly handles the user's password. It acts as a secure messenger between the user and Firebase.</p>
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-center">
+                        <div class="flex flex-col items-center">
+                            <div class="text-4xl">👤</div>
+                            <h4 class="font-bold mt-2">1. User</h4>
+                            <p class="text-xs text-stone-500">Enters email & password</p>
+                        </div>
+                        <div class="text-2xl text-stone-300 transform md:rotate-0 rotate-90">→</div>
+                        <div class="flex flex-col items-center">
+                             <div class="text-4xl">🖥️</div>
+                            <h4 class="font-bold mt-2">2. Your App (Frontend)</h4>
+                            <p class="text-xs text-stone-500">Securely sends credentials to Firebase</p>
+                        </div>
+                        <div class="text-2xl text-stone-300 transform md:rotate-0 rotate-90">→</div>
+                        <div class="flex flex-col items-center">
+                            <div class="text-4xl">🔥</div>
+                            <h4 class="font-bold mt-2">3. Firebase Auth</h4>
+                            <p class="text-xs text-stone-500">Verifies credentials against hashed password</p>
+                        </div>
+                         <div class="text-2xl text-stone-300 transform md:rotate-0 rotate-90">→</div>
+                        <div class="flex flex-col items-center">
+                            <div class="text-4xl">🔑</div>
+                            <h4 class="font-bold mt-2">4. Secure Token</h4>
+                            <p class="text-xs text-stone-500">Firebase sends a temporary token back to your app</p>
+                        </div>
+                    </div>
+                     <p class="mt-6 text-xs text-center text-stone-500">Your app then uses this token to prove the user's identity for all future actions, like fetching grades or posting on the message board.</p>
+                </div>
+            </section>
+
+            <!-- Section 3: The Code -->
+            <section>
+                 <h2 class="text-2xl md:text-3xl font-bold mb-4">Example 2: Prompting for the Core Logic</h2>
+                 <p class="text-stone-600 mb-6">While Firebase does the heavy lifting, we still need to prompt the AI to write the JavaScript that connects our forms to the service. The key is to be specific about the functions you want to use. Explore the core functions below.</p>
+                 <div class="bg-white rounded-xl shadow-sm border border-stone-200">
+                    <div class="flex border-b border-stone-200">
+                        <div id="tab-signup" class="interactive-tab active">Sign Up</div>
+                        <div id="tab-login" class="interactive-tab">Log In</div>
+                        <div id="tab-logout" class="interactive-tab">Log Out</div>
+                        <div id="tab-guard" class="interactive-tab">Auth Guard</div>
+                    </div>
+                    <div class="p-6">
+                        <div id="content-signup">
+                            <p class="text-sm text-stone-600 mb-2"><strong>Goal:</strong> To create a new user account.</p>
+                            <div class="code-block p-4 rounded-lg text-sm"><pre><code>import { createUserWithEmailAndPassword } from "firebase/auth";
+
+const email = "user@example.com";
+const password = "password123";
+
+createUserWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    // Signed up
+    const user = userCredential.user;
+    // ...
+  })
+  .catch((error) => {
+    const errorMessage = error.message;
+    // ..
+  });</code></pre></div>
+                        </div>
+                        <div id="content-login" class="hidden">
+                             <p class="text-sm text-stone-600 mb-2"><strong>Goal:</strong> To sign in an existing user.</p>
+                            <div class="code-block p-4 rounded-lg text-sm"><pre><code>import { signInWithEmailAndPassword } from "firebase/auth";
+
+signInWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    // Signed in
+    const user = userCredential.user;
+    window.location.href = '/dashboard.html';
+  })
+  .catch((error) => {
+    const errorMessage = error.message;
+  });</code></pre></div>
+                        </div>
+                        <div id="content-logout" class="hidden">
+                             <p class="text-sm text-stone-600 mb-2"><strong>Goal:</strong> To sign out the current user.</p>
+                            <div class="code-block p-4 rounded-lg text-sm"><pre><code>import { signOut } from "firebase/auth";
+
+signOut(auth).then(() => {
+  // Sign-out successful.
+  window.location.href = '/index.html';
+}).catch((error) => {
+  // An error happened.
+});</code></pre></div>
+                        </div>
+                        <div id="content-guard" class="hidden">
+                            <p class="text-sm text-stone-600 mb-2"><strong>Goal:</strong> To protect a page and redirect users who are not logged in.</p>
+                            <div class="code-block p-4 rounded-lg text-sm"><pre><code>import { onAuthStateChanged } from "firebase/auth";
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // User is signed in, see docs for a list of available properties
+    const uid = user.uid;
+    // ... page can now load data
+  } else {
+    // User is signed out
+    window.location.href = '/Login.html';
+  }
+});</code></pre></div>
+                        </div>
+                    </div>
+                 </div>
+            </section>
+
+            <!-- Section 4: Formative Assessment -->
+            <section>
+                <h2 class="text-2xl md:text-3xl font-bold mb-4">Formative Assessment: UX vs. Security Challenge</h2>
+                <p class="text-stone-600 mb-6">A great learning designer knows that security and user experience are often in a delicate balance. Drag each of the following login design choices into the bin that best describes its primary focus.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+                    <div id="items-pool" class="md:col-span-1 bg-white p-4 rounded-xl shadow-sm border border-stone-200 space-y-3">
+                        <div draggable="true" class="sortable-item bg-stone-100 p-3 rounded-lg border border-stone-200" data-category="ux">"Remember me" checkbox</div>
+                        <div draggable="true" class="sortable-item bg-stone-100 p-3 rounded-lg border border-stone-200" data-category="security">Forcing a password change every 90 days</div>
+                        <div draggable="true" class="sortable-item bg-stone-100 p-3 rounded-lg border border-stone-200" data-category="ux">"Sign in with Google" button</div>
+                        <div draggable="true" class="sortable-item bg-stone-100 p-3 rounded-lg border border-stone-200" data-category="security">Two-Factor Authentication (2FA)</div>
+                        <div draggable="true" class="sortable-item bg-stone-100 p-3 rounded-lg border border-stone-200" data-category="security">Logging out the user after 15 minutes of inactivity</div>
+                        <div draggable="true" class="sortable-item bg-stone-100 p-3 rounded-lg border border-stone-200" data-category="ux">Showing password requirements as the user types</div>
+                    </div>
+
+                    <div class="md:col-span-2 grid grid-cols-2 gap-6">
+                        <div class="bg-white p-4 rounded-xl shadow-sm">
+                            <h3 class="font-bold text-center text-indigo-700 mb-3">Prioritizes User Experience</h3>
+                            <div id="ux-zone" class="drop-zone p-3 rounded-lg bg-indigo-50"></div>
+                        </div>
+                         <div class="bg-white p-4 rounded-xl shadow-sm">
+                            <h3 class="font-bold text-center text-rose-700 mb-3">Prioritizes Security</h3>
+                            <div id="security-zone" class="drop-zone p-3 rounded-lg bg-rose-50"></div>
+                        </div>
+                    </div>
+                </div>
+                 <div class="text-center mt-8">
+                    <button id="check-sort-btn" class="px-8 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition">Check My Answers</button>
+                    <p id="sort-feedback" class="mt-4 text-sm font-medium"></p>
+                </div>
+            </section>
+            
+            <section class="text-center py-10 border-t border-stone-200">
+                 <a href="fa4.html" class="px-8 py-4 bg-indigo-800 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-900 transition text-lg">
+                    Take Summative Assessment
+                </a>
+            </section>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
+            authDomain: "elearning-e83cb.firebaseapp.com",
+            projectId: "elearning-e83cb",
+            storageBucket: "elearning-e83cb.appspot.com",
+            messagingSenderId: "25473938624",
+            appId: "1:25473938624:web:5b56738933543f32a7e925",
+            measurementId: "G-R713G5DD1S"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // --- Auth Guard ---
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = '/Login.html';
+            } else {
+                 document.getElementById('user-email-nav').textContent = user.email;
+            }
+        });
+        
+        // --- Navbar Logic ---
+        const logoutBtn = document.getElementById('logout-btn');
+        const profileBtn = document.getElementById('profile-btn');
+        const profileDropdown = document.getElementById('profile-dropdown');
+        profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
+        window.addEventListener('click', () => profileDropdown.classList.add('hidden'));
+        logoutBtn.addEventListener('click', () => signOut(auth));
+
+        // --- Interactive Tabs ---
+        const tabs = document.querySelectorAll('.interactive-tab');
+        const contents = {
+            'tab-signup': document.getElementById('content-signup'),
+            'tab-login': document.getElementById('content-login'),
+            'tab-logout': document.getElementById('content-logout'),
+            'tab-guard': document.getElementById('content-guard')
+        };
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                Object.values(contents).forEach(c => c.classList.add('hidden'));
+                contents[tab.id].classList.remove('hidden');
+            });
+        });
+
+        // --- Drag and Drop Quiz ---
+        const sortableItems = document.querySelectorAll('.sortable-item');
+        const dropZones = document.querySelectorAll('.drop-zone');
+        const checkSortBtn = document.getElementById('check-sort-btn');
+        const sortFeedback = document.getElementById('sort-feedback');
+
+        let draggedItem = null;
+
+        sortableItems.forEach(item => {
+            item.addEventListener('dragstart', (e) => {
+                draggedItem = e.target;
+                setTimeout(() => e.target.style.display = 'none', 0);
+            });
+            item.addEventListener('dragend', (e) => {
+                setTimeout(() => {
+                    draggedItem.style.display = 'block';
+                    draggedItem = null;
+                }, 0);
+            });
+        });
+
+        dropZones.forEach(zone => {
+            zone.addEventListener('dragover', e => e.preventDefault());
+            zone.addEventListener('dragenter', e => { e.preventDefault(); e.target.classList.add('over'); });
+            zone.addEventListener('dragleave', e => e.target.classList.remove('over'));
+            zone.addEventListener('drop', e => {
+                e.target.classList.remove('over');
+                e.target.appendChild(draggedItem);
+            });
+        });
+
+        checkSortBtn.addEventListener('click', () => {
+            let correct = 0;
+            const uxZone = document.getElementById('ux-zone');
+            const securityZone = document.getElementById('security-zone');
+
+            uxZone.querySelectorAll('.sortable-item').forEach(item => {
+                item.classList.remove('bg-green-200', 'bg-red-200');
+                if (item.dataset.category === 'ux') {
+                    correct++;
+                    item.classList.add('bg-green-200');
+                } else {
+                    item.classList.add('bg-red-200');
+                }
+            });
+
+             securityZone.querySelectorAll('.sortable-item').forEach(item => {
+                item.classList.remove('bg-green-200', 'bg-red-200');
+                if (item.dataset.category === 'security') {
+                    correct++;
+                    item.classList.add('bg-green-200');
+                } else {
+                    item.classList.add('bg-red-200');
+                }
+            });
+
+            sortFeedback.textContent = `You correctly sorted ${correct} out of 6 items.`;
+            if(correct === 6) {
+                sortFeedback.classList.add('text-green-600');
+                sortFeedback.classList.remove('text-red-600');
+            } else {
+                 sortFeedback.classList.add('text-red-600');
+                 sortFeedback.classList.remove('text-green-600');
+            }
+        });
+    </script>
+</body>
+</html>
