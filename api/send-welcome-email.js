@@ -57,7 +57,7 @@ export default async function handler(req, res) {
 
     // Send the email using Resend
     await resend.emails.send({
-      from: 'welcome@your-verified-domain.com', // IMPORTANT: Use an address from your verified domain
+      from: 'thewelcomewagon@commonwealthlingustics.org', // IMPORTANT: Use an address from your verified domain
       to: email,
       subject: `Welcome to the Forge, ${name}! Your Journey Starts Now.`,
       html: emailHtml
