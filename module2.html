@@ -7,37 +7,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
-        .concept-card {
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .concept-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-        }
-        /* Styles for the sorting quiz */
-        .sortable-item {
-            cursor: move;
-            transition: background-color 0.2s, opacity 0.2s;
-        }
-        .sortable-item.dragging {
-            opacity: 0.5;
-        }
-        .sort-box {
-            min-height: 150px;
-            transition: background-color 0.2s, border-color 0.2s;
-        }
-        .sort-box.drag-over {
-            background-color: #eff6ff;
-            border-color: #3b82f6;
-        }
-        .sortable-item.correct {
-            background-color: #dcfce7 !important;
-            border-color: #22c55e !important;
-        }
-        .sortable-item.incorrect {
-            background-color: #fee2e2 !important;
-            border-color: #ef4444 !important;
-        }
+        .code-block { background-color: #1e293b; color: #e2e8f0; font-family: monospace; }
+        .sorter-item { cursor: grab; }
+        .sorter-bin { min-height: 100px; }
+        .drag-over { background-color: #e0e7ff; border-style: dashed; }
     </style>
 </head>
 <body class="bg-stone-50 text-stone-800">
@@ -46,6 +19,14 @@
         <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
             <a href="dashboard.html" class="text-xl font-bold text-stone-900">Learning Experience Forge</a>
             <div class="flex items-center gap-4">
+                <div class="relative">
+                    <button id="notifications-btn" class="relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-stone-500 hover:text-stone-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                    </button>
+                    <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-stone-200 overflow-hidden">
+                        <div class="p-3 font-bold text-sm border-b">Notifications</div>
+                    </div>
+                </div>
                 <div class="relative">
                     <button id="profile-btn" class="flex items-center gap-2">
                         <span id="user-email" class="text-sm text-stone-600 hidden sm:block"></span>
@@ -62,136 +43,78 @@
         </div>
     </header>
 
-    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
-        <header class="mb-12">
-            <h1 class="text-4xl md:text-5xl font-bold text-stone-900">Module 2: The Serverless Backend</h1>
-            <p class="text-stone-500 mt-3 text-xl">Your Course's Central Nervous System</p>
+    <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
+        <header class="mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-stone-900">Module 2: The Serverless Backend</h1>
+            <p class="text-stone-500 mt-2 text-lg">Your Course's Central Nervous System</p>
         </header>
-
-        <main class="space-y-16">
-
+        
+        <div class="space-y-12">
             <section>
-                <h2 class="text-3xl font-bold mb-4">Why a Backend is Essential</h2>
-                <p class="text-stone-600 text-lg mb-6">
-                    While the frontend (what the user sees and clicks) is crucial for the learning experience, the backend is the invisible engine that makes everything work. It's your course's brain, handling all the critical tasks that require security, persistence, and reliability. Without a backend, your course is just a collection of static pages; with one, it becomes a dynamic, personalized platform.
-                </p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="concept-card bg-white p-6 rounded-xl shadow-sm border border-stone-200">
-                        <h3 class="font-bold text-lg text-indigo-600">Persistence</h3>
-                        <p class="text-stone-600 mt-2">The backend remembers things. It stores user progress, grades, and discussion posts in a database so the information is still there when the user logs back in tomorrow.</p>
-                    </div>
-                    <div class="concept-card bg-white p-6 rounded-xl shadow-sm border border-stone-200">
-                        <h3 class="font-bold text-lg text-indigo-600">Security</h3>
-                        <p class="text-stone-600 mt-2">It protects sensitive information. Your backend is where you safely store API keys and manage who is allowed to access what data, ensuring student grades and personal info remain private.</p>
-                    </div>
-                </div>
+                <h2 class="text-2xl font-bold mb-4">Why a Backend is Non-Negotiable</h2>
+                <p class="text-stone-600 mb-4">In Module 1, we focused on the frontend—what the user sees and interacts with. But for a learning experience to be meaningful, it needs **persistence**. A learner's progress, their grades, and their interactions must be saved and retrieved. This is the job of the backend.</p>
+                <p class="text-stone-600">The backend is your application's brain and long-term memory. It handles everything the user can't see, from securely logging them in to saving their assessment scores in a database. Without it, every visit to your course would be a fresh start, with no memory of past achievements.</p>
             </section>
 
             <section>
-                <h2 class="text-3xl font-bold mb-4">Core Backend Functions in E-Learning</h2>
-                <p class="text-stone-600 text-lg mb-6">Our backend manages several key LMS functions. Let's explore the most important ones.</p>
+                <h2 class="text-2xl font-bold mb-4">User Authentication: The Secure Front Door</h2>
+                 <p class="text-stone-600 mb-4">Before you can save a student's progress, you need to know who they are. This is authentication. Building a secure login system from scratch is incredibly difficult and risky. This is why we use a dedicated service like **Firebase Authentication**. It handles the complexities of security so you can focus on the learning experience.</p>
+                <p class="text-stone-600 mb-4">When a user signs up, Firebase doesn't just store their password. It performs a one-way cryptographic function called **hashing**. The result, a long, unique string, is stored—not the password itself. When the user logs in, Firebase hashes the entered password and compares it to the stored hash. Because this is a one-way process, even if a database is compromised, the actual passwords remain secret. Upon successful login, Firebase gives the user a temporary, secure **token** (a JWT), which acts as their ID card for all future requests, proving who they are without sending their password over and over.</p>
                 
-                <div class="space-y-4 bg-white p-8 rounded-xl shadow-sm border border-stone-200">
-                    <h3 class="text-2xl font-bold">User Authentication (The Gatekeeper)</h3>
-                    <p class="text-stone-600">
-                        This is more than just a login form; it's the foundation of your platform's security. Handling user passwords yourself is incredibly risky. A single mistake could expose all your user data. This is why we use a dedicated service like Firebase Authentication.
-                    </p>
-                    <p class="text-stone-600">
-                        When a user signs up, Firebase doesn't just store their password. It performs a one-way transformation called **hashing**, turning the password into a long, irreversible string of characters. When the user logs in again, Firebase hashes the password they entered and compares the hashes. The actual password is never stored and never sent across the network, making the process highly secure.
-                    </p>
-                    <p class="text-stone-600">
-                        Once authenticated, Firebase gives the user's browser a secure token (a JWT, or JSON Web Token). This token is like a temporary, cryptographic ID card. For every subsequent action, like fetching grades or posting in a discussion, the browser shows this ID card to the database to prove who the user is. This is how we ensure users can only see their own grades and that their discussion posts are correctly attributed to them.
-                    </p>
-                    
-                    <div class="pt-8 mt-8 border-t">
-                        <h4 class="text-xl font-bold text-center mb-4">Knowledge Check: Security Practices</h4>
-                        <p class="text-center text-stone-600 mb-6">Drag the items below into the correct categories.</p>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <h5 class="font-bold text-center text-green-600 mb-2">Good Practice 👍</h5>
-                                <div id="good-box" class="sort-box bg-green-50 border-2 border-dashed border-green-300 rounded-lg p-4 space-y-2"></div>
-                            </div>
-                            <div>
-                                <h5 class="font-bold text-center text-red-600 mb-2">Bad Practice 👎</h5>
-                                <div id="bad-box" class="sort-box bg-red-50 border-2 border-dashed border-red-300 rounded-lg p-4 space-y-2"></div>
-                            </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 mt-8">
+                    <h3 class="font-bold text-lg mb-4 text-center">Formative Quiz: Security Best Practices Sorter</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                        <!-- Bins -->
+                        <div>
+                            <h4 class="font-semibold text-center mb-2 text-green-700">Good Practice</h4>
+                            <div id="good-bin" class="sorter-bin bg-green-50 border-2 border-green-200 rounded-lg p-4 space-y-2"></div>
                         </div>
-                        <div id="unsorted-box" class="mt-6 p-4 space-y-2 bg-stone-100 rounded-lg">
-                            <div id="item1" class="sortable-item bg-white p-3 rounded-lg shadow-sm border" draggable="true" data-correct-bin="good">Using a trusted third-party service like Firebase.</div>
-                            <div id="item2" class="sortable-item bg-white p-3 rounded-lg shadow-sm border" draggable="true" data-correct-bin="bad">Storing user passwords in plain text in the database.</div>
-                            <div id="item3" class="sortable-item bg-white p-3 rounded-lg shadow-sm border" draggable="true" data-correct-bin="good">Using secure HTTPS for all login and data traffic.</div>
-                            <div id="item4" class="sortable-item bg-white p-3 rounded-lg shadow-sm border" draggable="true" data-correct-bin="bad">Sending the password back to the frontend after login.</div>
-                        </div>
-                        <div class="text-center mt-6">
-                            <button id="check-sorter-btn" class="hidden px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition">Check Answers</button>
-                            <p id="sorter-results" class="hidden font-bold text-lg"></p>
+                        <div>
+                            <h4 class="font-semibold text-center mb-2 text-red-700">Bad Practice</h4>
+                            <div id="bad-bin" class="sorter-bin bg-red-50 border-2 border-red-200 rounded-lg p-4 space-y-2"></div>
                         </div>
                     </div>
-                </div>
-
-                <div class="space-y-4 mt-6">
-                     <div class="bg-white p-8 rounded-xl shadow-sm border border-stone-200">
-                        <h3 class="text-2xl font-bold">Database Management (The Memory)</h3>
-                        <p class="text-stone-600">Our backend uses Firestore, a NoSQL database, to store all persistent data. When a user completes an assessment, the frontend securely tells the backend to write that grade to the database under that user's unique ID. The security rules we write are the gatekeepers, ensuring a user can only ever read or write their own data.</p>
+                    <!-- Items to be Sorted -->
+                    <div id="items-container" class="mt-6 flex flex-wrap gap-3 justify-center">
+                        <div class="sorter-item bg-white p-3 rounded-lg shadow-sm border cursor-grab" draggable="true" data-bin="good">Using a service like Firebase Auth</div>
+                        <div class="sorter-item bg-white p-3 rounded-lg shadow-sm border cursor-grab" draggable="true" data-bin="bad">Storing passwords in plain text</div>
+                        <div class="sorter-item bg-white p-3 rounded-lg shadow-sm border cursor-grab" draggable="true" data-bin="good">Password hashing</div>
+                        <div class="sorter-item bg-white p-3 rounded-lg shadow-sm border cursor-grab" draggable="true" data-bin="bad">Using a secret API key in frontend code</div>
+                        <div class="sorter-item bg-white p-3 rounded-lg shadow-sm border cursor-grab" draggable="true" data-bin="good">Using secure tokens (JWTs)</div>
                     </div>
-                     <div class="bg-white p-8 rounded-xl shadow-sm border border-stone-200">
-                        <h3 class="text-2xl font-bold">Serverless Functions (The Messengers)</h3>
-                        <p class="text-stone-600">For actions that require a secret key, like sending an email with Resend, we use serverless functions. The frontend sends the data (e.g., "send this email to this user"), and the function, running securely on a server, executes the command using the hidden API key. This prevents our secret keys from ever being exposed in the browser.</p>
+                    <div class="text-center mt-6">
+                        <button id="check-sorter-btn" class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">Check Answers</button>
+                        <p id="sorter-feedback" class="mt-4 text-sm font-medium"></p>
                     </div>
                 </div>
             </section>
 
             <section>
-                <h2 class="text-3xl font-bold mb-4">Beyond SCORM: Modern Data for Modern Learning</h2>
-                <p class="text-stone-600 text-lg mb-4">
-                    Many in the e-learning world are familiar with SCORM (Sharable Content Object Reference Model). For years, it has been the standard for packaging courses and sending simple data—like "completed" or "passed"—back to a traditional Learning Management System (LMS). While revolutionary for its time, building with modern web technologies allows for a much more robust and effective system.
-                </p>
-                <div class="bg-white p-8 rounded-xl shadow-sm border border-stone-200">
-                    <h3 class="font-bold text-xl mb-3">Mastering the Core Logic</h3>
-                    <p class="text-stone-600 mb-4">
-                        Think about what a SCORM package is: a self-contained website (HTML, CSS, JS) that uses a specific JavaScript API to communicate with an LMS. The skills you are learning in this course—prompting an AI to create interactive components, manage state with JavaScript, and structure data—are the exact same skills required to build the contents of a SCORM package.
-                    </p>
-                    <p class="text-stone-600">
-                        The only difference is the final step. Instead of sending data to Firestore, you would prompt the AI to send it to the SCORM API. For example:
-                    </p>
-                    <ul class="list-disc list-inside text-stone-600 mt-4 space-y-2">
-                        <li><strong>Our Method:</strong> `await setDoc(doc(db, 'progress', userId), { module1_completed: true });`</li>
-                        <li><strong>SCORM Method:</strong> `SCORM.set("cmi.core.lesson_status", "completed");`</li>
-                    </ul>
-                    <p class="text-stone-600 mt-4">
-                        By learning to build dynamic web applications, you are inherently becoming a highly competent SCORM developer. You are learning to control the engine, not just the paint job.
-                    </p>
-                </div>
-                 <div class="bg-white p-8 rounded-xl shadow-sm border border-stone-200 mt-6">
-                    <h3 class="font-bold text-xl mb-3">The Advantage of a Modern Backend</h3>
-                    <p class="text-stone-600">
-                        The true power of using a modern backend like Firebase is the richness of the data you can track. SCORM is limited to a few predefined data points. With Firestore, you can track anything you can imagine, providing deep insights into the learning process:
-                    </p>
-                     <ul class="list-disc list-inside text-stone-600 mt-4 space-y-2">
-                        <li>How long did a learner spend on a specific scenario before making a choice?</li>
-                        <li>Which incorrect answers were most commonly selected on a quiz?</li>
-                        <li>Did the learner re-watch a video or re-read a section of text?</li>
-                    </ul>
-                     <p class="text-stone-600 mt-4">
-                        This level of detail is a goldmine for an instructional designer, allowing for true data-driven course improvement. While you will be fully capable of building for SCORM when a project requires it, this course teaches you how to build a more effective, insightful, and engaging learning system from the ground up.
-                    </p>
-                </div>
+                <h2 class="text-2xl font-bold mb-4">A Note on SCORM: The Old vs. The New</h2>
+                <p class="text-stone-600 mb-4">Many in the e-learning world are familiar with **SCORM** (Sharable Content Object Reference Model). At its core, SCORM is simply a set of technical standards that defines how a piece of e-learning content (the "SCO") communicates with a Learning Management System (LMS). This communication happens through a frontend JavaScript API. When you complete a quiz in a SCORM package, the content uses a JavaScript call like `LMSSetValue('cmi.core.score.raw', '85')` to tell the LMS your score.</p>
+                <p class="text-stone-600 mb-4">The skills you are learning in this course make you **more than competent** to work with SCORM. By mastering how to build interactive web components and communicate with a backend, you are learning the fundamental principles that SCORM itself is built on. You could easily prompt an AI to create a simple quiz and then add the necessary JavaScript SCORM calls to make it compliant if a project required it.</p>
+                <p class="text-stone-600 font-semibold">However, the modern, serverless backend approach offers a far more robust and effective system.</p>
+                <ul class="list-disc list-inside text-stone-600 space-y-2">
+                    <li><strong>Richer Data:</strong> SCORM is limited to tracking predefined data points (e.g., completion, score, time). With a modern backend like Firestore, you can track anything: every click, every choice in a scenario, time spent on a specific interaction, etc. This provides infinitely richer data for learning analytics.</li>
+                    <li><strong>Flexibility and Independence:</strong> Your application is not tied to an LMS. It can function as a standalone platform, giving you complete control over the user experience.</li>
+                    <li><strong>Real-Time Interaction:</strong> Features like a live message board are simply not possible with the SCORM standard. A serverless backend enables dynamic, community-based learning experiences.</li>
+                </ul>
             </section>
 
-            <section class="text-center py-10">
-                 <a href="dashboard.html" class="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition text-lg">
-                    Return to Dashboard
+             <section class="text-center py-10">
+                 <a href="fa2.html" class="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition text-lg">
+                    Take Summative Assessment
                 </a>
             </section>
-        </main>
-    </div>
+        </div>
+    </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        
+
         const firebaseConfig = {
-            apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
+             apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
             authDomain: "elearning-e83cb.firebaseapp.com",
             projectId: "elearning-e83cb",
             storageBucket: "elearning-e83cb.appspot.com",
@@ -202,90 +125,85 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-
+        
+        // --- Auth Guard ---
+        onAuthStateChanged(auth, user => {
+            if (!user) {
+                window.location.href = '/Login.html';
+            } else {
+                 userEmailEl.textContent = user.email;
+            }
+        });
+        
+        // --- Navbar Logic ---
         const userEmailEl = document.getElementById('user-email');
         const logoutBtn = document.getElementById('logout-btn');
         const profileBtn = document.getElementById('profile-btn');
         const profileDropdown = document.getElementById('profile-dropdown');
-
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                userEmailEl.textContent = user.email;
-            } else {
-                window.location.href = '/Login.html';
-            }
-        });
-
+        const notificationsBtn = document.getElementById('notifications-btn');
+        const notificationsDropdown = document.getElementById('notifications-dropdown');
         profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
-        window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
-        logoutBtn.addEventListener('click', () => { signOut(auth); });
+        notificationsBtn.addEventListener('click', (e) => { e.stopPropagation(); notificationsDropdown.classList.toggle('hidden'); });
+        window.addEventListener('click', () => { 
+            profileDropdown.classList.add('hidden'); 
+            notificationsDropdown.classList.add('hidden');
+        });
+        logoutBtn.addEventListener('click', () => { signOut(auth).then(() => window.location.href = '/index.html'); });
 
-        // --- Drag and Drop Sorting Quiz Logic ---
-        const sortableItems = document.querySelectorAll('.sortable-item');
-        const sortBoxes = document.querySelectorAll('.sort-box');
-        const unsortedBox = document.getElementById('unsorted-box');
+
+        // --- Drag and Drop Sorter Logic ---
+        const items = document.querySelectorAll('.sorter-item');
+        const goodBin = document.getElementById('good-bin');
+        const badBin = document.getElementById('bad-bin');
         const checkSorterBtn = document.getElementById('check-sorter-btn');
-        const sorterResults = document.getElementById('sorter-results');
-        
+        const sorterFeedback = document.getElementById('sorter-feedback');
+
         let draggedItem = null;
 
-        sortableItems.forEach(item => {
+        items.forEach(item => {
             item.addEventListener('dragstart', () => {
                 draggedItem = item;
-                setTimeout(() => item.classList.add('dragging'), 0);
+                setTimeout(() => item.style.display = 'none', 0);
             });
+
             item.addEventListener('dragend', () => {
-                draggedItem.classList.remove('dragging');
-                draggedItem = null;
-                updateCheckButtonVisibility();
+                setTimeout(() => {
+                    draggedItem.style.display = 'block';
+                    draggedItem = null;
+                }, 0);
             });
         });
 
-        sortBoxes.forEach(box => {
-            box.addEventListener('dragover', e => {
+        [goodBin, badBin].forEach(bin => {
+            bin.addEventListener('dragover', e => {
                 e.preventDefault();
-                box.classList.add('drag-over');
+                bin.classList.add('drag-over');
             });
-            box.addEventListener('dragleave', () => {
-                box.classList.remove('drag-over');
+            bin.addEventListener('dragleave', () => {
+                bin.classList.remove('drag-over');
             });
-            box.addEventListener('drop', () => {
-                box.classList.remove('drag-over');
-                if (draggedItem) {
-                    box.appendChild(draggedItem);
-                }
+            bin.addEventListener('drop', () => {
+                bin.append(draggedItem);
+                bin.classList.remove('drag-over');
             });
         });
-
-        function updateCheckButtonVisibility() {
-            if (unsortedBox.children.length === 0) {
-                checkSorterBtn.classList.remove('hidden');
-            } else {
-                checkSorterBtn.classList.add('hidden');
-            }
-        }
 
         checkSorterBtn.addEventListener('click', () => {
-            let correctCount = 0;
-            const allSortedItems = document.querySelectorAll('#good-box .sortable-item, #bad-box .sortable-item');
-
-            allSortedItems.forEach(item => {
-                item.setAttribute('draggable', 'false'); // Disable further dragging
-                const correctBin = item.dataset.correctBin;
-                const parentId = item.parentElement.id;
-
-                if ((correctBin === 'good' && parentId === 'good-box') || (correctBin === 'bad' && parentId === 'bad-box')) {
-                    item.classList.add('correct');
-                    correctCount++;
-                } else {
-                    item.classList.add('incorrect');
-                }
+            let correct = true;
+            goodBin.querySelectorAll('.sorter-item').forEach(item => {
+                if (item.dataset.bin !== 'good') correct = false;
             });
-            
-            sorterResults.textContent = `You scored ${correctCount} out of ${allSortedItems.length}!`;
-            sorterResults.classList.remove('hidden');
-            checkSorterBtn.disabled = true;
-            checkSorterBtn.textContent = 'Checked!';
+            badBin.querySelectorAll('.sorter-item').forEach(item => {
+                if (item.dataset.bin !== 'bad') correct = false;
+            });
+
+            if (correct && goodBin.children.length === 3 && badBin.children.length === 2) {
+                sorterFeedback.textContent = "Perfect! You've correctly identified the security best practices.";
+                sorterFeedback.className = 'mt-4 text-sm font-medium text-green-600';
+            } else {
+                sorterFeedback.textContent = "Not quite. Review the items and try sorting them again.";
+                 sorterFeedback.className = 'mt-4 text-sm font-medium text-red-600';
+            }
         });
     </script>
 </body>
