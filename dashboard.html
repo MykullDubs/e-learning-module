@@ -3,288 +3,262 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Course Dashboard</title>
+    <title>Course Dashboard - Learning Experience Forge</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
-        .progress-ring-bg { fill: none; stroke: #e5e7eb; }
-        .progress-ring-fg {
-            fill: none;
-            stroke: #3b82f6;
-            stroke-linecap: round;
+        .progress-circle {
             transform: rotate(-90deg);
-            transform-origin: 50% 50%;
-            transition: stroke-dashoffset 0.5s;
+        }
+        .module-card.locked {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .module-card.locked .module-icon {
+            background-color: #e5e7eb; /* gray-200 */
+            color: #9ca3af; /* gray-400 */
         }
     </style>
 </head>
 <body class="bg-stone-50 text-stone-800">
 
-    <div id="loader" class="fixed inset-0 bg-white flex items-center justify-center z-50">
-        <p class="text-lg">Loading Dashboard...</p>
-    </div>
-
-    <div id="app-content" class="hidden">
-        <header class="bg-white shadow-sm border-b border-stone-200 sticky top-0 z-40">
-            <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
-                <h1 class="text-xl font-bold text-stone-900">Learning Experience Forge</h1>
-                <div class="flex items-center gap-4">
-                    <!-- Notifications -->
-                    <div class="relative">
-                        <button id="notifications-btn" class="relative text-stone-500 hover:text-stone-800">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 00-5-5.917V5a1 1 0 00-2 0v.083A6 6 0 006 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                            </svg>
-                            <span class="absolute -top-1 -right-1 flex h-3 w-3">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-                            </span>
-                        </button>
-                        <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-stone-200 overflow-hidden">
-                            <div class="p-4 font-semibold border-b">Notifications</div>
-                            <div class="divide-y">
-                                <a href="#" class="block p-4 hover:bg-stone-50">
-                                    <p class="font-semibold">New Grade Posted</p>
-                                    <p class="text-sm text-stone-500">Your summative assessment has been graded.</p>
-                                </a>
-                            </div>
-                        </div>
+    <header class="bg-white shadow-sm border-b border-stone-200 sticky top-0 z-40">
+        <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
+            <a href="dashboard.html" class="text-xl font-bold text-stone-900">Learning Experience Forge</a>
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <button id="notifications-btn" class="relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-stone-500 hover:text-stone-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                        <span class="absolute -top-1 -right-1 flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span></span>
+                    </button>
+                    <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-stone-200 overflow-hidden">
+                        <div class="p-3 font-bold text-sm border-b">Notifications</div>
+                        <a href="#" class="block p-3 text-sm text-stone-700 hover:bg-stone-100 border-b">
+                            <p class="font-semibold">Welcome to the course!</p>
+                            <p class="text-xs text-stone-500">Your journey into AI-powered design starts now.</p>
+                        </a>
+                        <a href="#" class="block p-3 text-sm text-stone-700 hover:bg-stone-100">
+                            <p class="font-semibold">Module 1 is unlocked!</p>
+                            <p class="text-xs text-stone-500">Start learning about the foundations of prompting.</p>
+                        </a>
                     </div>
-                    <!-- Profile Dropdown -->
-                    <div class="relative">
-                        <button id="profile-btn" class="flex items-center gap-2">
-                            <span id="user-email" class="text-sm text-stone-600 hidden sm:block"></span>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-                                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
-                            </svg>
-                        </button>
-                        <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-stone-200 overflow-hidden">
-                            <a href="grades.html" class="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100">My Grades</a>
-                            <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100">Settings</a>
-                            <div class="border-t border-stone-200"></div>
-                            <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100">Log Out</button>
-                        </div>
+                </div>
+                <div class="relative">
+                    <button id="profile-btn" class="flex items-center gap-2">
+                        <span id="user-email" class="text-sm text-stone-600 hidden sm:block"></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
+                    </button>
+                    <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-stone-200 overflow-hidden">
+                        <a href="grades.html" class="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100">My Grades</a>
+                        <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100">Settings</a>
+                        <div class="border-t border-stone-200"></div>
+                        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100">Log Out</button>
                     </div>
                 </div>
             </div>
-        </header>
+        </div>
+    </header>
 
-        <main class="container mx-auto p-4 sm:p-6 md:p-8">
-            <h2 class="text-3xl font-bold text-stone-900 mb-6">Welcome back, <span id="user-name">Student</span>!</h2>
+    <main class="container mx-auto p-4 sm:p-6 md:p-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Main Content Column -->
+            <div class="lg:col-span-2">
+                <div id="welcome-card" class="bg-white p-8 rounded-xl shadow-sm border border-stone-200 mb-8">
+                    <h1 class="text-3xl font-bold text-stone-900">Welcome back, <span id="user-name"></span>!</h1>
+                    <p class="text-stone-600 mt-2">Ready to forge the future of learning?</p>
+                </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Main Content -->
-                <div class="lg:col-span-2 space-y-8">
-                    <!-- Continue Learning -->
-                    <div id="continue-learning-card" class="bg-blue-600 text-white p-8 rounded-xl shadow-lg">
-                        <!-- Dynamic Content -->
+                <a href="#" id="continue-learning-link" class="block bg-indigo-600 text-white p-6 rounded-xl shadow-lg hover:bg-indigo-700 transition mb-8">
+                    <h2 id="continue-learning-text" class="text-2xl font-bold"></h2>
+                    <p id="continue-learning-subtext" class="mt-1 opacity-90"></p>
+                </a>
+
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">Your Learning Journey</h3>
+                    <div id="modules-container" class="space-y-4">
+                        <!-- Modules will be dynamically inserted here -->
                     </div>
+                </div>
+            </div>
 
-                    <!-- Course Modules -->
-                    <div>
-                        <h3 class="text-2xl font-bold mb-4">Course Modules</h3>
-                        <div id="modules-container" class="space-y-4">
-                            <!-- Modules will be dynamically rendered here -->
+            <!-- Sidebar Column -->
+            <div class="space-y-8">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                    <h3 class="font-bold text-lg mb-4">Overall Progress</h3>
+                    <div class="relative w-40 h-40 mx-auto">
+                        <svg class="progress-circle w-full h-full" viewBox="0 0 100 100">
+                            <circle class="stroke-current text-stone-200" cx="50" cy="50" r="45" fill="none" stroke-width="10"></circle>
+                            <circle id="progress-circle-bar" class="stroke-current text-blue-600" cx="50" cy="50" r="45" fill="none" stroke-width="10" stroke-dasharray="283" stroke-dashoffset="283"></circle>
+                        </svg>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <span id="progress-percentage" class="text-3xl font-bold">0%</span>
+                            <span class="text-sm text-stone-500">Complete</span>
                         </div>
                     </div>
                 </div>
+                
+                <a href="grades.html" class="block bg-white p-6 rounded-xl shadow-sm border border-stone-200 hover:shadow-md hover:border-stone-300 transition">
+                    <h3 class="font-bold text-lg">My Grades</h3>
+                    <p class="text-sm text-stone-500 mt-1">View your assessment results.</p>
+                </a>
 
-                <!-- Sidebar -->
-                <aside class="space-y-8">
-                    <!-- Overall Progress -->
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 text-center">
-                        <h3 class="text-xl font-bold mb-4">Overall Progress</h3>
-                        <div class="relative w-40 h-40 mx-auto">
-                            <svg class="w-full h-full" viewBox="0 0 100 100">
-                                <circle class="progress-ring-bg" stroke-width="10" cx="50" cy="50" r="45"></circle>
-                                <circle id="progress-ring" class="progress-ring-fg" stroke-width="10" cx="50" cy="50" r="45"></circle>
-                            </svg>
-                            <span id="progress-text" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl font-bold">0%</span>
-                        </div>
-                    </div>
-                    <!-- Module Discussions Widget -->
-                    <a href="module-discussions.html" class="block hover:scale-[1.02] transition-transform">
-                        <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 text-center">
-                             <h3 class="text-xl font-bold mb-2">Module Discussions</h3>
-                             <p class="text-stone-500 text-sm mb-4">Ask questions and chat with your peers.</p>
-                             <span class="inline-block bg-indigo-100 text-indigo-700 font-semibold py-2 px-4 rounded-lg">
-                                Join the Conversation
-                            </span>
-                        </div>
-                    </a>
-                    <!-- My Grades Widget -->
-                    <a href="grades.html" class="block hover:scale-[1.02] transition-transform">
-                        <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 text-center">
-                             <h3 class="text-xl font-bold mb-2">My Grades</h3>
-                             <p class="text-stone-500 text-sm mb-4">View your assessment results.</p>
-                             <span class="inline-block bg-indigo-100 text-indigo-700 font-semibold py-2 px-4 rounded-lg">
-                                View Report
-                            </span>
-                        </div>
-                    </a>
-                </aside>
+                <a href="module-discussions.html" class="block bg-white p-6 rounded-xl shadow-sm border border-stone-200 hover:shadow-md hover:border-stone-300 transition">
+                    <h3 class="font-bold text-lg">Module Discussions</h3>
+                    <p class="text-sm text-stone-500 mt-1">Engage with the instructor and peers.</p>
+                </a>
             </div>
-        </main>
-    </div>
+        </div>
+    </main>
 
-    <!-- Firebase SDK Scripts -->
     <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-      import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-      import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-      const firebaseConfig = {
-        apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
-        authDomain: "elearning-e83cb.firebaseapp.com",
-        projectId: "elearning-e83cb",
-        storageBucket: "elearning-e83cb.appspot.com",
-        messagingSenderId: "25473938624",
-        appId: "1:25473938624:web:5b56738933543f32a7e925",
-        measurementId: "G-R713G5DD1S"
-      };
+        const firebaseConfig = {
+            apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
+            authDomain: "elearning-e83cb.firebaseapp.com",
+            projectId: "elearning-e83cb",
+            storageBucket: "elearning-e83cb.appspot.com",
+            messagingSenderId: "25473938624",
+            appId: "1:25473938624:web:5b56738933543f32a7e925",
+            measurementId: "G-R713G5DD1S"
+        };
 
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-      const db = getFirestore(app);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-      // --- UI Elements ---
-      const loader = document.getElementById('loader');
-      const appContent = document.getElementById('app-content');
-      const userNameEl = document.getElementById('user-name');
-      const userEmailEl = document.getElementById('user-email');
-      const modulesContainer = document.getElementById('modules-container');
-      const continueLearningCard = document.getElementById('continue-learning-card');
-      const progressRing = document.getElementById('progress-ring');
-      const progressText = document.getElementById('progress-text');
-      const notificationsBtn = document.getElementById('notifications-btn');
-      const notificationsDropdown = document.getElementById('notifications-dropdown');
-      const profileBtn = document.getElementById('profile-btn');
-      const profileDropdown = document.getElementById('profile-dropdown');
-      const logoutBtn = document.getElementById('logout-btn');
+        // --- Navbar and Auth Logic ---
+        const userEmailEl = document.getElementById('user-email');
+        const userNameEl = document.getElementById('user-name');
+        const logoutBtn = document.getElementById('logout-btn');
+        const profileBtn = document.getElementById('profile-btn');
+        const profileDropdown = document.getElementById('profile-dropdown');
+        const notificationsBtn = document.getElementById('notifications-btn');
+        const notificationsDropdown = document.getElementById('notifications-dropdown');
 
-      // --- Progress Ring Logic ---
-      const radius = progressRing.r.baseVal.value;
-      const circumference = 2 * Math.PI * radius;
-      progressRing.style.strokeDasharray = `${circumference} ${circumference}`;
-      
-      function setProgress(percent) {
-        const offset = circumference - (percent / 100) * circumference;
-        progressRing.style.strokeDashoffset = offset;
-        progressText.textContent = `${percent}%`;
-      }
+        let currentUser = null;
 
-      // --- Authentication & Data Fetching ---
-      onAuthStateChanged(auth, async (user) => {
-        if (user) {
-          const name = user.displayName || user.email.split('@')[0];
-          userNameEl.textContent = name;
-          userEmailEl.textContent = user.email;
-          
-          const progressData = await fetchUserProgress(user.uid);
-          renderDashboard(progressData);
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                userEmailEl.textContent = user.email;
+                userNameEl.textContent = user.displayName || "Learner";
+                
+                const progressDoc = await getDoc(doc(db, "progress", user.uid));
+                if (progressDoc.exists()) {
+                    renderDashboard(progressDoc.data());
+                } else {
+                    console.log("No progress data found for user.");
+                }
+            } else {
+                window.location.href = '/Login.html';
+            }
+        });
 
-          loader.style.display = 'none';
-          appContent.classList.remove('hidden');
-        } else {
-          window.location.href = '/login.html';
+        profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
+        notificationsBtn.addEventListener('click', (e) => { e.stopPropagation(); notificationsDropdown.classList.toggle('hidden'); });
+        window.addEventListener('click', () => { 
+            profileDropdown.classList.add('hidden'); 
+            notificationsDropdown.classList.add('hidden');
+        });
+        logoutBtn.addEventListener('click', () => { signOut(auth).then(() => window.location.href = '/index.html'); });
+        
+        // --- Dashboard Rendering Logic ---
+        const modulesContainer = document.getElementById('modules-container');
+        const progressCircleBar = document.getElementById('progress-circle-bar');
+        const progressPercentageEl = document.getElementById('progress-percentage');
+        const continueLearningLink = document.getElementById('continue-learning-link');
+        const continueLearningText = document.getElementById('continue-learning-text');
+        const continueLearningSubtext = document.getElementById('continue-learning-subtext');
+        
+        const modules = [
+            { id: 1, title: 'Module 1: The Foundation: Prompting for Learning', description: 'Master the art of writing effective prompts for instructional content.', url: 'module1.html' },
+            { id: 2, title: 'Module 2: The Central Nervous System: Your Serverless Backend', description: 'Understand the engine that powers a dynamic learning platform.', url: 'module2.html' },
+            { id: 3, title: 'Module 3: The Blueprint: Architecting the Learner Experience', description: 'Design and generate core navigational elements for a seamless user journey.', url: '#' },
+            { id: 4, title: 'Module 4: The Front Door: Secure User Authentication', description: 'Implement a secure system for managing user accounts, sign-ups, and logins.', url: '#' },
+            { id: 5, title: 'Module 5: The Conversation: Automating Learner Communication', description: 'Build automated email systems to create a responsive communication loop.', url: '#' },
+            { id: 6, title: 'Module 6: Measuring Mastery: AI-Powered Assessments', description: 'Build robust assessments that accurately measure learning.', url: '#' },
+            { id: 7, title: 'Module 7: The Ledger: Tracking Progress with a Live Gradebook', description: 'Connect assessments to a live, dynamic gradebook.', url: '#' },
+            { id: 8, title: 'Module 8: The Launchpad: Assembling Your Full-Stack Application', description: 'Integrate all components into a cohesive e-learning platform.', url: '#' },
+        ];
+
+        function renderDashboard(progressData) {
+            const overallProgress = progressData.overall_progress || 0;
+            
+            // Update Overall Progress Circle
+            progressPercentageEl.textContent = `${overallProgress.toFixed(0)}%`;
+            const circumference = 2 * Math.PI * 45;
+            const offset = circumference - (overallProgress / 100) * circumference;
+            progressCircleBar.style.strokeDashoffset = offset;
+
+            modulesContainer.innerHTML = '';
+            let nextModuleFound = false;
+
+            modules.forEach((module, index) => {
+                const isCompleted = progressData[`module${module.id}_completed`] === true;
+                const isUnlocked = progressData[`module${module.id}_unlocked`] === true;
+                let status, statusColor, statusText, cardClasses, icon, progressBar;
+
+                if (isCompleted) {
+                    status = 'Completed';
+                    statusColor = 'bg-green-100 text-green-800';
+                    icon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
+                    progressBar = `<div class="w-full bg-stone-200 rounded-full h-2 mt-4"><div class="bg-green-600 h-2 rounded-full" style="width: 100%;"></div></div>`;
+                } else if (isUnlocked) {
+                    status = 'In Progress';
+                    statusColor = 'bg-blue-100 text-blue-800';
+                    icon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>`;
+                    progressBar = `<div class="w-full bg-stone-200 rounded-full h-2 mt-4"><div class="bg-blue-600 h-2 rounded-full" style="width: 0%;"></div></div>`; // Always starts at 0 for now
+                    if (!nextModuleFound) {
+                        continueLearningLink.href = module.url;
+                        if(overallProgress > 0) {
+                            continueLearningText.textContent = `Pick up where you left off`;
+                            continueLearningSubtext.textContent = `You're currently working on Module ${module.id}.`;
+                        } else {
+                            continueLearningText.textContent = `Get Started Learning`;
+                            continueLearningSubtext.textContent = `Begin with Module 1: The Foundation.`;
+                        }
+                        nextModuleFound = true;
+                    }
+                } else {
+                    status = 'Locked';
+                    statusColor = 'bg-stone-100 text-stone-500';
+                    cardClasses = 'locked';
+                    icon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>`;
+                    progressBar = `<div class="w-full bg-stone-200 rounded-full h-2 mt-4"></div>`;
+                }
+
+                const moduleHTML = `
+                    <a href="${isUnlocked ? module.url : '#'}" class="module-card block bg-white p-6 rounded-xl shadow-sm border border-stone-200 hover:shadow-md hover:border-stone-300 transition ${cardClasses || ''}">
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-center gap-4">
+                                <div class="module-icon flex-shrink-0 h-12 w-12 rounded-full flex items-center justify-center ${statusColor}">
+                                    ${icon}
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-lg text-stone-900">${module.title}</h4>
+                                    <p class="text-sm text-stone-500">${module.description}</p>
+                                </div>
+                            </div>
+                            <span class="flex-shrink-0 ml-4 text-xs font-medium px-2.5 py-0.5 rounded-full ${statusColor}">${status}</span>
+                        </div>
+                        ${progressBar}
+                    </a>
+                `;
+                modulesContainer.innerHTML += moduleHTML;
+            });
+
+             if (!nextModuleFound) { // Handle case where all modules are complete
+                continueLearningLink.style.display = 'none';
+                document.getElementById('welcome-card').innerHTML = `
+                    <h1 class="text-3xl font-bold text-stone-900">Congratulations, <span id="user-name">${currentUser.displayName || "Learner"}</span>!</h1>
+                    <p class="text-stone-600 mt-2">You have completed the course. Great work!</p>
+                `;
+            }
         }
-      });
-
-      async function fetchUserProgress(userId) {
-          const progressRef = doc(db, 'progress', userId);
-          const docSnap = await getDoc(progressRef);
-          if (docSnap.exists()) {
-              return docSnap.data();
-          } else {
-              console.log("No progress document found for user, creating one.");
-              const initialData = { module1_completed: false, module2_unlocked: false, overall_progress: 0 };
-              await setDoc(progressRef, initialData);
-              return initialData;
-          }
-      }
-
-      function renderDashboard(progress) {
-          setProgress(progress.overall_progress || 0);
-          modulesContainer.innerHTML = ''; 
-          
-          // Module 1
-          const module1_status = progress.module1_completed ? 'Completed' : 'In Progress';
-          const module1_progress = progress.module1_completed ? 100 : 0;
-          modulesContainer.innerHTML += createModuleHtml(1, 'AI Prompting Fundamentals', module1_status, module1_progress, true);
-          
-          // Module 2
-          const module2_status = progress.module2_unlocked ? 'In Progress' : 'Locked';
-          modulesContainer.innerHTML += createModuleHtml(2, 'Building a Backend', module2_status, 0, progress.module2_unlocked);
-
-          // Module 3
-          modulesContainer.innerHTML += createModuleHtml(3, 'Advanced AI Techniques', 'Locked', 0, false);
-
-          // Update Continue Learning Card
-          if (progress.overall_progress === 0 && !progress.module1_completed) {
-               continueLearningCard.innerHTML = `
-                  <h3 class="text-2xl font-bold">Get Started Learning</h3>
-                  <p class="mt-2 opacity-80">Begin your journey with Module 1.</p>
-                  <a href="module1.html" class="mt-6 inline-block bg-white text-blue-600 font-semibold py-3 px-6 rounded-lg hover:bg-blue-50 transition">
-                      Go to: AI Prompting Fundamentals →
-                  </a>
-              `;
-          } else if (!progress.module1_completed) {
-              continueLearningCard.innerHTML = `
-                  <h3 class="text-2xl font-bold">Continue Learning</h3>
-                  <p class="mt-2 opacity-80">Pick up where you left off in Module 1.</p>
-                  <a href="module1.html" class="mt-6 inline-block bg-white text-blue-600 font-semibold py-3 px-6 rounded-lg hover:bg-blue-50 transition">
-                      Go to: AI Prompting Fundamentals →
-                  </a>
-              `;
-          } else if (progress.module2_unlocked) {
-              continueLearningCard.innerHTML = `
-                  <h3 class="text-2xl font-bold">Start Next Module</h3>
-                  <p class="mt-2 opacity-80">You've unlocked Module 2!</p>
-                  <a href="#" class="mt-6 inline-block bg-white text-blue-600 font-semibold py-3 px-6 rounded-lg hover:bg-blue-50 transition">
-                      Go to: Building a Backend →
-                  </a>
-              `;
-          } else {
-              continueLearningCard.innerHTML = `
-                  <h3 class="text-2xl font-bold text-green-300">Course Complete!</h3>
-                  <p class="mt-2 opacity-80">Congratulations on finishing the course!</p>
-              `;
-          }
-      }
-
-      function createModuleHtml(number, title, status, progress, isUnlocked) {
-          const colors = {
-              'Completed': { bg: 'bg-green-100', text: 'text-green-700', border: 'border-stone-200', progressBg: 'bg-green-500', icon: '✔' },
-              'In Progress': { bg: 'bg-blue-100', text: 'text-blue-700', border: 'border-2 border-blue-500', progressBg: 'bg-blue-500', icon: number },
-              'Locked': { bg: 'bg-stone-200', text: 'text-stone-500', border: 'border-stone-200 opacity-60', progressBg: 'bg-stone-300', icon: number }
-          };
-          const statusConfig = colors[status];
-          const link = isUnlocked ? `href="module${number}.html"` : '';
-          const wrapperTag = isUnlocked ? 'a' : 'div';
-
-          return `
-              <${wrapperTag} ${link} class="block ${isUnlocked ? 'hover:scale-[1.02] transition-transform' : ''}">
-                  <div class="bg-white p-6 rounded-xl shadow-sm flex items-center gap-6 ${statusConfig.border}">
-                      <div class="${statusConfig.bg} ${statusConfig.text} font-bold p-4 rounded-lg">${statusConfig.icon}</div>
-                      <div class="flex-grow">
-                          <p class="font-semibold text-lg ${status === 'Locked' ? 'text-stone-500' : ''}">${title}</p>
-                          <div class="w-full bg-stone-200 rounded-full h-2.5 mt-2">
-                              <div class="${statusConfig.progressBg} h-2.5 rounded-full" style="width: ${progress}%"></div>
-                          </div>
-                      </div>
-                      <span class="text-sm font-semibold ${statusConfig.text}">${status}</span>
-                  </div>
-              </${wrapperTag}>
-          `;
-      }
-      
-      // --- Navbar Dropdown Logic ---
-      notificationsBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.add('hidden'); notificationsDropdown.classList.toggle('hidden'); });
-      profileBtn.addEventListener('click', (e) => { e.stopPropagation(); notificationsDropdown.classList.add('hidden'); profileDropdown.classList.toggle('hidden'); });
-      window.addEventListener('click', () => { notificationsDropdown.classList.add('hidden'); profileDropdown.classList.add('hidden'); });
-      logoutBtn.addEventListener('click', () => { signOut(auth).then(() => window.location.href = '/login.html'); });
-
     </script>
 </body>
 </html>
