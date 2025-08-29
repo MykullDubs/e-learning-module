@@ -11,19 +11,22 @@
             transition: transform 0.2s, box-shadow 0.2s;
         }
         .concept-card:hover {
-            transform: translateY(-px);
+            transform: translateY(-5px);
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
         }
         /* Styles for the sorting quiz */
         .sortable-item {
-            cursor: pointer;
-            transition: background-color 0.2s;
+            cursor: move;
+            transition: background-color 0.2s, opacity 0.2s;
+        }
+        .sortable-item.dragging {
+            opacity: 0.5;
         }
         .sort-box {
             min-height: 150px;
             transition: background-color 0.2s, border-color 0.2s;
         }
-        .sort-box.over {
+        .sort-box.drag-over {
             background-color: #eff6ff;
             border-color: #3b82f6;
         }
@@ -40,7 +43,23 @@
 <body class="bg-stone-50 text-stone-800">
 
     <header class="bg-white shadow-sm border-b border-stone-200 sticky top-0 z-40">
-        <!-- Full Navbar would be inserted here -->
+        <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
+            <a href="dashboard.html" class="text-xl font-bold text-stone-900">Learning Experience Forge</a>
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <button id="profile-btn" class="flex items-center gap-2">
+                        <span id="user-email" class="text-sm text-stone-600 hidden sm:block"></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
+                    </button>
+                    <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-stone-200 overflow-hidden">
+                        <a href="grades.html" class="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100">My Grades</a>
+                        <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100">Settings</a>
+                        <div class="border-t border-stone-200"></div>
+                        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100">Log Out</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </header>
 
     <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
@@ -72,7 +91,6 @@
                 <h2 class="text-3xl font-bold mb-4">Core Backend Functions in E-Learning</h2>
                 <p class="text-stone-600 text-lg mb-6">Our backend manages several key LMS functions. Let's explore the most important ones.</p>
                 
-                <!-- User Authentication Section -->
                 <div class="space-y-4 bg-white p-8 rounded-xl shadow-sm border border-stone-200">
                     <h3 class="text-2xl font-bold">User Authentication (The Gatekeeper)</h3>
                     <p class="text-stone-600">
@@ -85,27 +103,24 @@
                         Once authenticated, Firebase gives the user's browser a secure token (a JWT, or JSON Web Token). This token is like a temporary, cryptographic ID card. For every subsequent action, like fetching grades or posting in a discussion, the browser shows this ID card to the database to prove who the user is. This is how we ensure users can only see their own grades and that their discussion posts are correctly attributed to them.
                     </p>
                     
-                    <!-- Security Best Practices Sorter -->
                     <div class="pt-8 mt-8 border-t">
                         <h4 class="text-xl font-bold text-center mb-4">Knowledge Check: Security Practices</h4>
-                        <p class="text-center text-stone-600 mb-6">Click the items below to sort them into the correct categories. Are they good or bad security practices?</p>
+                        <p class="text-center text-stone-600 mb-6">Drag the items below into the correct categories.</p>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Good Practice Box -->
                             <div>
                                 <h5 class="font-bold text-center text-green-600 mb-2">Good Practice 👍</h5>
                                 <div id="good-box" class="sort-box bg-green-50 border-2 border-dashed border-green-300 rounded-lg p-4 space-y-2"></div>
                             </div>
-                            <!-- Bad Practice Box -->
                             <div>
                                 <h5 class="font-bold text-center text-red-600 mb-2">Bad Practice 👎</h5>
                                 <div id="bad-box" class="sort-box bg-red-50 border-2 border-dashed border-red-300 rounded-lg p-4 space-y-2"></div>
                             </div>
                         </div>
-                        <div id="unsorted-box" class="mt-6 p-4 space-y-2">
-                            <div class="sortable-item bg-white p-3 rounded-lg shadow-sm border" data-correct-bin="good">Using a trusted third-party service like Firebase.</div>
-                            <div class="sortable-item bg-white p-3 rounded-lg shadow-sm border" data-correct-bin="bad">Storing user passwords in plain text in the database.</div>
-                            <div class="sortable-item bg-white p-3 rounded-lg shadow-sm border" data-correct-bin="good">Using secure HTTPS for all login and data traffic.</div>
-                            <div class="sortable-item bg-white p-3 rounded-lg shadow-sm border" data-correct-bin="bad">Sending the password back to the frontend after login.</div>
+                        <div id="unsorted-box" class="mt-6 p-4 space-y-2 bg-stone-100 rounded-lg">
+                            <div id="item1" class="sortable-item bg-white p-3 rounded-lg shadow-sm border" draggable="true" data-correct-bin="good">Using a trusted third-party service like Firebase.</div>
+                            <div id="item2" class="sortable-item bg-white p-3 rounded-lg shadow-sm border" draggable="true" data-correct-bin="bad">Storing user passwords in plain text in the database.</div>
+                            <div id="item3" class="sortable-item bg-white p-3 rounded-lg shadow-sm border" draggable="true" data-correct-bin="good">Using secure HTTPS for all login and data traffic.</div>
+                            <div id="item4" class="sortable-item bg-white p-3 rounded-lg shadow-sm border" draggable="true" data-correct-bin="bad">Sending the password back to the frontend after login.</div>
                         </div>
                         <div class="text-center mt-6">
                             <button id="check-sorter-btn" class="hidden px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition">Check Answers</button>
@@ -114,8 +129,7 @@
                     </div>
                 </div>
 
-                <!-- Other Backend Functions... -->
-                <div class="space-y-4">
+                <div class="space-y-4 mt-6">
                      <div class="bg-white p-8 rounded-xl shadow-sm border border-stone-200">
                         <h3 class="text-2xl font-bold">Database Management (The Memory)</h3>
                         <p class="text-stone-600">Our backend uses Firestore, a NoSQL database, to store all persistent data. When a user completes an assessment, the frontend securely tells the backend to write that grade to the database under that user's unique ID. The security rules we write are the gatekeepers, ensuring a user can only ever read or write their own data.</p>
@@ -163,31 +177,83 @@
                     </p>
                 </div>
             </section>
+
+            <section class="text-center py-10">
+                 <a href="dashboard.html" class="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition text-lg">
+                    Return to Dashboard
+                </a>
+            </section>
         </main>
     </div>
 
     <script type="module">
-        // Basic auth guard and navbar logic would go here
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
+            authDomain: "elearning-e83cb.firebaseapp.com",
+            projectId: "elearning-e83cb",
+            storageBucket: "elearning-e83cb.appspot.com",
+            messagingSenderId: "25473938624",
+            appId: "1:25473938624:web:5b56738933543f32a7e925",
+            measurementId: "G-R713G5DD1S"
+        };
 
-        // --- Sorting Quiz Logic ---
-        const goodBox = document.getElementById('good-box');
-        const badBox = document.getElementById('bad-box');
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        const userEmailEl = document.getElementById('user-email');
+        const logoutBtn = document.getElementById('logout-btn');
+        const profileBtn = document.getElementById('profile-btn');
+        const profileDropdown = document.getElementById('profile-dropdown');
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                userEmailEl.textContent = user.email;
+            } else {
+                window.location.href = '/Login.html';
+            }
+        });
+
+        profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
+        window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
+        logoutBtn.addEventListener('click', () => { signOut(auth); });
+
+        // --- Drag and Drop Sorting Quiz Logic ---
+        const sortableItems = document.querySelectorAll('.sortable-item');
+        const sortBoxes = document.querySelectorAll('.sort-box');
         const unsortedBox = document.getElementById('unsorted-box');
         const checkSorterBtn = document.getElementById('check-sorter-btn');
         const sorterResults = document.getElementById('sorter-results');
-        const sortableItems = Array.from(document.querySelectorAll('.sortable-item'));
         
+        let draggedItem = null;
+
         sortableItems.forEach(item => {
-            item.addEventListener('click', () => {
-                if (unsortedBox.contains(item)) {
-                    // Default to good box if not sorted yet
-                    goodBox.appendChild(item);
-                } else if (goodBox.contains(item)) {
-                    badBox.appendChild(item);
-                } else {
-                    unsortedBox.appendChild(item);
-                }
+            item.addEventListener('dragstart', () => {
+                draggedItem = item;
+                setTimeout(() => item.classList.add('dragging'), 0);
+            });
+            item.addEventListener('dragend', () => {
+                draggedItem.classList.remove('dragging');
+                draggedItem = null;
                 updateCheckButtonVisibility();
+            });
+        });
+
+        sortBoxes.forEach(box => {
+            box.addEventListener('dragover', e => {
+                e.preventDefault();
+                box.classList.add('drag-over');
+            });
+            box.addEventListener('dragleave', () => {
+                box.classList.remove('drag-over');
+            });
+            box.addEventListener('drop', () => {
+                box.classList.remove('drag-over');
+                if (draggedItem) {
+                    box.appendChild(draggedItem);
+                }
             });
         });
 
@@ -204,6 +270,7 @@
             const allSortedItems = document.querySelectorAll('#good-box .sortable-item, #bad-box .sortable-item');
 
             allSortedItems.forEach(item => {
+                item.setAttribute('draggable', 'false'); // Disable further dragging
                 const correctBin = item.dataset.correctBin;
                 const parentId = item.parentElement.id;
 
