@@ -92,20 +92,20 @@
                 <p id="passing-message" class="mt-2 text-green-600 font-semibold"></p>
                 <p id="failing-message" class="mt-2 text-red-600 font-semibold"></p>
                 <div class="mt-6 text-left bg-stone-100 p-4 rounded text-sm text-stone-700">
-                    <p class="font-semibold mb-2">An email with your results has been sent.</p>
+                    <p class="font-semibold mb-2">An email with your results has been sent and your progress has been updated.</p>
                 </div>
             </div>
              <div id="modal-error-content" class="hidden">
                 <p class="text-lg text-red-700">There was an error submitting your results. Please try again later.</p>
             </div>
-            <button id="close-modal-btn" class="mt-6 w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">Close</button>
+            <button id="close-modal-btn" class="mt-6 w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">Return to Dashboard</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM", authDomain: "elearning-e83cb.firebaseapp.com", projectId: "elearning-e83cb", storageBucket: "elearning-e83cb.appspot.com", messagingSenderId: "25473938624", appId: "1:25473938624:web:5b56738933543f32a7e925", measurementId: "G-R713G5DD1S" };
         const app = initializeApp(firebaseConfig);
@@ -117,7 +117,6 @@
         const studentNameEl = document.getElementById('student-name');
         const studentEmailEl = document.getElementById('student-email');
         const finalChallengeInput = document.getElementById('final-challenge-input');
-        // ... other element selectors
         const resultsModal = document.getElementById('results-modal');
         const closeModalBtn = document.getElementById('close-modal-btn');
         const finalScoreEl = document.getElementById('final-score');
@@ -172,13 +171,23 @@
             }
         });
 
-        async function saveGradeToFirestore(userId, scoreData) {
+        async function saveGradeAndProgress(userId, scoreData) {
             try {
                 const gradeRef = doc(db, 'grades', userId);
                 await setDoc(gradeRef, { module1_summative: scoreData }, { merge: true });
                 console.log("Grade saved successfully!");
+
+                const progressRef = doc(db, 'progress', userId);
+                await updateDoc(progressRef, {
+                    module1_completed: true,
+                    module2_unlocked: true,
+                    overall_progress: 12.5 // 1 of 8 modules
+                });
+                console.log("Progress updated successfully!");
+
             } catch (error) {
-                console.error("Error saving grade: ", error);
+                console.error("Error saving data: ", error);
+                throw new Error("Could not save progress to the database.");
             }
         }
 
@@ -200,11 +209,9 @@
 
             let mcqScore = 0;
             document.querySelectorAll('.quiz-question').forEach(q => {
-                const selected = q.querySelector('input:checked').value;
-                if (selected === q.dataset.correct) mcqScore++;
+                if (q.querySelector('input:checked').value === q.dataset.correct) mcqScore++;
             });
             
-            // Score the final challenge
             let finalChallengeScore = 0;
             const challengeText = finalChallengeInput.value.toLowerCase();
             if (challengeText.includes('act as') && challengeText.includes('create') && challengeText.includes('tailwind') && challengeText.includes('html file')) {
@@ -224,7 +231,8 @@
             const scoreData = { score: scorePercentage, timestamp: new Date() };
 
             try {
-                await saveGradeToFirestore(currentUser.uid, scoreData);
+                await saveGradeAndProgress(currentUser.uid, scoreData);
+
                 const response = await fetch('/api/send-results', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -247,7 +255,6 @@
             } finally {
                 resultsModal.style.display = 'flex';
                 submitBtn.textContent = 'Submit Final Assessment';
-                // Visual feedback for answers
                 document.querySelectorAll('.quiz-question').forEach(q => {
                     const selected = q.querySelector('input:checked');
                     const correctVal = q.dataset.correct;
@@ -262,7 +269,7 @@
         });
 
         closeModalBtn.addEventListener('click', () => {
-            resultsModal.style.display = 'none';
+            window.location.href = '/dashboard.html';
         });
     </script>
 
