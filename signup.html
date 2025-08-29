@@ -49,6 +49,7 @@
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
       import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+      import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
       
       const firebaseConfig = {
         apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
@@ -62,10 +63,22 @@
 
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
+      const db = getFirestore(app);
 
       const signupForm = document.getElementById('signup-form');
       const submitBtn = document.getElementById('submit-btn');
       const errorMessage = document.getElementById('error-message');
+
+      async function createInitialProgress(userId) {
+          const progressRef = doc(db, 'progress', userId);
+          const initialData = {
+              module1_completed: false,
+              module2_unlocked: false,
+              overall_progress: 0
+              // Add more modules as needed
+          };
+          await setDoc(progressRef, initialData);
+      }
 
       signupForm.addEventListener('submit', (e) => {
           e.preventDefault();
@@ -79,45 +92,43 @@
           submitBtn.disabled = true;
           submitBtn.textContent = 'Creating Account...';
 
+          let createdUser;
+
           createUserWithEmailAndPassword(auth, email, password)
               .then((userCredential) => {
-                  const user = userCredential.user;
-                  // Now update the user's profile with their name
-                  return updateProfile(user, { displayName: name }).then(() => user);
+                  createdUser = userCredential.user;
+                  return updateProfile(createdUser, { displayName: name });
               })
-              .then((user) => {
-                  console.log('User created and profile updated:', user);
-                  
-                  // Now that the user is created, trigger the welcome email
-                  // We don't wait for this to finish to redirect, for a faster user experience
+              .then(() => {
+                  console.log('User created and profile updated:', createdUser);
+                  return createInitialProgress(createdUser.uid);
+              })
+              .then(() => {
+                  console.log('Initial progress document created.');
                   fetch('/api/send-welcome-email', {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },
                       body: JSON.stringify({ name: name, email: email })
                   });
-                  
-                  // --- SUCCESS ---
-                  // Redirect immediately to the dashboard
                   window.location.href = '/dashboard.html';
               })
               .catch((error) => {
                   console.error("Signup Error: ", error);
                   let message = 'An unknown error occurred.';
-                  if (error.code) { // Firebase error
+                  if (error.code) { 
                       switch (error.code) {
                           case 'auth/email-already-in-use': message = 'This email address is already in use.'; break;
                           case 'auth/invalid-email': message = 'Please enter a valid email address.'; break;
                           case 'auth/weak-password': message = 'Password should be at least 6 characters long.'; break;
                           default: message = error.message; break;
                       }
-                  } else { // Our custom error
+                  } else {
                       message = error.message;
                   }
                   errorMessage.textContent = message;
                   errorMessage.classList.remove('hidden');
               })
               .finally(() => {
-                  // Re-enable the button if there was an error
                   submitBtn.disabled = false;
                   submitBtn.textContent = 'Create Account & Enter';
               });
