@@ -29,7 +29,43 @@
             <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
                 <h1 class="text-xl font-bold text-stone-900">Learning Experience Forge</h1>
                 <div class="flex items-center gap-4">
-                    <!-- Nav Bar Content... -->
+                    <!-- Notifications -->
+                    <div class="relative">
+                        <button id="notifications-btn" class="relative text-stone-500 hover:text-stone-800">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 00-5-5.917V5a1 1 0 00-2 0v.083A6 6 0 006 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                            </svg>
+                            <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                            </span>
+                        </button>
+                        <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-stone-200 overflow-hidden">
+                            <div class="p-4 font-semibold border-b">Notifications</div>
+                            <div class="divide-y">
+                                <a href="#" class="block p-4 hover:bg-stone-50">
+                                    <p class="font-semibold">New Grade Posted</p>
+                                    <p class="text-sm text-stone-500">Your summative assessment has been graded.</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Profile Dropdown -->
+                    <div class="relative">
+                        <button id="profile-btn" class="flex items-center gap-2">
+                            <span id="user-email" class="text-sm text-stone-600 hidden sm:block"></span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                            </svg>
+                        </button>
+                        <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-stone-200 overflow-hidden">
+                            <a href="grades.html" class="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100">My Grades</a>
+                            <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100">Settings</a>
+                            <div class="border-t border-stone-200"></div>
+                            <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100">Log Out</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </header>
@@ -97,10 +133,16 @@
       const loader = document.getElementById('loader');
       const appContent = document.getElementById('app-content');
       const userNameEl = document.getElementById('user-name');
+      const userEmailEl = document.getElementById('user-email');
       const modulesContainer = document.getElementById('modules-container');
       const continueLearningCard = document.getElementById('continue-learning-card');
       const progressRing = document.getElementById('progress-ring');
       const progressText = document.getElementById('progress-text');
+      const notificationsBtn = document.getElementById('notifications-btn');
+      const notificationsDropdown = document.getElementById('notifications-dropdown');
+      const profileBtn = document.getElementById('profile-btn');
+      const profileDropdown = document.getElementById('profile-dropdown');
+      const logoutBtn = document.getElementById('logout-btn');
 
       // --- Progress Ring Logic ---
       const radius = progressRing.r.baseVal.value;
@@ -118,6 +160,7 @@
         if (user) {
           const name = user.displayName || user.email.split('@')[0];
           userNameEl.textContent = name;
+          userEmailEl.textContent = user.email;
           
           const progressData = await fetchUserProgress(user.uid);
           renderDashboard(progressData);
@@ -135,7 +178,6 @@
           if (docSnap.exists()) {
               return docSnap.data();
           } else {
-              // This is a fallback in case the sign-up function failed to create the doc
               console.log("No progress document found for user, creating one.");
               const initialData = { module1_completed: false, module2_unlocked: false, overall_progress: 0 };
               await setDoc(progressRef, initialData);
@@ -144,25 +186,31 @@
       }
 
       function renderDashboard(progress) {
-          // Update Overall Progress Circle
           setProgress(progress.overall_progress || 0);
-
-          // Render Modules
-          modulesContainer.innerHTML = ''; // Clear existing
+          modulesContainer.innerHTML = ''; 
           
           // Module 1
           const module1_status = progress.module1_completed ? 'Completed' : 'In Progress';
-          modulesContainer.innerHTML += createModuleHtml(1, 'AI Prompting Fundamentals', module1_status, 100, true);
+          const module1_progress = progress.module1_completed ? 100 : 0;
+          modulesContainer.innerHTML += createModuleHtml(1, 'AI Prompting Fundamentals', module1_status, module1_progress, true);
           
           // Module 2
           const module2_status = progress.module2_unlocked ? 'In Progress' : 'Locked';
-          modulesContainer.innerHTML += createModuleHtml(2, 'Building a Backend', module2_status, 25, progress.module2_unlocked);
+          modulesContainer.innerHTML += createModuleHtml(2, 'Building a Backend', module2_status, 0, progress.module2_unlocked);
 
           // Module 3
           modulesContainer.innerHTML += createModuleHtml(3, 'Advanced AI Techniques', 'Locked', 0, false);
 
           // Update Continue Learning Card
-          if (!progress.module1_completed) {
+          if (progress.overall_progress === 0 && !progress.module1_completed) {
+               continueLearningCard.innerHTML = `
+                  <h3 class="text-2xl font-bold">Get Started Learning</h3>
+                  <p class="mt-2 opacity-80">Begin your journey with Module 1.</p>
+                  <a href="module1.html" class="mt-6 inline-block bg-white text-blue-600 font-semibold py-3 px-6 rounded-lg hover:bg-blue-50 transition">
+                      Go to: AI Prompting Fundamentals →
+                  </a>
+              `;
+          } else if (!progress.module1_completed) {
               continueLearningCard.innerHTML = `
                   <h3 class="text-2xl font-bold">Continue Learning</h3>
                   <p class="mt-2 opacity-80">Pick up where you left off in Module 1.</p>
@@ -211,6 +259,12 @@
               </${wrapperTag}>
           `;
       }
+      
+      // --- Navbar Dropdown Logic ---
+      notificationsBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.add('hidden'); notificationsDropdown.classList.toggle('hidden'); });
+      profileBtn.addEventListener('click', (e) => { e.stopPropagation(); notificationsDropdown.classList.add('hidden'); profileDropdown.classList.toggle('hidden'); });
+      window.addEventListener('click', () => { notificationsDropdown.classList.add('hidden'); profileDropdown.classList.add('hidden'); });
+      logoutBtn.addEventListener('click', () => { signOut(auth).then(() => window.location.href = '/login.html'); });
 
     </script>
 </body>
