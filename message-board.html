@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Message Board</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <div id="loader" class="fixed inset-0 bg-white flex items-center justify-center z-50">
+        <p class="text-lg">Loading Message Board...</p>
+    </div>
+
+    <div id="app-content" class="hidden">
+        <header class="bg-white shadow-sm border-b border-stone-200 sticky top-0 z-40">
+            <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
+                <a href="dashboard.html" class="text-xl font-bold text-stone-900">AI-Powered Web Dev</a>
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <button id="profile-btn" class="flex items-center gap-2">
+                            <span id="user-email" class="text-sm text-stone-600 hidden sm:block"></span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
+                        </button>
+                        <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-stone-200 overflow-hidden">
+                            <a href="grades.html" class="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100">My Grades</a>
+                            <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100">Settings</a>
+                            <div class="border-t border-stone-200"></div>
+                            <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100">Log Out</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="container mx-auto p-4 sm:p-6 md:p-8">
+            <h2 class="text-3xl font-bold text-stone-900 mb-6">Community Message Board</h2>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                <!-- Message Display -->
+                <div id="messages-container" class="space-y-4 h-96 overflow-y-auto mb-6 pr-4">
+                    <!-- Messages will be dynamically inserted here -->
+                </div>
+                
+                <!-- New Message Form -->
+                <form id="message-form" class="flex items-center gap-4 border-t pt-6">
+                    <input type="text" id="message-input" class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Write a message..." required>
+                    <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">Send</button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- Firebase SDK Scripts -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+      import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
+        authDomain: "elearning-e83cb.firebaseapp.com",
+        projectId: "elearning-e83cb",
+        storageBucket: "elearning-e83cb.appspot.com",
+        messagingSenderId: "25473938624",
+        appId: "1:25473938624:web:5b56738933543f32a7e925",
+        measurementId: "G-R713G5DD1S"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      const loader = document.getElementById('loader');
+      const appContent = document.getElementById('app-content');
+      const userEmailEl = document.getElementById('user-email');
+      const logoutBtn = document.getElementById('logout-btn');
+      const profileBtn = document.getElementById('profile-btn');
+      const profileDropdown = document.getElementById('profile-dropdown');
+      const messagesContainer = document.getElementById('messages-container');
+      const messageForm = document.getElementById('message-form');
+      const messageInput = document.getElementById('message-input');
+      
+      let currentUser = null;
+
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          currentUser = user;
+          userEmailEl.textContent = user.email;
+          loader.style.display = 'none';
+          appContent.classList.remove('hidden');
+          listenForMessages();
+        } else {
+          window.location.href = '/login.html';
+        }
+      });
+      
+      // Post a new message
+      messageForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const messageText = messageInput.value.trim();
+          if (messageText && currentUser) {
+              try {
+                  await addDoc(collection(db, 'messages'), {
+                      text: messageText,
+                      name: currentUser.displayName || currentUser.email.split('@')[0],
+                      uid: currentUser.uid,
+                      createdAt: serverTimestamp()
+                  });
+                  messageInput.value = '';
+              } catch (error) {
+                  console.error("Error sending message: ", error);
+                  alert("Could not send message. Please try again.");
+              }
+          }
+      });
+
+      // Listen for new messages in real-time
+      function listenForMessages() {
+          const q = query(collection(db, 'messages'), orderBy('createdAt'));
+          onSnapshot(q, (querySnapshot) => {
+              messagesContainer.innerHTML = '';
+              querySnapshot.forEach((doc) => {
+                  const message = doc.data();
+                  const messageEl = document.createElement('div');
+                  const isCurrentUser = currentUser && message.uid === currentUser.uid;
+                  
+                  messageEl.className = `flex items-start gap-3 ${isCurrentUser ? 'flex-row-reverse' : ''}`;
+                  messageEl.innerHTML = `
+                      <div class="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center font-bold text-sm text-stone-500">${message.name.charAt(0)}</div>
+                      <div class="flex-1">
+                          <div class="p-3 rounded-lg ${isCurrentUser ? 'bg-blue-100 text-blue-900' : 'bg-stone-100'}">
+                              <p class="font-semibold text-sm">${message.name}</p>
+                              <p>${message.text}</p>
+                          </div>
+                      </div>
+                  `;
+                  messagesContainer.appendChild(messageEl);
+              });
+              // Scroll to the bottom
+              messagesContainer.scrollTop = messagesContainer.scrollHeight;
+          });
+      }
+
+      profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
+      window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
+      logoutBtn.addEventListener('click', () => { signOut(auth).then(() => window.location.href = '/login.html'); });
+    </script>
+</body>
+</html>
