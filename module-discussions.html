@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module Discussions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .reply { margin-left: 2.5rem; }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <div id="loader" class="fixed inset-0 bg-white flex items-center justify-center z-50">
+        <p class="text-lg">Loading Discussions...</p>
+    </div>
+
+    <div id="app-content" class="hidden">
+        <header class="bg-white shadow-sm border-b border-stone-200 sticky top-0 z-40">
+            <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
+                <a href="dashboard.html" class="text-xl font-bold text-stone-900">Learning Experience Forge</a>
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <button id="profile-btn" class="flex items-center gap-2">
+                            <span id="user-email" class="text-sm text-stone-600 hidden sm:block"></span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
+                        </button>
+                        <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-stone-200 overflow-hidden">
+                            <a href="grades.html" class="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100">My Grades</a>
+                            <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100">Settings</a>
+                            <div class="border-t border-stone-200"></div>
+                            <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100">Log Out</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="container mx-auto p-4 sm:p-6 md:p-8">
+            <h2 class="text-3xl font-bold text-stone-900 mb-6">Module Discussions</h2>
+
+            <div id="discussions-container" class="space-y-8">
+                <!-- Discussion threads will be dynamically inserted here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Firebase SDK Scripts -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+      import { getFirestore, collection, doc, addDoc, query, where, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
+        authDomain: "elearning-e83cb.firebaseapp.com",
+        projectId: "elearning-e83cb",
+        storageBucket: "elearning-e83cb.appspot.com",
+        messagingSenderId: "25473938624",
+        appId: "1:25473938624:web:5b56738933543f32a7e925",
+        measurementId: "G-R713G5DD1S"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      const loader = document.getElementById('loader');
+      const appContent = document.getElementById('app-content');
+      const userEmailEl = document.getElementById('user-email');
+      const logoutBtn = document.getElementById('logout-btn');
+      const profileBtn = document.getElementById('profile-btn');
+      const profileDropdown = document.getElementById('profile-dropdown');
+      const discussionsContainer = document.getElementById('discussions-container');
+      
+      let currentUser = null;
+
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          currentUser = user;
+          userEmailEl.textContent = user.email;
+          loader.style.display = 'none';
+          appContent.classList.remove('hidden');
+          listenForDiscussions();
+        } else {
+          window.location.href = '/login.html';
+        }
+      });
+      
+      function listenForDiscussions() {
+          const q = query(collection(db, 'discussions'), where('isParent', '==', true), orderBy('createdAt', 'desc'));
+          onSnapshot(q, (querySnapshot) => {
+              discussionsContainer.innerHTML = '';
+              querySnapshot.forEach((doc) => {
+                  renderDiscussionThread(doc);
+              });
+          });
+      }
+
+      function renderDiscussionThread(parentDoc) {
+          const threadData = parentDoc.data();
+          const threadContainer = document.createElement('div');
+          threadContainer.className = 'bg-white p-6 rounded-xl shadow-sm border border-stone-200';
+          
+          threadContainer.innerHTML = `
+              <div class="flex items-start gap-4">
+                  <div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg">${threadData.authorName.charAt(0)}</div>
+                  <div class="flex-1">
+                      <p class="font-bold">${threadData.authorName} <span class="text-sm font-normal text-stone-500 ml-2">${new Date(threadData.createdAt?.toDate()).toLocaleString()}</span></p>
+                      <p class="mt-2">${threadData.text}</p>
+                  </div>
+              </div>
+              <div id="replies-${parentDoc.id}" class="mt-4 space-y-4"></div>
+              <form class="reply-form mt-4 flex items-center gap-4 border-t pt-4">
+                  <input type="hidden" name="parentId" value="${parentDoc.id}">
+                  <input type="text" name="replyText" class="w-full px-4 py-2 border border-stone-300 rounded-lg" placeholder="Write a reply..." required>
+                  <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold">Reply</button>
+              </form>
+          `;
+          discussionsContainer.appendChild(threadContainer);
+
+          // Listen for replies
+          const repliesContainer = document.getElementById(`replies-${parentDoc.id}`);
+          const repliesQuery = query(collection(db, 'discussions'), where('parentId', '==', parentDoc.id), orderBy('createdAt', 'asc'));
+          onSnapshot(repliesQuery, (snapshot) => {
+              repliesContainer.innerHTML = '';
+              snapshot.forEach(replyDoc => {
+                  const replyData = replyDoc.data();
+                  const replyEl = document.createElement('div');
+                  replyEl.className = 'reply flex items-start gap-4';
+                  replyEl.innerHTML = `
+                      <div class="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center font-bold text-sm text-stone-500">${replyData.authorName.charAt(0)}</div>
+                      <div class="flex-1">
+                          <div class="bg-stone-50 p-3 rounded-lg">
+                              <p class="font-semibold text-sm">${replyData.authorName}</p>
+                              <p>${replyData.text}</p>
+                          </div>
+                      </div>
+                  `;
+                  repliesContainer.appendChild(replyEl);
+              });
+          });
+      }
+
+      // Handle reply form submission
+      discussionsContainer.addEventListener('submit', async (e) => {
+          if (e.target.classList.contains('reply-form')) {
+              e.preventDefault();
+              const form = e.target;
+              const parentId = form.parentId.value;
+              const replyText = form.replyText.value.trim();
+
+              if (replyText && currentUser) {
+                  try {
+                      await addDoc(collection(db, 'discussions'), {
+                          text: replyText,
+                          authorName: currentUser.displayName || currentUser.email.split('@')[0],
+                          uid: currentUser.uid,
+                          createdAt: serverTimestamp(),
+                          isParent: false,
+                          parentId: parentId
+                      });
+                      form.reset();
+                  } catch (error) {
+                      console.error("Error sending reply: ", error);
+                  }
+              }
+          }
+      });
+
+      profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
+      window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
+      logoutBtn.addEventListener('click', () => { signOut(auth).then(() => window.location.href = '/login.html'); });
+    </script>
+</body>
+</html>
