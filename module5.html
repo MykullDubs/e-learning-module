@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 5: Automated Email Communication</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .code-block { background-color: #1e293b; color: #e2e8f0; font-family: monospace; }
+        .concept-card { transition: transform 0.2s, box-shadow 0.2s; }
+        .concept-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .trigger-point { cursor: pointer; transition: all 0.2s ease-in-out; }
+        .trigger-point:hover { background-color: #eff6ff; border-color: #3b82f6; }
+        .trigger-point.correct { background-color: #dcfce7 !important; border-color: #22c55e !important; }
+        .trigger-point.incorrect { background-color: #fee2e2 !important; border-color: #ef4444 !important; }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <header class="bg-white shadow-sm border-b border-stone-200 sticky top-0 z-40">
+        <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
+            <a href="dashboard.html" class="text-xl font-bold text-stone-900">Learning Experience Forge</a>
+            <div class="flex items-center gap-4">
+                 <div class="relative">
+                    <button id="profile-btn" class="flex items-center gap-2">
+                        <span id="user-email-nav" class="text-sm text-stone-600 hidden sm:block"></span>
+                        <div id="nav-avatar-container">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
+                        </div>
+                    </button>
+                    <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-stone-200 overflow-hidden">
+                        <a href="grades.html" class="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100">My Grades</a>
+                        <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100">Settings</a>
+                        <div class="border-t border-stone-200"></div>
+                        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100">Log Out</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
+        <header class="mb-12">
+            <h1 class="text-3xl md:text-5xl font-bold text-stone-900">Module 5: Closing the Loop</h1>
+            <p class="text-stone-500 mt-3 text-xl">Designing and Implementing Automated Email Communication</p>
+        </header>
+
+        <div class="space-y-16">
+
+            <!-- Section 1: The Why -->
+            <section>
+                <h2 class="text-2xl md:text-3xl font-bold mb-4">The Instructional Power of a Well-Timed Email</h2>
+                <p class="text-stone-600 mb-6">In a self-paced online course, automated emails are your most powerful tool for creating a sense of instructor presence and personalized guidance. They are not just notifications; they are carefully timed instructional interventions. A strategically designed email can provide immediate feedback, boost a learner's confidence, or gently nudge them back on track, transforming a solitary experience into a supported journey.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 concept-card">
+                        <div class="text-3xl mb-3">✅</div>
+                        <h3 class="font-bold text-lg">Immediate Feedback</h3>
+                        <p class="text-stone-600 mt-2 text-sm">Sending assessment results instantly reinforces learning and clarifies misunderstandings while the content is still fresh.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 concept-card">
+                        <div class="text-3xl mb-3">🎉</div>
+                        <h3 class="font-bold text-lg">Motivation & Reinforcement</h3>
+                        <p class="text-stone-600 mt-2 text-sm">A welcome email validates the learner's decision to sign up, while a congratulatory email after a tough module boosts confidence.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 concept-card">
+                        <div class="text-3xl mb-3">🔔</div>
+                        <h3 class="font-bold text-lg">Guidance & Re-engagement</h3>
+                        <p class="text-stone-600 mt-2 text-sm">Automated reminders or helpful tips can re-engage learners who have been inactive, reducing dropout rates.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: The How -->
+            <section>
+                <h2 class="text-2xl md:text-3xl font-bold mb-4">The Technical Blueprint: Securely Sending Emails</h2>
+                <p class="text-stone-600 mb-6">As we learned in Module 2, sending an email requires a secure backend process to protect your secret API keys. We use a **serverless function** as a secure intermediary between our frontend application and our email service provider (Resend). Let's visualize the flow when a new user signs up.</p>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-center">
+                        <div class="flex flex-col items-center">
+                            <div class="text-4xl">👤</div>
+                            <h4 class="font-bold mt-2">1. User Signs Up</h4>
+                            <p class="text-xs text-stone-500">Frontend calls Firebase Auth</p>
+                        </div>
+                        <div class="text-2xl text-stone-300 transform md:rotate-0 rotate-90">→</div>
+                        <div class="flex flex-col items-center">
+                             <div class="text-4xl">🖥️</div>
+                            <h4 class="font-bold mt-2">2. Frontend Trigger</h4>
+                            <p class="text-xs text-stone-500">After success, calls your serverless function</p>
+                        </div>
+                        <div class="text-2xl text-stone-300 transform md:rotate-0 rotate-90">→</div>
+                        <div class="flex flex-col items-center">
+                            <div class="text-4xl">⚙️</div>
+                            <h4 class="font-bold mt-2">3. Serverless Function</h4>
+                            <p class="text-xs text-stone-500">Securely uses API key to talk to Resend</p>
+                        </div>
+                         <div class="text-2xl text-stone-300 transform md:rotate-0 rotate-90">→</div>
+                        <div class="flex flex-col items-center">
+                            <div class="text-4xl">✉️</div>
+                            <h4 class="font-bold mt-2">4. Email Delivered</h4>
+                            <p class="text-xs text-stone-500">The user receives their welcome email</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: The Art -->
+            <section>
+                 <h2 class="text-2xl md:text-3xl font-bold mb-4">The Art: Crafting Emails for Learning</h2>
+                 <p class="text-stone-600 mb-6">An educational email is not a marketing blast. It should be clean, encouraging, and focused. The goal is to deliver value and guide the learner to their next step. Avoid clutter and generic language. Every word should serve the instructional purpose.</p>
+                 
+                 <div class="bg-white rounded-xl shadow-sm border border-stone-200">
+                    <h3 class="font-semibold text-lg p-6">Example: An Email Makeover</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-stone-200">
+                        <!-- Bad Example -->
+                        <div class="bg-white p-6">
+                            <h4 class="font-bold text-red-600 mb-2">The "Bad" Example</h4>
+                            <div class="border border-stone-200 rounded p-4 text-sm">
+                                <p><strong>Subject:</strong> test done</p>
+                                <p>your results for fa1 are ready. you got 13/15. you passed. click here to cont. http://ourapp.com/dash</p>
+                            </div>
+                            <ul class="text-xs text-stone-500 mt-4 space-y-1 list-disc list-inside">
+                                <li>Unprofessional subject line</li>
+                                <li>Impersonal and lacks tone</li>
+                                <li>No clear call to action</li>
+                                <li>No branding or context</li>
+                            </ul>
+                        </div>
+                        <!-- Good Example -->
+                        <div class="bg-white p-6">
+                            <h4 class="font-bold text-green-600 mb-2">The "Good" Example</h4>
+                            <div class="border border-stone-200 rounded p-4 text-sm">
+                                <p class="mb-2"><strong>Subject:</strong> Your Module 1 Assessment Results are In!</p>
+                                <p class="mb-2">Hi Alex,</p>
+                                <p class="mb-2">Great work! You scored an impressive <strong>13 / 15</strong> on the Prompting Fundamentals assessment and have successfully passed the module.</p>
+                                <p class="mb-4">Module 2 is now unlocked and ready for you.</p>
+                                <a href="#" class="text-white bg-indigo-600 px-3 py-1.5 rounded-md no-underline">Continue to Dashboard</a>
+                            </div>
+                            <ul class="text-xs text-stone-500 mt-4 space-y-1 list-disc list-inside">
+                                <li>Clear, informative subject line</li>
+                                <li>Personalized and encouraging tone</li>
+                                <li>Strong, clear call-to-action button</li>
+                                <li>Clean, professional formatting</li>
+                            </ul>
+                        </div>
+                    </div>
+                 </div>
+            </section>
+
+            <!-- Section 4: Formative Assessment -->
+            <section>
+                <h2 class="text-2xl md:text-3xl font-bold mb-4">Formative Assessment: Trigger Point Identifier</h2>
+                <p class="text-stone-600 mb-6">Your task is to act as a learning experience designer. From the scenarios below, click on the **two** that represent the most instructionally valuable moments to send an automated email.</p>
+
+                <div class="space-y-4">
+                    <div class="trigger-point bg-white p-5 rounded-lg shadow-sm border border-stone-200" data-correct="false">
+                        <h3 class="font-semibold">Scenario 1: A user logs in.</h3>
+                        <p class="text-sm text-stone-500 mt-1">This is a frequent, routine action. Emailing every time would be annoying and quickly ignored.</p>
+                    </div>
+                     <div class="trigger-point bg-white p-5 rounded-lg shadow-sm border border-stone-200" data-correct="true">
+                        <h3 class="font-semibold">Scenario 2: A user hasn't logged in for 7 days.</h3>
+                        <p class="text-sm text-stone-500 mt-1">This is a critical moment for re-engagement. A friendly email with a helpful tip or a link back to their last module can prevent them from dropping out.</p>
+                    </div>
+                     <div class="trigger-point bg-white p-5 rounded-lg shadow-sm border border-stone-200" data-correct="true">
+                        <h3 class="font-semibold">Scenario 3: A user passes a difficult summative assessment.</h3>
+                        <p class="text-sm text-stone-500 mt-1">This is a perfect opportunity for positive reinforcement. A congratulatory email validates their effort and builds momentum for the next module.</p>
+                    </div>
+                     <div class="trigger-point bg-white p-5 rounded-lg shadow-sm border border-stone-200" data-correct="false">
+                        <h3 class="font-semibold">Scenario 4: A user clicks on the "Settings" page.</h3>
+                        <p class="text-sm text-stone-500 mt-1">This is a minor administrative action. Sending an email here provides no instructional value and adds to inbox clutter.</p>
+                    </div>
+                </div>
+                <p id="trigger-feedback" class="mt-4 text-center text-sm font-medium"></p>
+            </section>
+            
+            <section class="text-center py-10 border-t border-stone-200">
+                 <a href="fa5.html" class="px-8 py-4 bg-indigo-800 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-900 transition text-lg">
+                    Take Summative Assessment
+                </a>
+            </section>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
+            authDomain: "elearning-e83cb.firebaseapp.com",
+            projectId: "elearning-e83cb",
+            storageBucket: "elearning-e83cb.appspot.com",
+            messagingSenderId: "25473938624",
+            appId: "1:25473938624:web:5b56738933543f32a7e925",
+            measurementId: "G-R713G5DD1S"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // --- Auth Guard ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                 document.getElementById('user-email-nav').textContent = user.email;
+                 const navAvatarContainer = document.getElementById('nav-avatar-container');
+                 if (user.photoURL) {
+                    navAvatarContainer.innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
+                 }
+            } else {
+                window.location.href = '/Login.html';
+            }
+        });
+        
+        // --- Navbar Logic ---
+        const logoutBtn = document.getElementById('logout-btn');
+        const profileBtn = document.getElementById('profile-btn');
+        const profileDropdown = document.getElementById('profile-dropdown');
+        profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
+        window.addEventListener('click', () => profileDropdown.classList.add('hidden'));
+        logoutBtn.addEventListener('click', () => signOut(auth));
+
+        // --- Formative Quiz Logic ---
+        const triggerPoints = document.querySelectorAll('.trigger-point');
+        const triggerFeedback = document.getElementById('trigger-feedback');
+        let selectedCount = 0;
+        let correctCount = 0;
+
+        triggerPoints.forEach(point => {
+            point.addEventListener('click', () => {
+                if (point.classList.contains('correct') || point.classList.contains('incorrect')) return;
+
+                const isCorrect = point.dataset.correct === 'true';
+
+                if (isCorrect) {
+                    point.classList.add('correct');
+                    correctCount++;
+                } else {
+                    point.classList.add('incorrect');
+                }
+                
+                selectedCount++;
+
+                if (selectedCount === 2) {
+                    if (correctCount === 2) {
+                        triggerFeedback.textContent = "Excellent! You've identified the two most impactful moments for instructional emails.";
+                        triggerFeedback.classList.add('text-green-600');
+                    } else {
+                         triggerFeedback.textContent = `You correctly identified ${correctCount} out of 2. Think about which moments provide the most value to the learner.`;
+                         triggerFeedback.classList.add('text-red-600');
+                    }
+                    // Disable further clicks
+                     triggerPoints.forEach(p => p.style.pointerEvents = 'none');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
