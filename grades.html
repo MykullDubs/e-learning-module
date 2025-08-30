@@ -22,7 +22,22 @@
     <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-stone-200 dark:border-gray-700 sticky top-0 z-40">
         <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
              <a href="dashboard.html" class="text-xl font-bold text-stone-900 dark:text-white">Learning Experience Forge</a>
-             <div class="flex items-center gap-4">
+             <div class="flex items-center gap-6">
+                 <!-- Notifications Bell -->
+                 <div class="relative">
+                    <button id="notifications-btn" class="relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-stone-500 dark:text-stone-400 hover:text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                        <span id="notifications-dot" class="hidden absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden">
+                        <div class="p-3 font-semibold text-sm border-b border-stone-200 dark:border-gray-700">Notifications</div>
+                        <div id="notifications-list" class="max-h-96 overflow-y-auto">
+                            <!-- JS will populate this -->
+                        </div>
+                    </div>
+                 </div>
+
+                 <!-- Profile Dropdown -->
                  <div class="relative">
                     <button id="profile-btn" class="flex items-center gap-2">
                         <span id="user-email-nav" class="text-sm text-stone-600 dark:text-stone-300 hidden sm:block"></span>
@@ -73,7 +88,7 @@
                             <td class="p-4"><span id="module3-status" class="px-2 py-1 text-xs font-semibold rounded-full"></span></td>
                             <td id="module3-score" class="p-4 font-medium"></td>
                         </tr>
-                        <tr id="module4-grade-row" class="border-b border-stone-200 dark:border-gray-600 hidden">
+                         <tr id="module4-grade-row" class="border-b border-stone-200 dark:border-gray-600 hidden">
                             <td class="p-4 font-medium">Module 4: The Gateway to Learning</td>
                             <td class="p-4"><span id="module4-status" class="px-2 py-1 text-xs font-semibold rounded-full"></span></td>
                             <td id="module4-score" class="p-4 font-medium"></td>
@@ -95,7 +110,7 @@
      <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, query, where, onSnapshot, orderBy, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
         
         const firebaseConfig = {
             apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
@@ -111,13 +126,36 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- Navbar Logic ---
+        // --- Navbar Elements ---
         const logoutBtn = document.getElementById('logout-btn');
         const profileBtn = document.getElementById('profile-btn');
         const profileDropdown = document.getElementById('profile-dropdown');
-        profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
-        window.addEventListener('click', () => profileDropdown.classList.add('hidden'));
-        logoutBtn.addEventListener('click', () => signOut(auth));
+        const notificationsBtn = document.getElementById('notifications-btn');
+        const notificationsDropdown = document.getElementById('notifications-dropdown');
+        const notificationsDot = document.getElementById('notifications-dot');
+        const notificationsList = document.getElementById('notifications-list');
+        
+        let unreadNotifications = [];
+        let unsubscribeNotifications = null;
+
+        // --- Navbar Logic ---
+        profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); notificationsDropdown.classList.add('hidden'); });
+        notificationsBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            profileDropdown.classList.add('hidden');
+            notificationsDropdown.classList.toggle('hidden');
+            if (!notificationsDropdown.classList.contains('hidden')) {
+                markNotificationsAsRead();
+            }
+        });
+        window.addEventListener('click', () => {
+            profileDropdown.classList.add('hidden');
+            notificationsDropdown.classList.add('hidden');
+        });
+        logoutBtn.addEventListener('click', () => {
+            if (unsubscribeNotifications) unsubscribeNotifications();
+            signOut(auth);
+        });
         
         // --- Auth Guard and Data Fetching ---
         onAuthStateChanged(auth, (user) => {
@@ -128,11 +166,88 @@
                    navAvatarContainer.innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
                 }
                 fetchGrades(user.uid);
+                listenForNotifications(user.uid);
             } else {
                 window.location.href = '/Login.html';
             }
         });
+        
+        // --- Notifications Logic ---
+        function listenForNotifications(userId) {
+            const notificationsRef = collection(db, "notifications", userId, "userNotifications");
+            const q = query(notificationsRef, orderBy("createdAt", "desc"));
 
+            unsubscribeNotifications = onSnapshot(q, (snapshot) => {
+                unreadNotifications = [];
+                notificationsList.innerHTML = '';
+                if (snapshot.empty) {
+                    notificationsList.innerHTML = `<p class="p-4 text-sm text-stone-500 dark:text-stone-400">No new notifications.</p>`;
+                    notificationsDot.classList.add('hidden');
+                    return;
+                }
+
+                let hasUnread = false;
+                snapshot.forEach(doc => {
+                    const notification = { id: doc.id, ...doc.data() };
+                    if (!notification.isRead) {
+                        hasUnread = true;
+                        unreadNotifications.push(doc.id);
+                    }
+                    displayNotification(notification);
+                });
+
+                if (hasUnread) {
+                    notificationsDot.classList.remove('hidden');
+                } else {
+                    notificationsDot.classList.add('hidden');
+                }
+            });
+        }
+
+        function displayNotification(notification) {
+            const div = document.createElement('a');
+            div.href = notification.link || '#';
+            div.className = `block px-4 py-3 border-b border-stone-100 dark:border-gray-700 hover:bg-stone-50 dark:hover:bg-gray-700 ${!notification.isRead ? 'bg-indigo-50 dark:bg-indigo-900/20' : ''}`;
+            
+            const timeAgo = formatTimeAgo(notification.createdAt.toDate());
+
+            div.innerHTML = `
+                <p class="text-sm font-medium">${notification.message}</p>
+                <p class="text-xs text-stone-500 dark:text-stone-400 mt-1">${timeAgo}</p>
+            `;
+            notificationsList.appendChild(div);
+        }
+
+        async function markNotificationsAsRead() {
+            if (unreadNotifications.length === 0 || !auth.currentUser) return;
+
+            const batch = writeBatch(db);
+            unreadNotifications.forEach(notificationId => {
+                const notifRef = doc(db, "notifications", auth.currentUser.uid, "userNotifications", notificationId);
+                batch.update(notifRef, { isRead: true });
+            });
+
+            await batch.commit();
+            unreadNotifications = []; // Clear the local list
+        }
+
+        function formatTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            let interval = seconds / 31536000;
+            if (interval > 1) return Math.floor(interval) + " years ago";
+            interval = seconds / 2592000;
+            if (interval > 1) return Math.floor(interval) + " months ago";
+            interval = seconds / 86400;
+            if (interval > 1) return Math.floor(interval) + " days ago";
+            interval = seconds / 3600;
+            if (interval > 1) return Math.floor(interval) + " hours ago";
+            interval = seconds / 60;
+            if (interval > 1) return Math.floor(interval) + " minutes ago";
+            return Math.floor(seconds) + " seconds ago";
+        }
+
+
+        // --- Grades Logic ---
         async function fetchGrades(userId) {
             const gradeRef = doc(db, "grades", userId);
             const docSnap = await getDoc(gradeRef);
@@ -152,15 +267,11 @@
                         row.classList.remove('hidden');
                         document.getElementById(`module${moduleNum}-score`).textContent = data[scoreKey];
                         statusEl.textContent = data[passedKey] ? 'Passed' : 'Failed';
-                        statusEl.className = data[passedKey] ? 'px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800' : 'px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800';
+                        statusEl.className = data[passedKey] ? 'px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' : 'px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300';
                     }
                 }
 
-                populateGradeRow(1);
-                populateGradeRow(2);
-                populateGradeRow(3);
-                populateGradeRow(4);
-                populateGradeRow(5);
+                [1, 2, 3, 4, 5].forEach(populateGradeRow);
 
                 if (!hasGrades) {
                      document.getElementById('no-grades-message').classList.remove('hidden');
