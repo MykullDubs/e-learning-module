@@ -5,26 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Grades</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Theme loader script to prevent flash of wrong theme
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+    </script>
     <style>
         body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body class="bg-stone-50 text-stone-800">
+<body class="bg-stone-50 dark:bg-gray-900 text-stone-800 dark:text-stone-200 transition-colors duration-300">
 
-    <header class="bg-white shadow-sm border-b border-stone-200 sticky top-0 z-40">
+    <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-stone-200 dark:border-gray-700 sticky top-0 z-40">
         <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
-             <a href="dashboard.html" class="text-xl font-bold text-stone-900">Learning Experience Forge</a>
+             <a href="dashboard.html" class="text-xl font-bold text-stone-900 dark:text-white">Learning Experience Forge</a>
              <div class="flex items-center gap-4">
                  <div class="relative">
                     <button id="profile-btn" class="flex items-center gap-2">
-                        <span id="user-email-nav" class="text-sm text-stone-600 hidden sm:block"></span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
+                        <span id="user-email-nav" class="text-sm text-stone-600 dark:text-stone-300 hidden sm:block"></span>
+                        <div id="nav-avatar-container">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
+                        </div>
                     </button>
-                    <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-stone-200 overflow-hidden">
-                        <a href="grades.html" class="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100">My Grades</a>
-                        <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100">Settings</a>
-                        <div class="border-t border-stone-200"></div>
-                        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100">Log Out</button>
+                    <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden">
+                        <a href="grades.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">My Grades</a>
+                        <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Settings</a>
+                        <div class="border-t border-stone-200 dark:border-gray-600"></div>
+                        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100 dark:hover:bg-gray-700">Log Out</button>
                     </div>
                 </div>
             </div>
@@ -33,37 +43,46 @@
 
     <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
         <header class="mb-10">
-            <h1 class="text-3xl md:text-4xl font-bold text-stone-900">My Grades</h1>
-            <p class="text-stone-500 mt-2 text-lg">A summary of your performance on all summative assessments.</p>
+            <h1 class="text-3xl md:text-4xl font-bold text-stone-900 dark:text-white">My Grades</h1>
+            <p class="text-stone-500 dark:text-stone-400 mt-2 text-lg">A summary of your performance on all summative assessments.</p>
         </header>
 
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-stone-200 dark:border-gray-700">
             <div class="overflow-x-auto">
                 <table class="w-full text-left">
                     <thead>
-                        <tr class="border-b border-stone-200">
+                        <tr class="border-b border-stone-200 dark:border-gray-600">
                             <th class="p-4 font-semibold">Assessment</th>
                             <th class="p-4 font-semibold">Status</th>
                             <th class="p-4 font-semibold">Score</th>
                         </tr>
                     </thead>
                     <tbody id="grades-body">
-                        <tr id="module1-grade-row" class="border-b border-stone-200 hidden">
+                        <tr id="module1-grade-row" class="border-b border-stone-200 dark:border-gray-600 hidden">
                             <td class="p-4 font-medium">Module 1: Prompting Fundamentals</td>
                             <td class="p-4"><span id="module1-status" class="px-2 py-1 text-xs font-semibold rounded-full"></span></td>
                             <td id="module1-score" class="p-4 font-medium"></td>
                         </tr>
-                        <tr id="module2-grade-row" class="border-b border-stone-200 hidden">
+                        <tr id="module2-grade-row" class="border-b border-stone-200 dark:border-gray-600 hidden">
                             <td class="p-4 font-medium">Module 2: The Serverless Backend</td>
                             <td class="p-4"><span id="module2-status" class="px-2 py-1 text-xs font-semibold rounded-full"></span></td>
                             <td id="module2-score" class="p-4 font-medium"></td>
                         </tr>
-                        <tr id="module3-grade-row" class="border-b border-stone-200 hidden">
+                        <tr id="module3-grade-row" class="border-b border-stone-200 dark:border-gray-600 hidden">
                             <td class="p-4 font-medium">Module 3: Crafting the Learner's Journey</td>
                             <td class="p-4"><span id="module3-status" class="px-2 py-1 text-xs font-semibold rounded-full"></span></td>
                             <td id="module3-score" class="p-4 font-medium"></td>
                         </tr>
-                         <!-- More rows will be added here as the course grows -->
+                        <tr id="module4-grade-row" class="border-b border-stone-200 dark:border-gray-600 hidden">
+                            <td class="p-4 font-medium">Module 4: The Gateway to Learning</td>
+                            <td class="p-4"><span id="module4-status" class="px-2 py-1 text-xs font-semibold rounded-full"></span></td>
+                            <td id="module4-score" class="p-4 font-medium"></td>
+                        </tr>
+                        <tr id="module5-grade-row" class="border-b border-stone-200 dark:border-gray-600 hidden">
+                            <td class="p-4 font-medium">Module 5: Closing the Loop</td>
+                            <td class="p-4"><span id="module5-status" class="px-2 py-1 text-xs font-semibold rounded-full"></span></td>
+                            <td id="module5-score" class="p-4 font-medium"></td>
+                        </tr>
                     </tbody>
                 </table>
                 <div id="no-grades-message" class="text-center p-8 text-stone-500 hidden">
@@ -104,6 +123,10 @@
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 document.getElementById('user-email-nav').textContent = user.email;
+                const navAvatarContainer = document.getElementById('nav-avatar-container');
+                if (user.photoURL) {
+                   navAvatarContainer.innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
+                }
                 fetchGrades(user.uid);
             } else {
                 window.location.href = '/Login.html';
@@ -118,38 +141,26 @@
                 const data = docSnap.data();
                 let hasGrades = false;
 
-                // Module 1
-                if (data.module1_score) {
-                    hasGrades = true;
-                    const row = document.getElementById('module1-grade-row');
-                    const statusEl = document.getElementById('module1-status');
-                    row.classList.remove('hidden');
-                    document.getElementById('module1-score').textContent = data.module1_score;
-                    statusEl.textContent = data.module1_passed ? 'Passed' : 'Failed';
-                    statusEl.className = data.module1_passed ? 'px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800' : 'px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800';
+                function populateGradeRow(moduleNum) {
+                    const scoreKey = `module${moduleNum}_score`;
+                    const passedKey = `module${moduleNum}_passed`;
+
+                    if (data[scoreKey]) {
+                        hasGrades = true;
+                        const row = document.getElementById(`module${moduleNum}-grade-row`);
+                        const statusEl = document.getElementById(`module${moduleNum}-status`);
+                        row.classList.remove('hidden');
+                        document.getElementById(`module${moduleNum}-score`).textContent = data[scoreKey];
+                        statusEl.textContent = data[passedKey] ? 'Passed' : 'Failed';
+                        statusEl.className = data[passedKey] ? 'px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800' : 'px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800';
+                    }
                 }
 
-                // Module 2
-                if (data.module2_score) {
-                    hasGrades = true;
-                    const row = document.getElementById('module2-grade-row');
-                    const statusEl = document.getElementById('module2-status');
-                    row.classList.remove('hidden');
-                    document.getElementById('module2-score').textContent = data.module2_score;
-                    statusEl.textContent = data.module2_passed ? 'Passed' : 'Failed';
-                    statusEl.className = data.module2_passed ? 'px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800' : 'px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800';
-                }
-
-                // Module 3
-                if (data.module3_score) {
-                    hasGrades = true;
-                    const row = document.getElementById('module3-grade-row');
-                    const statusEl = document.getElementById('module3-status');
-                    row.classList.remove('hidden');
-                    document.getElementById('module3-score').textContent = data.module3_score;
-                    statusEl.textContent = data.module3_passed ? 'Passed' : 'Failed';
-                    statusEl.className = data.module3_passed ? 'px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800' : 'px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800';
-                }
+                populateGradeRow(1);
+                populateGradeRow(2);
+                populateGradeRow(3);
+                populateGradeRow(4);
+                populateGradeRow(5);
 
                 if (!hasGrades) {
                      document.getElementById('no-grades-message').classList.remove('hidden');
