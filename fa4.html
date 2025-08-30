@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 4: Summative Assessment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .quiz-option label.correct { background-color: #dcfce7 !important; border-color: #22c55e !important; color: #166534 !important; }
+        .quiz-option label.incorrect { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
+        .quiz-option label {
+            display: block;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .quiz-option input[type="radio"]:checked + label {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        .results-modal-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 50;
+            justify-content: center;
+            align-items: center;
+        }
+        .code-block { background-color: #1e293b; color: #e2e8f0; font-family: monospace; }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <header class="bg-white shadow-sm border-b border-stone-200 sticky top-0 z-40">
+        <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
+             <a href="dashboard.html" class="text-xl font-bold text-stone-900">Learning Experience Forge</a>
+             <nav class="flex items-center gap-4">
+                <a href="dashboard.html" class="text-sm font-medium text-stone-600 hover:text-indigo-600">Dashboard</a>
+             </nav>
+        </div>
+    </header>
+
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
+        
+        <header class="mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-stone-900">Module 4 Summative Assessment</h1>
+            <p class="text-stone-500 mt-2 text-lg">Test your knowledge of user authentication.</p>
+        </header>
+
+        <main id="assessment-container" class="space-y-12">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 space-y-8">
+                
+                <!-- Questions 1-15 -->
+                <div class="quiz-question" data-correct="personalization">
+                    <p class="font-semibold mb-4">1. Beyond security, what is a primary instructional design benefit of user authentication?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q1a1" name="q1" value="faster" class="hidden"><label for="q1a1">It makes the website load faster.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q1a2" name="q1" value="personalization" class="hidden"><label for="q1a2">It enables personalization, like tracking individual progress.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q1a3" name="q1" value="simpler" class="hidden"><label for="q1a3">It makes the code simpler to write.</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="firebase">
+                    <p class="font-semibold mb-4">2. (Scenario) You are building a new learning app. To handle user sign-ups securely, what is the best practice?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q2a1" name="q2" value="store-yourself" class="hidden"><label for="q2a1">Store user passwords in your own Firestore database.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q2a2" name="q2" value="firebase" class="hidden"><label for="q2a2">Use a dedicated service like Firebase Authentication to manage it.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q2a3" name="q2" value="no-passwords" class="hidden"><label for="q2a3">Don't use passwords, just use email addresses.</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="token">
+                    <p class="font-semibold mb-4">3. After a user logs in, their browser receives a secure ______ from Firebase, which acts like a temporary ID card for future requests.</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q3a1" name="q3" value="password" class="hidden"><label for="q3a1">password</label></div>
+                        <div class="quiz-option"><input type="radio" id="q3a2" name="q3" value="token" class="hidden"><label for="q3a2">token</label></div>
+                        <div class="quiz-option"><input type="radio" id="q3a3" name="q3" value="username" class="hidden"><label for="q3a3">username</label></div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question" data-correct="createUserWithEmailAndPassword">
+                    <p class="font-semibold mb-4">4. Which Firebase function is used to create a new user account?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q4a1" name="q4" value="signInWithEmailAndPassword" class="hidden"><label for="q4a1">signInWithEmailAndPassword</label></div>
+                        <div class="quiz-option"><input type="radio" id="q4a2" name="q4" value="createUserWithEmailAndPassword" class="hidden"><label for="q4a2">createUserWithEmailAndPassword</label></div>
+                        <div class="quiz-option"><input type="radio" id="q4a3" name="q4" value="onAuthStateChanged" class="hidden"><label for="q4a3">onAuthStateChanged</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="onAuthStateChanged">
+                    <p class="font-semibold mb-4">5. What is the name of the "auth guard" function that continuously checks if a user is logged in or out?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q5a1" name="q5" value="signOut" class="hidden"><label for="q5a1">signOut</label></div>
+                        <div class="quiz-option"><input type="radio" id="q5a2" name="q5" value="signInWithPopup" class="hidden"><label for="q5a2">signInWithPopup</label></div>
+                        <div class="quiz-option"><input type="radio" id="q5a3" name="q5" value="onAuthStateChanged" class="hidden"><label for="q5a3">onAuthStateChanged</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="ux">
+                    <p class="font-semibold mb-4">6. Adding a "Sign in with Google" button primarily prioritizes...</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q6a1" name="q6" value="ux" class="hidden"><label for="q6a1">...User Experience (UX) by making login faster.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q6a2" name="q6" value="security" class="hidden"><label for="q6a2">...Security, as it's the most secure method possible.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q6a3" name="q6" value="cost" class="hidden"><label for="q6a3">...Cost, as it's cheaper than email/password logins.</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="hashed">
+                    <p class="font-semibold mb-4">7. Firebase never stores a user's password directly. Instead, it stores a one-way encrypted version called a ______.</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q7a1" name="q7" value="key" class="hidden"><label for="q7a1">key</label></div>
+                        <div class="quiz-option"><input type="radio" id="q7a2" name="q7" value="hashed" class="hidden"><label for="q7a2">hash</label></div>
+                        <div class="quiz-option"><input type="radio" id="q7a3" name="q7" value="token" class="hidden"><label for="q7a3">token</label></div>
+                    </div>
+                </div>
+
+                 <div class="quiz-question" data-correct="frontend">
+                    <p class="font-semibold mb-4">8. Where does the `onAuthStateChanged` auth guard code run?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q8a1" name="q8" value="backend" class="hidden"><label for="q8a1">On the backend server</label></div>
+                        <div class="quiz-option"><input type="radio" id="q8a2" name="q8" value="frontend" class="hidden"><label for="q8a2">On the frontend (in the user's browser)</label></div>
+                        <div class="quiz-option"><input type="radio" id="q8a3" name="q8" value="firebase" class="hidden"><label for="q8a3">Inside the Firebase console</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="redirect">
+                    <p class="font-semibold mb-4">9. (Scenario) A user who is not logged in tries to directly access the `grades.html` page. What should the auth guard do?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q9a1" name="q9" value="show-error" class="hidden"><label for="q9a1">Show an error message.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q9a2" name="q9" value="show-page" class="hidden"><label for="q9a2">Show the page, but with no grades.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q9a3" name="q9" value="redirect" class="hidden"><label for="q9a3">Redirect the user to the login page.</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="false">
+                    <p class="font-semibold mb-4">10. True or False: You should include your Firebase project's API key in your serverless function code.</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q10a1" name="q10" value="true" class="hidden"><label for="q10a1">True</label></div>
+                        <div class="quiz-option"><input type="radio" id="q10a2" name="q10" value="false" class="hidden"><label for="q10a2">False - API keys are for frontend configuration; serverless functions use more secure methods.</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="ux-and-security">
+                    <p class="font-semibold mb-4">11. Forcing a password change every 90 days is a practice that primarily prioritizes security, often at the expense of...</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q11a1" name="q11" value="ux-and-security" class="hidden"><label for="q11a1">...User Experience (UX).</label></div>
+                        <div class="quiz-option"><input type="radio" id="q11a2" name="q11" value="cost" class="hidden"><label for="q11a2">...Cost.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q11a3" name="q11" value="speed" class="hidden"><label for="q11a3">...Development speed.</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="secure">
+                    <p class="font-semibold mb-4">12. Is it secure to place your Firebase project configuration object (with API keys) in your frontend JavaScript?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q12a1" name="q12" value="insecure" class="hidden"><label for="q12a1">No, API keys should never be in frontend code.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q12a2" name="q12" value="secure" class="hidden"><label for="q12a2">Yes, these keys are designed to be public and are protected by your Firestore security rules.</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="unauthorized-read">
+                    <p class="font-semibold mb-4">13. (Code Critique) What does this Firestore security rule prevent?</p>
+                    <div class="code-block p-4 rounded-lg mb-4 text-sm">
+                        <pre><code>match /progress/{userId} {
+  allow read: if request.auth.uid == userId;
+}</code></pre>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q13a1" name="q13" value="all-reads" class="hidden"><label for="q13a1">It prevents all users from reading any progress data.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q13a2" name="q13" value="unauthorized-read" class="hidden"><label for="q13a2">It prevents a logged-in user from reading another user's progress.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q13a3" name="q13" value="all-writes" class="hidden"><label for="q13a3">It prevents all users from writing progress data.</label></div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question" data-correct="private">
+                     <p class="font-semibold mb-4">14. Which of these is NOT a primary benefit of using a service like Firebase Authentication?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q14a1" name="q14" value="security" class="hidden"><label for="q14a1">High-level security</label></div>
+                        <div class="quiz-option"><input type="radio" id="q14a2" name="q14" value="private" class="hidden"><label for="q14a2">It runs on your own private server</label></div>
+                        <div class="quiz-option"><input type="radio" id="q14a3" name="q14" value="scalability" class="hidden"><label for="q14a3">Scalability to millions of users</label></div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question" data-correct="signOut">
+                     <p class="font-semibold mb-4">15. Which Firebase function would be called when a user clicks a "Log Out" button?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q15a1" name="q15" value="deleteUser" class="hidden"><label for="q15a1">deleteUser(auth.currentUser)</label></div>
+                        <div class="quiz-option"><input type="radio" id="q15a2" name="q15" value="signOut" class="hidden"><label for="q15a2">signOut(auth)</label></div>
+                         <div class="quiz-option"><input type="radio" id="q15a3" name="q15" value="updatePassword" class="hidden"><label for="q15a3">updatePassword(auth.currentUser)</label></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="text-center py-6">
+                <button id="submit-assessment-btn" class="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition text-lg w-full sm:w-auto">
+                    Submit Final Assessment
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Results Modal -->
+    <div id="results-modal" class="results-modal-backdrop">
+        <div class="bg-white w-11/12 md:max-w-2xl rounded-lg shadow-2xl p-6 text-center">
+            <h2 id="modal-title" class="text-2xl font-bold mb-4">Assessment Complete!</h2>
+            <p class="text-lg">You scored <span id="final-score" class="font-bold"></span> out of 15.</p>
+            <p id="passing-message" class="mt-2 text-green-600 font-semibold"></p>
+            <p id="failing-message" class="mt-2 text-red-600 font-semibold"></p>
+            <button id="close-modal-btn" class="mt-6 w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">Back to Dashboard</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, setDoc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
+            authDomain: "elearning-e83cb.firebaseapp.com",
+            projectId: "elearning-e83cb",
+            storageBucket: "elearning-e83cb.appspot.com",
+            messagingSenderId: "25473938624",
+            appId: "1:25473938624:web:5b56738933543f32a7e925",
+            measurementId: "G-R713G5DD1S"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+            } else {
+                window.location.href = '/Login.html';
+            }
+        });
+
+        const submitBtn = document.getElementById('submit-assessment-btn');
+        const resultsModal = document.getElementById('results-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const finalScoreEl = document.getElementById('final-score');
+        const passingMessageEl = document.getElementById('passing-message');
+        const failingMessageEl = document.getElementById('failing-message');
+        const questions = document.querySelectorAll('.quiz-question');
+
+        async function saveGradeToFirestore(score, totalQuestions, passed) {
+            if (!currentUser) return;
+            const gradeRef = doc(db, "grades", currentUser.uid);
+            await setDoc(gradeRef, {
+                module4_score: `${score}/${totalQuestions}`,
+                module4_passed: passed,
+                lastUpdated: new Date()
+            }, { merge: true });
+        }
+
+        async function updateUserProgress() {
+            if (!currentUser) return;
+            const progressRef = doc(db, "progress", currentUser.uid);
+             const docSnap = await getDoc(progressRef);
+            if(docSnap.exists() && docSnap.data().module4_completed) {
+                return; // Already completed, no need to update again
+            }
+            await updateDoc(progressRef, {
+                module4_completed: true,
+                module5_unlocked: true,
+                overall_progress: (4 / 8) * 100 
+            });
+        }
+
+        submitBtn.addEventListener('click', async () => {
+            let allAnswered = true;
+            questions.forEach((q, i) => {
+                if (!q.querySelector(`input[name="q${i+1}"]:checked`)) {
+                    allAnswered = false;
+                }
+            });
+
+            if (!allAnswered) {
+                alert('Please answer all questions before submitting.');
+                return;
+            }
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Grading...';
+
+            let score = 0;
+            questions.forEach(question => {
+                const correctAnswer = question.dataset.correct;
+                const selectedOption = question.querySelector('input[type="radio"]:checked');
+                if (selectedOption.value === correctAnswer) {
+                    score++;
+                }
+            });
+
+            const passed = score >= 12; // Passing score is 80%
+
+            try {
+                await saveGradeToFirestore(score, questions.length, passed);
+                if (passed) {
+                    await updateUserProgress();
+                }
+
+                finalScoreEl.textContent = `${score} / ${questions.length}`;
+                passingMessageEl.textContent = passed ? "Congratulations, you passed! Module 5 is now unlocked." : "";
+                failingMessageEl.textContent = !passed ? "You did not pass. Please review the module and try again." : "";
+
+                resultsModal.style.display = 'flex';
+                
+            } catch (error) {
+                console.error("Error saving progress:", error);
+                alert("There was an error saving your results. Please try again.");
+            } finally {
+                submitBtn.textContent = 'Submit Final Assessment';
+            }
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            window.location.href = '/dashboard.html';
+        });
+    </script>
+</body>
+</html>
