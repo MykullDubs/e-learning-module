@@ -1,206 +1,224 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class=""> <!-- The 'dark' class will be added here -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // This script needs to be in the <head> of EVERY page to prevent a flash of the wrong theme.
+        // It checks the user's preference from localStorage and applies the 'dark' class immediately.
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+    </script>
     <style>
         body { font-family: 'Inter', sans-serif; }
-        .toggle-bg:after {
-            content: '';
-            @apply absolute top-0.5 left-0.5 bg-white border border-gray-300 rounded-full h-5 w-5 transition shadow-sm;
-        }
-        input:checked + .toggle-bg:after {
-            transform: translateX(100%);
-            @apply border-white;
-        }
-        input:checked + .toggle-bg {
-            @apply bg-blue-600 border-blue-600;
-        }
+        /* Toggle Switch Styles */
+        .toggle-checkbox:checked + .toggle-label { background-color: #4f46e5; }
+        .toggle-checkbox:checked + .toggle-label .toggle-ball { transform: translateX(100%); }
     </style>
 </head>
-<body class="bg-stone-50 text-stone-800">
+<body class="bg-stone-50 dark:bg-gray-900 text-stone-800 dark:text-stone-200 transition-colors duration-300">
 
-    <div id="loader" class="fixed inset-0 bg-white flex items-center justify-center z-50">
-        <p class="text-lg">Loading Settings...</p>
-    </div>
-
-    <div id="app-content" class="hidden">
-        <header class="bg-white shadow-sm border-b border-stone-200 sticky top-0 z-40">
-            <div class="container mx-auto px-4 sm:p-6 md:px-8 py-4 flex justify-between items-center">
-                <a href="dashboard.html" class="text-xl font-bold text-stone-900">AI-Powered Web Dev</a>
-                <div class="flex items-center gap-4">
-                    <p id="user-email" class="text-sm text-stone-600 hidden sm:block"></p>
-                    <button id="logout-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-semibold text-sm">Log Out</button>
+    <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-stone-200 dark:border-gray-700 sticky top-0 z-40">
+        <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
+             <a href="dashboard.html" class="text-xl font-bold text-stone-900 dark:text-white">Learning Experience Forge</a>
+             <div class="flex items-center gap-4">
+                 <div class="relative">
+                    <button id="profile-btn" class="flex items-center gap-2">
+                        <span id="user-email-nav" class="text-sm text-stone-600 dark:text-stone-300 hidden sm:block"></span>
+                        <div id="nav-avatar-container">
+                            <!-- This will be filled by JS with either an img or an SVG -->
+                        </div>
+                    </button>
+                    <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden">
+                        <a href="grades.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">My Grades</a>
+                        <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Settings</a>
+                        <div class="border-t border-stone-200 dark:border-gray-600"></div>
+                        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100 dark:hover:bg-gray-700">Log Out</button>
+                    </div>
                 </div>
             </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-2xl">
+        <header class="mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-stone-900 dark:text-white">Settings</h1>
+            <p class="text-stone-500 dark:text-stone-400 mt-2 text-lg">Manage your account and preferences.</p>
         </header>
 
-        <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
-            <h2 class="text-3xl font-bold text-stone-900 mb-8">Settings</h2>
-
-            <div class="space-y-10">
-                <!-- Profile Settings -->
-                <section>
-                    <h3 class="text-xl font-bold border-b pb-2 mb-4">Profile</h3>
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
-                        <form id="profile-form" class="space-y-4">
-                            <div>
-                                <label for="display-name" class="block font-semibold mb-2">Display Name</label>
-                                <input type="text" id="display-name" class="w-full md:w-1/2 px-3 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Your Name">
-                            </div>
-                            <div>
-                                <button type="submit" class="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">Save Changes</button>
-                                <span id="profile-success" class="ml-4 text-green-600 hidden">Profile updated!</span>
-                            </div>
-                        </form>
+        <div class="space-y-12">
+            <!-- Appearance Settings -->
+            <section>
+                <h2 class="text-xl font-bold border-b border-stone-200 dark:border-gray-700 pb-3 mb-6">Appearance</h2>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-stone-200 dark:border-gray-700 flex justify-between items-center">
+                    <div>
+                        <h3 class="font-semibold">Dark Mode</h3>
+                        <p class="text-sm text-stone-500 dark:text-stone-400">Toggle between light and dark themes.</p>
                     </div>
-                </section>
+                    <div>
+                        <input type="checkbox" id="theme-toggle" class="toggle-checkbox hidden">
+                        <label for="theme-toggle" class="toggle-label flex items-center cursor-pointer w-12 h-6 rounded-full p-1 transition duration-300 bg-gray-300 dark:bg-gray-600">
+                            <div class="toggle-ball w-4 h-4 bg-white rounded-full shadow-md transform transition duration-300"></div>
+                        </label>
+                    </div>
+                </div>
+            </section>
 
-                <!-- Notification Settings -->
-                <section>
-                    <h3 class="text-xl font-bold border-b pb-2 mb-4">Notifications</h3>
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 space-y-4">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="font-semibold">New Grade Alerts</p>
-                                <p class="text-sm text-stone-500">Get an email when a new grade is posted.</p>
-                            </div>
-                            <label class="flex items-center cursor-pointer">
-                                <input type="checkbox" class="sr-only" checked>
-                                <div class="relative w-11 h-6 bg-gray-200 rounded-full border border-gray-200 toggle-bg"></div>
-                            </label>
-                        </div>
-                        <div class="flex items-center justify-between border-t pt-4">
-                            <div>
-                                <p class="font-semibold">Course Announcements</p>
-                                <p class="text-sm text-stone-500">Receive emails about course updates.</p>
-                            </div>
-                            <label class="flex items-center cursor-pointer">
-                                <input type="checkbox" class="sr-only">
-                                <div class="relative w-11 h-6 bg-gray-200 rounded-full border border-gray-200 toggle-bg"></div>
-                            </label>
+             <!-- Profile Settings -->
+             <section>
+                <h2 class="text-xl font-bold border-b border-stone-200 dark:border-gray-700 pb-3 mb-6">Profile</h2>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-stone-200 dark:border-gray-700 space-y-6">
+                    <!-- Profile Picture -->
+                    <div class="flex items-center gap-6">
+                        <img id="avatar-preview" src="https://placehold.co/96x96/E2E8F0/475569?text=Avatar" alt="Profile Picture" class="w-24 h-24 rounded-full object-cover border-4 border-white dark:border-gray-800 shadow-md">
+                        <div>
+                            <input type="file" id="file-input" class="hidden" accept="image/*">
+                            <button id="change-pic-btn" class="px-4 py-2 bg-stone-200 dark:bg-gray-700 text-stone-800 dark:text-stone-200 font-semibold rounded-lg shadow-sm hover:bg-stone-300 dark:hover:bg-gray-600 transition">Change Picture</button>
+                            <p class="text-xs text-stone-500 dark:text-stone-400 mt-2">JPG, PNG, or GIF. 5MB max.</p>
                         </div>
                     </div>
-                </section>
-
-                <!-- Account Settings -->
-                <section>
-                    <h3 class="text-xl font-bold border-b pb-2 mb-4">Account</h3>
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
-                        <h4 class="font-semibold">Change Password</h4>
-                        <p class="text-sm text-stone-500 mb-4">You will be sent an email with a link to reset your password.</p>
-                        <button id="change-password-btn" class="px-5 py-2 border border-stone-300 text-stone-700 rounded-lg hover:bg-stone-100 transition font-semibold">Send Reset Email</button>
-                        <span id="password-success" class="ml-4 text-green-600 hidden">Password reset email sent!</span>
+                    <!-- Display Name -->
+                    <div>
+                        <label for="display-name" class="block text-sm font-medium text-stone-700 dark:text-stone-300">Display Name</label>
+                        <input type="text" id="display-name" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-stone-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                     </div>
-                </section>
-
-                 <!-- Danger Zone -->
-                <section>
-                    <h3 class="text-xl font-bold text-red-600 border-b border-red-200 pb-2 mb-4">Danger Zone</h3>
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-red-300">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <h4 class="font-bold">Delete Account</h4>
-                                <p class="text-sm text-stone-500">Permanently delete your account and all of your data. This action cannot be undone.</p>
-                            </div>
-                            <button id="delete-account-btn" class="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-semibold">Delete Account</button>
-                        </div>
+                    <div class="text-right pt-2">
+                        <button id="update-profile-btn" class="px-5 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-sm hover:bg-indigo-700 transition">Save Profile</button>
                     </div>
-                </section>
+                </div>
+            </section>
+        </div>
+    </main>
 
-            </div>
-        </main>
-    </div>
-
-    <!-- Firebase SDK Scripts -->
     <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-      import { getAuth, onAuthStateChanged, signOut, updateProfile, sendPasswordResetEmail, deleteUser } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
+            authDomain: "elearning-e83cb.firebaseapp.com",
+            projectId: "elearning-e83cb",
+            storageBucket: "elearning-e83cb.appspot.com",
+            messagingSenderId: "25473938624",
+            appId: "1:25473938624:web:5b56738933543f32a7e925",
+            measurementId: "G-R713G5DD1S"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const storage = getStorage(app);
+        
+        let currentUser = null;
+        let selectedFile = null;
 
-      const firebaseConfig = {
-        apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
-        authDomain: "elearning-e83cb.firebaseapp.com",
-        projectId: "elearning-e83cb",
-        storageBucket: "elearning-e83cb.appspot.com",
-        messagingSenderId: "25473938624",
-        appId: "1:25473938624:web:5b56738933543f32a7e925",
-        measurementId: "G-R713G5DD1S"
-      };
+        // --- Auth Guard and User Info ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('user-email-nav').textContent = user.email;
+                document.getElementById('display-name').value = user.displayName || '';
+                
+                // Update nav bar avatar
+                const navAvatarContainer = document.getElementById('nav-avatar-container');
+                if (user.photoURL) {
+                    navAvatarContainer.innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
+                    document.getElementById('avatar-preview').src = user.photoURL;
+                } else {
+                    navAvatarContainer.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>`;
+                }
 
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-
-      const loader = document.getElementById('loader');
-      const appContent = document.getElementById('app-content');
-      const userEmailEl = document.getElementById('user-email');
-      const logoutBtn = document.getElementById('logout-btn');
-      const displayNameInput = document.getElementById('display-name');
-      const profileForm = document.getElementById('profile-form');
-      const profileSuccessMessage = document.getElementById('profile-success');
-      const changePasswordBtn = document.getElementById('change-password-btn');
-      const passwordSuccessMessage = document.getElementById('password-success');
-      const deleteAccountBtn = document.getElementById('delete-account-btn');
-
-      let currentUser = null;
-
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          currentUser = user;
-          userEmailEl.textContent = user.email;
-          displayNameInput.value = user.displayName || '';
-          loader.style.display = 'none';
-          appContent.classList.remove('hidden');
-        } else {
-          window.location.href = '/login.html';
-        }
-      });
-
-      // Update Profile
-      profileForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const newName = displayNameInput.value.trim();
-        if (newName === currentUser.displayName) return;
-
-        updateProfile(currentUser, {
-          displayName: newName
-        }).then(() => {
-          profileSuccessMessage.classList.remove('hidden');
-          setTimeout(() => profileSuccessMessage.classList.add('hidden'), 3000);
-        }).catch((error) => {
-          alert('Error updating profile: ' + error.message);
+            } else {
+                window.location.href = '/Login.html';
+            }
         });
-      });
 
-      // Change Password
-      changePasswordBtn.addEventListener('click', () => {
-        sendPasswordResetEmail(auth, currentUser.email)
-          .then(() => {
-            passwordSuccessMessage.classList.remove('hidden');
-            setTimeout(() => passwordSuccessMessage.classList.add('hidden'), 3000);
-          })
-          .catch((error) => {
-            alert('Error sending reset email: ' + error.message);
-          });
-      });
+        // --- Navbar Logic ---
+        const logoutBtn = document.getElementById('logout-btn');
+        const profileBtn = document.getElementById('profile-btn');
+        const profileDropdown = document.getElementById('profile-dropdown');
+        profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
+        window.addEventListener('click', () => profileDropdown.classList.add('hidden'));
+        logoutBtn.addEventListener('click', () => signOut(auth));
 
-      // Delete Account
-      deleteAccountBtn.addEventListener('click', () => {
-        const confirmation = prompt("This is permanent. To confirm, please type 'DELETE' in the box below.");
-        if (confirmation === 'DELETE') {
-          deleteUser(currentUser).then(() => {
-            alert('Account deleted successfully.');
-            window.location.href = '/login.html';
-          }).catch((error) => {
-            alert('Error deleting account: ' + error.message + ' You may need to log in again to perform this action.');
-          });
+        // --- Profile Picture Logic ---
+        const fileInput = document.getElementById('file-input');
+        const changePicBtn = document.getElementById('change-pic-btn');
+        const avatarPreview = document.getElementById('avatar-preview');
+
+        changePicBtn.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files[0]) {
+                selectedFile = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    avatarPreview.src = event.target.result;
+                };
+                reader.readAsDataURL(selectedFile);
+            }
+        });
+
+        // --- Profile Update Logic ---
+        const updateProfileBtn = document.getElementById('update-profile-btn');
+        const displayNameInput = document.getElementById('display-name');
+
+        updateProfileBtn.addEventListener('click', async () => {
+            if (!currentUser) return;
+            
+            updateProfileBtn.textContent = 'Saving...';
+            updateProfileBtn.disabled = true;
+
+            try {
+                // 1. Update Display Name
+                const nameToUpdate = displayNameInput.value;
+                let photoURLToUpdate = currentUser.photoURL; // Keep existing photo by default
+
+                // 2. If a new file was selected, upload it
+                if (selectedFile) {
+                    const storageRef = ref(storage, `profile-pictures/${currentUser.uid}/${selectedFile.name}`);
+                    const snapshot = await uploadBytes(storageRef, selectedFile);
+                    photoURLToUpdate = await getDownloadURL(snapshot.ref);
+                }
+
+                // 3. Update the user's profile in Firebase Auth
+                await updateProfile(currentUser, {
+                    displayName: nameToUpdate,
+                    photoURL: photoURLToUpdate
+                });
+
+                alert('Profile updated successfully!');
+                location.reload(); // Reload to show updated avatar in nav
+
+            } catch (error) {
+                console.error("Error updating profile:", error);
+                alert('Failed to update profile. Please try again.');
+            } finally {
+                updateProfileBtn.textContent = 'Save Profile';
+                updateProfileBtn.disabled = false;
+            }
+        });
+
+        // --- Dark Mode Logic ---
+        const themeToggle = document.getElementById('theme-toggle');
+        if (document.documentElement.classList.contains('dark')) {
+            themeToggle.checked = true;
         }
-      });
-
-      logoutBtn.addEventListener('click', () => {
-        signOut(auth).then(() => window.location.href = '/login.html');
-      });
+        themeToggle.addEventListener('change', () => {
+            if (themeToggle.checked) {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            }
+        });
     </script>
 </body>
 </html>
+
