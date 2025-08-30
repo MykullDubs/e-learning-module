@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 3: Summative Assessment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .quiz-option label.correct { background-color: #dcfce7 !important; border-color: #22c55e !important; color: #166534 !important; }
+        .quiz-option label.incorrect { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
+        .quiz-option label {
+            display: block;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .quiz-option input[type="radio"]:checked + label {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        .results-modal-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 50;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <header class="bg-white shadow-sm border-b border-stone-200 sticky top-0 z-40">
+        <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
+             <a href="dashboard.html" class="text-xl font-bold text-stone-900">Learning Experience Forge</a>
+             <nav class="flex items-center gap-4">
+                <a href="dashboard.html" class="text-sm font-medium text-stone-600 hover:text-indigo-600">Dashboard</a>
+             </nav>
+        </div>
+    </header>
+
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
+        
+        <header class="mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-stone-900">Module 3 Summative Assessment</h1>
+            <p class="text-stone-500 mt-2 text-lg">Test your knowledge of crafting the learner's journey.</p>
+        </header>
+
+        <main id="assessment-container" class="space-y-12">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 space-y-8">
+                
+                <!-- Questions 1-15 -->
+                <div class="quiz-question" data-correct="cognitive-load">
+                    <p class="font-semibold mb-4">1. What is the primary goal of a well-designed dashboard from a learning science perspective?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q1a1" name="q1" value="options" class="hidden"><label for="q1a1">To show the learner every possible option at once.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q1a2" name="q1" value="cognitive-load" class="hidden"><label for="q1a2">To reduce cognitive load by presenting a clear, prioritized path.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q1a3" name="q1" value="colors" class="hidden"><label for="q1a3">To use as many colors as possible to make it visually appealing.</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="friction">
+                    <p class="font-semibold mb-4">2. The "Continue Learning" button is a powerful UX element because it reduces what?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q2a1" name="q2" value="friction" class="hidden"><label for="q2a1">Friction</label></div>
+                        <div class="quiz-option"><input type="radio" id="q2a2" name="q2" value="security" class="hidden"><label for="q2a2">Security</label></div>
+                        <div class="quiz-option"><input type="radio" id="q2a3" name="q2" value="content" class="hidden"><label for="q2a3">Content</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="consistency">
+                    <p class="font-semibold mb-4">3. Having the same navigation bar on every page of your learning application provides a sense of predictability and ______.</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q3a1" name="q3" value="complexity" class="hidden"><label for="q3a1">Complexity</label></div>
+                        <div class="quiz-option"><input type="radio" id="q3a2" name="q3" value="gamification" class="hidden"><label for="q3a2">Gamification</label></div>
+                        <div class="quiz-option"><input type="radio" id="q3a3" name="q3" value="consistency" class="hidden"><label for="q3a3">Consistency</label></div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question" data-correct="gamification">
+                    <p class="font-semibold mb-4">4. Elements like progress bars, badges, and learning streaks are all examples of what design principle?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q4a1" name="q4" value="gamification" class="hidden"><label for="q4a1">Gamification</label></div>
+                        <div class="quiz-option"><input type="radio" id="q4a2" name="q4" value="authentication" class="hidden"><label for="q4a2">Authentication</label></div>
+                        <div class="quiz-option"><input type="radio" id="q4a3" name="q4" value="typography" class="hidden"><label for="q4a3">Typography</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="overwhelm">
+                    <p class="font-semibold mb-4">5. Displaying future modules in a "locked" state on the dashboard helps prevent learner ______.</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q5a1" name="q5" value="engagement" class="hidden"><label for="q5a1">Engagement</label></div>
+                        <div class="quiz-option"><input type="radio" id="q5a2" name="q5" value="overwhelm" class="hidden"><label for="q5a2">Overwhelm</label></div>
+                        <div class="quiz-option"><input type="radio" id="q5a3" name="q5" value="boredom" class="hidden"><label for="q5a3">Boredom</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="dynamic">
+                    <p class="font-semibold mb-4">6. A dashboard that changes based on a user's progress is described as being:</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q6a1" name="q6" value="static" class="hidden"><label for="q6a1">Static</label></div>
+                        <div class="quiz-option"><input type="radio" id="q6a2" name="q6" value="hardcoded" class="hidden"><label for="q6a2">Hardcoded</label></div>
+                        <div class="quiz-option"><input type="radio" id="q6a3" name="q6" value="dynamic" class="hidden"><label for="q6a3">Dynamic</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="states">
+                    <p class="font-semibold mb-4">7. When prompting an AI to create a list of module links, what is crucial to include for a dynamic dashboard?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q7a1" name="q7" value="colors" class="hidden"><label for="q7a1">The exact color codes for the links.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q7a2" name="q7" value="states" class="hidden"><label for="q7a2">The different visual states (e.g., locked, in-progress, completed).</label></div>
+                        <div class="quiz-option"><input type="radio" id="q7a3" name="q7" value="font" class="hidden"><label for="q7a3">The font family to be used.</label></div>
+                    </div>
+                </div>
+
+                 <div class="quiz-question" data-correct="motivation">
+                    <p class="font-semibold mb-4">8. The main purpose of gamification in an e-learning context is to increase learner ______.</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q8a1" name="q8" value="intelligence" class="hidden"><label for="q8a1">Intelligence</label></div>
+                        <div class="quiz-option"><input type="radio" id="q8a2" name="q8" value="motivation" class="hidden"><label for="q8a2">Motivation</label></div>
+                        <div class="quiz-option"><input type="radio" id="q8a3" name="q8" value="security" class="hidden"><label for="q8a3">Security</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="bell">
+                    <p class="font-semibold mb-4">9. (Scenario) A designer wants to add a place for non-urgent updates and announcements. What is the most common and intuitive UI element for this?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q9a1" name="q9" value="popup" class="hidden"><label for="q9a1">A large pop-up window that appears on login.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q9a2" name="q9" value="bell" class="hidden"><label for="q9a2">A notification bell icon in the navigation bar.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q9a3" name="q9" value="email" class="hidden"><label for="q9a3">A separate page that must be navigated to directly.</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="firestore">
+                    <p class="font-semibold mb-4">10. To make a dashboard dynamic, the frontend JavaScript needs to fetch user data from where?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q10a1" name="q10" value="css" class="hidden"><label for="q10a1">The CSS file</label></div>
+                        <div class="quiz-option"><input type="radio" id="q10a2" name="q10" value="firestore" class="hidden"><label for="q10a2">A backend database like Firestore</label></div>
+                        <div class="quiz-option"><input type="radio" id="q10a3" name="q10" value="html" class="hidden"><label for="q10a3">The HTML file itself</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="cognitive-load">
+                    <p class="font-semibold mb-4">11. (UX Critique) A learning module presents all of its text in a single, long, unbroken column. This design fails to manage:</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q11a1" name="q11" value="cognitive-load" class="hidden"><label for="q11a1">Cognitive Load</label></div>
+                        <div class="quiz-option"><input type="radio" id="q11a2" name="q11" value="user-authentication" class="hidden"><label for="q11a2">User Authentication</label></div>
+                        <div class="quiz-option"><input type="radio" id="q11a3" name="q11" value="database-security" class="hidden"><label for="q11a3">Database Security</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="profile-dropdown">
+                    <p class="font-semibold mb-4">12. Where is the most logical place in a UI to put links for secondary user actions like "Settings" and "My Grades"?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q12a1" name="q12" value="main-dashboard" class="hidden"><label for="q12a1">As large buttons on the main dashboard.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q12a2" name="q12" value="profile-dropdown" class="hidden"><label for="q12a2">Inside a user profile dropdown menu in the navbar.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q12a3" name="q12" value="footer" class="hidden"><label for="q12a3">In the footer of the website.</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="visual-hierarchy">
+                    <p class="font-semibold mb-4">13. Making the "Continue Learning" card larger and more prominent than other elements on the dashboard is an example of creating clear ______.</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q13a1" name="q13" value="visual-hierarchy" class="hidden"><label for="q13a1">Visual Hierarchy</label></div>
+                        <div class="quiz-option"><input type="radio" id="q13a2" name="q13" value="backend-logic" class="hidden"><label for="q13a2">Backend Logic</label></div>
+                        <div class="quiz-option"><input type="radio" id="q13a3" name="q13" value="security-rules" class="hidden"><label for="q13a3">Security Rules</label></div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question" data-correct="true">
+                     <p class="font-semibold mb-4">14. True or False: A good prompt for an interactive dashboard element should include instructions for both its appearance and its behavior (e.g., what happens on click).</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q14a1" name="q14" value="true" class="hidden"><label for="q14a1">True</label></div>
+                        <div class="quiz-option"><input type="radio" id="q14a2" name="q14" value="false" class="hidden"><label for="q14a2">False</label></div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question" data-correct="user-centric">
+                     <p class="font-semibold mb-4">15. The entire philosophy of crafting a learner's journey is best described as being ______.</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q15a1" name="q15" value="technology-centric" class="hidden"><label for="q15a1">Technology-centric</label></div>
+                        <div class="quiz-option"><input type="radio" id="q15a2" name="q15" value="user-centric" class="hidden"><label for="q15a2">User-centric</label></div>
+                         <div class="quiz-option"><input type="radio" id="q15a3" name="q15" value="instructor-centric" class="hidden"><label for="q15a3">Instructor-centric</label></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="text-center py-6">
+                <button id="submit-assessment-btn" class="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition text-lg w-full sm:w-auto">
+                    Submit Final Assessment
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Results Modal -->
+    <div id="results-modal" class="results-modal-backdrop">
+        <div class="bg-white w-11/12 md:max-w-2xl rounded-lg shadow-2xl p-6 text-center">
+            <h2 id="modal-title" class="text-2xl font-bold mb-4">Assessment Complete!</h2>
+            <p class="text-lg">You scored <span id="final-score" class="font-bold"></span> out of 15.</p>
+            <p id="passing-message" class="mt-2 text-green-600 font-semibold"></p>
+            <p id="failing-message" class="mt-2 text-red-600 font-semibold"></p>
+            <button id="close-modal-btn" class="mt-6 w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">Back to Dashboard</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, setDoc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
+            authDomain: "elearning-e83cb.firebaseapp.com",
+            projectId: "elearning-e83cb",
+            storageBucket: "elearning-e83cb.appspot.com",
+            messagingSenderId: "25473938624",
+            appId: "1:25473938624:web:5b56738933543f32a7e925",
+            measurementId: "G-R713G5DD1S"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+            } else {
+                window.location.href = '/Login.html';
+            }
+        });
+
+        const submitBtn = document.getElementById('submit-assessment-btn');
+        const resultsModal = document.getElementById('results-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const finalScoreEl = document.getElementById('final-score');
+        const passingMessageEl = document.getElementById('passing-message');
+        const failingMessageEl = document.getElementById('failing-message');
+        const questions = document.querySelectorAll('.quiz-question');
+
+        async function saveGradeToFirestore(score, totalQuestions, passed) {
+            if (!currentUser) return;
+            const gradeRef = doc(db, "grades", currentUser.uid);
+            await setDoc(gradeRef, {
+                module3_score: `${score}/${totalQuestions}`,
+                module3_passed: passed,
+                lastUpdated: new Date()
+            }, { merge: true });
+        }
+
+        async function updateUserProgress() {
+            if (!currentUser) return;
+            const progressRef = doc(db, "progress", currentUser.uid);
+            const docSnap = await getDoc(progressRef);
+            if(docSnap.exists() && docSnap.data().module3_completed) {
+                return; 
+            }
+            await updateDoc(progressRef, {
+                module3_completed: true,
+                module4_unlocked: true,
+                overall_progress: (3 / 8) * 100 
+            });
+        }
+
+        submitBtn.addEventListener('click', async () => {
+            let allAnswered = true;
+            questions.forEach((q, i) => {
+                if (!q.querySelector(`input[name="q${i+1}"]:checked`)) {
+                    allAnswered = false;
+                }
+            });
+
+            if (!allAnswered) {
+                alert('Please answer all questions before submitting.');
+                return;
+            }
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Grading...';
+
+            let score = 0;
+            questions.forEach(question => {
+                const correctAnswer = question.dataset.correct;
+                const selectedOption = question.querySelector('input[type="radio"]:checked');
+                if (selectedOption.value === correctAnswer) {
+                    score++;
+                }
+            });
+
+            const passed = score >= 12; // Passing score is 80%
+
+            try {
+                await saveGradeToFirestore(score, questions.length, passed);
+                if (passed) {
+                    await updateUserProgress();
+                }
+
+                finalScoreEl.textContent = `${score} / ${questions.length}`;
+                passingMessageEl.textContent = passed ? "Congratulations, you passed! Module 4 is now unlocked." : "";
+                failingMessageEl.textContent = !passed ? "You did not pass. Please review the module and try again." : "";
+
+                resultsModal.style.display = 'flex';
+                
+            } catch (error) {
+                console.error("Error saving progress:", error);
+                alert("There was an error saving your results. Please try again.");
+            } finally {
+                submitBtn.textContent = 'Submit Final Assessment';
+            }
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            window.location.href = '/dashboard.html';
+        });
+    </script>
+</body>
+</html>
