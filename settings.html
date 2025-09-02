@@ -145,17 +145,26 @@
         const notificationsDot = document.getElementById('notifications-dot');
         const notificationsList = document.getElementById('notifications-list');
 
+        // --- Page-specific Elements ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const fileInput = document.getElementById('file-input');
+        const changePicBtn = document.getElementById('change-pic-btn');
+        const avatarPreview = document.getElementById('avatar-preview');
+        const updateProfileBtn = document.getElementById('update-profile-btn');
+        const displayNameInput = document.getElementById('display-name');
+
+
         // --- Auth Guard and User Info ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
                 document.getElementById('user-email-nav').textContent = user.email;
-                document.getElementById('display-name').value = user.displayName || '';
+                displayNameInput.value = user.displayName || '';
                 
                 const navAvatarContainer = document.getElementById('nav-avatar-container');
                 if (user.photoURL) {
                     navAvatarContainer.innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
-                    document.getElementById('avatar-preview').src = user.photoURL;
+                    avatarPreview.src = user.photoURL;
                 } else {
                     navAvatarContainer.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>`;
                 }
@@ -167,7 +176,7 @@
             }
         });
 
-        // --- Navbar Logic ---
+        // --- Universal Navbar Logic ---
         profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); notificationsDropdown.classList.add('hidden'); });
         notificationsBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -186,7 +195,7 @@
             signOut(auth);
         });
         
-        // --- Notifications Logic ---
+        // --- Universal Notifications Logic ---
         function listenForNotifications(userId) {
             const notificationsRef = collection(db, "notifications", userId, "userNotifications");
             const q = query(notificationsRef, orderBy("createdAt", "desc"));
@@ -209,7 +218,6 @@
                     }
                     displayNotification(notification);
                 });
-
                 notificationsDot.style.display = hasUnread ? 'block' : 'none';
             });
         }
@@ -250,13 +258,8 @@
         }
 
 
-        // --- Profile Picture Logic ---
-        const fileInput = document.getElementById('file-input');
-        const changePicBtn = document.getElementById('change-pic-btn');
-        const avatarPreview = document.getElementById('avatar-preview');
-
+        // --- Page-Specific Logic for Settings ---
         changePicBtn.addEventListener('click', () => fileInput.click());
-
         fileInput.addEventListener('change', (e) => {
             if (e.target.files[0]) {
                 selectedFile = e.target.files[0];
@@ -265,10 +268,6 @@
                 reader.readAsDataURL(selectedFile);
             }
         });
-
-        // --- Profile Update Logic ---
-        const updateProfileBtn = document.getElementById('update-profile-btn');
-        const displayNameInput = document.getElementById('display-name');
 
         updateProfileBtn.addEventListener('click', async () => {
             if (!currentUser) return;
@@ -302,10 +301,8 @@
                 updateProfileBtn.disabled = false;
             }
         });
-
-        // --- CORRECT Dark Mode Logic ---
-        const themeToggle = document.getElementById('theme-toggle');
-
+        
+        // Correct Dark Mode Logic
         if (localStorage.getItem('theme') === 'dark') {
             themeToggle.checked = true;
         }
