@@ -1,7 +1,7 @@
 import { Resend } from 'resend';
 
-// Initialize Resend with your API key from your Vercel environment variables
-const resend = new Resend(process.env.re_VsbFGbqb_HhsaaPMbwNvmS7i6J14z5UG2);
+// CORRECT: This looks for an environment variable named "RESEND_API_KEY".
+const resend = new Resend(process.env.RESEND_API_KEY);
 const instructorEmail = 'michaelwesleywilson@gmail.com';
 
 export default async function handler(req, res) {
@@ -16,7 +16,7 @@ export default async function handler(req, res) {
 
     // --- 1. Send the results email to the USER who took the test ---
     await resend.emails.send({
-      from: 'results@commonwealthlinguistics.org', // IMPORTANT: Change this to an address on your verified domain
+      from: 'results@commonwealthlinguistics.org',
       to: userEmail,
       subject: `Your Results for: ${assessment.title}`,
       html: `
@@ -31,7 +31,7 @@ export default async function handler(req, res) {
 
     // --- 2. Send a notification email to YOU, the instructor ---
     await resend.emails.send({
-      from: 'notification@commonwealthlinguistics.org', // IMPORTANT: Change this to an address on your verified domain
+      from: 'results@commonwealthlinguistics.org', // CORRECTED: Using a consistent "from" address
       to: instructorEmail,
       subject: `New Public Assessment Submission: ${userEmail}`,
       html: `
