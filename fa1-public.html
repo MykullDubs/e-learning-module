@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 1: Public Summative Assessment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Theme loader script
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .quiz-option label.correct { background-color: #dcfce7 !important; border-color: #22c55e !important; color: #166534 !important; }
+        .quiz-option label.incorrect { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
+        .quiz-option label { display: block; padding: 0.75rem 1rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; cursor: pointer; transition: background-color 0.2s, border-color 0.2s; }
+        .dark .quiz-option label { border-color: #4b5563; }
+        .quiz-option input[type="radio"]:checked + label { border-color: #3b82f6; background-color: #eff6ff; }
+        .dark .quiz-option input[type="radio"]:checked + label { background-color: #3730a3; border-color: #4f46e5;}
+        .results-modal-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 50; justify-content: center; align-items: center; }
+        .code-block { background-color: #1e293b; color: #e2e8f0; font-family: monospace; }
+    </style>
+</head>
+<body class="bg-stone-50 dark:bg-gray-900 text-stone-800 dark:text-stone-200 transition-colors duration-300">
+
+    <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-stone-200 dark:border-gray-700 sticky top-0 z-40">
+        <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
+             <span class="text-xl font-bold text-stone-900 dark:text-white">Learning Experience Forge</span>
+             <a href="index.html" class="px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-sm hover:bg-indigo-700 transition">Enroll in Full Course</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
+        
+        <header class="mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-stone-900 dark:text-white">Module 1 Summative Assessment (Public Demo)</h1>
+            <p class="text-stone-500 dark:text-stone-400 mt-2 text-lg">Test your knowledge of AI-powered frontend development.</p>
+        </header>
+
+        <main id="assessment-container" class="space-y-12">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-stone-200 dark:border-gray-700 space-y-8">
+                <div>
+                    <label for="user-email" class="block font-semibold mb-2">Your Email Address:</label>
+                    <input type="email" id="user-email" class="w-full px-3 py-2 border border-stone-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-700" placeholder="Enter your email to receive your results">
+                    <p id="email-error" class="text-red-600 text-sm mt-2 hidden">Please enter a valid email address.</p>
+                </div>
+                
+                <div class="quiz-question" data-correct="all">
+                    <p class="font-semibold mb-4">1. A well-structured prompt should include which of the following components?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q1a1" name="q1" value="role" class="hidden"><label for="q1a1">Role</label></div>
+                        <div class="quiz-option"><input type="radio" id="q1a2" name="q1" value="task" class="hidden"><label for="q1a2">Task</label></div>
+                        <div class="quiz-option"><input type="radio" id="q1a3" name="q1" value="constraints" class="hidden"><label for="q1a3">Constraints & Details</label></div>
+                        <div class="quiz-option"><input type="radio" id="q1a4" name="q1" value="all" class="hidden"><label for="q1a4">All of the above</label></div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question" data-correct="sam">
+                    <p class="font-semibold mb-4">2. The iterative "Design, Prototype, Review" cycle is the core loop of which instructional design model?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q2a1" name="q2" value="addie" class="hidden"><label for="q2a1">ADDIE</label></div>
+                        <div class="quiz-option"><input type="radio" id="q2a2" name="q2" value="sam" class="hidden"><label for="q2a2">SAM (Successive Approximation Model)</label></div>
+                        <div class="quiz-option"><input type="radio" id="q2a3" name="q2" value="bloom" class="hidden"><label for="q2a3">Bloom's Taxonomy</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="instructional-designer">
+                    <p class="font-semibold mb-4">3. To generate a scenario-based learning activity instead of just a list of facts, which ROLE is best to assign to the AI?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q3a1" name="q3" value="developer" class="hidden"><label for="q3a1">"Act as a web developer."</label></div>
+                        <div class="quiz-option"><input type="radio" id="q3a2" name="q3" value="writer" class="hidden"><label for="q3a2">"Act as a technical writer."</label></div>
+                        <div class="quiz-option"><input type="radio" id="q3a3" name="q3" value="instructional-designer" class="hidden"><label for="q3a3">"Act as an expert instructional designer."</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="prototype">
+                    <p class="font-semibold mb-4">4. Asking the AI to generate a "single, self-contained HTML file" is a powerful strategy because it provides an instant...</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q4a1" name="q4" value="prototype" class="hidden"><label for="q4a1">...testable prototype.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q4a2" name="q4" value="design-doc" class="hidden"><label for="q4a2">...final design document.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q4a3" name="q4" value="image" class="hidden"><label for="q4a3">...image of the final product.</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="ux-designer">
+                    <p class="font-semibold mb-4">5. (Scenario) You want to plan the overall layout of a learning module page before building it. Which ROLE would be most effective for this task?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q5a1" name="q5" value="ux-designer" class="hidden"><label for="q5a1">"Act as a UX designer and create a wireframe..."</label></div>
+                        <div class="quiz-option"><input type="radio" id="q5a2" name="q5" value="database-admin" class="hidden"><label for="q5a2">"Act as a database administrator..."</label></div>
+                        <div class="quiz-option"><input type="radio" id="q5a3" name="q5" value="qa-tester" class="hidden"><label for="q5a3">"Act as a QA tester..."</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="feedback">
+                    <p class="font-semibold mb-4">6. The instruction, "The feedback for incorrect answers must be corrective," is an example of which prompt component?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q6a1" name="q6" value="role" class="hidden"><label for="q6a1">Role</label></div>
+                        <div class="quiz-option"><input type="radio" id="q6a2" name="q6" value="task" class="hidden"><label for="q6a2">Task</label></div>
+                        <div class="quiz-option"><input type="radio" id="q6a3" name="q6" value="feedback" class="hidden"><label for="q6a3">Constraints & Details</label></div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question" data-correct="event-listener">
+                    <p class="font-semibold mb-4">7. To make a button interactive (e.g., clickable), you must prompt the AI to add JavaScript that creates an...</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q7a1" name="q7" value="css-style" class="hidden"><label for="q7a1">...CSS style.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q7a2" name="q7" value="event-listener" class="hidden"><label for="q7a2">...event listener.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q7a3" name="q7" value="html-comment" class="hidden"><label for="q7a3">...HTML comment.</label></div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question" data-correct="flow">
+                    <p class="font-semibold mb-4">8. The primary purpose of prompting for a wireframe or storyboard early in the process is to get feedback on the...</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q8a1" name="q8" value="colors" class="hidden"><label for="q8a1">...color scheme and fonts.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q8a2" name="q8" value="final-code" class="hidden"><label for="q8a2">...final, bug-free code.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q8a3" name="q8" value="flow" class="hidden"><label for="q8a3">...instructional flow and layout of elements.</label></div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question" data-correct="chart-js">
+                    <p class="font-semibold mb-4">9. When prompting for a data visualization like a bar chart, it's crucial to specify the...</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q9a1" name="q9" value="chart-js" class="hidden"><label for="q9a1">...charting library (e.g., Chart.js), the data, and the chart type.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q9a2" name="q9" value="font" class="hidden"><label for="q9a2">...font to be used for the labels.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q9a3" name="q9" value="server" class="hidden"><label for="q9a3">...backend server address.</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="vague">
+                    <p class="font-semibold mb-4">10. A prompt like "Make a quiz" is considered a poor starting point primarily because it is too...</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q10a1" name="q10" value="specific" class="hidden"><label for="q10a1">...specific and detailed.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q10a2" name="q10" value="long" class="hidden"><label for="q10a2">...long and complicated.</label></div>
+                        <div class="quiz-option"><input type="radio" id="q10a3" name="q10" value="vague" class="hidden"><label for="q10a3">...vague and lacks necessary constraints.</label></div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question" data-correct="click">
+                    <p class="font-semibold mb-4">11. In the "Click to Reveal" example from the module, the user's action that triggers the JavaScript is known as what type of event?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q11a1" name="q11" value="mouseover" class="hidden"><label for="q11a1">A 'mouseover' event</label></div>
+                        <div class="quiz-option"><input type="radio" id="q11a2" name="q11" value="click" class="hidden"><label for="q11a2">A 'click' event</label></div>
+                        <div class="quiz-option"><input type="radio" id="q11a3" name="q11" value="keydown" class="hidden"><label for="q11a3">A 'keydown' event</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="true">
+                    <p class="font-semibold mb-4">12. True or False: Using AI and the SAM model can significantly reduce the time and cost compared to traditional e-learning authoring tools.</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q12a1" name="q12" value="true" class="hidden"><label for="q12a1">True</label></div>
+                        <div class="quiz-option"><input type="radio" id="q12a2" name="q12" value="false" class="hidden"><label for="q12a2">False</label></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="scenario">
+                    <p class="font-semibold mb-4">13. Which interactive component is best suited for testing a learner's judgment in a realistic situation?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q13a1" name="q13" value="flashcard" class="hidden"><label for="q13a1">A flashcard</label></div>
+                        <div class="quiz-option"><input type="radio" id="q13a2" name="q13" value="scenario" class="hidden"><label for="q13a2">A scenario-based question with feedback</label></div>
+                        <div class="quiz-option"><input type="radio" id="q13a3" name="q13" value="chart" class="hidden"><label for="q13a3">A bar chart</label></div>
+                    </div>
+                </div>
+
+                 <div class="quiz-question" data-correct="task">
+                    <p class="font-semibold mb-4">14. (Prompt Critique) A user writes: "Act as an expert LXD. Use a single HTML file." Which key component is most obviously missing?</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option"><input type="radio" id="q14a1" name="q14" value="role" class="hidden"><label for="q14a1">Role</label></div>
+                        <div class="quiz-option"><input type="radio" id="q14a2" name="q14" value="task" class="hidden"><label for="q14a2">Task</label></div>
+                        <div class="quiz-option"><input type="radio" id="q14a3" name="q14" value="format" class="hidden"><label for="q14a3">Format</label></div>
+                    </div>
+                </div>
+
+                <!-- Question 15: Practical Simulator -->
+                <div class="quiz-question" id="simulator-question">
+                    <p class="font-semibold mb-4">15. Practical Challenge: The Prompt-Tuning Simulator</p>
+                    <p class="text-sm text-stone-600 dark:text-stone-400 mb-4">Refine the vague prompt below into a high-quality prompt by adding a Role, Task, Constraints, and Format. Click the "Check Prompt" button to get feedback. You will get this question correct if you achieve a "high-quality" rating.</p>
+                    <div class="p-4 border border-stone-200 dark:border-gray-600 rounded-lg">
+                        <label for="prompt-input" class="block font-semibold mb-2">Your Prompt:</label>
+                        <textarea id="prompt-input" class="w-full h-32 p-2 border border-stone-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Make an interactive learning thing about history.</textarea>
+                        <button id="submit-prompt-btn" class="mt-4 px-5 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition">Check Prompt</button>
+                        <div id="prompt-feedback" class="mt-4 p-3 rounded-lg bg-stone-100 dark:bg-gray-700 hidden">
+                           <!-- JS will populate this -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="text-center py-6">
+                <button id="submit-assessment-btn" class="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition text-lg w-full sm:w-auto">
+                    Submit & Email My Results
+                </button>
+            </div>
+        </main>
+    </main>
+
+    <!-- Results Modal -->
+    <div id="results-modal" class="results-modal-backdrop">
+        <div class="bg-white dark:bg-gray-800 w-11/12 md:max-w-2xl rounded-lg shadow-2xl p-6 text-center">
+            <div id="modal-success-content" class="hidden">
+                <h2 class="text-2xl font-bold mb-4">Assessment Complete!</h2>
+                <p class="text-lg">You scored <span id="final-score" class="font-bold"></span> out of 15.</p>
+                <p id="passing-message" class="mt-2 text-green-600 font-semibold"></p>
+                <p id="failing-message" class="mt-2 text-red-600 font-semibold"></p>
+                <div class="mt-6 text-left bg-stone-100 dark:bg-gray-700 p-4 rounded text-sm text-stone-700 dark:text-stone-300">
+                    <p class="font-semibold mb-2">An email with your results has been sent to the address you provided.</p>
+                </div>
+            </div>
+             <div id="modal-error-content" class="hidden">
+                <h2 class="text-2xl font-bold mb-4 text-red-600">Submission Failed</h2>
+                <p class="text-lg text-stone-700 dark:text-stone-300">There was an error submitting your results. Please check your connection and try again later.</p>
+            </div>
+            <button id="close-modal-btn" class="mt-6 w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">Back to Home</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const submitBtn = document.getElementById('submit-assessment-btn');
+            const resultsModal = document.getElementById('results-modal');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const finalScoreEl = document.getElementById('final-score');
+            const passingMessageEl = document.getElementById('passing-message');
+            const failingMessageEl = document.getElementById('failing-message');
+            const modalSuccessContent = document.getElementById('modal-success-content');
+            const modalErrorContent = document.getElementById('modal-error-content');
+            const questions = document.querySelectorAll('.quiz-question:not(#simulator-question)');
+            const userEmailEl = document.getElementById('user-email');
+            const emailErrorEl = document.getElementById('email-error');
+            
+            // --- Simulator Logic ---
+            const promptInput = document.getElementById('prompt-input');
+            const submitPromptBtn = document.getElementById('submit-prompt-btn');
+            const promptFeedback = document.getElementById('prompt-feedback');
+            let simulatorScore = 0;
+
+            submitPromptBtn.addEventListener('click', () => {
+                const text = promptInput.value.toLowerCase();
+                let score = 0;
+                let feedbackText = '<ul>';
+                if (text.includes('act as') || text.includes('you are a')) { score++; feedbackText += '<li class="text-green-600 dark:text-green-400">✅ Great! You\'ve given the AI a <strong>Role</strong>.</li>'; } else { feedbackText += '<li class="text-red-600 dark:text-red-400">❌ Needs a <strong>Role</strong>.</li>'; }
+                if (text.includes('create') || text.includes('build') || text.includes('generate')) { score++; feedbackText += '<li class="text-green-600 dark:text-green-400">✅ Excellent! You\'ve defined a clear <strong>Task</strong>.</li>'; } else { feedbackText += '<li class="text-red-600 dark:text-red-400">❌ Needs a specific <strong>Task</strong>.</li>'; }
+                if (text.includes('tailwind') || text.includes('interactive') || text.includes('feedback')) { score++; feedbackText += '<li class="text-green-600 dark:text-green-400">✅ Good job adding <strong>Constraints & Details</strong>.</li>'; } else { feedbackText += '<li class="text-red-600 dark:text-red-400">❌ Needs <strong>Constraints</strong>.</li>'; }
+                if (text.includes('html') || text.includes('single file')) { score++; feedbackText += '<li class="text-green-600 dark:text-green-400">✅ Perfect! You\'ve specified the output <strong>Format</strong>.</li>'; } else { feedbackText += '<li class="text-red-600 dark:text-red-400">❌ Needs a <strong>Format</strong>.</li>'; }
+                if (score === 4) { feedbackText += '<p class="font-bold mt-2 text-green-600 dark:text-green-400">High-quality prompt achieved!</p>'; }
+                feedbackText += '</ul>';
+                promptFeedback.innerHTML = feedbackText;
+                promptFeedback.classList.remove('hidden');
+                simulatorScore = score;
+            });
+
+            // --- Main Submission Logic ---
+            submitBtn.addEventListener('click', async () => {
+                const userEmail = userEmailEl.value;
+                if (!String(userEmail).toLowerCase().match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
+                    emailErrorEl.classList.remove('hidden');
+                    return;
+                } else {
+                    emailErrorEl.classList.add('hidden');
+                }
+
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Submitting...';
+
+                // Calculate score for multiple choice questions
+                let mcScore = 0;
+                questions.forEach(question => {
+                    const correctAnswer = question.dataset.correct;
+                    const selectedOption = question.querySelector('input[type="radio"]:checked');
+                    if (selectedOption && selectedOption.value === correctAnswer) {
+                        mcScore++;
+                    }
+                });
+                
+                // Add point for simulator if it's a high-quality prompt
+                const simulatorPoint = simulatorScore === 4 ? 1 : 0;
+                const totalScore = mcScore + simulatorPoint;
+
+                const emailPayload = {
+                    userEmail: userEmail,
+                    assessment: {
+                        title: "Module 1 Summative Assessment (Public)",
+                        score: `${totalScore} / 15`,
+                        passed: totalScore >= 12
+                    }
+                };
+                
+                try {
+                    const response = await fetch('/api/send-public-results', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(emailPayload)
+                    });
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    
+                    modalSuccessContent.classList.remove('hidden');
+                    modalErrorContent.classList.add('hidden');
+                    
+                    finalScoreEl.textContent = `${totalScore} / 15`;
+                    passingMessageEl.textContent = totalScore >= 12 ? "Congratulations, you passed! Enroll in the full course to continue your journey." : "";
+                    failingMessageEl.textContent = totalScore < 12 ? "Good effort! Enroll in the full course to master these concepts." : "";
+
+                } catch (error) {
+                    console.error('Submission failed:', error);
+                    modalSuccessContent.classList.add('hidden');
+                    modalErrorContent.classList.remove('hidden');
+                } finally {
+                    resultsModal.style.display = 'flex';
+                    submitBtn.textContent = 'Submit & Email My Results';
+                }
+            });
+
+            closeModalBtn.addEventListener('click', () => window.location.href = 'index.html' );
+        });
+    </script>
+
+</body>
+</html>
+
