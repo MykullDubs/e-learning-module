@@ -6,8 +6,8 @@
     <title>Settings</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // This script needs to be in the <head> of EVERY page to prevent a flash of the wrong theme.
-        // It checks the user's preference from localStorage and applies the 'dark' class immediately.
+        // CRITICAL: This script must be in the <head> of EVERY page
+        // It prevents a flash of the wrong theme on page load.
         if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
           document.documentElement.classList.add('dark');
         } else {
@@ -26,12 +26,27 @@
     <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-stone-200 dark:border-gray-700 sticky top-0 z-40">
         <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
              <a href="dashboard.html" class="text-xl font-bold text-stone-900 dark:text-white">Learning Experience Forge</a>
-             <div class="flex items-center gap-4">
+             <div class="flex items-center gap-6">
+                 <!-- Notifications Bell -->
+                 <div class="relative">
+                    <button id="notifications-btn" class="relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-stone-500 dark:text-stone-400 hover:text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                        <span id="notifications-dot" class="hidden absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden">
+                        <div class="p-3 font-semibold text-sm border-b border-stone-200 dark:border-gray-700">Notifications</div>
+                        <div id="notifications-list" class="max-h-96 overflow-y-auto">
+                            <!-- JS will populate this -->
+                        </div>
+                    </div>
+                 </div>
+
+                 <!-- Profile Dropdown -->
                  <div class="relative">
                     <button id="profile-btn" class="flex items-center gap-2">
                         <span id="user-email-nav" class="text-sm text-stone-600 dark:text-stone-300 hidden sm:block"></span>
                         <div id="nav-avatar-container">
-                            <!-- This will be filled by JS with either an img or an SVG -->
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
                         </div>
                     </button>
                     <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden">
@@ -99,6 +114,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+        import { getFirestore, collection, query, orderBy, onSnapshot, writeBatch, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
         
         const firebaseConfig = {
             apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
@@ -113,9 +129,21 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const storage = getStorage(app);
+        const db = getFirestore(app);
         
         let currentUser = null;
         let selectedFile = null;
+        let unreadNotifications = [];
+        let unsubscribeNotifications = null;
+
+        // --- Navbar Elements ---
+        const logoutBtn = document.getElementById('logout-btn');
+        const profileBtn = document.getElementById('profile-btn');
+        const profileDropdown = document.getElementById('profile-dropdown');
+        const notificationsBtn = document.getElementById('notifications-btn');
+        const notificationsDropdown = document.getElementById('notifications-dropdown');
+        const notificationsDot = document.getElementById('notifications-dot');
+        const notificationsList = document.getElementById('notifications-list');
 
         // --- Auth Guard and User Info ---
         onAuthStateChanged(auth, (user) => {
@@ -124,7 +152,6 @@
                 document.getElementById('user-email-nav').textContent = user.email;
                 document.getElementById('display-name').value = user.displayName || '';
                 
-                // Update nav bar avatar
                 const navAvatarContainer = document.getElementById('nav-avatar-container');
                 if (user.photoURL) {
                     navAvatarContainer.innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
@@ -133,18 +160,95 @@
                     navAvatarContainer.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>`;
                 }
 
+                listenForNotifications(user.uid);
+
             } else {
                 window.location.href = '/Login.html';
             }
         });
 
         // --- Navbar Logic ---
-        const logoutBtn = document.getElementById('logout-btn');
-        const profileBtn = document.getElementById('profile-btn');
-        const profileDropdown = document.getElementById('profile-dropdown');
-        profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
-        window.addEventListener('click', () => profileDropdown.classList.add('hidden'));
-        logoutBtn.addEventListener('click', () => signOut(auth));
+        profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); notificationsDropdown.classList.add('hidden'); });
+        notificationsBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            profileDropdown.classList.add('hidden');
+            notificationsDropdown.classList.toggle('hidden');
+            if (!notificationsDropdown.classList.contains('hidden')) {
+                markNotificationsAsRead();
+            }
+        });
+        window.addEventListener('click', () => {
+            profileDropdown.classList.add('hidden');
+            notificationsDropdown.classList.add('hidden');
+        });
+        logoutBtn.addEventListener('click', () => {
+            if(unsubscribeNotifications) unsubscribeNotifications();
+            signOut(auth);
+        });
+        
+        // --- Notifications Logic ---
+        function listenForNotifications(userId) {
+            const notificationsRef = collection(db, "notifications", userId, "userNotifications");
+            const q = query(notificationsRef, orderBy("createdAt", "desc"));
+
+            unsubscribeNotifications = onSnapshot(q, (snapshot) => {
+                unreadNotifications = [];
+                notificationsList.innerHTML = '';
+                if (snapshot.empty) {
+                    notificationsList.innerHTML = `<p class="p-4 text-sm text-stone-500 dark:text-stone-400">No new notifications.</p>`;
+                    notificationsDot.classList.add('hidden');
+                    return;
+                }
+
+                let hasUnread = false;
+                snapshot.forEach(doc => {
+                    const notification = { id: doc.id, ...doc.data() };
+                    if (!notification.isRead) {
+                        hasUnread = true;
+                        unreadNotifications.push(doc.id);
+                    }
+                    displayNotification(notification);
+                });
+
+                notificationsDot.style.display = hasUnread ? 'block' : 'none';
+            });
+        }
+
+        function displayNotification(notification) {
+            const div = document.createElement('a');
+            div.href = notification.link || '#';
+            div.className = `block px-4 py-3 border-b border-stone-100 dark:border-gray-700 hover:bg-stone-50 dark:hover:bg-gray-700 ${!notification.isRead ? 'bg-indigo-50 dark:bg-indigo-900/20' : ''}`;
+            const timeAgo = formatTimeAgo(notification.createdAt.toDate());
+            div.innerHTML = `<p class="text-sm font-medium">${notification.message}</p><p class="text-xs text-stone-500 dark:text-stone-400 mt-1">${timeAgo}</p>`;
+            notificationsList.appendChild(div);
+        }
+
+        async function markNotificationsAsRead() {
+            if (unreadNotifications.length === 0 || !auth.currentUser) return;
+            const batch = writeBatch(db);
+            unreadNotifications.forEach(notificationId => {
+                const notifRef = doc(db, "notifications", auth.currentUser.uid, "userNotifications", notificationId);
+                batch.update(notifRef, { isRead: true });
+            });
+            await batch.commit();
+            unreadNotifications = [];
+        }
+
+        function formatTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            let interval = seconds / 31536000;
+            if (interval > 1) return Math.floor(interval) + " years ago";
+            interval = seconds / 2592000;
+            if (interval > 1) return Math.floor(interval) + " months ago";
+            interval = seconds / 86400;
+            if (interval > 1) return Math.floor(interval) + " days ago";
+            interval = seconds / 3600;
+            if (interval > 1) return Math.floor(interval) + " hours ago";
+            interval = seconds / 60;
+            if (interval > 1) return Math.floor(interval) + " minutes ago";
+            return Math.floor(seconds) + " seconds ago";
+        }
+
 
         // --- Profile Picture Logic ---
         const fileInput = document.getElementById('file-input');
@@ -157,9 +261,7 @@
             if (e.target.files[0]) {
                 selectedFile = e.target.files[0];
                 const reader = new FileReader();
-                reader.onload = (event) => {
-                    avatarPreview.src = event.target.result;
-                };
+                reader.onload = (event) => { avatarPreview.src = event.target.result; };
                 reader.readAsDataURL(selectedFile);
             }
         });
@@ -175,25 +277,22 @@
             updateProfileBtn.disabled = true;
 
             try {
-                // 1. Update Display Name
                 const nameToUpdate = displayNameInput.value;
-                let photoURLToUpdate = currentUser.photoURL; // Keep existing photo by default
+                let photoURLToUpdate = currentUser.photoURL;
 
-                // 2. If a new file was selected, upload it
                 if (selectedFile) {
                     const storageRef = ref(storage, `profile-pictures/${currentUser.uid}/${selectedFile.name}`);
                     const snapshot = await uploadBytes(storageRef, selectedFile);
                     photoURLToUpdate = await getDownloadURL(snapshot.ref);
                 }
 
-                // 3. Update the user's profile in Firebase Auth
                 await updateProfile(currentUser, {
                     displayName: nameToUpdate,
                     photoURL: photoURLToUpdate
                 });
 
                 alert('Profile updated successfully!');
-                location.reload(); // Reload to show updated avatar in nav
+                location.reload();
 
             } catch (error) {
                 console.error("Error updating profile:", error);
@@ -204,25 +303,22 @@
             }
         });
 
-// --- Dark Mode Logic on settings.html ---
-const themeToggle = document.getElementById('theme-toggle');
+        // --- CORRECT Dark Mode Logic ---
+        const themeToggle = document.getElementById('theme-toggle');
 
-// Set the toggle's initial state based on the current theme
-if (document.documentElement.classList.contains('dark')) {
-    themeToggle.checked = true;
-}
+        if (localStorage.getItem('theme') === 'dark') {
+            themeToggle.checked = true;
+        }
 
-themeToggle.addEventListener('change', () => {
-    if (themeToggle.checked) {
-        // When toggled ON, add 'dark' class and save preference
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
-    } else {
-        // When toggled OFF, remove 'dark' class and save preference
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('theme', 'light');
-    }
-});
+        themeToggle.addEventListener('change', () => {
+            if (themeToggle.checked) {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            }
+        });
     </script>
 </body>
 </html>
