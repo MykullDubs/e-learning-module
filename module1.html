@@ -6,6 +6,15 @@
     <title>Module 1: AI-Powered Instructional Design</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+        // CRITICAL: This script must be in the <head> of EVERY page
+        // It prevents a flash of the wrong theme on page load.
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+    </script>
     <style>
         body { font-family: 'Inter', sans-serif; }
         .code-block { background-color: #1e293b; color: #e2e8f0; }
@@ -471,3 +480,4 @@
     </script>
 </body>
 </html>
+
