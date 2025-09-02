@@ -6,7 +6,8 @@
     <title>My Grades</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // Theme loader script to prevent flash of wrong theme
+        // CRITICAL: This script must be in the <head> of EVERY page
+        // It prevents a flash of the wrong theme on page load.
         if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
           document.documentElement.classList.add('dark');
         } else {
