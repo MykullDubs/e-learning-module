@@ -134,8 +134,7 @@
         });
 
         // --- Notifications Logic ---
-        // Functions: listenForNotifications, displayNotification, markNotificationsAsRead, formatTimeAgo
-        // (These are the same as in your dashboard/grades pages)
+        // (This is the same as your other pages)
         function listenForNotifications(userId) {
             const notificationsRef = collection(db, "notifications", userId, "userNotifications");
             const q = query(notificationsRef, orderBy("createdAt", "desc"));
@@ -246,16 +245,13 @@
                 <div class="mt-4 reply-indent">
                     <div class="flex items-center gap-2">
                          <input type="text" id="reply-input-${postId}" class="w-full bg-stone-100 dark:bg-gray-700 border-stone-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Write a reply...">
-                         <button data-post-id="${postId}" class="reply-btn px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg text-sm hover:bg-indigo-700 transition">Reply</button>
+                         <button data-post-id="${postId}" data-author-id="${postData.authorId}" class="reply-btn px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg text-sm hover:bg-indigo-700 transition">Reply</button>
                     </div>
                 </div>
             `;
             discussionsContainer.appendChild(threadContainer);
-
-            // Fetch and render replies
-            fetchReplies(postId);
             
-            // Add event listener to the reply button
+            fetchReplies(postId);
             threadContainer.querySelector('.reply-btn').addEventListener('click', handleReply);
         }
         
@@ -296,6 +292,7 @@
 
         async function handleReply(event) {
             const parentId = event.target.dataset.postId;
+            const originalPosterId = event.target.dataset.authorId;
             const input = document.getElementById(`reply-input-${parentId}`);
             const text = input.value.trim();
 
@@ -317,15 +314,8 @@
             input.value = '';
             event.target.disabled = false;
 
-            // Find original poster to notify
-            const parentDoc = await getDoc(doc(db, "discussions", parentId));
-            if (parentDoc.exists()) {
-                const parentData = parentDoc.data();
-                const originalPosterId = parentData.authorId;
-                // Don't notify user if they reply to their own post
-                if (originalPosterId && originalPosterId !== currentUser.uid) {
-                    createNotification(originalPosterId, `${currentUser.displayName || 'A student'} replied to your post.`);
-                }
+            if (originalPosterId && originalPosterId !== currentUser.uid) {
+                createNotification(originalPosterId, `${currentUser.displayName || 'A student'} replied to your post.`);
             }
         }
         
