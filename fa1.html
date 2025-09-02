@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Module 1: Summative Assessment</title>
     <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+        // CRITICAL: This script must be in the <head> of EVERY page
+        // It prevents a flash of the wrong theme on page load.
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+    </script>
     <style>
         body { font-family: 'Inter', sans-serif; }
         .quiz-option label.correct { background-color: #dcfce7 !important; border-color: #22c55e !important; color: #166534 !important; }
@@ -336,3 +345,4 @@
     </script>
 </body>
 </html>
+
