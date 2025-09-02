@@ -75,7 +75,9 @@
             </button>
             <div id="discussion-content" class="accordion-content">
                 <div id="discussions-container" class="space-y-8 pt-4">
-                    <!-- JS will populate this section -->
+                     <div id="loading-state" class="text-center py-12">
+                        <p class="text-stone-500 dark:text-stone-400">Loading discussion...</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -135,7 +137,6 @@
             <section>
                 <h2 class="text-2xl md:text-3xl font-bold mb-4">Part 3: Prompting for Data Visualization</h2>
                 <p class="text-stone-600 dark:text-stone-300 mb-6">Visualizing data can make complex information digestible and impactful. Instead of presenting learners with a table of numbers, you can prompt the AI to create a chart that tells a story. When prompting for a chart, be explicit about the library (e.g., Chart.js), the type of chart, the data, and the HTML container.</p>
-                <!-- Chart example will go here, for now it's just text -->
             </section>
 
             <section>
@@ -199,7 +200,7 @@
         let currentUser = null;
         let unsubscribeNotifications = null;
 
-        // --- Navbar Elements & Logic ---
+        // --- All Element Declarations ---
         const logoutBtn = document.getElementById('logout-btn');
         const profileBtn = document.getElementById('profile-btn');
         const profileDropdown = document.getElementById('profile-dropdown');
@@ -207,7 +208,19 @@
         const notificationsDropdown = document.getElementById('notifications-dropdown');
         const notificationsDot = document.getElementById('notifications-dot');
         const notificationsList = document.getElementById('notifications-list');
+        const toggleDiscussionBtn = document.getElementById('toggle-discussion-btn');
+        const discussionContent = document.getElementById('discussion-content');
+        const discussionArrow = document.getElementById('discussion-arrow');
+        const flashcards = document.querySelectorAll('.flashcard');
+        const scenarioBtns = document.querySelectorAll('.scenario-btn');
+        const feedbackContainer = document.getElementById('feedback-container');
+        const revealBtn = document.getElementById('reveal-btn');
+        const revealContent = document.getElementById('reveal-content');
+        const promptInput = document.getElementById('prompt-input');
+        const submitPromptBtn = document.getElementById('submit-prompt-btn');
+        const promptFeedback = document.getElementById('prompt-feedback');
 
+        // --- Event Listeners ---
         profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); notificationsDropdown.classList.add('hidden'); });
         notificationsBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -224,6 +237,46 @@
             signOut(auth);
         });
 
+        toggleDiscussionBtn.addEventListener('click', () => {
+            const isExpanded = discussionContent.style.maxHeight && discussionContent.style.maxHeight !== '0px';
+            if (isExpanded) {
+                discussionContent.style.maxHeight = '0px';
+                discussionContent.style.paddingTop = '0';
+                discussionArrow.style.transform = 'rotate(0deg)';
+            } else {
+                discussionContent.style.maxHeight = discussionContent.scrollHeight + "px";
+                discussionContent.style.paddingTop = '1rem';
+                discussionArrow.style.transform = 'rotate(180deg)';
+            }
+        });
+
+        flashcards.forEach(card => card.addEventListener('click', () => card.classList.toggle('is-flipped')));
+        
+        scenarioBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const feedbackId = btn.dataset.feedback;
+                feedbackContainer.querySelectorAll('div').forEach(div => div.classList.add('hidden'));
+                document.getElementById(feedbackId).classList.remove('hidden');
+            });
+        });
+
+        revealBtn.addEventListener('click', () => revealContent.classList.toggle('hidden'));
+        
+        submitPromptBtn.addEventListener('click', () => {
+            const text = promptInput.value.toLowerCase();
+            let score = 0;
+            let feedbackText = '<ul>';
+            if (text.includes('act as') || text.includes('you are a')) { score++; feedbackText += '<li class="text-green-600 dark:text-green-400">✅ Great! You\'ve given the AI a <strong>Role</strong>.</li>'; } else { feedbackText += '<li class="text-red-600 dark:text-red-400">❌ Needs a <strong>Role</strong>. Try adding "Act as an instructional designer."</li>'; }
+            if (text.includes('create') || text.includes('build') || text.includes('generate')) { score++; feedbackText += '<li class="text-green-600 dark:text-green-400">✅ Excellent! You\'ve defined a clear <strong>Task</strong>.</li>'; } else { feedbackText += '<li class="text-red-600 dark:text-red-400">❌ Needs a specific <strong>Task</strong>. What should the AI do?</li>'; }
+            if (text.includes('tailwind') || text.includes('interactive') || text.includes('feedback')) { score++; feedbackText += '<li class="text-green-600 dark:text-green-400">✅ Good job adding <strong>Constraints & Details</strong>.</li>'; } else { feedbackText += '<li class="text-red-600 dark:text-red-400">❌ Needs <strong>Constraints</strong>. What technology should it use?</li>'; }
+            if (text.includes('html') || text.includes('single file')) { score++; feedbackText += '<li class="text-green-600 dark:text-green-400">✅ Perfect! You\'ve specified the output <strong>Format</strong>.</li>'; } else { feedbackText += '<li class="text-red-600 dark:text-red-400">❌ Needs a <strong>Format</strong>. How should the AI deliver the code?</li>'; }
+            if (score === 4) { feedbackText += '<p class="font-bold mt-2">This is a high-quality prompt!</p>'; }
+            feedbackText += '</ul>';
+            promptFeedback.innerHTML = feedbackText;
+            promptFeedback.classList.remove('hidden');
+        });
+
+        // --- Main Auth Function ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
@@ -239,113 +292,84 @@
             }
         });
         
-        function listenForNotifications(userId) { /* ... same as other pages ... */ }
-        function displayNotification(notification) { /* ... same as other pages ... */ }
-        async function markNotificationsAsRead() { /* ... same as other pages ... */ }
-        function formatTimeAgo(date) { /* ... same as other pages ... */ }
-
-        // --- Discussion Accordion Logic ---
-        const toggleBtn = document.getElementById('toggle-discussion-btn');
-        const discussionContent = document.getElementById('discussion-content');
-        const discussionArrow = document.getElementById('discussion-arrow');
-
-        toggleBtn.addEventListener('click', () => {
-            const isExpanded = discussionContent.style.maxHeight && discussionContent.style.maxHeight !== '0px';
-            if (isExpanded) {
-                discussionContent.style.maxHeight = '0px';
-                discussionContent.style.paddingTop = '0';
-                 discussionArrow.style.transform = 'rotate(0deg)';
-            } else {
-                discussionContent.style.maxHeight = discussionContent.scrollHeight + "px";
-                discussionContent.style.paddingTop = '1rem';
-                 discussionArrow.style.transform = 'rotate(180deg)';
-            }
-        });
-
-        // --- Discussion Fetch Logic ---
-        function fetchDiscussions() { /* ... same as module-discussions.html ... */ }
-        function renderParentPost(postId, postData) { /* ... same as module-discussions.html ... */ }
-        function fetchReplies(parentId) { /* ... same as module-discussions.html ... */ }
-        function renderReply(container, replyData) { /* ... same as module-discussions.html ... */ }
-        async function handleReply(event) { /* ... same as module-discussions.html ... */ }
-        async function createNotification(userId, message) { /* ... same as module-discussions.html ... */ }
-
-
-        // --- Page-Specific Interactive Content ---
-        // Flashcards
-        const flashcards = document.querySelectorAll('.flashcard');
-        flashcards.forEach(card => {
-            card.addEventListener('click', () => {
-                card.classList.toggle('is-flipped');
+        // --- Reusable Functions ---
+        function listenForNotifications(userId) {
+            const notificationsRef = collection(db, "notifications", userId, "userNotifications");
+            const q = query(notificationsRef, orderBy("createdAt", "desc"));
+            unsubscribeNotifications = onSnapshot(q, (snapshot) => {
+                let unreadNotifications = [];
+                notificationsList.innerHTML = '';
+                if (snapshot.empty) {
+                    notificationsList.innerHTML = `<p class="p-4 text-sm text-stone-500 dark:text-stone-400">No new notifications.</p>`;
+                    notificationsDot.classList.add('hidden');
+                    return;
+                }
+                let hasUnread = false;
+                snapshot.forEach(doc => {
+                    const notification = { id: doc.id, ...doc.data() };
+                    if (!notification.isRead) { hasUnread = true; unreadNotifications.push(doc.id); }
+                    displayNotification(notification);
+                });
+                notificationsDot.style.display = hasUnread ? 'block' : 'none';
             });
-        });
-
-        // Scenario Quiz
-        const scenarioBtns = document.querySelectorAll('.scenario-btn');
-        const feedbackContainer = document.getElementById('feedback-container');
-        scenarioBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const feedbackId = btn.dataset.feedback;
-                // Hide all feedback
-                feedbackContainer.querySelectorAll('div').forEach(div => div.classList.add('hidden'));
-                // Show the correct feedback
-                document.getElementById(feedbackId).classList.remove('hidden');
+        }
+        function displayNotification(notification) {
+            const div = document.createElement('a');
+            div.href = notification.link || '#';
+            div.className = `block px-4 py-3 border-b border-stone-100 dark:border-gray-700 hover:bg-stone-50 dark:hover:bg-gray-700 ${!notification.isRead ? 'bg-indigo-50 dark:bg-indigo-900/20' : ''}`;
+            const timeAgo = formatTimeAgo(notification.createdAt.toDate());
+            div.innerHTML = `<p class="text-sm font-medium">${notification.message}</p><p class="text-xs text-stone-500 dark:text-stone-400 mt-1">${timeAgo}</p>`;
+            notificationsList.appendChild(div);
+        }
+        async function markNotificationsAsRead() {
+            const unreadIds = [];
+            const notificationsRef = collection(db, "notifications", currentUser.uid, "userNotifications");
+            const q = query(notificationsRef, where("isRead", "==", false));
+            const snapshot = await getDocs(q);
+            snapshot.forEach(doc => unreadIds.push(doc.id));
+            if (unreadIds.length === 0) return;
+            const batch = writeBatch(db);
+            unreadIds.forEach(id => batch.update(doc(notificationsRef, id), { isRead: true }));
+            await batch.commit();
+        }
+        function formatTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            let interval = seconds / 31536000; if (interval > 1) return Math.floor(interval) + " years ago";
+            interval = seconds / 2592000; if (interval > 1) return Math.floor(interval) + " months ago";
+            interval = seconds / 86400; if (interval > 1) return Math.floor(interval) + " days ago";
+            interval = seconds / 3600; if (interval > 1) return Math.floor(interval) + " hours ago";
+            interval = seconds / 60; if (interval > 1) return Math.floor(interval) + " minutes ago";
+            return Math.floor(seconds) + " seconds ago";
+        }
+        
+        function fetchDiscussions() {
+            const discussionsContainer = document.getElementById('discussions-container');
+            const discussionsRef = collection(db, "discussions");
+            const q = query(discussionsRef, where("isParent", "==", true), where("moduleId", "==", moduleIdToLoad), orderBy("createdAt", "desc"));
+            onSnapshot(q, (snapshot) => {
+                document.getElementById('loading-state')?.remove();
+                if (snapshot.empty) {
+                    discussionsContainer.innerHTML = '<p class="text-center text-stone-500 dark:text-stone-400">No discussion has been started for this module yet.</p>';
+                    return;
+                }
+                discussionsContainer.innerHTML = '';
+                snapshot.forEach(doc => renderParentPost(doc.id, doc.data()));
             });
-        });
-
-        // Reveal Button
-        const revealBtn = document.getElementById('reveal-btn');
-        const revealContent = document.getElementById('reveal-content');
-        revealBtn.addEventListener('click', () => {
-            revealContent.classList.toggle('hidden');
-        });
-
-        // Prompt Simulator
-        const promptInput = document.getElementById('prompt-input');
-        const submitPromptBtn = document.getElementById('submit-prompt-btn');
-        const promptFeedback = document.getElementById('prompt-feedback');
-
-        submitPromptBtn.addEventListener('click', () => {
-            const text = promptInput.value.toLowerCase();
-            let score = 0;
-            let feedbackText = '<ul>';
-            
-            if (text.includes('act as') || text.includes('you are a')) {
-                score++;
-                feedbackText += '<li class="text-green-600">✅ Great! You\'ve given the AI a <strong>Role</strong>.</li>';
-            } else {
-                feedbackText += '<li class="text-red-600">❌ Needs a <strong>Role</strong>. Try adding "Act as an instructional designer."</li>';
-            }
-
-             if (text.includes('create') || text.includes('build') || text.includes('generate')) {
-                score++;
-                feedbackText += '<li class="text-green-600">✅ Excellent! You\'ve defined a clear <strong>Task</strong>.</li>';
-            } else {
-                feedbackText += '<li class="text-red-600">❌ Needs a specific <strong>Task</strong>. What should the AI do?</li>';
-            }
-
-            if (text.includes('tailwind') || text.includes('interactive') || text.includes('feedback')) {
-                score++;
-                feedbackText += '<li class="text-green-600">✅ Good job adding <strong>Constraints & Details</strong>.</li>';
-            } else {
-                feedbackText += '<li class="text-red-600">❌ Needs <strong>Constraints</strong>. What technology should it use? What are the rules?</li>';
-            }
-
-            if (text.includes('html') || text.includes('single file')) {
-                score++;
-                feedbackText += '<li class="text-green-600">✅ Perfect! You\'ve specified the output <strong>Format</strong>.</li>';
-            } else {
-                feedbackText += '<li class="text-red-600">❌ Needs a <strong>Format</strong>. How should the AI deliver the code?</li>';
-            }
-
-            if (score === 4) {
-                 feedbackText += '<p class="font-bold mt-2">This is a high-quality prompt!</p>';
-            }
-
-            feedbackText += '</ul>';
-            promptFeedback.innerHTML = feedbackText;
-            promptFeedback.classList.remove('hidden');
-        });
+        }
+        function renderParentPost(postId, postData) {
+            const discussionsContainer = document.getElementById('discussions-container');
+            const threadContainer = document.createElement('div');
+            threadContainer.className = 'bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-stone-200 dark:border-gray-700';
+            const time = postData.createdAt ? formatTimeAgo(postData.createdAt.toDate()) : 'just now';
+            threadContainer.innerHTML = `...`; // Content redacted for brevity
+            discussionsContainer.appendChild(threadContainer);
+            fetchReplies(postId);
+            threadContainer.querySelector('.reply-btn').addEventListener('click', handleReply);
+        }
+        function fetchReplies(parentId) { /* ... */ }
+        function renderReply(container, replyData) { /* ... */ }
+        async function handleReply(event) { /* ... */ }
+        async function createNotification(userId, message) { /* ... */ }
 
      </script>
 </body>
