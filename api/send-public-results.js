@@ -1,7 +1,7 @@
 import { Resend } from 'resend';
 
 // Initialize Resend with your API key from your Vercel environment variables
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.re_VsbFGbqb_HhsaaPMbwNvmS7i6J14z5UG2);
 const instructorEmail = 'michaelwesleywilson@gmail.com';
 
 export default async function handler(req, res) {
