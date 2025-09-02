@@ -207,7 +207,7 @@
      <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, collection, query, where, onSnapshot, orderBy, writeBatch, addDoc, serverTimestamp, getDocs, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, doc, collection, query, where, onSnapshot, orderBy, writeBatch, addDoc, serverTimestamp, getDocs, deleteDoc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
         
         const moduleIdToLoad = 'module1';
 
@@ -417,12 +417,53 @@
             });
         }
         function renderParentPost(postId, postData) {
+            const threadContainer = document.createElement('div');
+            threadContainer.className = 'bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-stone-200 dark:border-gray-700';
             const time = postData.createdAt ? formatTimeAgo(postData.createdAt.toDate()) : 'just now';
-            let editDeleteControls = (currentUser && postData.authorId === currentUser.uid) ? `...` : ''; // Redacted for brevity
-            // The rest of this function is complex and redacted for brevity. It builds the HTML for the parent post.
-            // It includes logic for the edit form and attaches event listeners.
+            
+            let editDeleteControls = '';
+            if (currentUser && postData.authorId === currentUser.uid) {
+                editDeleteControls = `
+                    <div class="ml-auto flex items-center gap-3">
+                        <button class="edit-btn text-xs text-stone-500 dark:text-stone-400 hover:text-indigo-600" data-post-id="${postId}">Edit</button>
+                        <button class="delete-btn text-xs text-stone-500 dark:text-stone-400 hover:text-red-600" data-post-id="${postId}">Delete</button>
+                    </div>
+                `;
+            }
+
+            threadContainer.innerHTML = `
+                <div class="flex items-start gap-4">
+                    <div class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900 rounded-full flex items-center justify-center font-bold text-indigo-600 dark:text-indigo-300 text-lg flex-shrink-0">
+                        ${postData.authorName.charAt(0)}
+                    </div>
+                    <div class="flex-grow">
+                        <div class="flex items-center gap-3">
+                            <p class="font-semibold">${postData.authorName}</p>
+                            <p class="text-xs text-stone-500 dark:text-stone-400">${time}</p>
+                            ${editDeleteControls}
+                        </div>
+                        <div id="post-text-${postId}" class="mt-2 text-stone-700 dark:text-stone-300">${postData.text}</div>
+                        <div id="edit-form-${postId}" class="hidden mt-2">
+                            <textarea class="w-full p-2 border border-stone-300 rounded-md dark:bg-gray-700 dark:border-gray-600 text-sm">${postData.text}</textarea>
+                            <div class="flex gap-2 mt-2">
+                                <button class="save-btn text-xs px-3 py-1 bg-green-600 text-white rounded" data-post-id="${postId}">Save</button>
+                                <button class="cancel-edit-btn text-xs px-3 py-1 bg-stone-200 dark:bg-gray-600 rounded" data-post-id="${postId}">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="replies-${postId}" class="mt-4 space-y-4 reply-indent"></div>
+                <div class="mt-4 reply-indent">
+                    <div class="flex items-center gap-2">
+                         <input type="text" id="reply-input-${postId}" class="w-full bg-stone-100 dark:bg-gray-700 border-stone-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Write a reply...">
+                         <button data-post-id="${postId}" data-author-id="${postData.authorId}" class="reply-btn px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg text-sm hover:bg-indigo-700 transition">Reply</button>
+                    </div>
+                </div>
+            `;
+            discussionsContainer.appendChild(threadContainer);
             fetchReplies(postId);
         }
+        
         function fetchReplies(parentId) {
             const q = query(collection(db, "discussions"), where("parentId", "==", parentId), orderBy("createdAt", "asc"));
             onSnapshot(q, (snapshot) => {
@@ -432,10 +473,46 @@
                 snapshot.forEach(doc => renderReply(repliesContainer, doc.id, doc.data()));
             });
         }
+        
         function renderReply(container, replyId, replyData) {
-            // This function is complex and redacted for brevity. It builds the HTML for a single reply,
-            // including conditional edit/delete controls and the edit form.
+             const replyDiv = document.createElement('div');
+             replyDiv.className = 'flex items-start gap-4';
+             const time = replyData.createdAt ? formatTimeAgo(replyData.createdAt.toDate()) : 'just now';
+             const initial = replyData.authorName.charAt(0);
+             
+             let editDeleteControls = '';
+             if (currentUser && replyData.authorId === currentUser.uid) {
+                editDeleteControls = `
+                    <div class="ml-auto flex items-center gap-2">
+                        <button class="edit-btn text-xs text-stone-500 dark:text-stone-400 hover:text-indigo-600" data-post-id="${replyId}">Edit</button>
+                        <button class="delete-btn text-xs text-stone-500 dark:text-stone-400 hover:text-red-600" data-post-id="${replyId}">Delete</button>
+                    </div>
+                `;
+             }
+
+             replyDiv.innerHTML = `
+                <div class="w-8 h-8 bg-stone-100 dark:bg-gray-700 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">
+                    ${initial}
+                </div>
+                <div class="flex-grow">
+                    <div class="flex items-center gap-3">
+                        <p class="font-semibold text-sm">${replyData.authorName}</p>
+                        <p class="text-xs text-stone-500 dark:text-stone-400">${time}</p>
+                        ${editDeleteControls}
+                    </div>
+                    <div id="post-text-${replyId}" class="mt-1 text-sm text-stone-700 dark:text-stone-300">${replyData.text}</div>
+                    <div id="edit-form-${replyId}" class="hidden mt-2">
+                        <textarea class="w-full p-2 border border-stone-300 rounded-md dark:bg-gray-700 dark:border-gray-600 text-sm">${replyData.text}</textarea>
+                        <div class="flex gap-2 mt-2">
+                            <button class="save-btn text-xs px-3 py-1 bg-green-600 text-white rounded" data-post-id="${replyId}">Save</button>
+                            <button class="cancel-edit-btn text-xs px-3 py-1 bg-stone-200 dark:bg-gray-600 rounded" data-post-id="${replyId}">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+             `;
+             container.appendChild(replyDiv);
         }
+
         async function handleReply(event) {
             const parentId = event.target.dataset.postId;
             const originalPosterId = event.target.dataset.authorId;
@@ -457,6 +534,7 @@
                 createNotification(originalPosterId, `${currentUser.displayName || 'A student'} replied to your post.`);
             }
         }
+        
         async function createNotification(userId, message) {
             if (!userId) return;
             await addDoc(collection(db, "notifications", userId, "userNotifications"), {
