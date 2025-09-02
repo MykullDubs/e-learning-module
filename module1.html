@@ -26,6 +26,7 @@
         .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out, padding 0.5s ease-out; }
         .reply-indent { margin-left: 2.5rem; }
         .code-block { background-color: #1e293b; color: #e2e8f0; font-family: monospace; }
+        .wireframe-box { border: 2px dashed #9ca3af; }
     </style>
 </head>
 <body class="bg-stone-50 dark:bg-gray-900 text-stone-800 dark:text-stone-200 transition-colors duration-300">
@@ -36,7 +37,7 @@
              <div class="flex items-center gap-6">
                  <div class="relative">
                     <button id="notifications-btn" class="relative">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-stone-500 dark:text-stone-400 hover:text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-stone-500 dark:text-stone-400 hover:text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 S's a professional look and feel, and makes the application much more..."
                         <span id="notifications-dot" class="hidden absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
                     </button>
                     <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden">
@@ -134,6 +135,39 @@
                 </div>
             </section>
 
+            <!-- NEW SECTION -->
+            <section>
+                <h2 class="text-2xl md:text-3xl font-bold mb-4">Prompting for Wireframes and Storyboards</h2>
+                <p class="text-stone-600 dark:text-stone-300 mb-6">Before you even think about final styling or complex interactivity, you need to structure your learning experience. This is a key part of the "Savvy Start" in the SAM model. You can use an AI to act as a UX designer, generating a low-fidelity wireframe or storyboard that helps you visualize the flow of your module. This is about planning the instructional journey, not the final look.</p>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-stone-200 dark:border-gray-700">
+                    <h3 class="font-semibold text-lg mb-4">Example: Storyboarding a Simple Interaction</h3>
+                    <p class="text-stone-600 dark:text-stone-300 mb-6 text-sm">Here, we'll ask the AI to create a simple visual layout for a three-step learning interaction using basic styled divs. This helps you get feedback on the flow and placement of elements before committing to a full design.</p>
+                    <div class="p-4 border border-stone-200 dark:border-gray-600 rounded-lg">
+                        <div class="bg-stone-100 dark:bg-gray-700 p-4 rounded-lg">
+                            <div class="wireframe-box p-4 bg-white dark:bg-gray-800 rounded mb-4">
+                                <h4 class="font-bold text-center">Step 1: Introduction</h4>
+                                <div class="wireframe-box h-24 mt-2 flex items-center justify-center text-sm text-stone-500">Video Element</div>
+                                <p class="text-xs text-center mt-2 text-stone-500">Brief introductory text explaining the concept.</p>
+                            </div>
+                            <div class="text-center text-2xl text-stone-400">↓</div>
+                             <div class="wireframe-box p-4 bg-white dark:bg-gray-800 rounded my-4">
+                                <h4 class="font-bold text-center">Step 2: Knowledge Check</h4>
+                                <div class="wireframe-box h-12 mt-2 flex items-center justify-center text-sm text-stone-500">Multiple Choice Question</div>
+                                <div class="grid grid-cols-2 gap-2 mt-2">
+                                    <div class="wireframe-box h-8 text-xs flex items-center justify-center text-stone-500">Option A</div>
+                                    <div class="wireframe-box h-8 text-xs flex items-center justify-center text-stone-500">Option B</div>
+                                </div>
+                            </div>
+                            <div class="text-center text-2xl text-stone-400">↓</div>
+                             <div class="wireframe-box p-4 bg-white dark:bg-gray-800 rounded mt-4">
+                                <h4 class="font-bold text-center">Step 3: Feedback</h4>
+                                <p class="text-xs text-center mt-2 text-stone-500">A text block that provides corrective feedback based on the user's answer in Step 2.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
             <section>
                 <h2 class="text-2xl md:text-3xl font-bold mb-4">Part 3: Prompting for Data Visualization</h2>
                 <p class="text-stone-600 dark:text-stone-300 mb-6">Visualizing data can make complex information digestible and impactful. Instead of presenting learners with a table of numbers, you can prompt the AI to create a chart that tells a story. When prompting for a chart, be explicit about the library (e.g., Chart.js), the type of chart, the data, and the HTML container.</p>
@@ -179,7 +213,7 @@
      <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, collection, query, where, onSnapshot, orderBy, writeBatch, addDoc, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, doc, collection, query, where, onSnapshot, orderBy, writeBatch, addDoc, serverTimestamp, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
         
         const moduleIdToLoad = 'module1';
 
@@ -322,14 +356,19 @@
             notificationsList.appendChild(div);
         }
         async function markNotificationsAsRead() {
+            if (!currentUser) return;
             const unreadIds = [];
             const notificationsRef = collection(db, "notifications", currentUser.uid, "userNotifications");
             const q = query(notificationsRef, where("isRead", "==", false));
             const snapshot = await getDocs(q);
             snapshot.forEach(doc => unreadIds.push(doc.id));
+
             if (unreadIds.length === 0) return;
             const batch = writeBatch(db);
-            unreadIds.forEach(id => batch.update(doc(notificationsRef, id), { isRead: true }));
+            unreadIds.forEach(id => {
+                const notifRef = doc(db, "notifications", currentUser.uid, "userNotifications", id);
+                batch.update(notifRef, { isRead: true });
+            });
             await batch.commit();
         }
         function formatTimeAgo(date) {
@@ -361,15 +400,91 @@
             const threadContainer = document.createElement('div');
             threadContainer.className = 'bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-stone-200 dark:border-gray-700';
             const time = postData.createdAt ? formatTimeAgo(postData.createdAt.toDate()) : 'just now';
-            threadContainer.innerHTML = `...`; // Content redacted for brevity
+            threadContainer.innerHTML = `
+                <div class="flex items-start gap-4">
+                    <div class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900 rounded-full flex items-center justify-center font-bold text-indigo-600 dark:text-indigo-300 text-lg">
+                        ${postData.authorName.charAt(0)}
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-3">
+                            <p class="font-semibold">${postData.authorName}</p>
+                            <p class="text-xs text-stone-500 dark:text-stone-400">${time}</p>
+                        </div>
+                        <p class="mt-2">${postData.text}</p>
+                    </div>
+                </div>
+                <div id="replies-${postId}" class="mt-4 space-y-4 reply-indent"></div>
+                <div class="mt-4 reply-indent">
+                    <div class="flex items-center gap-2">
+                         <input type="text" id="reply-input-${postId}" class="w-full bg-stone-100 dark:bg-gray-700 border-stone-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Write a reply...">
+                         <button data-post-id="${postId}" data-author-id="${postData.authorId}" class="reply-btn px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg text-sm hover:bg-indigo-700 transition">Reply</button>
+                    </div>
+                </div>
+            `;
             discussionsContainer.appendChild(threadContainer);
             fetchReplies(postId);
             threadContainer.querySelector('.reply-btn').addEventListener('click', handleReply);
         }
-        function fetchReplies(parentId) { /* ... */ }
-        function renderReply(container, replyData) { /* ... */ }
-        async function handleReply(event) { /* ... */ }
-        async function createNotification(userId, message) { /* ... */ }
+        function fetchReplies(parentId) {
+            const repliesContainer = document.getElementById(`replies-${parentId}`);
+            const q = query(collection(db, "discussions"), where("parentId", "==", parentId), orderBy("createdAt", "asc"));
+            onSnapshot(q, (snapshot) => {
+                repliesContainer.innerHTML = '';
+                snapshot.forEach(doc => renderReply(repliesContainer, doc.data()));
+            });
+        }
+        function renderReply(container, replyData) {
+             const replyDiv = document.createElement('div');
+             replyDiv.className = 'flex items-start gap-4';
+             const time = replyData.createdAt ? formatTimeAgo(replyData.createdAt.toDate()) : 'just now';
+             const initial = replyData.authorName.charAt(0);
+             const avatarBg = replyData.authorId === 'instructor' ? 'bg-indigo-100 dark:bg-indigo-900' : 'bg-stone-100 dark:bg-gray-700';
+             const avatarText = replyData.authorId === 'instructor' ? 'text-indigo-600 dark:text-indigo-300' : '';
+             replyDiv.innerHTML = `
+                <div class="w-8 h-8 ${avatarBg} rounded-full flex items-center justify-center font-bold ${avatarText} text-sm flex-shrink-0">
+                    ${initial}
+                </div>
+                <div>
+                    <div class="flex items-center gap-3">
+                        <p class="font-semibold text-sm">${replyData.authorName}</p>
+                        <p class="text-xs text-stone-500 dark:text-stone-400">${time}</p>
+                    </div>
+                    <p class="mt-1 text-sm">${replyData.text}</p>
+                </div>
+             `;
+             container.appendChild(replyDiv);
+        }
+        async function handleReply(event) {
+            const parentId = event.target.dataset.postId;
+            const originalPosterId = event.target.dataset.authorId;
+            const input = document.getElementById(`reply-input-${parentId}`);
+            const text = input.value.trim();
+            if (!text || !currentUser) return;
+            event.target.disabled = true;
+            await addDoc(collection(db, "discussions"), {
+                authorId: currentUser.uid,
+                authorName: currentUser.displayName || currentUser.email,
+                isParent: false,
+                parentId: parentId,
+                text: text,
+                createdAt: serverTimestamp()
+            });
+            input.value = '';
+            event.target.disabled = false;
+            if (originalPosterId && originalPosterId !== currentUser.uid) {
+                createNotification(originalPosterId, `${currentUser.displayName || 'A student'} replied to your post.`);
+            }
+        }
+        async function createNotification(userId, message) {
+            if (!userId) return;
+            const notificationsRef = collection(db, "notifications", userId, "userNotifications");
+            await addDoc(notificationsRef, {
+                message: message,
+                isRead: false,
+                createdAt: serverTimestamp(),
+                link: '/module-discussions.html' 
+            });
+        }
 
      </script>
 </body>
