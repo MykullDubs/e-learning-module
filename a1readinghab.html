@@ -13,6 +13,12 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
+        /* Style for smooth transitions on the accordion */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+        }
     </style>
 </head>
 <body class="bg-slate-100 font-sans text-slate-800">
@@ -106,7 +112,7 @@
         </section>
 
         <section id="practice" class="mb-10">
-            <h2 class="text-2xl font-semibold text-slate-900 mb-4">Let's Practice!</h2>
+            <h2 class="text-2xl font-semibold text-slate-900 mb-4">Check Your Knowledge</h2>
             
             <div class="bg-slate-50 p-5 rounded-lg mb-4">
                 <p class="mb-2 text-lg">1. Choose the correct preposition: She reads ___ the evening.</p>
@@ -141,11 +147,71 @@
             </div>
         </section>
 
+        <section id="discussion" class="mb-10">
+            <h2 class="text-2xl font-semibold text-slate-900 mb-4">Let's Talk About You 🗣️</h2>
+            <div class="space-y-6">
+
+                <div class="bg-slate-50 p-5 rounded-lg">
+                    <div class="font-semibold text-lg text-slate-800">
+                        Q: What do you like to read?
+                        <p class="text-sm font-normal text-slate-500">(What kind of books or magazines?)</p>
+                    </div>
+                    <button class="accordion-toggle mt-3 text-blue-600 font-semibold flex items-center space-x-1">
+                        <span>See example answers</span>
+                        <span class="arrow">▼</span>
+                    </button>
+                    <div class="accordion-content">
+                        <ul class="mt-4 space-y-2 text-slate-700 border-t pt-4">
+                            <li>🚀 I like to read <strong class="font-semibold">science fiction novels</strong>.</li>
+                            <li>🐉 I like to read <strong class="font-semibold">fantasy books</strong>.</li>
+                            <li>📜 I like to read <strong class="font-semibold">history books</strong>.</li>
+                            <li>💥 I like to read <strong class="font-semibold">comic books</strong>.</li>
+                            <li>💅 I like to read <strong class="font-semibold">magazines about fashion</strong>.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 p-5 rounded-lg">
+                    <div class="font-semibold text-lg text-slate-800">
+                        Q: Where do you read?
+                    </div>
+                    <button class="accordion-toggle mt-3 text-blue-600 font-semibold flex items-center space-x-1">
+                        <span>See example answers</span>
+                        <span class="arrow">▼</span>
+                    </button>
+                    <div class="accordion-content">
+                        <ul class="mt-4 space-y-2 text-slate-700 border-t pt-4">
+                            <li>🏠 I read <strong class="font-semibold">at home</strong>.</li>
+                            <li>🌳 I read <strong class="font-semibold">in the park</strong>.</li>
+                            <li>🚌 I read <strong class="font-semibold">on the bus</strong>.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                 <div class="bg-slate-50 p-5 rounded-lg">
+                    <div class="font-semibold text-lg text-slate-800">
+                        Q: When do you read?
+                    </div>
+                    <button class="accordion-toggle mt-3 text-blue-600 font-semibold flex items-center space-x-1">
+                        <span>See example answers</span>
+                        <span class="arrow">▼</span>
+                    </button>
+                    <div class="accordion-content">
+                        <ul class="mt-4 space-y-2 text-slate-700 border-t pt-4">
+                            <li>☀️ I read <strong class="font-semibold">in the morning</strong>.</li>
+                            <li>🌙 I read <strong class="font-semibold">at night</strong>.</li>
+                            <li>📅 I read <strong class="font-semibold">on the weekend</strong>.</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </section>
         <section id="production">
              <h2 class="text-2xl font-semibold text-slate-900 mb-4">Your Turn ✍️</h2>
              <div id="production-container" class="bg-green-50 p-6 rounded-lg border border-green-200">
-                <p class="mb-3 text-lg">Write two sentences about your own habits. Use words from this lesson.</p>
-                <p class="text-sm text-slate-500 mb-3">Example: I read a book on the weekend. I read in my bed at night.</p>
+                <p class="mb-3 text-lg">Now, answer the questions from the section above. Write two or three sentences about your reading habits.</p>
+                <p class="text-sm text-slate-500 mb-3">Example: I like to read comic books. I usually read at home on the weekend.</p>
                 <textarea id="production-textarea" class="w-full p-3 border rounded-md h-24" placeholder="Write your sentences here..."></textarea>
                 <button id="production-btn" class="mt-4 px-6 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700">I'm Done!</button>
              </div>
@@ -213,14 +279,36 @@
                 }
             });
 
+            // --- *** NEW SCRIPT: Accordion for Discussion Questions *** ---
+            const accordions = document.querySelectorAll('.accordion-toggle');
+            accordions.forEach(accordion => {
+                accordion.addEventListener('click', () => {
+                    const content = accordion.nextElementSibling;
+                    const arrow = accordion.querySelector('.arrow');
+
+                    if (content.style.maxHeight) {
+                        // Collapse accordion
+                        content.style.maxHeight = null;
+                        accordion.querySelector('span').textContent = 'See example answers';
+                        arrow.textContent = '▼';
+                    } else {
+                        // Expand accordion
+                        content.style.maxHeight = content.scrollHeight + "px";
+                        accordion.querySelector('span').textContent = 'Hide example answers';
+                        arrow.textContent = '▲';
+                    }
+                });
+            });
+
+
             // --- Production Section Logic ---
             const productionContainer = document.getElementById('production-container');
             const productionBtn = document.getElementById('production-btn');
             productionBtn.addEventListener('click', () => {
                 productionContainer.innerHTML = `
                     <div class="text-center py-8">
-                        <h3 class="text-2xl font-bold text-green-800">Great job! 🥳</h3>
-                        <p class="mt-2 text-lg text-slate-700">You are building excellent habits in English. Keep practicing!</p>
+                        <h3 class="text-2xl font-bold text-green-800">Fantastic! 🥳</h3>
+                        <p class="mt-2 text-lg text-slate-700">You did a great job talking about your habits. Keep up the excellent work!</p>
                     </div>
                 `;
             });
