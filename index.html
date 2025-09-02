@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Learning Experience Forge</title>
     <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+        // CRITICAL: This script must be in the <head> of EVERY page
+        // It prevents a flash of the wrong theme on page load.
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+    </script>
     <style>
         body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
         .hero-gradient { background: radial-gradient(circle, rgba(240,249,255,1) 0%, rgba(255,255,255,0) 70%); }
@@ -168,4 +177,5 @@ STYLING: Use Tailwind CSS for a clean, modern design with a subtle shadow and bo
 
 </body>
 </html>
+
 
