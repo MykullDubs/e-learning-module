@@ -204,20 +204,25 @@
             }
         });
 
-        // --- Dark Mode Logic ---
-        const themeToggle = document.getElementById('theme-toggle');
-        if (document.documentElement.classList.contains('dark')) {
-            themeToggle.checked = true;
-        }
-        themeToggle.addEventListener('change', () => {
-            if (themeToggle.checked) {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-            }
-        });
+// --- Dark Mode Logic on settings.html ---
+const themeToggle = document.getElementById('theme-toggle');
+
+// Set the toggle's initial state based on the current theme
+if (document.documentElement.classList.contains('dark')) {
+    themeToggle.checked = true;
+}
+
+themeToggle.addEventListener('change', () => {
+    if (themeToggle.checked) {
+        // When toggled ON, add 'dark' class and save preference
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+    } else {
+        // When toggled OFF, remove 'dark' class and save preference
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+    }
+});
     </script>
 </body>
 </html>
