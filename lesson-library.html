@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson Library - Golden Fellows English</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Theme loader script
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+    </script>
+    
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .lesson-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .lesson-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-stone-50 dark:bg-gray-900 text-stone-800 dark:text-stone-200 transition-colors duration-300">
+
+    <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-stone-200 dark:border-gray-700 sticky top-0 z-40">
+        <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
+             <a href="dashboard.html" class="text-xl font-bold text-stone-900 dark:text-white">Golden Fellows English</a>
+             <div class="flex items-center gap-6">
+                 <!-- New Level Filter -->
+                 <div class="flex items-center gap-2">
+                     <div id="level-badge" class="hidden items-center">
+                        <svg class="h-8 text-red-600 dark:text-red-500" viewBox="0 0 100 100" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0 0 H100 V100 L50 75 L0 100 Z"/>
+                        </svg>
+                        <span id="badge-text" class="relative -ml-12 text-white font-bold text-sm pr-3">A1</span>
+                     </div>
+                     <div class="relative">
+                        <button id="level-filter-btn" class="flex items-center gap-2 p-2 rounded-md hover:bg-stone-100 dark:hover:bg-gray-700">
+                            <span id="filter-btn-text" class="text-sm font-semibold">All Levels</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-stone-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                        </button>
+                        <div id="level-filter-dropdown" class="hidden absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden">
+                            <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="all">All Levels</a>
+                            <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="A1">A1 - Beginner</a>
+                            <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="A2">A2 - Elementary</a>
+                            <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="B1">B1 - Intermediate</a>
+                            <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="B2">B2 - Upper Intermediate</a>
+                        </div>
+                     </div>
+                 </div>
+                 
+                 <div class="relative">
+                    <button id="notifications-btn" class="relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-stone-500 dark:text-stone-400 hover:text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                        <span id="notifications-dot" class="hidden absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden">
+                        <div class="p-3 font-semibold text-sm border-b border-stone-200 dark:border-gray-700">Notifications</div>
+                        <div id="notifications-list" class="max-h-96 overflow-y-auto"></div>
+                    </div>
+                 </div>
+                 <div class="relative">
+                    <button id="profile-btn" class="flex items-center gap-2">
+                        <span id="user-email-nav" class="text-sm text-stone-600 dark:text-stone-300 hidden sm:block"></span>
+                        <div id="nav-avatar-container">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
+                        </div>
+                    </button>
+                    <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden">
+                        <a href="grades.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">My Progress</a>
+                        <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Settings</a>
+                        <div class="border-t border-stone-200 dark:border-gray-600"></div>
+                        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100 dark:hover:bg-gray-700">Log Out</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-7xl">
+        <header class="mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-stone-900 dark:text-white">Lesson Library</h1>
+            <p class="text-stone-500 dark:text-stone-400 mt-2 text-lg">Browse our collection of lessons to improve your professional English.</p>
+        </header>
+        
+        <div id="lessons-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- JS will populate the lessons here -->
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        // Other Firebase imports can be added here if needed for notifications etc.
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
+            authDomain: "elearning-e83cb.firebaseapp.com",
+            projectId: "elearning-e83cb",
+            storageBucket: "elearning-e83cb.appspot.com",
+            messagingSenderId: "25473938624",
+            appId: "1:25473938624:web:5b56738933543f32a7e925"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // --- Auth Guard ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('user-email-nav').textContent = user.email;
+                const navAvatarContainer = document.getElementById('nav-avatar-container');
+                if (user.photoURL) {
+                   navAvatarContainer.innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
+                }
+                // listenForNotifications(user.uid); // You would add this back if using notifications
+            } else {
+                window.location.href = '/Login.html'; 
+            }
+        });
+        
+        // --- Navbar Logic ---
+        const profileBtn = document.getElementById('profile-btn');
+        const profileDropdown = document.getElementById('profile-dropdown');
+        const logoutBtn = document.getElementById('logout-btn');
+        
+        profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
+        window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
+        logoutBtn.addEventListener('click', () => { signOut(auth); });
+
+        // --- Lesson Data ---
+        const lessons = [
+            { title: "My Reading Habits", description: "Learn to talk about your routine with simple present verbs.", level: "A1", url: "a1-lesson-reading-habits.html", color: "blue" },
+            { title: "What Are You Reading?", description: "Use present progressive and simple past to discuss reading.", level: "A2", url: "a2-lesson-reading-now.html", color: "green" },
+            { title: "Giving a Book Recommendation", description: "Use the passive voice and present perfect continuous.", level: "B1", url: "b1-lesson-book-recommendation.html", color: "yellow" },
+            { title: "Debating a Book's Reputation", description: "Use the third conditional and clauses of concession.", level: "B2", url: "b2-lesson-book-debate.html", color: "red" },
+            { title: "Daily Routines", description: "Mastering the simple present for everyday activities.", level: "A1", url: "#", color: "blue" },
+            { title: "Describing People", description: "Learn adjectives for appearance and personality.", level: "A2", url: "#", color: "green" },
+            { title: "Making Future Plans", description: "Discussing intentions with 'going to' and 'will'.", level: "B1", url: "#", color: "yellow" },
+            { title: "Expressing Opinions", description: "Advanced phrases for agreeing and disagreeing politely.", level: "B2", url: "#", color: "red" },
+        ];
+
+        // --- Lesson Library & Filter Logic ---
+        const lessonsGrid = document.getElementById('lessons-grid');
+        const levelFilterBtn = document.getElementById('level-filter-btn');
+        const levelFilterDropdown = document.getElementById('level-filter-dropdown');
+        const levelOptions = document.querySelectorAll('.level-option');
+        const levelBadge = document.getElementById('level-badge');
+        const badgeText = document.getElementById('badge-text');
+        const filterBtnText = document.getElementById('filter-btn-text');
+
+        levelFilterBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            levelFilterDropdown.classList.toggle('hidden');
+        });
+        window.addEventListener('click', () => {
+            levelFilterDropdown.classList.add('hidden');
+        });
+
+        function renderLessons(filterLevel) {
+            lessonsGrid.innerHTML = '';
+            const filteredLessons = filterLevel === 'all' 
+                ? lessons 
+                : lessons.filter(lesson => lesson.level === filterLevel);
+
+            if (filteredLessons.length === 0) {
+                lessonsGrid.innerHTML = `<p class="col-span-full text-center text-stone-500">No lessons found for this level yet.</p>`;
+                return;
+            }
+            
+            filteredLessons.forEach(lesson => {
+                const card = document.createElement('a');
+                card.href = lesson.url;
+                card.className = 'lesson-card block bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-stone-200 dark:border-gray-700';
+                
+                const levelColors = {
+                    A1: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300',
+                    A2: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300',
+                    B1: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300',
+                    B2: 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300'
+                };
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-lg font-bold text-stone-900 dark:text-white">${lesson.title}</h3>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded-full ${levelColors[lesson.level]}">${lesson.level}</span>
+                    </div>
+                    <p class="text-sm text-stone-600 dark:text-stone-400">${lesson.description}</p>
+                `;
+                lessonsGrid.appendChild(card);
+            });
+        }
+
+        levelOptions.forEach(option => {
+            option.addEventListener('click', (e) => {
+                e.preventDefault();
+                const selectedLevel = e.target.dataset.level;
+                
+                if (selectedLevel === 'all') {
+                    levelBadge.classList.add('hidden');
+                    filterBtnText.textContent = 'All Levels';
+                } else {
+                    levelBadge.classList.remove('hidden');
+                    levelBadge.classList.add('flex');
+                    badgeText.textContent = selectedLevel;
+                    filterBtnText.textContent = selectedLevel;
+                }
+                
+                renderLessons(selectedLevel);
+                levelFilterDropdown.classList.add('hidden');
+            });
+        });
+
+        // Initial render
+        renderLessons('all');
+
+    </script>
+</body>
+</html>
