@@ -32,19 +32,17 @@
         .font-brand { font-family: 'Source Serif Pro', serif; }
         .font-typewriter { font-family: 'Special Elite', monospace; }
 
-        /* --- NEW FLASHCARD STYLES --- */
+        /* --- FLASHCARD STYLES --- */
         .bg-paper {
             background-color: #ffffff;
             /* Subtle paper texture from Hero Patterns */
             background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239C92AC' fill-opacity='0.1' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E");
         }
         .dark .bg-paper {
-             background-color: #E2E8F0; /* Slate 200 for a slightly off-white paper in dark mode */
+             background-color: #E2E8F0; /* Slate 200 for an off-white paper in dark mode */
         }
-        /* --- End New Styles --- */
-
         .card { perspective: 1000px; }
-        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-d; }
+        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
         .card.is-flipped .card-inner { transform: rotateY(180deg); }
         .card-front, .card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; display: flex; flex-direction: column; border-radius: 1rem; }
         .card-back { transform: rotateY(180deg); }
@@ -86,32 +84,42 @@
                 <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Advanced Fitness Concepts</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     
-                    <div class="card h-80 cursor-pointer group">
+                    <div class="card h-96 cursor-pointer group">
                         <div class="card-inner">
                             <div class="card-front bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-stone-200/80 dark:border-gray-700/80 justify-between">
                                 <div>
-                                    <img src="https://images.unsplash.com/photo-1549060279-7e168fcee0c2?ixlib=rb-4.0.3&q=80&w=400" alt="A personal trainer with a client" class="rounded-xl mb-4 h-40 w-full object-cover">
+                                    <img src="https://images.unsplash.com/photo-1549060279-7e168fcee0c2?ixlib=rb-4.0.3&q=80&w=400" alt="A personal trainer with a client" class="rounded-xl mb-4 h-48 w-full object-cover">
                                     <h3 class="text-2xl font-bold">personal trainer</h3>
                                 </div>
                                 <span class="text-sm font-semibold text-stone-500 dark:text-stone-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 text-right">Flip Card ↻</span>
                             </div>
                             <div class="card-back bg-paper p-6 rounded-2xl shadow-lg border border-stone-300 dark:border-gray-600">
-                                <p class="font-typewriter text-lg text-gray-800">You <strong class="font-bold">should consider hiring</strong> a personal trainer to learn correct form.</p>
+                                <ul class="font-typewriter text-gray-900 list-disc list-inside space-y-4 text-base">
+                                    <li>You <strong>should</strong> hire a *personal trainer* if you are new to the gym.</li>
+                                    <li><strong>Working</strong> with a *personal trainer* is a great way to learn correct form.</li>
+                                    <li>I plan <strong>to meet</strong> my *personal trainer* at 5 PM.</li>
+                                    <li>My old *personal trainer* <strong>moved</strong> to a different city last year.</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card h-80 cursor-pointer group">
+                    <div class="card h-96 cursor-pointer group">
                         <div class="card-inner">
                              <div class="card-front bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-stone-200/80 dark:border-gray-700/80 justify-between">
                                 <div>
-                                    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&q=80&w=400" alt="A person setting a fitness goal" class="rounded-xl mb-4 h-40 w-full object-cover">
+                                    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&q=80&w=400" alt="A person setting a fitness goal" class="rounded-xl mb-4 h-48 w-full object-cover">
                                     <h3 class="text-2xl font-bold">set a goal</h3>
                                 </div>
                                 <span class="text-sm font-semibold text-stone-500 dark:text-stone-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 text-right">Flip Card ↻</span>
                             </div>
                              <div class="card-back bg-paper p-6 rounded-2xl shadow-lg border border-stone-300 dark:border-gray-600">
-                                <p class="font-typewriter text-lg text-gray-800">I <strong class="font-bold">decided to set a goal</strong> of running a 5k race next month.</p>
+                                <ul class="font-typewriter text-gray-900 list-disc list-inside space-y-4 text-base">
+                                    <li>It's important <strong>to set a goal</strong> that is realistic and achievable.</li>
+                                    <li>You <strong>must set a goal</strong> to track your progress effectively.</li>
+                                    <li>Last month, I <strong>set a goal</strong> to run 50 kilometers in total.</li>
+                                    <li><strong>Setting a goal</strong> helps keep me motivated throughout the month.</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -126,9 +134,9 @@
                     <h3 class="text-xl font-semibold mb-3 text-stone-800 dark:text-stone-200">Modals: Advice & Obligation</h3>
                     <p class="mb-4 text-gray-600 dark:text-gray-400">Use modals to give recommendations and state rules.</p>
                     <ul class="space-y-3 text-gray-700 dark:text-gray-300">
-                        <li><strong class="font-semibold inline-block w-20">Should:</strong> (Advice) You <strong class="font-bold">should</strong> warm up before lifting weights.</li>
-                        <li><strong class="font-semibold inline-block w-20">Must:</strong> (Strong Obligation/Rule) You <strong class="font-bold">must</strong> wear proper shoes in the gym.</li>
-                        <li><strong class="font-semibold inline-block w-20">Have to:</strong> (External Obligation) I <strong class="font-bold">have to</strong> go to the gym today; it's on my schedule.</li>
+                        <li><strong class="font-semibold inline-block w-24">Should:</strong> (Advice) You <strong>should</strong> warm up before lifting weights.</li>
+                        <li><strong class="font-semibold inline-block w-24">Must:</strong> (Strong Obligation/Rule) You <strong>must</strong> wear proper shoes in the gym.</li>
+                        <li><strong class="font-semibold inline-block w-24">Have to:</strong> (External Obligation) I <strong>have to</strong> go to the gym today; it's on my schedule.</li>
                     </ul>
                 </div>
                 <div class="bg-stone-50 dark:bg-gray-800/50 p-6 rounded-2xl border border-stone-200 dark:border-gray-700">
@@ -137,13 +145,13 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <h4 class="font-semibold">Verb + Gerund (-ing)</h4>
-                            <p>I enjoy <strong class="font-bold">running</strong>.</p>
-                            <p>You should avoid <strong class="font-bold">lifting</strong> with bad form.</p>
+                            <p>I enjoy <strong>running</strong>.</p>
+                            <p>You should avoid <strong>lifting</strong> with bad form.</p>
                         </div>
                         <div>
                             <h4 class="font-semibold">Verb + Infinitive (to...)</h4>
-                            <p>I want <strong class="font-bold">to get</strong> stronger.</p>
-                            <p>He plans <strong class="font-bold">to hire</strong> a trainer.</p>
+                            <p>I want <strong>to get</strong> stronger.</p>
+                            <p>He plans <strong>to hire</strong> a trainer.</p>
                         </div>
                     </div>
                 </div>
@@ -205,7 +213,6 @@
                 if (!e.target.closest('.speak-btn')) card.classList.toggle('is-flipped');
             }));
             
-            // --- Practice Question 1 Logic ---
             const q1Select = document.getElementById('q1-select');
             const q1Feedback = document.getElementById('q1-feedback');
             q1Select.addEventListener('change', () => {
@@ -218,7 +225,6 @@
                 }
             });
 
-            // --- Practice Question 2 Logic ---
             const q2Input = document.getElementById('q2-input');
             const q2Feedback = document.getElementById('q2-feedback');
             q2Input.addEventListener('input', () => {
