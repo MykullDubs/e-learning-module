@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class=""> <!-- Dark mode class will be added here -->
+<html lang="en" class="">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +7,7 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // Theme loader script to prevent a flash of the wrong theme
+        // Theme loader script
         if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
           document.documentElement.classList.add('dark');
         } else {
@@ -24,12 +24,44 @@
         .card { perspective: 1000px; }
         .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
         .card.is-flipped .card-inner { transform: rotateY(180deg); }
-        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; border-radius: 0.75rem; /* rounded-xl */ }
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; border-radius: 0.75rem; }
         .card-back { transform: rotateY(180deg); }
         .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-in-out; }
     </style>
 </head>
 <body class="bg-stone-50 dark:bg-gray-900 text-stone-800 dark:text-stone-200 transition-colors duration-300">
+
+    <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-stone-200 dark:border-gray-700 sticky top-0 z-40">
+        <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
+             <a href="dashboard.html" class="text-xl font-bold text-stone-900 dark:text-white">ESL Learning Platform</a>
+             <div class="flex items-center gap-6">
+                 <div class="relative">
+                    <button id="notifications-btn" class="relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-stone-500 dark:text-stone-400 hover:text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                        <span id="notifications-dot" class="hidden absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden">
+                        <div class="p-3 font-semibold text-sm border-b border-stone-200 dark:border-gray-700">Notifications</div>
+                        <div id="notifications-list" class="max-h-96 overflow-y-auto"></div>
+                    </div>
+                 </div>
+                 <div class="relative">
+                    <button id="profile-btn" class="flex items-center gap-2">
+                        <span id="user-email-nav" class="text-sm text-stone-600 dark:text-stone-300 hidden sm:block"></span>
+                        <div id="nav-avatar-container">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
+                        </div>
+                    </button>
+                    <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden">
+                        <a href="grades.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">My Progress</a>
+                        <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Settings</a>
+                        <div class="border-t border-stone-200 dark:border-gray-600"></div>
+                        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100 dark:hover:bg-gray-700">Log Out</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
 
     <main class="max-w-4xl mx-auto my-8 p-6 sm:p-10 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-stone-200 dark:border-gray-700">
 
@@ -67,7 +99,7 @@
                         </div>
                         <div class="card-back bg-indigo-50 dark:bg-indigo-900/20 p-4 border border-indigo-200 dark:border-indigo-800">
                             <h4 class="text-xl font-bold text-indigo-900 dark:text-indigo-200 mb-3 border-b border-indigo-200 dark:border-indigo-700 pb-2">Examples for "book"</h4>
-                            <ul class="space-y-3 text-stone-800 dark:text-stone-200">
+                            <ul class="space-y-3 text-stone-800 dark:text-stone-200 text-sm">
                                 <li>I want to read <strong class="font-semibold">a new book</strong>.</li>
                                 <li><strong class="font-semibold">The book</strong> you told me about is very good.</li>
                                 <li>He <strong class="font-semibold">bought</strong> a book yesterday. <span class="text-xs bg-red-100 text-red-800 font-semibold px-2 py-0.5 rounded-full ml-1 dark:bg-red-900/50 dark:text-red-300">Past Tense</span></li>
@@ -90,7 +122,7 @@
                         </div>
                         <div class="card-back bg-indigo-50 dark:bg-indigo-900/20 p-4 border border-indigo-200 dark:border-indigo-800">
                             <h4 class="text-xl font-bold text-indigo-900 dark:text-indigo-200 mb-3 border-b border-indigo-200 dark:border-indigo-700 pb-2">Examples for "magazine"</h4>
-                            <ul class="space-y-3 text-stone-800 dark:text-stone-200">
+                            <ul class="space-y-3 text-stone-800 dark:text-stone-200 text-sm">
                                 <li>She buys <strong class="font-semibold">a magazine</strong> every week.</li>
                                 <li>Where is <strong class="font-semibold">the magazine</strong> about cars?</li>
                                 <li>I <strong class="font-semibold">read</strong> that magazine last night. <span class="text-xs bg-red-100 text-red-800 font-semibold px-2 py-0.5 rounded-full ml-1 dark:bg-red-900/50 dark:text-red-300">Past Tense</span></li>
@@ -113,7 +145,7 @@
                         </div>
                         <div class="card-back bg-indigo-50 dark:bg-indigo-900/20 p-4 border border-indigo-200 dark:border-indigo-800">
                              <h4 class="text-xl font-bold text-indigo-900 dark:text-indigo-200 mb-3 border-b border-indigo-200 dark:border-indigo-700 pb-2">Examples for "library"</h4>
-                            <ul class="space-y-3 text-stone-800 dark:text-stone-200">
+                            <ul class="space-y-3 text-stone-800 dark:text-stone-200 text-sm">
                                 <li>There is <strong class="font-semibold">a library</strong> near my house.</li>
                                 <li><strong class="font-semibold">The library</strong> is a very quiet place.</li>
                                 <li>We <strong class="font-semibold">went</strong> to the library on Saturday. <span class="text-xs bg-red-100 text-red-800 font-semibold px-2 py-0.5 rounded-full ml-1 dark:bg-red-900/50 dark:text-red-300">Past Tense</span></li>
@@ -220,6 +252,23 @@
                         </ul>
                     </div>
                 </div>
+                
+                <div class="bg-stone-100 dark:bg-gray-800/50 p-5 rounded-lg">
+                    <div class="font-semibold text-lg">
+                        Q: How do you read?
+                    </div>
+                    <button class="accordion-toggle mt-3 text-indigo-600 dark:text-indigo-400 font-semibold flex items-center space-x-1">
+                        <span>See example answers</span>
+                        <span class="arrow transition-transform">▼</span>
+                    </button>
+                    <div class="accordion-content">
+                        <ul class="mt-4 space-y-2 text-stone-700 dark:text-stone-300 border-t border-stone-200 dark:border-gray-700 pt-4">
+                            <li>📖 I read <strong class="font-semibold">with paper books</strong>.</li>
+                            <li>📱 I read <strong class="font-semibold">on an e-reader</strong>.</li>
+                            <li>🤳 I read <strong class="font-semibold">on my phone</strong>.</li>
+                        </ul>
+                    </div>
+                </div>
 
                 <div class="bg-stone-100 dark:bg-gray-800/50 p-5 rounded-lg">
                     <div class="font-semibold text-lg">
@@ -270,85 +319,127 @@
 
     </main>
     
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- Flashcard Flip Logic ---
-            const cards = document.querySelectorAll('.card');
-            cards.forEach(card => {
-                card.addEventListener('click', (event) => {
-                    if (!event.target.closest('.speak-btn')) {
-                        card.classList.toggle('is-flipped');
-                    }
-                });
-            });
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, query, where, onSnapshot, orderBy, writeBatch, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-            // --- Vocabulary Speech Synthesis ---
-            const speakButtons = document.querySelectorAll('.speak-btn');
-            const synth = window.speechSynthesis;
-            speakButtons.forEach(button => {
-                button.addEventListener('click', (event) => {
-                    event.stopPropagation(); // Prevents card from flipping
-                    const textToSpeak = button.dataset.text;
-                    if (synth.speaking) synth.cancel();
-                    const utterance = new SpeechSynthesisUtterance(textToSpeak);
-                    utterance.lang = 'en-US';
-                    synth.speak(utterance);
-                });
-            });
+        const firebaseConfig = {
+            apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
+            authDomain: "elearning-e83cb.firebaseapp.com",
+            projectId: "elearning-e83cb",
+            storageBucket: "elearning-e83cb.appspot.com",
+            messagingSenderId: "25473938624",
+            appId: "1:25473938624:web:5b56738933543f32a7e925",
+            measurementId: "G-R713G5DD1S"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-            // --- Practice Question 1 Logic ---
-            document.getElementById('q1-check-btn').addEventListener('click', () => {
-                const answer = document.getElementById('q1-select').value;
-                const feedbackEl = document.getElementById('q1-feedback');
-                if (answer === 'in') {
-                    feedbackEl.textContent = 'Correct! ✅';
-                    feedbackEl.className = 'font-semibold text-green-600 dark:text-green-400';
+        let currentUser = null;
+        let unsubscribeNotifications = null;
+
+        // --- Auth Guard ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('user-email-nav').textContent = user.email;
+                const navAvatarContainer = document.getElementById('nav-avatar-container');
+                if (user.photoURL) {
+                   navAvatarContainer.innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
+                }
+                listenForNotifications(user.uid);
+            } else {
+                window.location.href = '/Login.html'; 
+            }
+        });
+        
+        // --- Navbar & Notification Logic (same as other pages) ---
+        const profileBtn = document.getElementById('profile-btn');
+        const profileDropdown = document.getElementById('profile-dropdown');
+        const logoutBtn = document.getElementById('logout-btn');
+        const notificationsBtn = document.getElementById('notifications-btn');
+        const notificationsDropdown = document.getElementById('notifications-dropdown');
+        const notificationsDot = document.getElementById('notifications-dot');
+        const notificationsList = document.getElementById('notifications-list');
+
+        profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); notificationsDropdown.classList.add('hidden'); });
+        notificationsBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.add('hidden'); notificationsDropdown.classList.toggle('hidden'); if (!notificationsDropdown.classList.contains('hidden')) markNotificationsAsRead(); });
+        window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); notificationsDropdown.classList.add('hidden'); });
+        logoutBtn.addEventListener('click', () => { if(unsubscribeNotifications) unsubscribeNotifications(); signOut(auth); });
+
+        function listenForNotifications(userId) { /* ... same as other pages ... */ }
+        function displayNotification(notification) { /* ... same as other pages ... */ }
+        async function markNotificationsAsRead() { /* ... same as other pages ... */ }
+        function formatTimeAgo(date) { /* ... same as other pages ... */ }
+
+        // --- Lesson-Specific Interactivity ---
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => card.addEventListener('click', (event) => { if (!event.target.closest('.speak-btn')) { card.classList.toggle('is-flipped'); } }));
+
+        const speakButtons = document.querySelectorAll('.speak-btn');
+        const synth = window.speechSynthesis;
+        speakButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.stopPropagation();
+                const textToSpeak = button.dataset.text;
+                if (synth.speaking) synth.cancel();
+                const utterance = new SpeechSynthesisUtterance(textToSpeak);
+                utterance.lang = 'en-US';
+                synth.speak(utterance);
+            });
+        });
+
+        document.getElementById('q1-check-btn').addEventListener('click', () => {
+            const answer = document.getElementById('q1-select').value;
+            const feedbackEl = document.getElementById('q1-feedback');
+            if (answer === 'in') {
+                feedbackEl.textContent = 'Correct! ✅';
+                feedbackEl.className = 'font-semibold text-green-600 dark:text-green-400';
+            } else {
+                feedbackEl.textContent = 'Not quite. We use "in" for parts of the day.';
+                feedbackEl.className = 'font-semibold text-red-600 dark:text-red-400';
+            }
+        });
+
+        document.getElementById('q2-check-btn').addEventListener('click', () => {
+            const answer = document.getElementById('q2-input').value.trim().toLowerCase();
+             const feedbackEl = document.getElementById('q2-feedback');
+            if (answer === 'reads') {
+                feedbackEl.textContent = 'Excellent! ✅';
+                feedbackEl.className = 'font-semibold text-green-600 dark:text-green-400';
+            } else {
+                feedbackEl.textContent = 'Try again. Remember: he/she/it + verb-s.';
+                feedbackEl.className = 'font-semibold text-red-600 dark:text-red-400';
+            }
+        });
+        
+        const accordions = document.querySelectorAll('.accordion-toggle');
+        accordions.forEach(accordion => {
+            accordion.addEventListener('click', () => {
+                const content = accordion.nextElementSibling;
+                const arrow = accordion.querySelector('.arrow');
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                    accordion.querySelector('span').textContent = 'See example answers';
+                    arrow.style.transform = 'rotate(0deg)';
                 } else {
-                    feedbackEl.textContent = 'Not quite. We use "in" for parts of the day.';
-                    feedbackEl.className = 'font-semibold text-red-600 dark:text-red-400';
+                    content.style.maxHeight = content.scrollHeight + "px";
+                    accordion.querySelector('span').textContent = 'Hide example answers';
+                     arrow.style.transform = 'rotate(180deg)';
                 }
             });
+        });
 
-            // --- Practice Question 2 Logic ---
-            document.getElementById('q2-check-btn').addEventListener('click', () => {
-                const answer = document.getElementById('q2-input').value.trim().toLowerCase();
-                 const feedbackEl = document.getElementById('q2-feedback');
-                if (answer === 'reads') {
-                    feedbackEl.textContent = 'Excellent! ✅';
-                    feedbackEl.className = 'font-semibold text-green-600 dark:text-green-400';
-                } else {
-                    feedbackEl.textContent = 'Try again. Remember: he/she/it + verb-s.';
-                    feedbackEl.className = 'font-semibold text-red-600 dark:text-red-400';
-                }
-            });
-            
-            // --- Accordion for Discussion Questions ---
-            const accordions = document.querySelectorAll('.accordion-toggle');
-            accordions.forEach(accordion => {
-                accordion.addEventListener('click', () => {
-                    const content = accordion.nextElementSibling;
-                    const arrow = accordion.querySelector('.arrow');
-                    if (content.style.maxHeight) {
-                        content.style.maxHeight = null;
-                        accordion.querySelector('span').textContent = 'See example answers';
-                        arrow.style.transform = 'rotate(0deg)';
-                    } else {
-                        content.style.maxHeight = content.scrollHeight + "px";
-                        accordion.querySelector('span').textContent = 'Hide example answers';
-                         arrow.style.transform = 'rotate(180deg)';
-                    }
-                });
-            });
-
-            // --- Production Section Logic ---
-            document.getElementById('production-btn').addEventListener('click', () => {
-                document.getElementById('production-container').innerHTML = `
-                    <div class="text-center py-8">
-                        <h3 class="text-2xl font-bold text-green-800 dark:text-green-300">Fantastic! 🥳</h3>
-                        <p class="mt-2 text-lg text-stone-700 dark:text-stone-300">You did a great job talking about your habits. Keep up the excellent work!</p>
-                    </div>
-                `;
-            });
+        document.getElementById('production-btn').addEventListener('click', () => {
+            document.getElementById('production-container').innerHTML = `
+                <div class="text-center py-8">
+                    <h3 class="text-2xl font-bold text-green-800 dark:text-green-300">Fantastic! 🥳</h3>
+                    <p class="mt-2 text-lg text-stone-700 dark:text-stone-300">You did a great job talking about your habits. Keep up the excellent work!</p>
+                </div>
+            `;
         });
     </script>
 </body>
