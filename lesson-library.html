@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lesson Library - Golden Fellows English</title>
+    <title>Your Dashboard - Golden Fellows English</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,9 +13,9 @@
     <script>
         // Theme loader script
         if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-          document.documentElement.classList.add('dark');
+            document.documentElement.classList.add('dark');
         } else {
-          document.documentElement.classList.remove('dark');
+            document.documentElement.classList.remove('dark');
         }
     </script>
     
@@ -26,218 +26,186 @@
             background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23DCD9D4" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
         }
         .dark body {
-             background-color: #1a202c;
-             background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%232D3748" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+            background-color: #1a202c;
+            background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%232D3748" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
         }
+        .font-brand { font-family: 'Source Serif Pro', serif; }
         .lesson-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeIn 0.5s ease-out forwards;
-        }
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
         .lesson-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
-        .font-brand {
-             font-family: 'Source Serif Pro', serif;
-        }
-        /* Custom ribbon colors */
-        .ribbon-red { color: #C53030; }
-        .dark .ribbon-red { color: #FC8181; }
-
     </style>
 </head>
-<body class="text-gray-800 dark:text-gray-200">
+<body class="text-gray-800 dark:text-gray-200 antialiased">
 
     <header class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-sm border-b border-stone-200 dark:border-gray-700 sticky top-0 z-40">
         <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
-             <a href="dashboard.html" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
-             <div class="flex items-center gap-6">
-                 <!-- Level Filter -->
-                 <div class="flex items-center gap-2">
-                     <div id="level-badge" class="hidden items-center">
-                        <svg class="h-8 ribbon-red" viewBox="0 0 100 100" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M0 0 H100 V100 L50 75 L0 100 Z"/>
-                        </svg>
-                        <span id="badge-text" class="relative -ml-12 text-white font-bold text-sm pr-3">A1</span>
-                     </div>
-                     <div class="relative">
-                        <button id="level-filter-btn" class="flex items-center gap-2 p-2 rounded-md hover:bg-stone-100 dark:hover:bg-gray-700">
-                            <span id="filter-btn-text" class="text-sm font-semibold font-brand">All Levels</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-stone-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                        </button>
-                        <div id="level-filter-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden font-brand">
-                            <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="all">All Levels</a>
-                            <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="A1">A1 - Beginner</a>
-                            <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="A2">A2 - Elementary</a>
-                            <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="B1">B1 - Intermediate</a>
-                            <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="B2">B2 - Upper Intermediate</a>
-                        </div>
-                     </div>
-                 </div>
-                 
-                 <!-- Profile/User section remains the same -->
-                 <div class="relative">
-                    <button id="profile-btn" class="flex items-center gap-2">
-                        <span id="user-email-nav" class="text-sm text-stone-600 dark:text-stone-300 hidden sm:block font-brand"></span>
-                        <div id="nav-avatar-container">
-                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
-                        </div>
-                    </button>
-                    <div id="profile-dropdown" class="hidden absolute font-brand right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden">
-                        <a href="grades.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">My Progress</a>
-                        <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Settings</a>
-                        <div class="border-t border-stone-200 dark:border-gray-600"></div>
-                        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100 dark:hover:bg-gray-700">Log Out</button>
-                    </div>
-                </div>
+            <a href="#" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
             </div>
-        </div>
     </header>
 
     <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-7xl font-brand">
-        <header class="mb-12 text-center">
-            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Lesson Library</h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-3 text-lg max-w-2xl mx-auto">Browse our collection of lessons, crafted to elevate your professional English skills.</p>
+        <header class="mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Welcome back!</h1>
+            <p class="text-gray-600 dark:text-gray-400 mt-3 text-lg">Let's continue your journey to fluency.</p>
         </header>
-        
-        <div id="lessons-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            <!-- JS will populate the lessons here -->
+
+        <section id="continue-learning-section" class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Pick Up Where You Left Off</h2>
+            <div id="continue-learning-card" class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-stone-200 dark:border-gray-700 flex items-center justify-between hover:border-indigo-500 dark:hover:border-indigo-500 transition-colors duration-300">
+                </div>
+        </section>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+            <aside class="w-full lg:w-1/4">
+                <div class="sticky top-24">
+                    <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Discover Lessons</h3>
+                    <div id="filters" class="space-y-6">
+                        <div>
+                            <label class="font-bold">Level</label>
+                            <div id="level-filter" class="flex flex-wrap gap-2 mt-2">
+                                </div>
+                        </div>
+                        <div>
+                            <label class="font-bold">Topic</label>
+                            <div id="topic-filter" class="flex flex-wrap gap-2 mt-2">
+                                 </div>
+                        </div>
+                        <input id="search-input" type="text" placeholder="Search by keyword..." class="w-full p-2 border border-stone-300 dark:border-gray-600 rounded-md bg-transparent focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                </div>
+            </aside>
+
+            <div id="lessons-grid" class="w-full lg:w-3/4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                </div>
         </div>
     </main>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
-            authDomain: "elearning-e83cb.firebaseapp.com",
-            projectId: "elearning-e83cb",
-            storageBucket: "elearning-e83cb.appspot.com",
-            messagingSenderId: "25473938624",
-            appId: "1:25473938624:web:5b56738933543f32a7e925"
-        };
-        
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
+            const lessons = [
+                // Tags: [Level, Topic] - expanded for filtering
+                { title: "How Are You Feeling?", level: "A1", topic: "Health & Medicine", status: 'completed', progress: 100, url: "#" },
+                { title: "My Workout Routine", level: "A1", topic: "Working Out", status: 'in-progress', progress: 60, url: "#" },
+                { title: "What Are You Reading?", level: "A2", topic: "Reading", status: 'not-started', progress: 0, url: "#" },
+                { title: "Improving My Fitness", level: "A2", topic: "Working Out", status: 'not-started', progress: 0, url: "#" },
+                { title: "Optimizing Your Workout", level: "B1", topic: "Working Out", status: 'not-started', progress: 0, url: "#" },
+                { title: "Advanced Fitness Strategy", level: "B2", topic: "Working Out", status: 'not-started', progress: 0, url: "#" },
+                { title: "Daily Routines", level: "A1", topic: "Hobbies", status: 'completed', progress: 100, url: "#" },
+                { title: "Describing Measurements", level: "A2", topic: "Measurements", status: 'not-started', progress: 0, url: "#" },
+            ];
 
-        // --- Auth Guard ---
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                document.getElementById('user-email-nav').textContent = user.email;
-                const navAvatarContainer = document.getElementById('nav-avatar-container');
-                if (user.photoURL) {
-                   navAvatarContainer.innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
-                }
+            const lessonsGrid = document.getElementById('lessons-grid');
+            const levelFilterContainer = document.getElementById('level-filter');
+            const topicFilterContainer = document.getElementById('topic-filter');
+            const searchInput = document.getElementById('search-input');
+            const continueLearningCard = document.getElementById('continue-learning-card');
+
+            // --- 1. Populate Dynamic "Continue Learning" Card ---
+            const lastInProgress = lessons.find(l => l.status === 'in-progress');
+            if (lastInProgress) {
+                continueLearningCard.innerHTML = `
+                    <div>
+                        <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300">${lastInProgress.level}</span>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mt-2">${lastInProgress.title}</h3>
+                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mt-2">
+                          <div class="bg-indigo-600 h-2.5 rounded-full" style="width: ${lastInProgress.progress}%"></div>
+                        </div>
+                    </div>
+                    <a href="${lastInProgress.url}" class="bg-indigo-600 text-white font-semibold px-4 py-2 rounded-lg whitespace-nowrap hover:bg-indigo-700">Continue</a>
+                `;
             } else {
-                window.location.href = '/Login.html'; 
-            }
-        });
-        
-        // --- Navbar Logic ---
-        const profileBtn = document.getElementById('profile-btn');
-        const profileDropdown = document.getElementById('profile-dropdown');
-        const logoutBtn = document.getElementById('logout-btn');
-        
-        profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
-        window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
-        logoutBtn.addEventListener('click', () => { signOut(auth); });
-
-        // --- Lesson Data ---
-        const lessons = [
-            { title: "My Reading Habits", description: "Learn to talk about your routine with simple present verbs.", level: "A1", url: "a1readinghab.html" },
-            { title: "What Are You Reading?", description: "Use present progressive and simple past to discuss reading.", level: "A2", url: "a2readingnow.html" },
-            { title: "Giving a Book Recommendation", description: "Use the passive voice and present perfect continuous.", level: "B1", url: "b1recommendation.html" },
-            { title: "Debating a Book's Reputation", description: "Use the third conditional and clauses of concession.", level: "B2", url: "b2bookdebate.html" },
-            { title: "Daily Routines", description: "Mastering the simple present for everyday activities.", level: "A1", url: "#" },
-            { title: "Describing People", description: "Learn adjectives for appearance and personality.", level: "A2", url: "#" },
-            { title: "Making Future Plans", description: "Discussing intentions with 'going to' and 'will'.", level: "B1", url: "#" },
-            { title: "Expressing Opinions", description: "Advanced phrases for agreeing and disagreeing politely.", level: "B2", url: "#" },
-        ];
-
-        // --- Lesson Library & Filter Logic ---
-        const lessonsGrid = document.getElementById('lessons-grid');
-        const levelFilterBtn = document.getElementById('level-filter-btn');
-        const levelFilterDropdown = document.getElementById('level-filter-dropdown');
-        const levelOptions = document.querySelectorAll('.level-option');
-        const levelBadge = document.getElementById('level-badge');
-        const badgeText = document.getElementById('badge-text');
-        const filterBtnText = document.getElementById('filter-btn-text');
-
-        levelFilterBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            levelFilterDropdown.classList.toggle('hidden');
-        });
-        window.addEventListener('click', () => {
-            levelFilterDropdown.classList.add('hidden');
-        });
-
-        function renderLessons(filterLevel) {
-            lessonsGrid.innerHTML = '';
-            const filteredLessons = filterLevel === 'all' 
-                ? lessons 
-                : lessons.filter(lesson => lesson.level === filterLevel);
-
-            if (filteredLessons.length === 0) {
-                lessonsGrid.innerHTML = `<p class="col-span-full text-center text-gray-500">No lessons found for this level yet.</p>`;
-                return;
+                 document.getElementById('continue-learning-section').style.display = 'none';
             }
             
-            filteredLessons.forEach((lesson, index) => {
-                const card = document.createElement('a');
-                card.href = lesson.url;
-                card.className = 'lesson-card block bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-stone-200/50 dark:border-gray-700/50';
-                card.style.animationDelay = `${index * 50}ms`;
+            // --- 2. Populate Filters ---
+            const levels = [...new Set(lessons.map(l => l.level))].sort();
+            const topics = [...new Set(lessons.map(l => l.topic))].sort();
+            
+            levelFilterContainer.innerHTML = '<button class="filter-btn level-btn active" data-filter="all">All</button>' + levels.map(l => `<button class="filter-btn level-btn" data-filter="${l}">${l}</button>`).join('');
+            topicFilterContainer.innerHTML = '<button class="filter-btn topic-btn active" data-filter="all">All</button>' + topics.map(t => `<button class="filter-btn topic-btn" data-filter="${t}">${t}</button>`).join('');
 
-                const levelColors = {
-                    A1: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 border border-blue-200 dark:border-blue-700',
-                    A2: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 border border-green-200 dark:border-green-700',
-                    B1: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-700',
-                    B2: 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300 border border-red-200 dark:border-red-700'
-                };
+            // --- 3. Render Lessons Function ---
+            function renderLessons() {
+                const activeLevel = document.querySelector('.level-btn.active').dataset.filter;
+                const activeTopic = document.querySelector('.topic-btn.active').dataset.filter;
+                const searchTerm = searchInput.value.toLowerCase();
 
-                card.innerHTML = `
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">${lesson.title}</h3>
-                        <span class="text-xs font-bold px-2 py-0.5 rounded-full ${levelColors[lesson.level]}">${lesson.level}</span>
-                    </div>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">${lesson.description}</p>
-                `;
-                lessonsGrid.appendChild(card);
-            });
-        }
-
-        levelOptions.forEach(option => {
-            option.addEventListener('click', (e) => {
-                e.preventDefault();
-                const selectedLevel = e.target.dataset.level;
+                const filteredLessons = lessons.filter(lesson => {
+                    const levelMatch = activeLevel === 'all' || lesson.level === activeLevel;
+                    const topicMatch = activeTopic === 'all' || lesson.topic === activeTopic;
+                    const searchMatch = lesson.title.toLowerCase().includes(searchTerm);
+                    return levelMatch && topicMatch && searchMatch;
+                });
                 
-                if (selectedLevel === 'all') {
-                    levelBadge.classList.add('hidden');
-                    filterBtnText.textContent = 'All Levels';
-                } else {
-                    levelBadge.classList.remove('hidden');
-                    levelBadge.classList.add('flex');
-                    badgeText.textContent = selectedLevel;
-                    filterBtnText.textContent = selectedLevel;
+                lessonsGrid.innerHTML = '';
+                if (filteredLessons.length === 0) {
+                    lessonsGrid.innerHTML = `<p class="col-span-full text-center text-gray-500 dark:text-gray-400">No lessons match your filters.</p>`;
+                    return;
                 }
-                
-                renderLessons(selectedLevel);
-                levelFilterDropdown.classList.add('hidden');
-            });
-        });
 
-        // Initial render
-        renderLessons('all');
+                filteredLessons.forEach(lesson => {
+                    const card = document.createElement('a');
+                    card.href = lesson.url;
+                    
+                    let cardClasses = 'lesson-card block bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-stone-200 dark:border-gray-700';
+                    let statusIcon = '';
+                    let progressBar = '';
+                    
+                    if(lesson.status === 'completed') {
+                        cardClasses += ' opacity-60'; // Visually distinguish completed lessons
+                        statusIcon = `<svg class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
+                    }
+                    if(lesson.status === 'in-progress') {
+                        progressBar = `
+                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 mt-3">
+                          <div class="bg-indigo-600 h-1.5 rounded-full" style="width: ${lesson.progress}%"></div>
+                        </div>`;
+                    }
+
+                    card.className = cardClasses;
+
+                    card.innerHTML = `
+                        <div class="flex justify-between items-start">
+                            <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-stone-100 text-stone-800 dark:bg-gray-900 dark:text-stone-300 border border-stone-200 dark:border-gray-700">${lesson.topic}</span>
+                            ${statusIcon}
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mt-4">${lesson.title}</h3>
+                        ${progressBar}
+                    `;
+                    lessonsGrid.appendChild(card);
+                });
+            }
+            
+            // --- 4. Event Listeners ---
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Handle active state for its group
+                    btn.parentElement.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderLessons();
+                });
+            });
+            searchInput.addEventListener('input', renderLessons);
+
+            // --- Initial Render ---
+            renderLessons();
+            
+            // --- Helper Styles ---
+            // This is a simple way to add styles for the active filter buttons without an external CSS file
+            const style = document.createElement('style');
+            style.innerHTML = `
+                .filter-btn { padding: 4px 12px; border-radius: 9999px; font-size: 14px; font-weight: 600; background-color: #F5F5F4; color: #57534E; border: 1px solid #E7E5E4; }
+                .dark .filter-btn { background-color: #374151; color: #D6D3D1; border-color: #4B5563; }
+                .filter-btn.active { background-color: #4338CA; color: white; border-color: #4338CA; }
+                .dark .filter-btn.active { background-color: #6366F1; color: white; border-color: #6366F1; }
+            `;
+            document.head.appendChild(style);
+        });
     </script>
 </body>
 </html>
-
