@@ -47,7 +47,7 @@
                     <button id="profile-btn" class="flex items-center gap-2">
                         <span id="user-email-nav" class="text-sm text-stone-600 dark:text-stone-300 hidden sm:block font-brand"></span>
                         <div id="nav-avatar-container">
-                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
+                             <svg xmlns="http://www.w.org/2000/svg" class="h-8 w-8 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
                         </div>
                     </button>
                     <div id="profile-dropdown" class="hidden absolute font-brand right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden">
@@ -67,7 +67,7 @@
             <p class="text-gray-600 dark:text-gray-400 mt-3 text-lg max-w-2xl mx-auto">Choose a plan that fits your goals and accelerate your journey to professional fluency.</p>
         </header>
         
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 max-w-7xl mx-auto">
             <!-- Standard Tier -->
             <div class="pricing-card w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-stone-200/50 dark:border-gray-700/50 flex flex-col">
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white font-brand">Standard Tier</h2>
@@ -82,8 +82,7 @@
             </div>
 
             <!-- Plus Tier -->
-            <div class="pricing-card w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border-2 border-indigo-500 dark:border-indigo-600 relative flex flex-col">
-                <div class="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 px-4 py-1 bg-indigo-600 text-white text-sm font-semibold rounded-full">Most Popular</div>
+            <div class="pricing-card w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-stone-200/50 dark:border-gray-700/50 flex flex-col">
                 <h2 class="text-2xl font-bold text-indigo-700 dark:text-indigo-400 font-brand">Plus Tier</h2>
                 <p class="mt-2 text-gray-600 dark:text-gray-400">For accelerated growth with expert guidance.</p>
                 <p class="mt-6 text-4xl font-bold">$22.22 <span class="text-lg font-normal text-gray-500">/ month</span></p>
@@ -91,22 +90,34 @@
                     <li class="flex items-center gap-3">✅ Everything in the Standard Tier</li>
                     <li class="flex items-center gap-3 font-semibold text-indigo-800 dark:text-indigo-300">✅ 10 Instructor-graded audio submissions</li>
                     <li class="flex items-center gap-3 font-semibold text-indigo-800 dark:text-indigo-300">✅ Monthly 15-min personalized lesson</li>
-                    <li class="flex items-center gap-3 font-semibold text-indigo-800 dark:text-indigo-300">✅ Personalized feedback on pronunciation</li>
                 </ul>
                 <button id="subscribe-plus-btn" class="w-full mt-8 p-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition">Upgrade to Plus</button>
             </div>
             
-            <!-- Executive Tier -->
-            <div class="pricing-card w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border-2 border-yellow-500 dark:border-yellow-600 relative flex flex-col">
-                <div class="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 px-4 py-1 bg-yellow-600 text-white text-sm font-semibold rounded-full">White Glove Service</div>
-                <h2 class="text-2xl font-bold text-yellow-700 dark:text-yellow-400 font-brand">Executive Tier</h2>
-                <p class="mt-2 text-gray-600 dark:text-gray-400">For comprehensive, personalized coaching.</p>
-                <p class="mt-6 text-4xl font-bold">$250 <span class="text-lg font-normal text-gray-500">/ month</span></p>
+            <!-- Professional Tier -->
+            <div class="pricing-card w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border-2 border-green-500 dark:border-green-600 relative flex flex-col">
+                <div class="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 px-4 py-1 bg-green-600 text-white text-sm font-semibold rounded-full">Best Value</div>
+                <h2 class="text-2xl font-bold text-green-700 dark:text-green-400 font-brand">Professional Tier</h2>
+                <p class="mt-2 text-gray-600 dark:text-gray-400">For dedicated professionals.</p>
+                <p class="mt-6 text-4xl font-bold">$60 <span class="text-lg font-normal text-gray-500">/ month</span></p>
                 <ul class="mt-6 space-y-3 text-gray-700 dark:text-gray-300 flex-grow">
                     <li class="flex items-center gap-3">✅ Everything in the Plus Tier</li>
+                    <li class="flex items-center gap-3 font-semibold text-green-800 dark:text-green-300">✅ Four 15-minute guided lessons per month</li>
+                    <li class="flex items-center gap-3 font-semibold text-green-800 dark:text-green-300">✅ Enhanced priority support</li>
+                </ul>
+                <button id="subscribe-pro-btn" class="w-full mt-8 p-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition">Upgrade to Pro</button>
+            </div>
+
+            <!-- Executive Tier -->
+            <div class="pricing-card w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-stone-200/50 dark:border-gray-700/50 flex flex-col">
+                <div class="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 px-4 py-1 bg-yellow-600 text-white text-sm font-semibold rounded-full hidden lg:block">White Glove</div>
+                <h2 class="text-2xl font-bold text-yellow-700 dark:text-yellow-400 font-brand">Executive Tier</h2>
+                <p class="mt-2 text-gray-600 dark:text-gray-400">For comprehensive coaching.</p>
+                <p class="mt-6 text-4xl font-bold">$250 <span class="text-lg font-normal text-gray-500">/ month</span></p>
+                <ul class="mt-6 space-y-3 text-gray-700 dark:text-gray-300 flex-grow">
+                    <li class="flex items-center gap-3">✅ Everything in the Professional Tier</li>
                     <li class="flex items-center gap-3 font-semibold text-yellow-800 dark:text-yellow-300">✅ 30 monthly audio feedback reports</li>
                     <li class="flex items-center gap-3 font-semibold text-yellow-800 dark:text-yellow-300">✅ 4 hours of live 1-on-1 lessons</li>
-                    <li class="flex items-center gap-3 font-semibold text-yellow-800 dark:text-yellow-300">✅ Direct instructor access</li>
                 </ul>
                 <button id="subscribe-executive-btn" class="w-full mt-8 p-3 bg-yellow-600 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-700 transition">Upgrade to Executive</button>
             </div>
@@ -145,6 +156,7 @@
 
         // --- Stripe Checkout Logic ---
         const subscribePlusBtn = document.getElementById('subscribe-plus-btn');
+        const subscribeProBtn = document.getElementById('subscribe-pro-btn');
         const subscribeExecutiveBtn = document.getElementById('subscribe-executive-btn');
         const stripe = Stripe('pk_test_YOUR_PUBLISHABLE_KEY'); // IMPORTANT: Replace with your Stripe Publishable Key
 
@@ -175,7 +187,11 @@
         }
         
         subscribePlusBtn.addEventListener('click', () => {
-            createCheckoutSession('price_YOUR_PLUS_PRICE_ID', subscribePlusBtn); // IMPORTANT: Replace with your new $22.22 Stripe Price ID
+            createCheckoutSession('price_YOUR_PLUS_PRICE_ID', subscribePlusBtn); // IMPORTANT: Replace with your $22.22 Stripe Price ID
+        });
+
+        subscribeProBtn.addEventListener('click', () => {
+            createCheckoutSession('price_YOUR_PRO_PRICE_ID', subscribeProBtn); // IMPORTANT: Replace with your new $60 Stripe Price ID
         });
 
         subscribeExecutiveBtn.addEventListener('click', () => {
