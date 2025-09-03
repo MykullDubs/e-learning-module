@@ -1,153 +1,122 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class=""> <!-- Dark mode class will be added here -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A1 Lesson: My Reading Habits (Complete)</title>
+    <title>A1 Lesson: My Reading Habits</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Theme loader script to prevent a flash of the wrong theme
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+    </script>
     
     <style>
-        /* A little extra style for a pleasant learning experience */
-        body {
+        body { 
+            font-family: 'Inter', sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
-
-        /* Custom CSS for the 3D flip card effect */
-        .card {
-            perspective: 1000px; /* Gives the 3D effect */
-        }
-        .card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-        }
-        /* The JS will add this class to flip the card */
-        .card.is-flipped .card-inner {
-            transform: rotateY(180deg);
-        }
-        .card-front, .card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden; /* For Safari */
-            backface-visibility: hidden;
-            display: flex;
-            flex-direction: column;
-            border-radius: 0.5rem; /* Corresponds to Tailwind's rounded-lg */
-        }
-        .card-back {
-            transform: rotateY(180deg);
-        }
-
-        /* Style for smooth transitions on the accordion */
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-in-out;
-        }
+        .card { perspective: 1000px; }
+        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
+        .card.is-flipped .card-inner { transform: rotateY(180deg); }
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; border-radius: 0.75rem; /* rounded-xl */ }
+        .card-back { transform: rotateY(180deg); }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-in-out; }
     </style>
 </head>
-<body class="bg-slate-100 font-sans text-slate-800">
+<body class="bg-stone-50 dark:bg-gray-900 text-stone-800 dark:text-stone-200 transition-colors duration-300">
 
-    <main class="max-w-4xl mx-auto my-8 p-6 sm:p-10 bg-white rounded-2xl shadow-lg">
+    <main class="max-w-4xl mx-auto my-8 p-6 sm:p-10 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-stone-200 dark:border-gray-700">
 
-        <header class="border-b pb-4 mb-6">
+        <header class="border-b border-stone-200 dark:border-gray-700 pb-4 mb-6">
             <div class="flex items-center justify-between">
-                <h1 class="text-3xl sm:text-4xl font-bold text-slate-900">My Reading Habits</h1>
-                <span class="bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-1 rounded-full">CEFR Level: A1</span>
+                <h1 class="text-3xl sm:text-4xl font-bold text-stone-900 dark:text-white">My Reading Habits</h1>
+                <span class="bg-indigo-100 text-indigo-800 text-sm font-semibold px-3 py-1 rounded-full dark:bg-indigo-900/50 dark:text-indigo-300">CEFR Level: A1</span>
             </div>
-            <p class="mt-2 text-lg text-slate-600">Learn to talk about your routine with simple present verbs and prepositions of time.</p>
+            <p class="mt-2 text-lg text-stone-600 dark:text-stone-400">Learn to talk about your routine with simple present verbs and prepositions of time.</p>
         </header>
 
         <section id="introduction" class="mb-10">
-            <h2 class="text-2xl font-semibold text-slate-900 mb-3">Let's Begin!</h2>
-            <p class="text-base leading-relaxed">
+            <h2 class="text-2xl font-semibold text-stone-900 dark:text-white mb-3">Let's Begin!</h2>
+            <p class="text-base leading-relaxed text-stone-700 dark:text-stone-300">
                 Do you like to read? Reading is a great habit. In this lesson, we will learn the words to talk about when and what you read.
             </p>
         </section>
 
         <section id="vocabulary" class="mb-10">
-            <h2 class="text-2xl font-semibold text-slate-900 mb-4">New Words (Flashcards)</h2>
-            <p class="text-slate-600 mb-6 -mt-2">Click on a card to flip it and see examples.</p>
+            <h2 class="text-2xl font-semibold text-stone-900 dark:text-white mb-4">New Words (Flashcards)</h2>
+            <p class="text-stone-600 dark:text-stone-400 mb-6 -mt-2">Click on a card to flip it and see examples.</p>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 
                 <div class="card h-80 cursor-pointer group">
-                    <div class="card-inner shadow-md rounded-lg">
-                        <div class="card-front bg-slate-50 p-4 justify-between">
+                    <div class="card-inner">
+                        <div class="card-front bg-stone-50 dark:bg-gray-700/50 p-4 justify-between border border-stone-200 dark:border-gray-700">
                             <div>
                                 <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-4.0.3&q=80&w=400" alt="A stack of books" class="rounded-md mb-3 h-40 w-full object-cover">
-                                <h3 class="text-2xl font-bold text-slate-800">book</h3>
+                                <h3 class="text-2xl font-bold">book</h3>
                             </div>
                             <div class="flex justify-between items-center">
-                                <button class="speak-btn text-blue-600 hover:text-blue-800" data-text="book">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.858 15.858a5 5 0 01-2.828-7.072m9.9 9.9a1.5 1.5 0 01-2.122 0l-6.363-6.364a1.5 1.5 0 010-2.121l.707-.707a1.5 1.5 0 012.121 0l6.364 6.364a1.5 1.5 0 010 2.121l-.707.707z" /></svg>
-                                    Listen
-                                </button>
-                                <span class="text-sm font-semibold text-slate-500 group-hover:text-blue-600">Flip Card ↻</span>
+                                <button class="speak-btn text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 font-semibold" data-text="book">Listen</button>
+                                <span class="text-sm font-semibold text-stone-500 group-hover:text-indigo-600 dark:text-stone-400 dark:group-hover:text-indigo-400">Flip Card ↻</span>
                             </div>
                         </div>
-                        <div class="card-back bg-blue-50 p-4">
-                            <h4 class="text-xl font-bold text-blue-900 mb-3 border-b border-blue-200 pb-2">Examples for "book"</h4>
-                            <ul class="space-y-3 text-slate-800">
+                        <div class="card-back bg-indigo-50 dark:bg-indigo-900/20 p-4 border border-indigo-200 dark:border-indigo-800">
+                            <h4 class="text-xl font-bold text-indigo-900 dark:text-indigo-200 mb-3 border-b border-indigo-200 dark:border-indigo-700 pb-2">Examples for "book"</h4>
+                            <ul class="space-y-3 text-stone-800 dark:text-stone-200">
                                 <li>I want to read <strong class="font-semibold">a new book</strong>.</li>
                                 <li><strong class="font-semibold">The book</strong> you told me about is very good.</li>
-                                <li>He <strong class="font-semibold">bought</strong> a book yesterday. <span class="text-xs bg-red-100 text-red-800 font-semibold px-2 py-0.5 rounded-full ml-1">Past Tense</span></li>
+                                <li>He <strong class="font-semibold">bought</strong> a book yesterday. <span class="text-xs bg-red-100 text-red-800 font-semibold px-2 py-0.5 rounded-full ml-1 dark:bg-red-900/50 dark:text-red-300">Past Tense</span></li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
                 <div class="card h-80 cursor-pointer group">
-                    <div class="card-inner shadow-md rounded-lg">
-                        <div class="card-front bg-slate-50 p-4 justify-between">
+                    <div class="card-inner">
+                        <div class="card-front bg-stone-50 dark:bg-gray-700/50 p-4 justify-between border border-stone-200 dark:border-gray-700">
                             <div>
                                 <img src="https://images.unsplash.com/photo-1621947081720-86970823577a?ixlib=rb-4.0.3&q=80&w=400" alt="A magazine on a table" class="rounded-md mb-3 h-40 w-full object-cover">
-                                <h3 class="text-2xl font-bold text-slate-800">magazine</h3>
+                                <h3 class="text-2xl font-bold">magazine</h3>
                             </div>
                             <div class="flex justify-between items-center">
-                                <button class="speak-btn text-blue-600 hover:text-blue-800" data-text="magazine">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.858 15.858a5 5 0 01-2.828-7.072m9.9 9.9a1.5 1.5 0 01-2.122 0l-6.363-6.364a1.5 1.5 0 010-2.121l.707-.707a1.5 1.5 0 012.121 0l6.364 6.364a1.5 1.5 0 010 2.121l-.707.707z" /></svg>
-                                    Listen
-                                </button>
-                                <span class="text-sm font-semibold text-slate-500 group-hover:text-blue-600">Flip Card ↻</span>
+                                <button class="speak-btn text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 font-semibold" data-text="magazine">Listen</button>
+                                <span class="text-sm font-semibold text-stone-500 group-hover:text-indigo-600 dark:text-stone-400 dark:group-hover:text-indigo-400">Flip Card ↻</span>
                             </div>
                         </div>
-                        <div class="card-back bg-blue-50 p-4">
-                            <h4 class="text-xl font-bold text-blue-900 mb-3 border-b border-blue-200 pb-2">Examples for "magazine"</h4>
-                            <ul class="space-y-3 text-slate-800">
+                        <div class="card-back bg-indigo-50 dark:bg-indigo-900/20 p-4 border border-indigo-200 dark:border-indigo-800">
+                            <h4 class="text-xl font-bold text-indigo-900 dark:text-indigo-200 mb-3 border-b border-indigo-200 dark:border-indigo-700 pb-2">Examples for "magazine"</h4>
+                            <ul class="space-y-3 text-stone-800 dark:text-stone-200">
                                 <li>She buys <strong class="font-semibold">a magazine</strong> every week.</li>
                                 <li>Where is <strong class="font-semibold">the magazine</strong> about cars?</li>
-                                <li>I <strong class="font-semibold">read</strong> that magazine last night. <span class="text-xs bg-red-100 text-red-800 font-semibold px-2 py-0.5 rounded-full ml-1">Past Tense</span></li>
+                                <li>I <strong class="font-semibold">read</strong> that magazine last night. <span class="text-xs bg-red-100 text-red-800 font-semibold px-2 py-0.5 rounded-full ml-1 dark:bg-red-900/50 dark:text-red-300">Past Tense</span></li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
                 <div class="card h-80 cursor-pointer group">
-                    <div class="card-inner shadow-md rounded-lg">
-                        <div class="card-front bg-slate-50 p-4 justify-between">
-                            <div>
+                    <div class="card-inner">
+                        <div class="card-front bg-stone-50 dark:bg-gray-700/50 p-4 justify-between border border-stone-200 dark:border-gray-700">
+                           <div>
                                 <img src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixlib=rb-4.0.3&q=80&w=400" alt="A quiet library" class="rounded-md mb-3 h-40 w-full object-cover">
-                                <h3 class="text-2xl font-bold text-slate-800">library</h3>
+                                <h3 class="text-2xl font-bold">library</h3>
                             </div>
                             <div class="flex justify-between items-center">
-                                <button class="speak-btn text-blue-600 hover:text-blue-800" data-text="library">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.858 15.858a5 5 0 01-2.828-7.072m9.9 9.9a1.5 1.5 0 01-2.122 0l-6.363-6.364a1.5 1.5 0 010-2.121l.707-.707a1.5 1.5 0 012.121 0l6.364 6.364a1.5 1.5 0 010 2.121l-.707.707z" /></svg>
-                                    Listen
-                                </button>
-                                <span class="text-sm font-semibold text-slate-500 group-hover:text-blue-600">Flip Card ↻</span>
+                                <button class="speak-btn text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 font-semibold" data-text="library">Listen</button>
+                                <span class="text-sm font-semibold text-stone-500 group-hover:text-indigo-600 dark:text-stone-400 dark:group-hover:text-indigo-400">Flip Card ↻</span>
                             </div>
                         </div>
-                        <div class="card-back bg-blue-50 p-4">
-                            <h4 class="text-xl font-bold text-blue-900 mb-3 border-b border-blue-200 pb-2">Examples for "library"</h4>
-                            <ul class="space-y-3 text-slate-800">
+                        <div class="card-back bg-indigo-50 dark:bg-indigo-900/20 p-4 border border-indigo-200 dark:border-indigo-800">
+                             <h4 class="text-xl font-bold text-indigo-900 dark:text-indigo-200 mb-3 border-b border-indigo-200 dark:border-indigo-700 pb-2">Examples for "library"</h4>
+                            <ul class="space-y-3 text-stone-800 dark:text-stone-200">
                                 <li>There is <strong class="font-semibold">a library</strong> near my house.</li>
                                 <li><strong class="font-semibold">The library</strong> is a very quiet place.</li>
-                                <li>We <strong class="font-semibold">went</strong> to the library on Saturday. <span class="text-xs bg-red-100 text-red-800 font-semibold px-2 py-0.5 rounded-full ml-1">Past Tense</span></li>
+                                <li>We <strong class="font-semibold">went</strong> to the library on Saturday. <span class="text-xs bg-red-100 text-red-800 font-semibold px-2 py-0.5 rounded-full ml-1 dark:bg-red-900/50 dark:text-red-300">Past Tense</span></li>
                             </ul>
                         </div>
                     </div>
@@ -156,12 +125,12 @@
         </section>
 
         <section id="grammar" class="mb-10">
-             <h2 class="text-2xl font-semibold text-slate-900 mb-4">Grammar Focus 💡</h2>
-            <div class="p-6 bg-amber-50 border border-amber-200 rounded-lg">
-                <h3 class="text-xl font-semibold mb-3 text-amber-900">Prepositions of Time: IN, AT, ON</h3>
+             <h2 class="text-2xl font-semibold text-stone-900 dark:text-white mb-4">Grammar Focus 💡</h2>
+             <div class="p-6 bg-stone-100 dark:bg-gray-800 border border-stone-200 dark:border-gray-700 rounded-lg mb-6">
+                <h3 class="text-xl font-semibold mb-3 text-stone-800 dark:text-stone-200">Prepositions of Time: IN, AT, ON</h3>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left">
-                        <thead class="bg-amber-100">
+                        <thead class="bg-stone-200 dark:bg-gray-700">
                             <tr>
                                 <th class="p-3">Preposition</th>
                                 <th class="p-3">When to Use</th>
@@ -169,109 +138,99 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="border-b border-amber-200">
+                            <tr class="border-b border-stone-200 dark:border-gray-600">
                                 <td class="p-3 font-bold">IN</td>
-                                <td class="p-3">Parts of the day (the morning, the afternoon, the evening)</td>
-                                <td class="p-3">I read <strong class="font-semibold">in the morning</strong>.</td>
+                                <td class="p-3">Parts of the day</td>
+                                <td class="p-3">I read <strong class="font-semibold text-indigo-600 dark:text-indigo-400">in the morning</strong>.</td>
                             </tr>
-                            <tr class="border-b border-amber-200">
+                            <tr class="border-b border-stone-200 dark:border-gray-600">
                                 <td class="p-3 font-bold">AT</td>
                                 <td class="p-3">Specific times, night</td>
-                                <td class="p-3">He reads <strong class="font-semibold">at night</strong>.</td>
+                                <td class="p-3">He reads <strong class="font-semibold text-indigo-600 dark:text-indigo-400">at night</strong>.</td>
                             </tr>
                             <tr>
                                 <td class="p-3 font-bold">ON</td>
-                                <td class="p-3">Days of the week, the weekend</td>
-                                <td class="p-3">She reads <strong class="font-semibold">on the weekend</strong>.</td>
+                                <td class="p-3">Days of the week</td>
+                                <td class="p-3">She reads <strong class="font-semibold text-indigo-600 dark:text-indigo-400">on the weekend</strong>.</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-            <div class="mt-6 p-6 bg-gradient-to-br from-indigo-50 to-purple-100 border border-indigo-200 rounded-lg">
-                <h3 class="text-xl font-semibold mb-4 text-indigo-900">Simple Present Verbs: The '-s' Rule</h3>
+            <div class="p-6 bg-stone-100 dark:bg-gray-800 border border-stone-200 dark:border-gray-700 rounded-lg">
+                <h3 class="text-xl font-semibold mb-4 text-stone-800 dark:text-stone-200">Simple Present Verbs: The '-s' Rule</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 items-center">
-                    <div class="bg-white/70 p-4 rounded-md border">
-                        <p class="text-base"><code class="font-mono bg-slate-200 text-slate-800 px-2 py-1 rounded">I / You / We / They</code> + <strong class="text-indigo-700 text-lg">read</strong></p>
-                        <p class="text-slate-600 mt-2 italic">"We <strong class="text-indigo-700">read</strong> every day."</p>
+                    <div class="bg-white/70 dark:bg-gray-900/50 p-4 rounded-md border dark:border-gray-600">
+                        <p class="text-base"><code class="font-mono bg-stone-200 dark:bg-gray-600 text-stone-800 dark:text-stone-200 px-2 py-1 rounded">I / You / We / They</code> + <strong class="text-indigo-700 dark:text-indigo-400 text-lg">read</strong></p>
+                        <p class="text-stone-600 dark:text-stone-400 mt-2 italic">"We <strong class="text-indigo-700 dark:text-indigo-400">read</strong> every day."</p>
                     </div>
-                    <div class="bg-white/70 p-4 rounded-md border border-purple-300 ring-2 ring-purple-200">
-                        <p class="text-base"><code class="font-mono bg-slate-200 text-slate-800 px-2 py-1 rounded">He / She / It</code> + <strong class="text-indigo-700 text-lg">read<span class="text-red-500 font-bold text-2xl">s</span></strong></p>
-                        <p class="text-slate-600 mt-2 italic">"She <strong class="text-indigo-700">reads</strong> at night."</p>
+                    <div class="bg-white/70 dark:bg-gray-900/50 p-4 rounded-md border border-indigo-300 dark:border-indigo-700 ring-2 ring-indigo-200 dark:ring-indigo-800">
+                        <p class="text-base"><code class="font-mono bg-stone-200 dark:bg-gray-600 text-stone-800 dark:text-stone-200 px-2 py-1 rounded">He / She / It</code> + <strong class="text-indigo-700 dark:text-indigo-400 text-lg">read<span class="text-red-500 font-bold text-2xl">s</span></strong></p>
+                        <p class="text-stone-600 dark:text-stone-400 mt-2 italic">"She <strong class="text-indigo-700 dark:text-indigo-400">reads</strong> at night."</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="practice" class="mb-10">
-            <h2 class="text-2xl font-semibold text-slate-900 mb-4">Check Your Knowledge</h2>
+            <h2 class="text-2xl font-semibold text-stone-900 dark:text-white mb-4">Check Your Knowledge</h2>
             
-            <div class="bg-slate-50 p-5 rounded-lg mb-4">
+            <div class="bg-stone-100 dark:bg-gray-800/50 p-5 rounded-lg mb-4">
                 <p class="mb-2 text-lg">1. Choose the correct preposition: She reads ___ the evening.</p>
                 <div class="flex items-center space-x-4">
-                    <select id="q1-select" class="p-2 border rounded-md">
+                    <select id="q1-select" class="p-2 border rounded-md bg-white dark:bg-gray-700 border-stone-300 dark:border-gray-600">
                         <option value="">-- select --</option>
                         <option value="at">at</option>
                         <option value="in">in</option>
                         <option value="on">on</option>
                     </select>
-                    <button id="q1-check-btn" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Check</button>
+                    <button id="q1-check-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Check</button>
                     <p id="q1-feedback" class="font-semibold"></p>
                 </div>
             </div>
 
-            <div class="bg-slate-50 p-5 rounded-lg mb-4">
+            <div class="bg-stone-100 dark:bg-gray-800/50 p-5 rounded-lg">
                 <p class="mb-2 text-lg">2. Write the correct form of the verb: My brother (read) ___ every day.</p>
                 <div class="flex items-center space-x-4">
-                    <input type="text" id="q2-input" class="p-2 border rounded-md" placeholder="verb form">
-                    <button id="q2-check-btn" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Check</button>
+                    <input type="text" id="q2-input" class="p-2 border rounded-md bg-white dark:bg-gray-700 border-stone-300 dark:border-gray-600" placeholder="verb form">
+                    <button id="q2-check-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Check</button>
                     <p id="q2-feedback" class="font-semibold"></p>
                 </div>
             </div>
-
-            <div class="bg-slate-50 p-5 rounded-lg">
-                <p class="mb-2 text-lg">3. Unscramble the sentence: <code class="bg-slate-200 p-1 rounded">on the weekend / I / books / read</code></p>
-                <div class="flex items-center space-x-4">
-                    <input type="text" id="q3-input" class="p-2 border rounded-md w-full" placeholder="Type the correct sentence">
-                    <button id="q3-check-btn" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Check</button>
-                    <p id="q3-feedback" class="font-semibold"></p>
-                </div>
-            </div>
         </section>
-
+        
         <section id="discussion" class="mb-10">
-            <h2 class="text-2xl font-semibold text-slate-900 mb-4">Let's Talk About You 🗣️</h2>
+            <h2 class="text-2xl font-semibold text-stone-900 dark:text-white mb-4">Let's Talk About You 🗣️</h2>
             <div class="space-y-6">
 
-                <div class="bg-slate-50 p-5 rounded-lg">
-                    <div class="font-semibold text-lg text-slate-800">
+                <div class="bg-stone-100 dark:bg-gray-800/50 p-5 rounded-lg">
+                    <div class="font-semibold text-lg">
                         Q: What do you like to read?
-                        <p class="text-sm font-normal text-slate-500">(What kind of books or magazines?)</p>
+                        <p class="text-sm font-normal text-stone-500 dark:text-stone-400">(What kind of books or magazines?)</p>
                     </div>
-                    <button class="accordion-toggle mt-3 text-blue-600 font-semibold flex items-center space-x-1">
+                    <button class="accordion-toggle mt-3 text-indigo-600 dark:text-indigo-400 font-semibold flex items-center space-x-1">
                         <span>See example answers</span>
-                        <span class="arrow">▼</span>
+                        <span class="arrow transition-transform">▼</span>
                     </button>
                     <div class="accordion-content">
-                        <ul class="mt-4 space-y-2 text-slate-700 border-t pt-4">
+                        <ul class="mt-4 space-y-2 text-stone-700 dark:text-stone-300 border-t border-stone-200 dark:border-gray-700 pt-4">
                             <li>🚀 I like to read <strong class="font-semibold">science fiction novels</strong>.</li>
-                            <li>🐉 I like to read <strong class="font-semibold">fantasy books</strong>.</li>
                             <li>📜 I like to read <strong class="font-semibold">history books</strong>.</li>
                             <li>💥 I like to read <strong class="font-semibold">comic books</strong>.</li>
                         </ul>
                     </div>
                 </div>
 
-                <div class="bg-slate-50 p-5 rounded-lg">
-                    <div class="font-semibold text-lg text-slate-800">
+                <div class="bg-stone-100 dark:bg-gray-800/50 p-5 rounded-lg">
+                    <div class="font-semibold text-lg">
                         Q: Where do you read?
                     </div>
-                    <button class="accordion-toggle mt-3 text-blue-600 font-semibold flex items-center space-x-1">
+                    <button class="accordion-toggle mt-3 text-indigo-600 dark:text-indigo-400 font-semibold flex items-center space-x-1">
                         <span>See example answers</span>
-                        <span class="arrow">▼</span>
+                        <span class="arrow transition-transform">▼</span>
                     </button>
                     <div class="accordion-content">
-                        <ul class="mt-4 space-y-2 text-slate-700 border-t pt-4">
+                        <ul class="mt-4 space-y-2 text-stone-700 dark:text-stone-300 border-t border-stone-200 dark:border-gray-700 pt-4">
                             <li>🏠 I read <strong class="font-semibold">at home</strong>.</li>
                             <li>🌳 I read <strong class="font-semibold">in the park</strong>.</li>
                             <li>🚌 I read <strong class="font-semibold">on the bus</strong>.</li>
@@ -279,16 +238,16 @@
                     </div>
                 </div>
 
-                 <div class="bg-slate-50 p-5 rounded-lg">
-                    <div class="font-semibold text-lg text-slate-800">
+                 <div class="bg-stone-100 dark:bg-gray-800/50 p-5 rounded-lg">
+                    <div class="font-semibold text-lg">
                         Q: When do you read?
                     </div>
-                    <button class="accordion-toggle mt-3 text-blue-600 font-semibold flex items-center space-x-1">
+                    <button class="accordion-toggle mt-3 text-indigo-600 dark:text-indigo-400 font-semibold flex items-center space-x-1">
                         <span>See example answers</span>
-                        <span class="arrow">▼</span>
+                        <span class="arrow transition-transform">▼</span>
                     </button>
                     <div class="accordion-content">
-                        <ul class="mt-4 space-y-2 text-slate-700 border-t pt-4">
+                        <ul class="mt-4 space-y-2 text-stone-700 dark:text-stone-300 border-t border-stone-200 dark:border-gray-700 pt-4">
                             <li>☀️ I read <strong class="font-semibold">in the morning</strong>.</li>
                             <li>🌙 I read <strong class="font-semibold">at night</strong>.</li>
                             <li>📅 I read <strong class="font-semibold">on the weekend</strong>.</li>
@@ -300,11 +259,11 @@
         </section>
 
         <section id="production">
-             <h2 class="text-2xl font-semibold text-slate-900 mb-4">Your Turn ✍️</h2>
-             <div id="production-container" class="bg-green-50 p-6 rounded-lg border border-green-200">
-                <p class="mb-3 text-lg">Now, answer the questions from the section above. Write two or three sentences about your reading habits.</p>
-                <p class="text-sm text-slate-500 mb-3">Example: I like to read comic books. I usually read at home on the weekend.</p>
-                <textarea id="production-textarea" class="w-full p-3 border rounded-md h-24" placeholder="Write your sentences here..."></textarea>
+             <h2 class="text-2xl font-semibold text-stone-900 dark:text-white mb-4">Your Turn ✍️</h2>
+             <div id="production-container" class="bg-green-50 dark:bg-green-900/20 p-6 rounded-lg border border-green-200 dark:border-green-800">
+                <p class="mb-3 text-lg">Now, use the vocabulary and grammar from this lesson to write two or three sentences about your own reading habits.</p>
+                <p class="text-sm text-stone-500 dark:text-stone-400 mb-3">Example: I like to read comic books. I usually read at home on the weekend.</p>
+                <textarea id="production-textarea" class="w-full p-3 border rounded-md h-24 bg-white dark:bg-gray-700 border-stone-300 dark:border-gray-600" placeholder="Write your sentences here..."></textarea>
                 <button id="production-btn" class="mt-4 px-6 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700">I'm Done!</button>
              </div>
         </section>
@@ -313,7 +272,6 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-
             // --- Flashcard Flip Logic ---
             const cards = document.querySelectorAll('.card');
             cards.forEach(card => {
@@ -331,9 +289,7 @@
                 button.addEventListener('click', (event) => {
                     event.stopPropagation(); // Prevents card from flipping
                     const textToSpeak = button.dataset.text;
-                    if (synth.speaking) {
-                        synth.cancel();
-                    }
+                    if (synth.speaking) synth.cancel();
                     const utterance = new SpeechSynthesisUtterance(textToSpeak);
                     utterance.lang = 'en-US';
                     synth.speak(utterance);
@@ -341,50 +297,31 @@
             });
 
             // --- Practice Question 1 Logic ---
-            const q1Select = document.getElementById('q1-select');
-            const q1CheckBtn = document.getElementById('q1-check-btn');
-            const q1Feedback = document.getElementById('q1-feedback');
-            q1CheckBtn.addEventListener('click', () => {
-                const answer = q1Select.value;
+            document.getElementById('q1-check-btn').addEventListener('click', () => {
+                const answer = document.getElementById('q1-select').value;
+                const feedbackEl = document.getElementById('q1-feedback');
                 if (answer === 'in') {
-                    q1Feedback.textContent = 'Correct! ✅';
-                    q1Feedback.className = 'font-semibold text-green-600';
+                    feedbackEl.textContent = 'Correct! ✅';
+                    feedbackEl.className = 'font-semibold text-green-600 dark:text-green-400';
                 } else {
-                    q1Feedback.textContent = 'Not quite. We use "in" for parts of the day.';
-                    q1Feedback.className = 'font-semibold text-red-600';
+                    feedbackEl.textContent = 'Not quite. We use "in" for parts of the day.';
+                    feedbackEl.className = 'font-semibold text-red-600 dark:text-red-400';
                 }
             });
 
             // --- Practice Question 2 Logic ---
-            const q2Input = document.getElementById('q2-input');
-            const q2CheckBtn = document.getElementById('q2-check-btn');
-            const q2Feedback = document.getElementById('q2-feedback');
-            q2CheckBtn.addEventListener('click', () => {
-                const answer = q2Input.value.trim().toLowerCase();
+            document.getElementById('q2-check-btn').addEventListener('click', () => {
+                const answer = document.getElementById('q2-input').value.trim().toLowerCase();
+                 const feedbackEl = document.getElementById('q2-feedback');
                 if (answer === 'reads') {
-                    q2Feedback.textContent = 'Excellent! ✅';
-                    q2Feedback.className = 'font-semibold text-green-600';
+                    feedbackEl.textContent = 'Excellent! ✅';
+                    feedbackEl.className = 'font-semibold text-green-600 dark:text-green-400';
                 } else {
-                    q2Feedback.textContent = 'Try again. Remember: he/she/it + verb-s.';
-                    q2Feedback.className = 'font-semibold text-red-600';
+                    feedbackEl.textContent = 'Try again. Remember: he/she/it + verb-s.';
+                    feedbackEl.className = 'font-semibold text-red-600 dark:text-red-400';
                 }
             });
             
-            // --- Practice Question 3 Logic ---
-            const q3Input = document.getElementById('q3-input');
-            const q3CheckBtn = document.getElementById('q3-check-btn');
-            const q3Feedback = document.getElementById('q3-feedback');
-            q3CheckBtn.addEventListener('click', () => {
-                const answer = q3Input.value.trim().toLowerCase().replace('.', '');
-                if (answer === 'i read books on the weekend') {
-                    q3Feedback.textContent = 'Perfect! ✅';
-                    q3Feedback.className = 'font-semibold text-green-600';
-                } else {
-                    q3Feedback.textContent = 'Almost! Check the word order.';
-                    q3Feedback.className = 'font-semibold text-red-600';
-                }
-            });
-
             // --- Accordion for Discussion Questions ---
             const accordions = document.querySelectorAll('.accordion-toggle');
             accordions.forEach(accordion => {
@@ -394,23 +331,21 @@
                     if (content.style.maxHeight) {
                         content.style.maxHeight = null;
                         accordion.querySelector('span').textContent = 'See example answers';
-                        arrow.textContent = '▼';
+                        arrow.style.transform = 'rotate(0deg)';
                     } else {
                         content.style.maxHeight = content.scrollHeight + "px";
                         accordion.querySelector('span').textContent = 'Hide example answers';
-                        arrow.textContent = '▲';
+                         arrow.style.transform = 'rotate(180deg)';
                     }
                 });
             });
 
             // --- Production Section Logic ---
-            const productionContainer = document.getElementById('production-container');
-            const productionBtn = document.getElementById('production-btn');
-            productionBtn.addEventListener('click', () => {
-                productionContainer.innerHTML = `
+            document.getElementById('production-btn').addEventListener('click', () => {
+                document.getElementById('production-container').innerHTML = `
                     <div class="text-center py-8">
-                        <h3 class="text-2xl font-bold text-green-800">Fantastic! 🥳</h3>
-                        <p class="mt-2 text-lg text-slate-700">You did a great job talking about your habits. Keep up the excellent work!</p>
+                        <h3 class="text-2xl font-bold text-green-800 dark:text-green-300">Fantastic! 🥳</h3>
+                        <p class="mt-2 text-lg text-stone-700 dark:text-stone-300">You did a great job talking about your habits. Keep up the excellent work!</p>
                     </div>
                 `;
             });
@@ -418,3 +353,4 @@
     </script>
 </body>
 </html>
+
