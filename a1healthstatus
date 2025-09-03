@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A1 Lesson: Health Status - Golden Fellows English</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400&family=Special+Elite&display=swap" rel="stylesheet">
+
+    <script>
+        // Theme loader script
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    
+    <style>
+        body { 
+            font-family: 'Source Serif Pro', serif;
+            background-color: #F7F5F2;
+            background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23DCD9D4" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+        }
+        .dark body {
+            background-color: #1a202c;
+            background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%232D3748" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+        }
+        .font-brand { font-family: 'Source Serif Pro', serif; }
+        .font-typewriter { font-family: 'Special Elite', monospace; }
+        .bg-paper {
+            background-color: #ffffff;
+            background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239C92AC' fill-opacity='0.1' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E");
+        }
+        .dark .bg-paper { background-color: #E2E8F0; }
+        .card { perspective: 1000px; }
+        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
+        .card.is-flipped .card-inner { transform: rotateY(180deg); }
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; display: flex; flex-direction: column; border-radius: 1rem; }
+        .card-back { transform: rotateY(180deg); }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-in-out; }
+    </style>
+</head>
+<body class="text-gray-800 dark:text-gray-200 antialiased">
+
+    <header class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-sm border-b border-stone-200 dark:border-gray-700 sticky top-0 z-40">
+        <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
+            <a href="#" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
+            <button id="theme-toggle" class="p-2 rounded-md hover:bg-stone-100 dark:hover:bg-gray-700">
+                <svg id="theme-toggle-light-icon" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                <svg id="theme-toggle-dark-icon" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+            </button>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl font-brand">
+        <div class="bg-white/50 dark:bg-gray-800/50 backdrop-blur-lg p-6 sm:p-10 rounded-2xl shadow-xl border border-stone-200/50 dark:border-gray-700/50">
+
+            <header class="border-b border-stone-200 dark:border-gray-700 pb-4 mb-8">
+                <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">How Are You Feeling?</h1>
+                <div class="flex items-center gap-2 mt-3">
+                    <span class="text-xs font-bold px-3 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 border border-blue-200 dark:border-blue-700">A1</span>
+                    <span class="text-xs font-semibold px-3 py-1 rounded-full bg-stone-100 text-stone-800 dark:bg-gray-900/50 dark:text-stone-300 border border-stone-200 dark:border-gray-700">Health & Medicine</span>
+                </div>
+            </header>
+
+            <section id="introduction" class="mb-10">
+                <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-3">Talking About Health</h2>
+                <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                    Sometimes we feel great, and sometimes we feel sick. It is very important to know how to tell someone how you are feeling. In this lesson, we will learn the basic words to talk about your health.
+                </p>
+            </section>
+            <hr class="my-10 border-stone-200 dark:border-gray-700">
+
+            <section id="vocabulary" class="mb-10">
+                <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Health Vocabulary</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <div class="card h-96 cursor-pointer group">
+                        <div class="card-inner">
+                            <div class="card-front bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-stone-200/80 dark:border-gray-700/80 justify-between">
+                                <div>
+                                    <img src="https://images.unsplash.com/photo-1554512211-625ca6b2a095?ixlib=rb-4.0.3&q=80&w=400" alt="Person with a headache" class="rounded-xl mb-4 h-48 w-full object-cover">
+                                    <h3 class="text-2xl font-bold">a headache</h3>
+                                </div>
+                                <span class="text-sm font-semibold text-stone-500 dark:text-stone-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 text-right">Flip Card ↻</span>
+                            </div>
+                            <div class="card-back bg-paper p-6 rounded-2xl shadow-lg border border-stone-300 dark:border-gray-600">
+                                <ul class="font-typewriter text-gray-900 list-disc list-inside space-y-4 text-base">
+                                    <li>I **have** *a headache*.</li>
+                                    <li>My head hurts. I think I **have** *a headache*.</li>
+                                    <li>He **has** *a bad headache* today.</li>
+                                    <li>She is taking medicine for her *headache*.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card h-96 cursor-pointer group">
+                        <div class="card-inner">
+                             <div class="card-front bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-stone-200/80 dark:border-gray-700/80 justify-between">
+                                <div>
+                                    <img src="https://images.unsplash.com/photo-1578763073327-0c283b8a8169?ixlib=rb-4.0.3&q=80&w=400" alt="Person feeling better with tea" class="rounded-xl mb-4 h-48 w-full object-cover">
+                                    <h3 class="text-2xl font-bold">feel better</h3>
+                                </div>
+                                <span class="text-sm font-semibold text-stone-500 dark:text-stone-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 text-right">Flip Card ↻</span>
+                            </div>
+                             <div class="card-back bg-paper p-6 rounded-2xl shadow-lg border border-stone-300 dark:border-gray-600">
+                                 <ul class="font-typewriter text-gray-900 list-disc list-inside space-y-4 text-base">
+                                    <li>I was sick, but now I **feel better**.</li>
+                                    <li>You should drink water to **feel better**.</li>
+                                    <li>He took medicine and now he **feels better**.</li>
+                                    <li>I hope you **feel better** soon!</li>
+                                 </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+            <hr class="my-10 border-stone-200 dark:border-gray-700">
+
+            <section id="grammar" class="mb-10">
+                <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Grammar Focus 🩺</h2>
+                <div class="bg-stone-50 dark:bg-gray-800/50 p-6 rounded-2xl border border-stone-200 dark:border-gray-700 mb-6">
+                    <h3 class="text-xl font-semibold mb-3 text-stone-800 dark:text-stone-200">'To feel' + Adjective</h3>
+                    <p class="mb-4 text-gray-600 dark:text-gray-400">Use the verb **feel** to describe your state or condition.</p>
+                    <ul class="space-y-3 text-gray-700 dark:text-gray-300">
+                        <li>I **feel good**.</li>
+                        <li>She **feels sick**.</li>
+                        <li>They **feel tired**.</li>
+                    </ul>
+                </div>
+                <div class="bg-stone-50 dark:bg-gray-800/50 p-6 rounded-2xl border border-stone-200 dark:border-gray-700">
+                    <h3 class="text-xl font-semibold mb-3 text-stone-800 dark:text-stone-200">'To have' + Noun (Ailment)</h3>
+                    <p class="mb-4 text-gray-600 dark:text-gray-400">Use the verb **have** to say what problem you have.</p>
+                     <ul class="space-y-3 text-gray-700 dark:text-gray-300">
+                        <li>I **have a** headache.</li>
+                        <li>He **has a** sore throat.</li>
+                        <li>We **have** colds.</li>
+                    </ul>
+                </div>
+            </section>
+            <hr class="my-10 border-stone-200 dark:border-gray-700">
+
+            <section id="practice" class="mb-10">
+                <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Check Your Knowledge</h2>
+                <div class="space-y-4">
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-xl border border-stone-200 dark:border-gray-700">
+                        <p class="mb-2 text-lg">1. Complete the sentence: "Maria is not at work today. She ___ sick."</p>
+                        <input type="text" id="q1-input" class="w-full p-2 border border-stone-300 dark:border-gray-600 rounded-md bg-transparent" placeholder="feels">
+                        <p id="q1-feedback" class="font-semibold text-sm mt-2 h-5"></p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-xl border border-stone-200 dark:border-gray-700">
+                        <p class="mb-2 text-lg">2. Complete the sentence: "My back hurts. I have some ___ in my back."</p>
+                        <input type="text" id="q2-input" class="w-full p-2 border border-stone-300 dark:border-gray-600 rounded-md bg-transparent" placeholder="pain">
+                        <p id="q2-feedback" class="font-semibold text-sm mt-2 h-5"></p>
+                    </div>
+                </div>
+            </section>
+            <hr class="my-10 border-stone-200 dark:border-gray-700">
+            
+            <section id="discussion" class="mb-10">
+                <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Common Conversation</h2>
+                <div class="bg-white dark:bg-gray-800 p-5 rounded-xl border border-stone-200 dark:border-gray-700">
+                    <div class="font-semibold text-lg text-slate-800 dark:text-slate-200">Q: How are you feeling?</div>
+                    <button class="accordion-toggle mt-3 text-indigo-600 dark:text-indigo-400 font-semibold flex items-center space-x-1"><span>See possible answers</span><span class="arrow">▼</span></button>
+                    <div class="accordion-content">
+                        <ul class="mt-4 space-y-2 text-gray-700 dark:text-gray-300 border-t border-stone-200 dark:border-gray-700 pt-4">
+                            <li><strong class="text-green-600 dark:text-green-400">(+ Positive)</strong> I feel great, thanks!</li>
+                            <li><strong class="text-green-600 dark:text-green-400">(+ Positive)</strong> Much better, thank you.</li>
+                            <li><strong class="text-yellow-600 dark:text-yellow-400">(- Negative)</strong> Not so great.</li>
+                            <li><strong class="text-yellow-600 dark:text-yellow-400">(- Negative)</strong> Not well. I have a headache.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="production">
+                 <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Your Turn ✍️</h2>
+                 <div id="production-container" class="bg-green-50 dark:bg-green-900/30 p-6 rounded-2xl border border-green-200 dark:border-green-700">
+                    <p class="mb-3 text-lg text-gray-800 dark:text-gray-200">Imagine you are not feeling well. Write two sentences to tell a friend.</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Example: I'm not feeling great today. I have a sore throat.</p>
+                    <textarea id="production-textarea" class="w-full p-3 border border-stone-300 dark:border-gray-600 rounded-md h-24 bg-white/50 dark:bg-gray-800/50"></textarea>
+                    <button id="production-btn" class="mt-4 px-6 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700">Complete Lesson</button>
+                 </div>
+            </section>
+        </div>
+    </main>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const lightIcon = document.getElementById('theme-toggle-light-icon');
+            const darkIcon = document.getElementById('theme-toggle-dark-icon');
+            if (localStorage.getItem('theme') === 'dark') {
+                lightIcon.classList.add('hidden');
+                darkIcon.classList.remove('hidden');
+            }
+            themeToggleBtn.addEventListener('click', () => {
+                document.documentElement.classList.toggle('dark');
+                lightIcon.classList.toggle('hidden');
+                darkIcon.classList.toggle('hidden');
+                localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+            });
+
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => card.addEventListener('click', (e) => {
+                if (!e.target.closest('.speak-btn')) card.classList.toggle('is-flipped');
+            }));
+            
+            const q1Input = document.getElementById('q1-input');
+            const q1Feedback = document.getElementById('q1-feedback');
+            q1Input.addEventListener('input', () => {
+                const answer = q1Input.value.trim().toLowerCase();
+                if (answer === 'feels') {
+                    q1Feedback.textContent = 'Correct! We use "feels" for she/he/it. ✅';
+                    q1Feedback.className = 'font-semibold text-sm mt-2 h-5 text-green-600 dark:text-green-400';
+                }
+            });
+
+            const q2Input = document.getElementById('q2-input');
+            const q2Feedback = document.getElementById('q2-feedback');
+            q2Input.addEventListener('input', () => {
+                const answer = q2Input.value.trim().toLowerCase();
+                if (answer === 'pain') {
+                     q2Feedback.textContent = 'Perfect! ✅';
+                    q2Feedback.className = 'font-semibold text-sm mt-2 h-5 text-green-600 dark:text-green-400';
+                }
+            });
+
+            const accordions = document.querySelectorAll('.accordion-toggle');
+            accordions.forEach(accordion => {
+                accordion.addEventListener('click', () => {
+                    const content = accordion.nextElementSibling;
+                    const arrow = accordion.querySelector('.arrow');
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                        accordion.querySelector('span').textContent = 'See possible answers';
+                        if(arrow) arrow.textContent = '▼';
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                        accordion.querySelector('span').textContent = 'Hide answers';
+                        if(arrow) arrow.textContent = '▲';
+                    }
+                });
+            });
+
+            const productionContainer = document.getElementById('production-container');
+            const productionBtn = document.getElementById('production-btn');
+            productionBtn.addEventListener('click', () => {
+                productionContainer.innerHTML = `<div class="text-center py-8"><h3 class="text-2xl font-bold text-green-800 dark:text-green-300">Lesson Complete! 🥳</h3><p class="mt-2 text-lg text-gray-700 dark:text-gray-300">Great job! We hope you feel better soon.</p></div>`;
+            });
+        });
+    </script>
+</body>
+</html>
