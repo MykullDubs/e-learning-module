@@ -1,105 +1,149 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A2 Lesson: What Are You Reading?</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Theme loader script
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+    </script>
     
     <style>
-        body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        body { 
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
         .card { perspective: 1000px; }
         .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
         .card.is-flipped .card-inner { transform: rotateY(180deg); }
-        .card-front, .card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; display: flex; flex-direction: column; border-radius: 0.5rem; }
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; border-radius: 0.75rem; }
         .card-back { transform: rotateY(180deg); }
         .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-in-out; }
     </style>
 </head>
-<body class="bg-slate-100 font-sans text-slate-800">
+<body class="bg-stone-50 dark:bg-gray-900 text-stone-800 dark:text-stone-200 transition-colors duration-300">
 
-    <main class="max-w-4xl mx-auto my-8 p-6 sm:p-10 bg-white rounded-2xl shadow-lg">
-
-        <header class="border-b pb-4 mb-6">
-            <div class="flex items-center justify-between">
-                <h1 class="text-3xl sm:text-4xl font-bold text-slate-900">What Are You Reading?</h1>
-                <span class="bg-green-100 text-green-800 text-sm font-semibold px-3 py-1 rounded-full">CEFR Level: A2</span>
+    <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-stone-200 dark:border-gray-700 sticky top-0 z-40">
+        <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
+             <a href="dashboard.html" class="text-xl font-bold text-stone-900 dark:text-white">ESL Learning Platform</a>
+             <div class="flex items-center gap-6">
+                 <div class="relative">
+                    <button id="notifications-btn" class="relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-stone-500 dark:text-stone-400 hover:text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                        <span id="notifications-dot" class="hidden absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden">
+                        <div class="p-3 font-semibold text-sm border-b border-stone-200 dark:border-gray-700">Notifications</div>
+                        <div id="notifications-list" class="max-h-96 overflow-y-auto"></div>
+                    </div>
+                 </div>
+                 <div class="relative">
+                    <button id="profile-btn" class="flex items-center gap-2">
+                        <span id="user-email-nav" class="text-sm text-stone-600 dark:text-stone-300 hidden sm:block"></span>
+                        <div id="nav-avatar-container">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
+                        </div>
+                    </button>
+                    <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden">
+                        <a href="grades.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">My Progress</a>
+                        <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Settings</a>
+                        <div class="border-t border-stone-200 dark:border-gray-600"></div>
+                        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100 dark:hover:bg-gray-700">Log Out</button>
+                    </div>
+                </div>
             </div>
-            <p class="mt-2 text-lg text-slate-600">Use the present progressive and simple past to talk about your reading habits.</p>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto my-8 p-6 sm:p-10 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-stone-200 dark:border-gray-700">
+
+        <header class="border-b border-stone-200 dark:border-gray-700 pb-4 mb-6">
+            <div class="flex items-center justify-between">
+                <h1 class="text-3xl sm:text-4xl font-bold text-stone-900 dark:text-white">What Are You Reading?</h1>
+                <span class="bg-green-100 text-green-800 text-sm font-semibold px-3 py-1 rounded-full dark:bg-green-900/50 dark:text-green-300">CEFR Level: A2</span>
+            </div>
+            <p class="mt-2 text-lg text-stone-600 dark:text-stone-400">Use the present progressive and simple past to talk about your reading habits.</p>
         </header>
 
         <section id="introduction" class="mb-10">
-            <h2 class="text-2xl font-semibold text-slate-900 mb-3">Let's Discuss!</h2>
-            <p class="text-base leading-relaxed">
+            <h2 class="text-2xl font-semibold text-stone-900 dark:text-white mb-3">Let's Discuss!</h2>
+            <p class="text-base leading-relaxed text-stone-700 dark:text-stone-300">
                 Are you reading a good book right now? In this lesson, we'll learn how to talk about the books you are reading these days and the books you finished in the past.
             </p>
         </section>
 
         <section id="vocabulary" class="mb-10">
-            <h2 class="text-2xl font-semibold text-slate-900 mb-4">New Vocabulary</h2>
-            <p class="text-slate-600 mb-6 -mt-2">Click on a card to flip it and see examples.</p>
+            <h2 class="text-2xl font-semibold text-stone-900 dark:text-white mb-4">New Vocabulary</h2>
+            <p class="text-stone-600 dark:text-stone-400 mb-6 -mt-2">Click on a card to flip it and see examples.</p>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 
                 <div class="card h-80 cursor-pointer group">
-                    <div class="card-inner shadow-md rounded-lg">
-                        <div class="card-front bg-slate-50 p-4 justify-between">
+                    <div class="card-inner">
+                        <div class="card-front bg-stone-50 dark:bg-gray-700/50 p-4 justify-between border border-stone-200 dark:border-gray-700">
                             <div>
-                                <img src="https://images.unsplash.com/photo-1455390582262-044cdead277a?ixlib=rb-4.0.3&q=80&w=400" alt="Author writing in a book" class="rounded-md mb-3 h-40 w-full object-cover">
-                                <h3 class="text-2xl font-bold text-slate-800">author</h3>
+                                <img src="https://images.unsplash.com/photo-1455390582262-044cdead277a?ixlib=rb-4.0.3&q=80&w=400" alt="Author writing in a book" class="rounded-xl mb-3 h-40 w-full object-cover">
+                                <h3 class="text-2xl font-bold">author</h3>
                             </div>
                             <div class="flex justify-between items-center">
-                                <button class="speak-btn text-blue-600 hover:text-blue-800" data-text="author"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.858 15.858a5 5 0 01-2.828-7.072m9.9 9.9a1.5 1.5 0 01-2.122 0l-6.363-6.364a1.5 1.5 0 010-2.121l.707-.707a1.5 1.5 0 012.121 0l6.364 6.364a1.5 1.5 0 010 2.121l-.707.707z" /></svg> Listen</button>
-                                <span class="text-sm font-semibold text-slate-500 group-hover:text-blue-600">Flip Card ↻</span>
+                                <button class="speak-btn text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 font-semibold" data-text="author">Listen</button>
+                                <span class="text-sm font-semibold text-stone-500 group-hover:text-indigo-600 dark:text-stone-400 dark:group-hover:text-indigo-400">Flip Card ↻</span>
                             </div>
                         </div>
-                        <div class="card-back bg-blue-50 p-4">
-                            <h4 class="text-xl font-bold text-blue-900 mb-3 border-b border-blue-200 pb-2">Examples for "author"</h4>
-                            <ul class="space-y-3 text-slate-800">
+                        <div class="card-back bg-indigo-50 dark:bg-indigo-900/20 p-4 border border-indigo-200 dark:border-indigo-800">
+                            <h4 class="text-xl font-bold text-indigo-900 dark:text-indigo-200 mb-3 border-b border-indigo-200 dark:border-indigo-700 pb-2">Examples for "author"</h4>
+                            <ul class="space-y-3 text-stone-800 dark:text-stone-200 text-sm">
                                 <li>My favorite <strong class="font-semibold">author</strong> is writing a new book.</li>
-                                <li>I <strong class="font-semibold">met</strong> the author at a bookstore last year. <span class="text-xs bg-red-100 text-red-800 font-semibold px-2 py-0.5 rounded-full ml-1">Past Tense</span></li>
+                                <li>I <strong class="font-semibold">met</strong> the author at a bookstore last year. <span class="text-xs bg-red-100 text-red-800 font-semibold px-2 py-0.5 rounded-full ml-1 dark:bg-red-900/50 dark:text-red-300">Past Tense</span></li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
                 <div class="card h-80 cursor-pointer group">
-                    <div class="card-inner shadow-md rounded-lg">
-                        <div class="card-front bg-slate-50 p-4 justify-between">
+                    <div class="card-inner">
+                        <div class="card-front bg-stone-50 dark:bg-gray-700/50 p-4 justify-between border border-stone-200 dark:border-gray-700">
                             <div>
-                                <img src="https://images.unsplash.com/photo-1524578271613-d550eace3c25?ixlib=rb-4.0.3&q=80&w=400" alt="An open novel" class="rounded-md mb-3 h-40 w-full object-cover">
-                                <h3 class="text-2xl font-bold text-slate-800">novel</h3>
+                                <img src="https://images.unsplash.com/photo-1524578271613-d550eace3c25?ixlib=rb-4.0.3&q=80&w=400" alt="An open novel" class="rounded-xl mb-3 h-40 w-full object-cover">
+                                <h3 class="text-2xl font-bold">novel</h3>
                             </div>
                             <div class="flex justify-between items-center">
-                                <button class="speak-btn text-blue-600 hover:text-blue-800" data-text="novel"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.858 15.858a5 5 0 01-2.828-7.072m9.9 9.9a1.5 1.5 0 01-2.122 0l-6.363-6.364a1.5 1.5 0 010-2.121l.707-.707a1.5 1.5 0 012.121 0l6.364 6.364a1.5 1.5 0 010 2.121l-.707.707z" /></svg> Listen</button>
-                                <span class="text-sm font-semibold text-slate-500 group-hover:text-blue-600">Flip Card ↻</span>
+                                <button class="speak-btn text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 font-semibold" data-text="novel">Listen</button>
+                                <span class="text-sm font-semibold text-stone-500 group-hover:text-indigo-600 dark:text-stone-400 dark:group-hover:text-indigo-400">Flip Card ↻</span>
                             </div>
                         </div>
-                        <div class="card-back bg-blue-50 p-4">
-                            <h4 class="text-xl font-bold text-blue-900 mb-3 border-b border-blue-200 pb-2">Examples for "novel"</h4>
-                            <ul class="space-y-3 text-slate-800">
+                        <div class="card-back bg-indigo-50 dark:bg-indigo-900/20 p-4 border border-indigo-200 dark:border-indigo-800">
+                             <h4 class="text-xl font-bold text-indigo-900 dark:text-indigo-200 mb-3 border-b border-indigo-200 dark:border-indigo-700 pb-2">Examples for "novel"</h4>
+                            <ul class="space-y-3 text-stone-800 dark:text-stone-200 text-sm">
                                 <li>I am currently reading a great <strong class="font-semibold">novel</strong>.</li>
-                                <li>She <strong class="font-semibold">finished</strong> that novel in two days! <span class="text-xs bg-red-100 text-red-800 font-semibold px-2 py-0.5 rounded-full ml-1">Past Tense</span></li>
+                                <li>She <strong class="font-semibold">finished</strong> that novel in two days! <span class="text-xs bg-red-100 text-red-800 font-semibold px-2 py-0.5 rounded-full ml-1 dark:bg-red-900/50 dark:text-red-300">Past Tense</span></li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
                 <div class="card h-80 cursor-pointer group">
-                    <div class="card-inner shadow-md rounded-lg">
-                        <div class="card-front bg-slate-50 p-4 justify-between">
-                            <div>
-                                <img src="https://images.unsplash.com/photo-1511108690759-009324a90411?ixlib=rb-4.0.3&q=80&w=400" alt="Different genres of books" class="rounded-md mb-3 h-40 w-full object-cover">
-                                <h3 class="text-2xl font-bold text-slate-800">genre</h3>
+                    <div class="card-inner">
+                        <div class="card-front bg-stone-50 dark:bg-gray-700/50 p-4 justify-between border border-stone-200 dark:border-gray-700">
+                           <div>
+                                <img src="https://images.unsplash.com/photo-1511108690759-009324a90411?ixlib=rb-4.0.3&q=80&w=400" alt="Different genres of books" class="rounded-xl mb-3 h-40 w-full object-cover">
+                                <h3 class="text-2xl font-bold">genre</h3>
                             </div>
                             <div class="flex justify-between items-center">
-                                <button class="speak-btn text-blue-600 hover:text-blue-800" data-text="genre"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.858 15.858a5 5 0 01-2.828-7.072m9.9 9.9a1.5 1.5 0 01-2.122 0l-6.363-6.364a1.5 1.5 0 010-2.121l.707-.707a1.5 1.5 0 012.121 0l6.364 6.364a1.5 1.5 0 010 2.121l-.707.707z" /></svg> Listen</button>
-                                <span class="text-sm font-semibold text-slate-500 group-hover:text-blue-600">Flip Card ↻</span>
+                                <button class="speak-btn text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 font-semibold" data-text="genre">Listen</button>
+                                <span class="text-sm font-semibold text-stone-500 group-hover:text-indigo-600 dark:text-stone-400 dark:group-hover:text-indigo-400">Flip Card ↻</span>
                             </div>
                         </div>
-                        <div class="card-back bg-blue-50 p-4">
-                            <h4 class="text-xl font-bold text-blue-900 mb-3 border-b border-blue-200 pb-2">Examples for "genre"</h4>
-                            <ul class="space-y-3 text-slate-800">
+                        <div class="card-back bg-indigo-50 dark:bg-indigo-900/20 p-4 border border-indigo-200 dark:border-indigo-800">
+                             <h4 class="text-xl font-bold text-indigo-900 dark:text-indigo-200 mb-3 border-b border-indigo-200 dark:border-indigo-700 pb-2">Examples for "genre"</h4>
+                            <ul class="space-y-3 text-stone-800 dark:text-stone-200 text-sm">
                                 <li>What <strong class="font-semibold">genre</strong> are you reading right now?</li>
                                 <li>My favorite <strong class="font-semibold">genre</strong> is science fiction.</li>
                             </ul>
@@ -110,186 +154,211 @@
         </section>
 
         <section id="grammar" class="mb-10">
-             <h2 class="text-2xl font-semibold text-slate-900 mb-4">Grammar Focus 🧠</h2>
-            <div class="p-6 bg-teal-50 border border-teal-200 rounded-lg">
-                <h3 class="text-xl font-semibold mb-3 text-teal-900">Present Progressive (be + verb-ing)</h3>
-                <p class="mb-4 text-slate-700">Use this for actions happening **now** or **around now** (these days, this week).</p>
-                <div class="bg-white/70 p-4 rounded-md border">
-                    <p class="text-base">I + <strong class="text-teal-700">am reading</strong>.</p>
-                    <p class="text-base">He / She / It + <strong class="text-teal-700">is reading</strong>.</p>
-                    <p class="text-base">We / You / They + <strong class="text-teal-700">are reading</strong>.</p>
-                </div>
-            </div>
-            <div class="mt-6 p-6 bg-gradient-to-br from-slate-50 to-gray-100 border border-slate-200 rounded-lg">
-                <h3 class="text-xl font-semibold mb-4 text-slate-900">Simple Past vs. Present Progressive</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <h4 class="font-bold text-center">Simple Past</h4>
-                        <div class="bg-white p-3 rounded-md mt-2 text-center border-2 border-red-200">
-                            <p class="font-semibold">Finished Actions 🏁</p>
-                            <p class="text-slate-600 mt-1 italic">"I <strong class="text-red-600">read</strong> that book yesterday."</p>
+             <h2 class="text-2xl font-semibold text-stone-900 dark:text-white mb-4">Grammar Focus 🧠</h2>
+             <div class="p-6 bg-stone-100 dark:bg-gray-800 border border-stone-200 dark:border-gray-700 rounded-xl">
+                <h3 class="text-xl font-semibold mb-4 text-stone-800 dark:text-stone-200">Simple Past vs. Present Progressive</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white dark:bg-gray-700/50 p-4 rounded-lg border-l-4 border-rose-400">
+                        <div class="flex items-center gap-3">
+                             <span class="text-2xl">🕒</span>
+                            <h4 class="font-bold text-lg">Simple Past</h4>
                         </div>
+                        <p class="text-sm text-stone-600 dark:text-stone-400 mt-2 mb-3">Use for actions that are **finished**.</p>
+                        <p class="italic text-stone-700 dark:text-stone-300">"I <strong class="text-rose-600 dark:text-rose-400">read</strong> that book yesterday."</p>
                     </div>
-                    <div>
-                        <h4 class="font-bold text-center">Present Progressive</h4>
-                        <div class="bg-white p-3 rounded-md mt-2 text-center border-2 border-teal-200">
-                            <p class="font-semibold">Ongoing Actions ⏳</p>
-                            <p class="text-slate-600 mt-1 italic">"I <strong class="text-teal-600">am reading</strong> a book now."</p>
+                     <div class="bg-white dark:bg-gray-700/50 p-4 rounded-lg border-l-4 border-teal-400">
+                        <div class="flex items-center gap-3">
+                           <span class="text-2xl">🔄</span>
+                            <h4 class="font-bold text-lg">Present Progressive</h4>
                         </div>
+                        <p class="text-sm text-stone-600 dark:text-stone-400 mt-2 mb-3">Use for actions happening **now** or **around now**.</p>
+                        <p class="italic text-stone-700 dark:text-stone-300">"I <strong class="text-teal-600 dark:text-teal-400">am reading</strong> a book now."</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="practice" class="mb-10">
-            <h2 class="text-2xl font-semibold text-slate-900 mb-4">Check Your Knowledge</h2>
+            <h2 class="text-2xl font-semibold text-stone-900 dark:text-white mb-4">Check Your Knowledge</h2>
             
-            <div class="bg-slate-50 p-5 rounded-lg mb-4">
+            <div class="bg-stone-100 dark:bg-gray-800/50 p-5 rounded-lg mb-4">
                 <p class="mb-2 text-lg">1. Write the correct verb form: They ____ (read) a new novel this week.</p>
                 <div class="flex items-center space-x-4">
-                    <input type="text" id="q1-input" class="p-2 border rounded-md" placeholder="verb form">
-                    <button id="q1-check-btn" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Check</button>
+                    <input type="text" id="q1-input" class="p-2 border rounded-md bg-white dark:bg-gray-700 border-stone-300 dark:border-gray-600" placeholder="verb form">
+                    <button id="q1-check-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Check</button>
                     <p id="q1-feedback" class="font-semibold"></p>
                 </div>
             </div>
 
-            <div class="bg-slate-50 p-5 rounded-lg mb-4">
+            <div class="bg-stone-100 dark:bg-gray-800/50 p-5 rounded-lg">
                 <p class="mb-2 text-lg">2. Choose the correct words: Last month, I ___ a book. Now, I ___ another one.</p>
                 <div class="flex items-center space-x-4">
-                     <select id="q2-select" class="p-2 border rounded-md">
+                    <select id="q2-select" class="p-2 border rounded-md bg-white dark:bg-gray-700 border-stone-300 dark:border-gray-600">
                         <option value="">-- select --</option>
                         <option value="read/am reading">read / am reading</option>
                         <option value="am reading/read">am reading / read</option>
                         <option value="read/read">read / read</option>
                     </select>
-                    <button id="q2-check-btn" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Check</button>
+                    <button id="q2-check-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Check</button>
                     <p id="q2-feedback" class="font-semibold"></p>
                 </div>
             </div>
         </section>
-
+        
         <section id="discussion" class="mb-10">
-            <h2 class="text-2xl font-semibold text-slate-900 mb-4">Let's Talk About You 🗣️</h2>
+            <h2 class="text-2xl font-semibold text-stone-900 dark:text-white mb-4">Let's Talk About You 🗣️</h2>
             <div class="space-y-6">
 
-                <div class="bg-slate-50 p-5 rounded-lg">
-                    <div class="font-semibold text-lg text-slate-800">Q: What kind of book are you reading these days?</div>
-                    <button class="accordion-toggle mt-3 text-blue-600 font-semibold flex items-center space-x-1"><span>See example answers</span><span class="arrow">▼</span></button>
+                <div class="bg-stone-100 dark:bg-gray-800/50 p-5 rounded-lg">
+                    <div class="font-semibold text-lg">Q: What kind of book are you reading these days?</div>
+                    <button class="accordion-toggle mt-3 text-indigo-600 dark:text-indigo-400 font-semibold flex items-center space-x-1">
+                        <span>See example answers</span>
+                        <span class="arrow transition-transform">▼</span>
+                    </button>
                     <div class="accordion-content">
-                        <ul class="mt-4 space-y-2 text-slate-700 border-t pt-4">
+                        <ul class="mt-4 space-y-2 text-stone-700 dark:text-stone-300 border-t border-stone-200 dark:border-gray-700 pt-4">
                             <li>➡️ Currently, I'm reading a science fiction novel.</li>
                             <li>➡️ I'm reading a book about history.</li>
                         </ul>
                     </div>
                 </div>
-
-                <div class="bg-slate-50 p-5 rounded-lg">
-                    <div class="font-semibold text-lg text-slate-800">Q: What book did you finish recently?</div>
-                    <button class="accordion-toggle mt-3 text-blue-600 font-semibold flex items-center space-x-1"><span>See example answers</span><span class="arrow">▼</span></button>
+                
+                <div class="bg-stone-100 dark:bg-gray-800/50 p-5 rounded-lg">
+                    <div class="font-semibold text-lg">Q: What book did you finish recently?</div>
+                    <button class="accordion-toggle mt-3 text-indigo-600 dark:text-indigo-400 font-semibold flex items-center space-x-1">
+                        <span>See example answers</span>
+                        <span class="arrow transition-transform">▼</span>
+                    </button>
                     <div class="accordion-content">
-                        <ul class="mt-4 space-y-2 text-slate-700 border-t pt-4">
-                            <li>➡️ I just finished a fantasy novel. I really enjoyed it.</li>
-                            <li>➡️ Last week, I read a book by my favorite author.</li>
+                        <ul class="mt-4 space-y-2 text-stone-700 dark:text-stone-300 border-t border-stone-200 dark:border-gray-700 pt-4">
+                           <li>➡️ I just finished a fantasy novel. I really enjoyed it.</li>
+                           <li>➡️ Last week, I read a book by my favorite author.</li>
                         </ul>
                     </div>
                 </div>
+
             </div>
         </section>
 
         <section id="production">
-             <h2 class="text-2xl font-semibold text-slate-900 mb-4">Your Turn ✍️</h2>
-             <div id="production-container" class="bg-green-50 p-6 rounded-lg border border-green-200">
+             <h2 class="text-2xl font-semibold text-stone-900 dark:text-white mb-4">Your Turn ✍️</h2>
+             <div id="production-container" class="bg-green-50 dark:bg-green-900/20 p-6 rounded-lg border border-green-200 dark:border-green-800">
                 <p class="mb-3 text-lg">Write 2-3 sentences. What are you reading now? What did you read last month?</p>
-                <p class="text-sm text-slate-500 mb-3">Example: I am reading a history book right now. Last month, I read a great novel by a Japanese author.</p>
-                <textarea id="production-textarea" class="w-full p-3 border rounded-md h-24" placeholder="Write your sentences here..."></textarea>
+                <p class="text-sm text-stone-500 dark:text-stone-400 mb-3">Example: I am reading a history book right now. Last month, I read a great novel by a Japanese author.</p>
+                <textarea id="production-textarea" class="w-full p-3 border rounded-md h-24 bg-white dark:bg-gray-700 border-stone-300 dark:border-gray-600" placeholder="Write your sentences here..."></textarea>
                 <button id="production-btn" class="mt-4 px-6 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700">I'm Done!</button>
              </div>
         </section>
 
     </main>
     
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, query, where, onSnapshot, orderBy, writeBatch, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-            const cards = document.querySelectorAll('.card');
-            cards.forEach(card => {
-                card.addEventListener('click', (event) => {
-                    if (!event.target.closest('.speak-btn')) {
-                        card.classList.toggle('is-flipped');
-                    }
-                });
+        const firebaseConfig = {
+            apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
+            authDomain: "elearning-e83cb.firebaseapp.com",
+            projectId: "elearning-e83cb",
+            storageBucket: "elearning-e83cb.appspot.com",
+            messagingSenderId: "25473938624",
+            appId: "1:25473938624:web:5b56738933543f32a7e925",
+            measurementId: "G-R713G5DD1S"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let unsubscribeNotifications = null;
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('user-email-nav').textContent = user.email;
+                const navAvatarContainer = document.getElementById('nav-avatar-container');
+                if (user.photoURL) {
+                   navAvatarContainer.innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
+                }
+                listenForNotifications(user.uid);
+            } else {
+                window.location.href = '/Login.html'; 
+            }
+        });
+        
+        const profileBtn = document.getElementById('profile-btn');
+        const profileDropdown = document.getElementById('profile-dropdown');
+        const logoutBtn = document.getElementById('logout-btn');
+        const notificationsBtn = document.getElementById('notifications-btn');
+        // ... (rest of navbar and notification logic is the same) ...
+
+        // --- Lesson-Specific Interactivity ---
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => card.addEventListener('click', (event) => { if (!event.target.closest('.speak-btn')) { card.classList.toggle('is-flipped'); } }));
+
+        const speakButtons = document.querySelectorAll('.speak-btn');
+        const synth = window.speechSynthesis;
+        speakButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.stopPropagation();
+                const textToSpeak = button.dataset.text;
+                if (synth.speaking) synth.cancel();
+                const utterance = new SpeechSynthesisUtterance(textToSpeak);
+                utterance.lang = 'en-US';
+                synth.speak(utterance);
             });
+        });
 
-            const speakButtons = document.querySelectorAll('.speak-btn');
-            const synth = window.speechSynthesis;
-            speakButtons.forEach(button => {
-                button.addEventListener('click', (event) => {
-                    event.stopPropagation();
-                    const textToSpeak = button.dataset.text;
-                    if (synth.speaking) { synth.cancel(); }
-                    const utterance = new SpeechSynthesisUtterance(textToSpeak);
-                    utterance.lang = 'en-US';
-                    synth.speak(utterance);
-                });
-            });
-
-            // --- Practice Question 1 Logic ---
-            const q1Input = document.getElementById('q1-input');
-            const q1CheckBtn = document.getElementById('q1-check-btn');
-            const q1Feedback = document.getElementById('q1-feedback');
-            q1CheckBtn.addEventListener('click', () => {
-                const answer = q1Input.value.trim().toLowerCase();
-                if (answer === 'are reading') {
-                    q1Feedback.textContent = 'Correct! ✅';
-                    q1Feedback.className = 'font-semibold text-green-600';
+        document.getElementById('q1-check-btn').addEventListener('click', () => {
+            const answer = document.getElementById('q1-input').value.trim().toLowerCase();
+            const feedbackEl = document.getElementById('q1-feedback');
+            if (answer === 'are reading') {
+                feedbackEl.textContent = 'Correct! ✅';
+                feedbackEl.className = 'font-semibold text-green-600 dark:text-green-400';
+            } else {
+                feedbackEl.textContent = 'Try again. Remember: They + are + verb-ing.';
+                feedbackEl.className = 'font-semibold text-red-600 dark:text-red-400';
+            }
+        });
+        
+        document.getElementById('q2-check-btn').addEventListener('click', () => {
+            const answer = document.getElementById('q2-select').value;
+             const feedbackEl = document.getElementById('q2-feedback');
+            if (answer === 'read/am reading') {
+                feedbackEl.textContent = 'Excellent! ✅';
+                feedbackEl.className = 'font-semibold text-green-600 dark:text-green-400';
+            } else {
+                feedbackEl.textContent = 'Not quite. Use simple past for "Last month".';
+                feedbackEl.className = 'font-semibold text-red-600 dark:text-red-400';
+            }
+        });
+        
+        const accordions = document.querySelectorAll('.accordion-toggle');
+        accordions.forEach(accordion => {
+            accordion.addEventListener('click', () => {
+                const content = accordion.nextElementSibling;
+                const arrow = accordion.querySelector('.arrow');
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                    accordion.querySelector('span').textContent = 'See example answers';
+                    arrow.style.transform = 'rotate(0deg)';
                 } else {
-                    q1Feedback.textContent = 'Try again. Remember: They + are + verb-ing.';
-                    q1Feedback.className = 'font-semibold text-red-600';
+                    content.style.maxHeight = content.scrollHeight + "px";
+                    accordion.querySelector('span').textContent = 'Hide example answers';
+                     arrow.style.transform = 'rotate(180deg)';
                 }
             });
+        });
 
-            // --- Practice Question 2 Logic ---
-            const q2Select = document.getElementById('q2-select');
-            const q2CheckBtn = document.getElementById('q2-check-btn');
-            const q2Feedback = document.getElementById('q2-feedback');
-            q2CheckBtn.addEventListener('click', () => {
-                const answer = q2Select.value;
-                if (answer === 'read/am reading') {
-                    q2Feedback.textContent = 'Excellent! ✅';
-                    q2Feedback.className = 'font-semibold text-green-600';
-                } else {
-                    q2Feedback.textContent = 'Not quite. Use simple past for "Last month" and present progressive for "Now".';
-                    q2Feedback.className = 'font-semibold text-red-600';
-                }
-            });
-            
-            const accordions = document.querySelectorAll('.accordion-toggle');
-            accordions.forEach(accordion => {
-                accordion.addEventListener('click', () => {
-                    const content = accordion.nextElementSibling;
-                    const arrow = accordion.querySelector('.arrow');
-                    if (content.style.maxHeight) {
-                        content.style.maxHeight = null;
-                        accordion.querySelector('span').textContent = 'See example answers';
-                        arrow.textContent = '▼';
-                    } else {
-                        content.style.maxHeight = content.scrollHeight + "px";
-                        accordion.querySelector('span').textContent = 'Hide example answers';
-                        arrow.textContent = '▲';
-                    }
-                });
-            });
-
-            const productionContainer = document.getElementById('production-container');
-            const productionBtn = document.getElementById('production-btn');
-            productionBtn.addEventListener('click', () => {
-                productionContainer.innerHTML = `
-                    <div class="text-center py-8">
-                        <h3 class="text-2xl font-bold text-green-800">Fantastic! 🥳</h3>
-                        <p class="mt-2 text-lg text-slate-700">You are doing a great job discussing literature. Keep it up!</p>
-                    </div>
-                `;
-            });
+        document.getElementById('production-btn').addEventListener('click', () => {
+            document.getElementById('production-container').innerHTML = `
+                <div class="text-center py-8">
+                    <h3 class="text-2xl font-bold text-green-800 dark:text-green-300">Fantastic! 🥳</h3>
+                    <p class="mt-2 text-lg text-stone-700 dark:text-stone-300">You are doing a great job discussing literature. Keep it up!</p>
+                </div>
+            `;
         });
     </script>
 </body>
