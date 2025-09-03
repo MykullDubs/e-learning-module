@@ -76,41 +76,55 @@
             </div>
         </section>
 
-        <section id="grammar" class="mb-10 p-6 bg-amber-50 border border-amber-200 rounded-lg">
+        <section id="grammar" class="mb-10">
             <h2 class="text-2xl font-semibold text-slate-900 mb-4">Grammar Focus 💡</h2>
-            <h3 class="text-xl font-semibold mb-2">Prepositions of Time: IN, AT, ON</h3>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left">
-                    <thead class="bg-amber-100">
-                        <tr>
-                            <th class="p-3">Preposition</th>
-                            <th class="p-3">When to Use</th>
-                            <th class="p-3">Example</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="border-b border-amber-200">
-                            <td class="p-3 font-bold">IN</td>
-                            <td class="p-3">Parts of the day (the morning, the afternoon, the evening)</td>
-                            <td class="p-3">I read <strong class="font-semibold">in the morning</strong>.</td>
-                        </tr>
-                        <tr class="border-b border-amber-200">
-                            <td class="p-3 font-bold">AT</td>
-                            <td class="p-3">Specific times, night</td>
-                            <td class="p-3">He reads <strong class="font-semibold">at night</strong>.</td>
-                        </tr>
-                        <tr>
-                            <td class="p-3 font-bold">ON</td>
-                            <td class="p-3">Days of the week, the weekend</td>
-                            <td class="p-3">She reads <strong class="font-semibold">on the weekend</strong>.</td>
-                        </tr>
-                    </tbody>
-                </table>
+            
+            <div class="p-6 bg-amber-50 border border-amber-200 rounded-lg">
+                <h3 class="text-xl font-semibold mb-3 text-amber-900">Prepositions of Time: IN, AT, ON</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-amber-100">
+                            <tr>
+                                <th class="p-3">Preposition</th>
+                                <th class="p-3">When to Use</th>
+                                <th class="p-3">Example</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-amber-200">
+                                <td class="p-3 font-bold">IN</td>
+                                <td class="p-3">Parts of the day (the morning, the afternoon, the evening)</td>
+                                <td class="p-3">I read <strong class="font-semibold">in the morning</strong>.</td>
+                            </tr>
+                            <tr class="border-b border-amber-200">
+                                <td class="p-3 font-bold">AT</td>
+                                <td class="p-3">Specific times, night</td>
+                                <td class="p-3">He reads <strong class="font-semibold">at night</strong>.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-bold">ON</td>
+                                <td class="p-3">Days of the week, the weekend</td>
+                                <td class="p-3">She reads <strong class="font-semibold">on the weekend</strong>.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <h3 class="text-xl font-semibold mt-6 mb-2">Simple Present Verbs</h3>
-            <p>Remember to add '-s' to the verb for <strong>he</strong>, <strong>she</strong>, and <strong>it</strong>. (I read -> He read<strong>s</strong>)</p>
-        </section>
 
+            <div class="mt-6 p-6 bg-gradient-to-br from-indigo-50 to-purple-100 border border-indigo-200 rounded-lg">
+                <h3 class="text-xl font-semibold mb-4 text-indigo-900">Simple Present Verbs: The '-s' Rule</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 items-center">
+                    <div class="bg-white/70 p-4 rounded-md border">
+                        <p class="text-base"><code class="font-mono bg-slate-200 text-slate-800 px-2 py-1 rounded">I / You / We / They</code> + <strong class="text-indigo-700 text-lg">read</strong></p>
+                        <p class="text-slate-600 mt-2 italic">"We <strong class="text-indigo-700">read</strong> every day."</p>
+                    </div>
+                    <div class="bg-white/70 p-4 rounded-md border border-purple-300 ring-2 ring-purple-200">
+                        <p class="text-base"><code class="font-mono bg-slate-200 text-slate-800 px-2 py-1 rounded">He / She / It</code> + <strong class="text-indigo-700 text-lg">read<span class="text-red-500 font-bold text-2xl">s</span></strong></p>
+                        <p class="text-slate-600 mt-2 italic">"She <strong class="text-indigo-700">reads</strong> at night."</p>
+                    </div>
+                </div>
+            </div>
+        </section>
         <section id="practice" class="mb-10">
             <h2 class="text-2xl font-semibold text-slate-900 mb-4">Check Your Knowledge</h2>
             
@@ -207,6 +221,7 @@
 
             </div>
         </section>
+
         <section id="production">
              <h2 class="text-2xl font-semibold text-slate-900 mb-4">Your Turn ✍️</h2>
              <div id="production-container" class="bg-green-50 p-6 rounded-lg border border-green-200">
@@ -279,7 +294,7 @@
                 }
             });
 
-            // --- *** NEW SCRIPT: Accordion for Discussion Questions *** ---
+            // --- Accordion for Discussion Questions ---
             const accordions = document.querySelectorAll('.accordion-toggle');
             accordions.forEach(accordion => {
                 accordion.addEventListener('click', () => {
