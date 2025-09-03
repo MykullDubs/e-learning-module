@@ -86,12 +86,12 @@
                 <div class="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 px-4 py-1 bg-indigo-600 text-white text-sm font-semibold rounded-full">Most Popular</div>
                 <h2 class="text-2xl font-bold text-indigo-700 dark:text-indigo-400 font-brand">Plus Tier</h2>
                 <p class="mt-2 text-gray-600 dark:text-gray-400">For accelerated growth with expert guidance.</p>
-                <p class="mt-6 text-4xl font-bold">$12.99 <span class="text-lg font-normal text-gray-500">/ month</span></p>
+                <p class="mt-6 text-4xl font-bold">$22.22 <span class="text-lg font-normal text-gray-500">/ month</span></p>
                 <ul class="mt-6 space-y-3 text-gray-700 dark:text-gray-300 flex-grow">
                     <li class="flex items-center gap-3">✅ Everything in the Standard Tier</li>
                     <li class="flex items-center gap-3 font-semibold text-indigo-800 dark:text-indigo-300">✅ 10 Instructor-graded audio submissions</li>
+                    <li class="flex items-center gap-3 font-semibold text-indigo-800 dark:text-indigo-300">✅ Monthly 15-min personalized lesson</li>
                     <li class="flex items-center gap-3 font-semibold text-indigo-800 dark:text-indigo-300">✅ Personalized feedback on pronunciation</li>
-                    <li class="flex items-center gap-3 font-semibold text-indigo-800 dark:text-indigo-300">✅ Priority support</li>
                 </ul>
                 <button id="subscribe-plus-btn" class="w-full mt-8 p-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition">Upgrade to Plus</button>
             </div>
@@ -175,7 +175,7 @@
         }
         
         subscribePlusBtn.addEventListener('click', () => {
-            createCheckoutSession('price_YOUR_PLUS_PRICE_ID', subscribePlusBtn); // IMPORTANT: Replace with your Stripe Price ID
+            createCheckoutSession('price_YOUR_PLUS_PRICE_ID', subscribePlusBtn); // IMPORTANT: Replace with your new $22.22 Stripe Price ID
         });
 
         subscribeExecutiveBtn.addEventListener('click', () => {
