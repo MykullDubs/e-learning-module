@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B2 Lesson: Debating a Book's Reputation</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Theme loader script
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+    </script>
+    
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .card { perspective: 1000px; }
+        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
+        .card.is-flipped .card-inner { transform: rotateY(180deg); }
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; border-radius: 0.75rem; }
+        .card-back { transform: rotateY(180deg); }
+        .slider-container { position: relative; overflow: hidden; }
+        .slider-handle { cursor: col-resize; z-index: 20; }
+        .slider-top { clip-path: inset(0 50% 0 0); }
+        .slider-bottom { clip-path: inset(0 0 0 50%); }
+    </style>
+</head>
+<body class="bg-stone-50 dark:bg-gray-900 text-stone-800 dark:text-stone-200 transition-colors duration-300">
+
+    <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-stone-200 dark:border-gray-700 sticky top-0 z-40">
+        <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
+             <a href="dashboard.html" class="text-xl font-bold text-stone-900 dark:text-white">ESL Learning Platform</a>
+             <div class="flex items-center gap-6">
+                 <div class="relative">
+                    <button id="notifications-btn" class="relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-stone-500 dark:text-stone-400 hover:text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                        <span id="notifications-dot" class="hidden absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden">
+                        <div class="p-3 font-semibold text-sm border-b border-stone-200 dark:border-gray-700">Notifications</div>
+                        <div id="notifications-list" class="max-h-96 overflow-y-auto"></div>
+                    </div>
+                 </div>
+                 <div class="relative">
+                    <button id="profile-btn" class="flex items-center gap-2">
+                        <span id="user-email-nav" class="text-sm text-stone-600 dark:text-stone-300 hidden sm:block"></span>
+                        <div id="nav-avatar-container">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
+                        </div>
+                    </button>
+                    <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden">
+                        <a href="grades.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">My Progress</a>
+                        <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Settings</a>
+                        <div class="border-t border-stone-200 dark:border-gray-600"></div>
+                        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100 dark:hover:bg-gray-700">Log Out</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto my-8 p-6 sm:p-10 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-stone-200 dark:border-gray-700">
+
+        <header class="border-b border-stone-200 dark:border-gray-700 pb-4 mb-6">
+            <div class="flex items-center justify-between">
+                <h1 class="text-3xl sm:text-4xl font-bold text-stone-900 dark:text-white">Debating a Book's Reputation</h1>
+                <span class="bg-red-100 text-red-800 text-sm font-semibold px-3 py-1 rounded-full dark:bg-red-900/50 dark:text-red-300">CEFR Level: B2</span>
+            </div>
+            <p class="mt-2 text-lg text-stone-600 dark:text-stone-400">Use the third conditional and clauses of concession to discuss hypothetical situations and contrasting ideas.</p>
+        </header>
+
+        <section id="introduction" class="mb-10">
+            <h2 class="text-2xl font-semibold text-stone-900 dark:text-white mb-3">Agree to Disagree</h2>
+            <p class="text-base leading-relaxed text-stone-700 dark:text-stone-300">
+                Have you ever loved a book that everyone else hated? Or disliked a book that everyone said was a masterpiece? In this lesson, we will learn the advanced language needed to defend our opinions, discuss imaginary past situations, and express contrasting ideas.
+            </p>
+        </section>
+
+        <section id="vocabulary" class="mb-10">
+            <h2 class="text-2xl font-semibold text-stone-900 dark:text-white mb-4">Vocabulary for Critics</h2>
+            <p class="text-stone-600 dark:text-stone-400 mb-6 -mt-2">Learn words to describe a book's reputation.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="card h-48 cursor-pointer group">
+                    <div class="card-inner"><div class="card-front bg-stone-50 dark:bg-gray-700/50 p-4 justify-center items-center border border-stone-200 dark:border-gray-700"><h3 class="text-2xl font-bold text-center">critically-acclaimed</h3></div><div class="card-back bg-indigo-50 dark:bg-indigo-900/20 p-4 border border-indigo-200 dark:border-indigo-800 justify-center items-center"><p class="text-center text-sm">Praised by experts and reviewers. <br><em>"It was a <strong class="font-semibold">critically-acclaimed</strong> novel."</em></p></div></div>
+                </div>
+                <div class="card h-48 cursor-pointer group">
+                    <div class="card-inner"><div class="card-front bg-stone-50 dark:bg-gray-700/50 p-4 justify-center items-center border border-stone-200 dark:border-gray-700"><h3 class="text-2xl font-bold text-center">controversial</h3></div><div class="card-back bg-indigo-50 dark:bg-indigo-900/20 p-4 border border-indigo-200 dark:border-indigo-800 justify-center items-center"><p class="text-center text-sm">Causing a lot of public disagreement. <br><em>"The book's ending was very <strong class="font-semibold">controversial</strong>."</em></p></div></div>
+                </div>
+                <div class="card h-48 cursor-pointer group">
+                    <div class="card-inner"><div class="card-front bg-stone-50 dark:bg-gray-700/50 p-4 justify-center items-center border border-stone-200 dark:border-gray-700"><h3 class="text-2xl font-bold text-center">masterpiece</h3></div><div class="card-back bg-indigo-50 dark:bg-indigo-900/20 p-4 border border-indigo-200 dark:border-indigo-800 justify-center items-center"><p class="text-center text-sm">An artist's best piece of work. <br><em>"Many people consider it a <strong class="font-semibold">masterpiece</strong>."</em></p></div></div>
+                </div>
+                <div class="card h-48 cursor-pointer group">
+                    <div class="card-inner"><div class="card-front bg-stone-50 dark:bg-gray-700/50 p-4 justify-center items-center border border-stone-200 dark:border-gray-700"><h3 class="text-2xl font-bold text-center">overrated</h3></div><div class="card-back bg-indigo-50 dark:bg-indigo-900/20 p-4 border border-indigo-200 dark:border-indigo-800 justify-center items-center"><p class="text-center text-sm">Considered better than it really is. <br><em>"In my opinion, the book is highly <strong class="font-semibold">overrated</strong>."</em></p></div></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="grammar" class="mb-10">
+             <h2 class="text-2xl font-semibold text-stone-900 dark:text-white mb-4">Grammar Focus 🧠</h2>
+             <div class="p-6 bg-stone-100 dark:bg-gray-800 border border-stone-200 dark:border-gray-700 rounded-xl mb-6">
+                <h3 class="text-xl font-semibold mb-2 text-stone-800 dark:text-stone-200">Clauses of Concession (even though)</h3>
+                <p class="text-sm text-stone-600 dark:text-stone-400 mb-4">Use "even though" to connect two contrasting or surprising ideas. It shows that one fact is true despite another fact.</p>
+                <div class="bg-white dark:bg-gray-700/50 p-4 rounded-lg border-l-4 border-teal-400">
+                    <p class="italic text-stone-700 dark:text-stone-300">"I loved the book, <strong class="text-teal-600 dark:text-teal-400">even though</strong> it got horrible reviews."</p>
+                    <p class="italic text-stone-700 dark:text-stone-300 mt-2"><strong class="text-teal-600 dark:text-teal-400">Even though</strong> the plot was simple, the characters were amazing.</p>
+                </div>
+             </div>
+
+             <div class="p-6 bg-stone-100 dark:bg-gray-800 border border-stone-200 dark:border-gray-700 rounded-xl">
+                <h3 class="text-xl font-semibold mb-2 text-stone-800 dark:text-stone-200">"Sliding Doors": Third Conditional</h3>
+                <p class="text-sm text-stone-600 dark:text-stone-400 mb-4">Use the third conditional to talk about an imaginary or hypothetical situation in the past that did not happen. Drag the slider to see the difference between the real past and the unreal past.</p>
+                 <div class="slider-container rounded-lg bg-white dark:bg-gray-700 w-full h-32 relative">
+                    <!-- Bottom Layer (What Could Have Been) -->
+                    <div class="slider-bottom absolute inset-0 p-4 flex flex-col justify-center items-center text-center bg-rose-50 dark:bg-rose-900/30">
+                         <p class="font-semibold">Unreal Past (Third Conditional)</p>
+                         <p class="italic mt-1">"I <strong class="text-rose-600 dark:text-rose-400">would have read</strong> it if it <strong class="text-rose-600 dark:text-rose-400">hadn't gotten</strong> bad reviews."</p>
+                    </div>
+                    <!-- Top Layer (What Really Happened) -->
+                    <div class="slider-top absolute inset-0 p-4 flex flex-col justify-center items-center text-center bg-indigo-50 dark:bg-indigo-900/30">
+                        <p class="font-semibold">Real Past (Simple Past)</p>
+                        <p class="italic mt-1">"The book <strong class="text-indigo-600 dark:text-indigo-400">got</strong> bad reviews, so I <strong class="text-indigo-600 dark:text-indigo-400">didn't read</strong> it."</p>
+                    </div>
+                    <!-- Handle -->
+                    <div class="slider-handle absolute top-0 bottom-0 w-2 bg-gray-500/50 dark:bg-gray-400/50" style="left: 50%;"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="practice" class="mb-10">
+            <h2 class="text-2xl font-semibold text-stone-900 dark:text-white mb-4">Check Your Knowledge</h2>
+            
+            <div class="bg-stone-100 dark:bg-gray-800/50 p-5 rounded-lg mb-4">
+                <p class="mb-2 text-lg">1. Choose the correct words to complete the sentence: "I ___ the movie if I ___ it was based on a book."</p>
+                <div class="flex items-center space-x-4">
+                    <select id="q1-select" class="p-2 border rounded-md bg-white dark:bg-gray-700 border-stone-300 dark:border-gray-600">
+                        <option value="">-- select --</option>
+                        <option value="would watch / knew">would watch / knew</option>
+                        <option value="would have watched / had known">would have watched / had known</option>
+                        <option value="watched / would have known">watched / would have known</option>
+                    </select>
+                    <button id="q1-check-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Check</button>
+                    <p id="q1-feedback" class="font-semibold"></p>
+                </div>
+            </div>
+
+            <div class="bg-stone-100 dark:bg-gray-800/50 p-5 rounded-lg">
+                <p class="mb-2 text-lg">2. Combine the two sentences using "even though": The characters were boring. The plot was fantastic.</p>
+                <div class="flex items-center space-x-4">
+                    <input type="text" id="q2-input" class="w-full p-2 border rounded-md bg-white dark:bg-gray-700 border-stone-300 dark:border-gray-600" placeholder="Combine the sentences...">
+                    <button id="q2-check-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Check</button>
+                    <p id="q2-feedback" class="font-semibold"></p>
+                </div>
+            </div>
+        </section>
+
+        <section id="production">
+             <h2 class="text-2xl font-semibold text-stone-900 dark:text-white mb-4">Your Turn ✍️</h2>
+             <div id="production-container" class="bg-green-50 dark:bg-green-900/20 p-6 rounded-lg border border-green-200 dark:border-green-800">
+                <p class="mb-3 text-lg">Write 2-3 sentences defending a book you liked even though it had bad reviews, OR explaining why you didn't read a popular book.</p>
+                <p class="text-sm text-stone-500 dark:text-stone-400 mb-3">Example: I would have read that novel if my friend hadn't told me the ending! I still enjoyed the movie, even though I knew what would happen.</p>
+                <textarea id="production-textarea" class="w-full p-3 border rounded-md h-24 bg-white dark:bg-gray-700 border-stone-300 dark:border-gray-600" placeholder="Write your opinion here..."></textarea>
+                <button id="production-btn" class="mt-4 px-6 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700">I'm Done!</button>
+             </div>
+        </section>
+
+    </main>
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
+            authDomain: "elearning-e83cb.firebaseapp.com",
+            projectId: "elearning-e83cb",
+            storageBucket: "elearning-e83cb.appspot.com",
+            messagingSenderId: "25473938624",
+            appId: "1:25473938624:web:5b56738933543f32a7e925"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('user-email-nav').textContent = user.email;
+                const navAvatarContainer = document.getElementById('nav-avatar-container');
+                if (user.photoURL) {
+                   navAvatarContainer.innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
+                }
+            } else {
+                window.location.href = '/Login.html'; 
+            }
+        });
+        
+        // --- Navbar & Notification logic would go here ---
+
+        // --- Lesson-Specific Interactivity ---
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => card.addEventListener('click', () => card.classList.toggle('is-flipped')));
+
+        // Sliding Doors Grammar Activity
+        const handle = document.querySelector('.slider-handle');
+        const topLayer = document.querySelector('.slider-top');
+        const container = document.querySelector('.slider-container');
+        let isDragging = false;
+
+        handle.addEventListener('mousedown', () => { isDragging = true; });
+        window.addEventListener('mouseup', () => { isDragging = false; });
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const rect = container.getBoundingClientRect();
+            let x = e.clientX - rect.left;
+            if (x < 0) x = 0;
+            if (x > rect.width) x = rect.width;
+            const percent = (x / rect.width) * 100;
+            handle.style.left = `${percent}%`;
+            topLayer.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
+        });
+
+        document.getElementById('q1-check-btn').addEventListener('click', () => {
+            const answer = document.getElementById('q1-select').value;
+            const feedbackEl = document.getElementById('q1-feedback');
+            if (answer === 'would have watched / had known') {
+                feedbackEl.textContent = 'Correct! ✅';
+                feedbackEl.className = 'font-semibold text-green-600 dark:text-green-400';
+            } else {
+                feedbackEl.textContent = 'Not quite. Use the third conditional for unreal past situations.';
+                feedbackEl.className = 'font-semibold text-red-600 dark:text-red-400';
+            }
+        });
+
+        document.getElementById('q2-check-btn').addEventListener('click', () => {
+            const answer = document.getElementById('q2-input').value.trim().toLowerCase();
+            const feedbackEl = document.getElementById('q2-feedback');
+            if (answer.includes('even though')) {
+                feedbackEl.textContent = 'Excellent! ✅';
+                feedbackEl.className = 'font-semibold text-green-600 dark:text-green-400';
+            } else {
+                feedbackEl.textContent = 'Try again. Remember to use "even though".';
+                feedbackEl.className = 'font-semibold text-red-600 dark:text-red-400';
+            }
+        });
+
+        document.getElementById('production-btn').addEventListener('click', () => {
+            document.getElementById('production-container').innerHTML = `
+                <div class="text-center py-8">
+                    <h3 class="text-2xl font-bold text-green-800 dark:text-green-300">Great Job! 🥳</h3>
+                    <p class="mt-2 text-lg text-stone-700 dark:text-stone-300">You did a wonderful job expressing a complex opinion. Keep practicing!</p>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
