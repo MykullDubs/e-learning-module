@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B1 Lesson: Giving a Book Recommendation</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Theme loader script
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+    </script>
+    
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .card { perspective: 1000px; }
+        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
+        .card.is-flipped .card-inner { transform: rotateY(180deg); }
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; border-radius: 0.75rem; }
+        .card-back { transform: rotateY(180deg); }
+        .grammar-transformer .sentence { transition: opacity 0.3s; }
+    </style>
+</head>
+<body class="bg-stone-50 dark:bg-gray-900 text-stone-800 dark:text-stone-200 transition-colors duration-300">
+
+    <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-stone-200 dark:border-gray-700 sticky top-0 z-40">
+        <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
+             <a href="dashboard.html" class="text-xl font-bold text-stone-900 dark:text-white">ESL Learning Platform</a>
+             <div class="flex items-center gap-6">
+                 <div class="relative">
+                    <button id="notifications-btn" class="relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-stone-500 dark:text-stone-400 hover:text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                        <span id="notifications-dot" class="hidden absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden">
+                        <div class="p-3 font-semibold text-sm border-b border-stone-200 dark:border-gray-700">Notifications</div>
+                        <div id="notifications-list" class="max-h-96 overflow-y-auto"></div>
+                    </div>
+                 </div>
+                 <div class="relative">
+                    <button id="profile-btn" class="flex items-center gap-2">
+                        <span id="user-email-nav" class="text-sm text-stone-600 dark:text-stone-300 hidden sm:block"></span>
+                        <div id="nav-avatar-container">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
+                        </div>
+                    </button>
+                    <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden">
+                        <a href="grades.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">My Progress</a>
+                        <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Settings</a>
+                        <div class="border-t border-stone-200 dark:border-gray-600"></div>
+                        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100 dark:hover:bg-gray-700">Log Out</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto my-8 p-6 sm:p-10 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-stone-200 dark:border-gray-700">
+
+        <header class="border-b border-stone-200 dark:border-gray-700 pb-4 mb-6">
+            <div class="flex items-center justify-between">
+                <h1 class="text-3xl sm:text-4xl font-bold text-stone-900 dark:text-white">Giving a Book Recommendation</h1>
+                <span class="bg-yellow-100 text-yellow-800 text-sm font-semibold px-3 py-1 rounded-full dark:bg-yellow-900/50 dark:text-yellow-300">CEFR Level: B1</span>
+            </div>
+            <p class="mt-2 text-lg text-stone-600 dark:text-stone-400">Use the passive voice and present perfect continuous to share your opinions.</p>
+        </header>
+
+        <section id="introduction" class="mb-10">
+            <h2 class="text-2xl font-semibold text-stone-900 dark:text-white mb-3">Time to Share!</h2>
+            <p class="text-base leading-relaxed text-stone-700 dark:text-stone-300">
+                You know how to talk about your reading habits. Now, let's learn how to give a recommendation! In this lesson, you will learn the language to describe books and share what you've been reading with friends.
+            </p>
+        </section>
+
+        <section id="vocabulary" class="mb-10">
+            <h2 class="text-2xl font-semibold text-stone-900 dark:text-white mb-4">Vocabulary for Reviews</h2>
+            <p class="text-stone-600 dark:text-stone-400 mb-6 -mt-2">Click a card to learn words for describing a book.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="card h-48 cursor-pointer group">
+                    <div class="card-inner"><div class="card-front bg-stone-50 dark:bg-gray-700/50 p-4 justify-center items-center border border-stone-200 dark:border-gray-700"><h3 class="text-2xl font-bold text-center">plot</h3></div><div class="card-back bg-indigo-50 dark:bg-indigo-900/20 p-4 border border-indigo-200 dark:border-indigo-800 justify-center items-center"><p class="text-center text-sm">The story or events of a book. <br><em>"The <strong class="font-semibold">plot</strong> was very exciting."</em></p></div></div>
+                </div>
+                <div class="card h-48 cursor-pointer group">
+                    <div class="card-inner"><div class="card-front bg-stone-50 dark:bg-gray-700/50 p-4 justify-center items-center border border-stone-200 dark:border-gray-700"><h3 class="text-2xl font-bold text-center">character</h3></div><div class="card-back bg-indigo-50 dark:bg-indigo-900/20 p-4 border border-indigo-200 dark:border-indigo-800 justify-center items-center"><p class="text-center text-sm">A person in a story. <br><em>"My favorite <strong class="font-semibold">character</strong> was the hero."</em></p></div></div>
+                </div>
+                <div class="card h-48 cursor-pointer group">
+                    <div class="card-inner"><div class="card-front bg-stone-50 dark:bg-gray-700/50 p-4 justify-center items-center border border-stone-200 dark:border-gray-700"><h3 class="text-2xl font-bold text-center">setting</h3></div><div class="card-back bg-indigo-50 dark:bg-indigo-900/20 p-4 border border-indigo-200 dark:border-indigo-800 justify-center items-center"><p class="text-center text-sm">The time and place of a story. <br><em>"The <strong class="font-semibold">setting</strong> is a fantasy world."</em></p></div></div>
+                </div>
+                <div class="card h-48 cursor-pointer group">
+                    <div class="card-inner"><div class="card-front bg-stone-50 dark:bg-gray-700/50 p-4 justify-center items-center border border-stone-200 dark:border-gray-700"><h3 class="text-2xl font-bold text-center">recommend</h3></div><div class="card-back bg-indigo-50 dark:bg-indigo-900/20 p-4 border border-indigo-200 dark:border-indigo-800 justify-center items-center"><p class="text-center text-sm">To suggest something is good. <br><em>"I <strong class="font-semibold">recommend</strong> this book."</em></p></div></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="grammar" class="mb-10">
+             <h2 class="text-2xl font-semibold text-stone-900 dark:text-white mb-4">Grammar Focus 🧠</h2>
+             <div class="p-6 bg-stone-100 dark:bg-gray-800 border border-stone-200 dark:border-gray-700 rounded-xl mb-6">
+                <h3 class="text-xl font-semibold mb-2 text-stone-800 dark:text-stone-200">Present Perfect Continuous</h3>
+                <p class="text-sm text-stone-600 dark:text-stone-400 mb-4">Use this for actions that started in the recent past and are still happening (or just finished). It's perfect for talking about what you're reading "these days".</p>
+                <div class="bg-white dark:bg-gray-700/50 p-4 rounded-lg border-l-4 border-teal-400">
+                    <p class="italic text-stone-700 dark:text-stone-300">"What <strong class="text-teal-600 dark:text-teal-400">have you been reading</strong> recently?"</p>
+                    <p class="italic text-stone-700 dark:text-stone-300 mt-2">"I<strong class="text-teal-600 dark:text-teal-400">'ve been reading</strong> a fantasy series from an American author."</p>
+                </div>
+             </div>
+
+             <div class="p-6 bg-stone-100 dark:bg-gray-800 border border-stone-200 dark:border-gray-700 rounded-xl grammar-transformer">
+                <h3 class="text-xl font-semibold mb-2 text-stone-800 dark:text-stone-200">Grammar Transformer: Active vs. Passive Voice</h3>
+                <p class="text-sm text-stone-600 dark:text-stone-400 mb-4">We use the passive voice when the action is more important than who did it. Click the button to see the sentence transform!</p>
+                <div class="bg-white dark:bg-gray-700/50 p-4 rounded-lg">
+                    <div id="sentence-container" class="text-lg text-center font-medium h-12 flex items-center justify-center">
+                        <p class="sentence active" id="active-sentence">J.R.R. Tolkien <strong class="text-indigo-600 dark:text-indigo-400">wrote</strong> The Hobbit in 1937.</p>
+                        <p class="sentence opacity-0 absolute" id="passive-sentence">The Hobbit <strong class="text-rose-600 dark:text-rose-400">was written</strong> in 1937.</p>
+                    </div>
+                    <div class="text-center mt-3">
+                        <button id="transform-btn" class="px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg text-sm hover:bg-indigo-700 transition">Switch to Passive</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="practice" class="mb-10">
+            <h2 class="text-2xl font-semibold text-stone-900 dark:text-white mb-4">Check Your Knowledge</h2>
+            
+            <div class="bg-stone-100 dark:bg-gray-800/50 p-5 rounded-lg mb-4">
+                <p class="mb-2 text-lg">1. Choose the correct verb form: "The Harry Potter series ___ by J.K. Rowling."</p>
+                <div class="flex items-center space-x-4">
+                    <select id="q1-select" class="p-2 border rounded-md bg-white dark:bg-gray-700 border-stone-300 dark:border-gray-600">
+                        <option value="">-- select --</option>
+                        <option value="was written">was written</option>
+                        <option value="wrote">wrote</option>
+                        <option value="has been writing">has been writing</option>
+                    </select>
+                    <button id="q1-check-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Check</button>
+                    <p id="q1-feedback" class="font-semibold"></p>
+                </div>
+            </div>
+
+            <div class="bg-stone-100 dark:bg-gray-800/50 p-5 rounded-lg">
+                <p class="mb-2 text-lg">2. Write the correct verb form: "I ___ (read) a lot of mystery novels lately."</p>
+                <div class="flex items-center space-x-4">
+                    <input type="text" id="q2-input" class="p-2 border rounded-md bg-white dark:bg-gray-700 border-stone-300 dark:border-gray-600" placeholder="verb form">
+                    <button id="q2-check-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Check</button>
+                    <p id="q2-feedback" class="font-semibold"></p>
+                </div>
+            </div>
+        </section>
+
+        <section id="production">
+             <h2 class="text-2xl font-semibold text-stone-900 dark:text-white mb-4">Your Turn ✍️</h2>
+             <div id="production-container" class="bg-green-50 dark:bg-green-900/20 p-6 rounded-lg border border-green-200 dark:border-green-800">
+                <p class="mb-3 text-lg">Write a short recommendation for a book you have read. Try to use the passive voice and the present perfect continuous.</p>
+                <p class="text-sm text-stone-500 dark:text-stone-400 mb-3">Example: I've been reading a fantasy series. The first book was written in 2005. I recommend it!</p>
+                <textarea id="production-textarea" class="w-full p-3 border rounded-md h-24 bg-white dark:bg-gray-700 border-stone-300 dark:border-gray-600" placeholder="Write your recommendation here..."></textarea>
+                <button id="production-btn" class="mt-4 px-6 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700">I'm Done!</button>
+             </div>
+        </section>
+
+    </main>
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
+            authDomain: "elearning-e83cb.firebaseapp.com",
+            projectId: "elearning-e83cb",
+            storageBucket: "elearning-e83cb.appspot.com",
+            messagingSenderId: "25473938624",
+            appId: "1:25473938624:web:5b56738933543f32a7e925"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('user-email-nav').textContent = user.email;
+                const navAvatarContainer = document.getElementById('nav-avatar-container');
+                if (user.photoURL) {
+                   navAvatarContainer.innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
+                }
+            } else {
+                window.location.href = '/Login.html'; 
+            }
+        });
+        
+        // --- Navbar & Notification logic would go here ---
+
+        // --- Lesson-Specific Interactivity ---
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => card.addEventListener('click', (event) => { if (!event.target.closest('.speak-btn')) { card.classList.toggle('is-flipped'); } }));
+
+        const speakButtons = document.querySelectorAll('.speak-btn');
+        const synth = window.speechSynthesis;
+        speakButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.stopPropagation();
+                const textToSpeak = button.dataset.text;
+                if (synth.speaking) synth.cancel();
+                const utterance = new SpeechSynthesisUtterance(textToSpeak);
+                utterance.lang = 'en-US';
+                synth.speak(utterance);
+            });
+        });
+
+        // Grammar Transformer
+        const transformBtn = document.getElementById('transform-btn');
+        const activeSentence = document.getElementById('active-sentence');
+        const passiveSentence = document.getElementById('passive-sentence');
+        transformBtn.addEventListener('click', () => {
+            const isActive = activeSentence.classList.contains('active');
+            if (isActive) {
+                activeSentence.classList.remove('active');
+                activeSentence.classList.add('opacity-0', 'absolute');
+                passiveSentence.classList.remove('opacity-0', 'absolute');
+                transformBtn.textContent = 'Switch to Active';
+            } else {
+                activeSentence.classList.add('active');
+                activeSentence.classList.remove('opacity-0', 'absolute');
+                passiveSentence.classList.add('opacity-0', 'absolute');
+                transformBtn.textContent = 'Switch to Passive';
+            }
+        });
+
+        document.getElementById('q1-check-btn').addEventListener('click', () => {
+            const answer = document.getElementById('q1-select').value;
+            const feedbackEl = document.getElementById('q1-feedback');
+            if (answer === 'was written') {
+                feedbackEl.textContent = 'Correct! ✅';
+                feedbackEl.className = 'font-semibold text-green-600 dark:text-green-400';
+            } else {
+                feedbackEl.textContent = 'Not quite. Use the passive voice here.';
+                feedbackEl.className = 'font-semibold text-red-600 dark:text-red-400';
+            }
+        });
+
+        document.getElementById('q2-check-btn').addEventListener('click', () => {
+            const answer = document.getElementById('q2-input').value.trim().toLowerCase();
+             const feedbackEl = document.getElementById('q2-feedback');
+            if (answer === 'have been reading') {
+                feedbackEl.textContent = 'Excellent! ✅';
+                feedbackEl.className = 'font-semibold text-green-600 dark:text-green-400';
+            } else {
+                feedbackEl.textContent = 'Try again. Remember: I + have been + verb-ing.';
+                feedbackEl.className = 'font-semibold text-red-600 dark:text-red-400';
+            }
+        });
+
+        document.getElementById('production-btn').addEventListener('click', () => {
+            document.getElementById('production-container').innerHTML = `
+                <div class="text-center py-8">
+                    <h3 class="text-2xl font-bold text-green-800 dark:text-green-300">Great Recommendation! 🥳</h3>
+                    <p class="mt-2 text-lg text-stone-700 dark:text-stone-300">You did a wonderful job using the new grammar. Thanks for sharing!</p>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
