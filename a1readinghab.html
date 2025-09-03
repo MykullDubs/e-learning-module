@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A1 Lesson: My Reading Habits</title>
+    <title>A1 Lesson: My Reading Habits (Complete)</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -13,6 +13,36 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
+
+        /* Custom CSS for the 3D flip card effect */
+        .card {
+            perspective: 1000px; /* Gives the 3D effect */
+        }
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        /* The JS will add this class to flip the card */
+        .card.is-flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden; /* For Safari */
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            border-radius: 0.5rem; /* Corresponds to Tailwind's rounded-lg */
+        }
+        .card-back {
+            transform: rotateY(180deg);
+        }
+
         /* Style for smooth transitions on the accordion */
         .accordion-content {
             max-height: 0;
@@ -41,44 +71,92 @@
         </section>
 
         <section id="vocabulary" class="mb-10">
-            <h2 class="text-2xl font-semibold text-slate-900 mb-4">New Words</h2>
+            <h2 class="text-2xl font-semibold text-slate-900 mb-4">New Words (Flashcards)</h2>
+            <p class="text-slate-600 mb-6 -mt-2">Click on a card to flip it and see examples.</p>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 
-                <div class="bg-slate-50 p-4 rounded-lg shadow transition hover:shadow-md hover:-translate-y-1">
-                    <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-4.0.3&q=80&w=400" alt="A stack of books" class="rounded-md mb-3 h-40 w-full object-cover">
-                    <h3 class="text-xl font-bold">book</h3>
-                    <p class="text-slate-600 mt-1">I read a <strong class="font-semibold">book</strong>.</p>
-                    <button class="speak-btn mt-2 text-blue-600 hover:text-blue-800" data-text="book. I read a book.">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.858 15.858a5 5 0 01-2.828-7.072m9.9 9.9a1.5 1.5 0 01-2.122 0l-6.363-6.364a1.5 1.5 0 010-2.121l.707-.707a1.5 1.5 0 012.121 0l6.364 6.364a1.5 1.5 0 010 2.121l-.707.707z" /></svg>
-                        Listen
-                    </button>
+                <div class="card h-80 cursor-pointer group">
+                    <div class="card-inner shadow-md rounded-lg">
+                        <div class="card-front bg-slate-50 p-4 justify-between">
+                            <div>
+                                <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-4.0.3&q=80&w=400" alt="A stack of books" class="rounded-md mb-3 h-40 w-full object-cover">
+                                <h3 class="text-2xl font-bold text-slate-800">book</h3>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <button class="speak-btn text-blue-600 hover:text-blue-800" data-text="book">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.858 15.858a5 5 0 01-2.828-7.072m9.9 9.9a1.5 1.5 0 01-2.122 0l-6.363-6.364a1.5 1.5 0 010-2.121l.707-.707a1.5 1.5 0 012.121 0l6.364 6.364a1.5 1.5 0 010 2.121l-.707.707z" /></svg>
+                                    Listen
+                                </button>
+                                <span class="text-sm font-semibold text-slate-500 group-hover:text-blue-600">Flip Card ↻</span>
+                            </div>
+                        </div>
+                        <div class="card-back bg-blue-50 p-4">
+                            <h4 class="text-xl font-bold text-blue-900 mb-3 border-b border-blue-200 pb-2">Examples for "book"</h4>
+                            <ul class="space-y-3 text-slate-800">
+                                <li>I want to read <strong class="font-semibold">a new book</strong>.</li>
+                                <li><strong class="font-semibold">The book</strong> you told me about is very good.</li>
+                                <li>He <strong class="font-semibold">bought</strong> a book yesterday. <span class="text-xs bg-red-100 text-red-800 font-semibold px-2 py-0.5 rounded-full ml-1">Past Tense</span></li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="bg-slate-50 p-4 rounded-lg shadow transition hover:shadow-md hover:-translate-y-1">
-                    <img src="https://images.unsplash.com/photo-1621947081720-86970823577a?ixlib=rb-4.0.3&q=80&w=400" alt="A magazine on a table" class="rounded-md mb-3 h-40 w-full object-cover">
-                    <h3 class="text-xl font-bold">magazine</h3>
-                    <p class="text-slate-600 mt-1">He reads a <strong class="font-semibold">magazine</strong>.</p>
-                    <button class="speak-btn mt-2 text-blue-600 hover:text-blue-800" data-text="magazine. He reads a magazine.">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.858 15.858a5 5 0 01-2.828-7.072m9.9 9.9a1.5 1.5 0 01-2.122 0l-6.363-6.364a1.5 1.5 0 010-2.121l.707-.707a1.5 1.5 0 012.121 0l6.364 6.364a1.5 1.5 0 010 2.121l-.707.707z" /></svg>
-                        Listen
-                    </button>
+                <div class="card h-80 cursor-pointer group">
+                    <div class="card-inner shadow-md rounded-lg">
+                        <div class="card-front bg-slate-50 p-4 justify-between">
+                            <div>
+                                <img src="https://images.unsplash.com/photo-1621947081720-86970823577a?ixlib=rb-4.0.3&q=80&w=400" alt="A magazine on a table" class="rounded-md mb-3 h-40 w-full object-cover">
+                                <h3 class="text-2xl font-bold text-slate-800">magazine</h3>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <button class="speak-btn text-blue-600 hover:text-blue-800" data-text="magazine">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.858 15.858a5 5 0 01-2.828-7.072m9.9 9.9a1.5 1.5 0 01-2.122 0l-6.363-6.364a1.5 1.5 0 010-2.121l.707-.707a1.5 1.5 0 012.121 0l6.364 6.364a1.5 1.5 0 010 2.121l-.707.707z" /></svg>
+                                    Listen
+                                </button>
+                                <span class="text-sm font-semibold text-slate-500 group-hover:text-blue-600">Flip Card ↻</span>
+                            </div>
+                        </div>
+                        <div class="card-back bg-blue-50 p-4">
+                            <h4 class="text-xl font-bold text-blue-900 mb-3 border-b border-blue-200 pb-2">Examples for "magazine"</h4>
+                            <ul class="space-y-3 text-slate-800">
+                                <li>She buys <strong class="font-semibold">a magazine</strong> every week.</li>
+                                <li>Where is <strong class="font-semibold">the magazine</strong> about cars?</li>
+                                <li>I <strong class="font-semibold">read</strong> that magazine last night. <span class="text-xs bg-red-100 text-red-800 font-semibold px-2 py-0.5 rounded-full ml-1">Past Tense</span></li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="bg-slate-50 p-4 rounded-lg shadow transition hover:shadow-md hover:-translate-y-1">
-                    <img src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixlib=rb-4.0.3&q=80&w=400" alt="A quiet library" class="rounded-md mb-3 h-40 w-full object-cover">
-                    <h3 class="text-xl font-bold">quiet place</h3>
-                    <p class="text-slate-600 mt-1">She reads in a <strong class="font-semibold">quiet place</strong>.</p>
-                    <button class="speak-btn mt-2 text-blue-600 hover:text-blue-800" data-text="quiet place. She reads in a quiet place.">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.858 15.858a5 5 0 01-2.828-7.072m9.9 9.9a1.5 1.5 0 01-2.122 0l-6.363-6.364a1.5 1.5 0 010-2.121l.707-.707a1.5 1.5 0 012.121 0l6.364 6.364a1.5 1.5 0 010 2.121l-.707.707z" /></svg>
-                        Listen
-                    </button>
+                <div class="card h-80 cursor-pointer group">
+                    <div class="card-inner shadow-md rounded-lg">
+                        <div class="card-front bg-slate-50 p-4 justify-between">
+                            <div>
+                                <img src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixlib=rb-4.0.3&q=80&w=400" alt="A quiet library" class="rounded-md mb-3 h-40 w-full object-cover">
+                                <h3 class="text-2xl font-bold text-slate-800">library</h3>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <button class="speak-btn text-blue-600 hover:text-blue-800" data-text="library">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.858 15.858a5 5 0 01-2.828-7.072m9.9 9.9a1.5 1.5 0 01-2.122 0l-6.363-6.364a1.5 1.5 0 010-2.121l.707-.707a1.5 1.5 0 012.121 0l6.364 6.364a1.5 1.5 0 010 2.121l-.707.707z" /></svg>
+                                    Listen
+                                </button>
+                                <span class="text-sm font-semibold text-slate-500 group-hover:text-blue-600">Flip Card ↻</span>
+                            </div>
+                        </div>
+                        <div class="card-back bg-blue-50 p-4">
+                            <h4 class="text-xl font-bold text-blue-900 mb-3 border-b border-blue-200 pb-2">Examples for "library"</h4>
+                            <ul class="space-y-3 text-slate-800">
+                                <li>There is <strong class="font-semibold">a library</strong> near my house.</li>
+                                <li><strong class="font-semibold">The library</strong> is a very quiet place.</li>
+                                <li>We <strong class="font-semibold">went</strong> to the library on Saturday. <span class="text-xs bg-red-100 text-red-800 font-semibold px-2 py-0.5 rounded-full ml-1">Past Tense</span></li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <section id="grammar" class="mb-10">
-            <h2 class="text-2xl font-semibold text-slate-900 mb-4">Grammar Focus 💡</h2>
-            
+             <h2 class="text-2xl font-semibold text-slate-900 mb-4">Grammar Focus 💡</h2>
             <div class="p-6 bg-amber-50 border border-amber-200 rounded-lg">
                 <h3 class="text-xl font-semibold mb-3 text-amber-900">Prepositions of Time: IN, AT, ON</h3>
                 <div class="overflow-x-auto">
@@ -110,7 +188,6 @@
                     </table>
                 </div>
             </div>
-
             <div class="mt-6 p-6 bg-gradient-to-br from-indigo-50 to-purple-100 border border-indigo-200 rounded-lg">
                 <h3 class="text-xl font-semibold mb-4 text-indigo-900">Simple Present Verbs: The '-s' Rule</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 items-center">
@@ -125,6 +202,7 @@
                 </div>
             </div>
         </section>
+
         <section id="practice" class="mb-10">
             <h2 class="text-2xl font-semibold text-slate-900 mb-4">Check Your Knowledge</h2>
             
@@ -180,7 +258,6 @@
                             <li>🐉 I like to read <strong class="font-semibold">fantasy books</strong>.</li>
                             <li>📜 I like to read <strong class="font-semibold">history books</strong>.</li>
                             <li>💥 I like to read <strong class="font-semibold">comic books</strong>.</li>
-                            <li>💅 I like to read <strong class="font-semibold">magazines about fashion</strong>.</li>
                         </ul>
                     </div>
                 </div>
@@ -237,12 +314,26 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
+            // --- Flashcard Flip Logic ---
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('click', (event) => {
+                    if (!event.target.closest('.speak-btn')) {
+                        card.classList.toggle('is-flipped');
+                    }
+                });
+            });
+
             // --- Vocabulary Speech Synthesis ---
             const speakButtons = document.querySelectorAll('.speak-btn');
             const synth = window.speechSynthesis;
             speakButtons.forEach(button => {
-                button.addEventListener('click', () => {
+                button.addEventListener('click', (event) => {
+                    event.stopPropagation(); // Prevents card from flipping
                     const textToSpeak = button.dataset.text;
+                    if (synth.speaking) {
+                        synth.cancel();
+                    }
                     const utterance = new SpeechSynthesisUtterance(textToSpeak);
                     utterance.lang = 'en-US';
                     synth.speak(utterance);
@@ -300,21 +391,17 @@
                 accordion.addEventListener('click', () => {
                     const content = accordion.nextElementSibling;
                     const arrow = accordion.querySelector('.arrow');
-
                     if (content.style.maxHeight) {
-                        // Collapse accordion
                         content.style.maxHeight = null;
                         accordion.querySelector('span').textContent = 'See example answers';
                         arrow.textContent = '▼';
                     } else {
-                        // Expand accordion
                         content.style.maxHeight = content.scrollHeight + "px";
                         accordion.querySelector('span').textContent = 'Hide example answers';
                         arrow.textContent = '▲';
                     }
                 });
             });
-
 
             // --- Production Section Logic ---
             const productionContainer = document.getElementById('production-container');
