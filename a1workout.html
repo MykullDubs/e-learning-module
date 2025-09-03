@@ -1,1 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A1 Lesson: My Workout Routine</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        .card { perspective: 1000px; }
+        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
+        .card.is-flipped .card-inner { transform: rotateY(180deg); }
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; display: flex; flex-direction: column; border-radius: 0.5rem; }
+        .card-back { transform: rotateY(180deg); }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-in-out; }
+        .vowel-input {
+            width: 2rem;
+            height: 2.5rem;
+            text-align: center;
+            font-size: 1.5rem;
+            border-radius: 0.25rem;
+            border: 2px solid #cbd5e1; /* slate-300 */
+        }
+        .vowel-input:focus {
+            outline: none;
+            border-color: #4f46e5; /* indigo-600 */
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-slate-100 font-sans text-slate-800">
 
+    <main class="max-w-4xl mx-auto my-8 p-6 sm:p-10 bg-white rounded-2xl shadow-lg">
+
+        <header class="border-b pb-4 mb-6">
+            <div class="flex items-center justify-between">
+                <h1 class="text-3xl sm:text-4xl font-bold text-slate-900">My Workout Routine</h1>
+                <span class="bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-1 rounded-full">CEFR Level: A1</span>
+            </div>
+            <p class="mt-2 text-lg text-slate-600">Learn to talk about exercise using the simple present and 'can'.</p>
+        </header>
+
+        <section id="introduction" class="mb-10">
+            <h2 class="text-2xl font-semibold text-slate-900 mb-3">Let's Warm Up!</h2>
+            <p class="text-base leading-relaxed mb-4">
+                Do you like to exercise? It's a great habit! Let's learn a new word. Can you spell **exercising**? Fill in the missing vowels (a, e, i, o, u).
+            </p>
+            <div class="bg-slate-50 p-5 rounded-lg">
+                <div id="spelling-activity" class="flex items-center justify-center space-x-1">
+                    <span class="text-4xl font-bold">E</span>
+                    <span class="text-4xl font-bold">x</span>
+                    <input type="text" maxlength="1" class="vowel-input" data-correct="e">
+                    <span class="text-4xl font-bold">r</span>
+                    <span class="text-4xl font-bold">c</span>
+                    <input type="text" maxlength="1" class="vowel-input" data-correct="i">
+                    <span class="text-4xl font-bold">s</span>
+                    <input type="text" maxlength="1" class="vowel-input" data-correct="i">
+                    <span class="text-4xl font-bold">n</span>
+                    <span class="text-4xl font-bold">g</span>
+                </div>
+                <div class="text-center mt-4">
+                    <button id="spelling-check-btn" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Check Spelling</button>
+                    <p id="spelling-feedback" class="font-semibold mt-2"></p>
+                </div>
+            </div>
+        </section>
+
+        <section id="vocabulary" class="mb-10">
+            <h2 class="text-2xl font-semibold text-slate-900 mb-4">Workout Words</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <div class="card h-80 cursor-pointer group">
+                    <div class="card-inner shadow-md rounded-lg">
+                        <div class="card-front bg-slate-50 p-4 justify-between">
+                            <div>
+                                <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-4.0.3&q=80&w=400" alt="Inside a gym" class="rounded-md mb-3 h-40 w-full object-cover">
+                                <h3 class="text-2xl font-bold text-slate-800">gym</h3>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <button class="speak-btn text-blue-600 hover:text-blue-800" data-text="gym"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.858 15.858a5 5 0 01-2.828-7.072m9.9 9.9a1.5 1.5 0 01-2.122 0l-6.363-6.364a1.5 1.5 0 010-2.121l.707-.707a1.5 1.5 0 012.121 0l6.364 6.364a1.5 1.5 0 010 2.121l-.707.707z" /></svg> Listen</button>
+                                <span class="text-sm font-semibold text-slate-500 group-hover:text-blue-600">Flip Card ↻</span>
+                            </div>
+                        </div>
+                        <div class="card-back bg-blue-50 p-4">
+                            <h4 class="text-xl font-bold text-blue-900 mb-3 border-b border-blue-200 pb-2">Example</h4>
+                            <p class="text-slate-800">I go to the <strong class="font-semibold">gym</strong> three times a week.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card h-80 cursor-pointer group">
+                    <div class="card-inner shadow-md rounded-lg">
+                        <div class="card-front bg-slate-50 p-4 justify-between">
+                            <div>
+                                <img src="https://images.unsplash.com/photo-1486250233213-3d0f19520a23?ixlib=rb-4.0.3&q=80&w=400" alt="Person running" class="rounded-md mb-3 h-40 w-full object-cover">
+                                <h3 class="text-2xl font-bold text-slate-800">run</h3>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <button class="speak-btn text-blue-600 hover:text-blue-800" data-text="run"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.858 15.858a5 5 0 01-2.828-7.072m9.9 9.9a1.5 1.5 0 01-2.122 0l-6.363-6.364a1.5 1.5 0 010-2.121l.707-.707a1.5 1.5 0 012.121 0l6.364 6.364a1.5 1.5 0 010 2.121l-.707.707z" /></svg> Listen</button>
+                                <span class="text-sm font-semibold text-slate-500 group-hover:text-blue-600">Flip Card ↻</span>
+                            </div>
+                        </div>
+                        <div class="card-back bg-blue-50 p-4">
+                            <h4 class="text-xl font-bold text-blue-900 mb-3 border-b border-blue-200 pb-2">Example</h4>
+                            <p class="text-slate-800">She <strong class="font-semibold">runs</strong> in the park every morning.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card h-80 cursor-pointer group">
+                    <div class="card-inner shadow-md rounded-lg">
+                        <div class="card-front bg-slate-50 p-4 justify-between">
+                            <div>
+                                <img src="https://images.unsplash.com/photo-1581009137042-c552e485697a?ixlib=rb-4.0.3&q=80&w=400" alt="Person lifting weights" class="rounded-md mb-3 h-40 w-full object-cover">
+                                <h3 class="text-2xl font-bold text-slate-800">lift weights</h3>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <button class="speak-btn text-blue-600 hover:text-blue-800" data-text="lift weights"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.858 15.858a5 5 0 01-2.828-7.072m9.9 9.9a1.5 1.5 0 01-2.122 0l-6.363-6.364a1.5 1.5 0 010-2.121l.707-.707a1.5 1.5 0 012.121 0l6.364 6.364a1.5 1.5 0 010 2.121l-.707.707z" /></svg> Listen</button>
+                                <span class="text-sm font-semibold text-slate-500 group-hover:text-blue-600">Flip Card ↻</span>
+                            </div>
+                        </div>
+                        <div class="card-back bg-blue-50 p-4">
+                            <h4 class="text-xl font-bold text-blue-900 mb-3 border-b border-blue-200 pb-2">Example</h4>
+                            <p class="text-slate-800">They <strong class="font-semibold">lift weights</strong> to get strong.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="grammar" class="mb-10">
+             <h2 class="text-2xl font-semibold text-slate-900 mb-4">Grammar Focus 💪</h2>
+            <div class="p-6 bg-amber-50 border border-amber-200 rounded-lg">
+                <h3 class="text-xl font-semibold mb-3 text-amber-900">Simple Present for Routines</h3>
+                <p class="mb-4 text-slate-700">Use this for habits and actions you do regularly.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-white/70 p-4 rounded-md border"><code class="font-mono bg-slate-200 px-2 py-1 rounded">I / You / We / They</code> + <strong class="text-amber-700">run</strong></div>
+                    <div class="bg-white/70 p-4 rounded-md border"><code class="font-mono bg-slate-200 px-2 py-1 rounded">He / She / It</code> + <strong class="text-amber-700">runs</strong></div>
+                </div>
+            </div>
+            <div class="mt-6 p-6 bg-indigo-50 border border-indigo-200 rounded-lg">
+                <h3 class="text-xl font-semibold mb-3 text-indigo-900">Ability with 'Can' / 'Can't'</h3>
+                <p class="mb-4 text-slate-700">Use this to talk about what you are able to do. The verb form does not change.</p>
+                <div class="space-y-2">
+                   <p><strong class="text-green-600">(+)</strong> I <strong class="font-semibold">can</strong> lift 50 KG.</p>
+                   <p><strong class="text-red-600">(-)</strong> He <strong class="font-semibold">can't</strong> run 10 kilometers.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="practice" class="mb-10">
+            <h2 class="text-2xl font-semibold text-slate-900 mb-4">Check Your Knowledge</h2>
+            <div class="bg-slate-50 p-5 rounded-lg mb-4">
+                <p class="mb-2 text-lg">1. Write the correct verb form: He ___ (go) to the gym every day.</p>
+                <div class="flex items-center space-x-4">
+                    <input type="text" id="q1-input" class="p-2 border rounded-md" placeholder="verb form">
+                    <button id="q1-check-btn" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Check</button>
+                    <p id="q1-feedback" class="font-semibold"></p>
+                </div>
+            </div>
+            <div class="bg-slate-50 p-5 rounded-lg">
+                <p class="mb-2 text-lg">2. Choose the correct word: Maria is very strong. She ___ lift 100 KG.</p>
+                <div class="flex items-center space-x-4">
+                     <select id="q2-select" class="p-2 border rounded-md">
+                        <option value="">-- select --</option>
+                        <option value="can">can</option>
+                        <option value="can't">can't</option>
+                    </select>
+                    <button id="q2-check-btn" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Check</button>
+                    <p id="q2-feedback" class="font-semibold"></p>
+                </div>
+            </div>
+        </section>
+
+        <section id="discussion" class="mb-10">
+            <h2 class="text-2xl font-semibold text-slate-900 mb-4">Workout Numbers & Stats 📊</h2>
+            <div class="space-y-6">
+                <div class="bg-slate-50 p-5 rounded-lg">
+                    <div class="font-semibold text-lg text-slate-800">Q: How often do you run?</div>
+                    <button class="accordion-toggle mt-3 text-blue-600 font-semibold flex items-center space-x-1"><span>See example answers</span><span class="arrow">▼</span></button>
+                    <div class="accordion-content">
+                        <ul class="mt-4 space-y-2 text-slate-700 border-t pt-4">
+                            <li>➡️ I run <strong class="font-semibold">three times a week</strong>.</li>
+                            <li>➡️ I go to the gym <strong class="font-semibold">every day</strong>.</li>
+                            <li>➡️ I never exercise.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="bg-slate-50 p-5 rounded-lg">
+                    <div class="font-semibold text-lg text-slate-800">Q: How much can you bench press?</div>
+                    <button class="accordion-toggle mt-3 text-blue-600 font-semibold flex items-center space-x-1"><span>See example answers</span><span class="arrow">▼</span></button>
+                    <div class="accordion-content">
+                        <ul class="mt-4 space-y-2 text-slate-700 border-t pt-4">
+                            <li>➡️ I can bench <strong class="font-semibold">90 KG</strong> for <strong class="font-semibold">3 sets</strong> of <strong class="font-semibold">10 reps</strong>.</li>
+                            <li>➡️ I can lift <strong class="font-semibold">20 KG</strong>.</li>
+                            <li>➡️ I'm not sure. I don't lift weights.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="production">
+             <h2 class="text-2xl font-semibold text-slate-900 mb-4">Your Turn ✍️</h2>
+             <div id="production-container" class="bg-green-50 p-6 rounded-lg border border-green-200">
+                <p class="mb-3 text-lg">Write 2 sentences about your exercise routine.</p>
+                <p class="text-sm text-slate-500 mb-3">Example: I run two times a week. I can run 5 kilometers.</p>
+                <textarea id="production-textarea" class="w-full p-3 border rounded-md h-24" placeholder="Write your sentences here..."></textarea>
+                <button id="production-btn" class="mt-4 px-6 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700">I'm Done!</button>
+             </div>
+        </section>
+    </main>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- Spelling Activity ---
+            const spellingInputs = document.querySelectorAll('#spelling-activity .vowel-input');
+            const spellingCheckBtn = document.getElementById('spelling-check-btn');
+            const spellingFeedback = document.getElementById('spelling-feedback');
+            spellingCheckBtn.addEventListener('click', () => {
+                let isCorrect = true;
+                spellingInputs.forEach(input => {
+                    if (input.value.toLowerCase() !== input.dataset.correct) {
+                        isCorrect = false;
+                        input.style.borderColor = '#ef4444'; // red-500
+                    } else {
+                        input.style.borderColor = '#22c55e'; // green-500
+                    }
+                });
+                if (isCorrect) {
+                    spellingFeedback.textContent = 'Perfect! You spelled it right. ✅';
+                    spellingFeedback.className = 'font-semibold mt-2 text-green-600';
+                } else {
+                    spellingFeedback.textContent = 'Not quite, try again!';
+                    spellingFeedback.className = 'font-semibold mt-2 text-red-600';
+                }
+            });
+
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('click', (event) => {
+                    if (!event.target.closest('.speak-btn')) {
+                        card.classList.toggle('is-flipped');
+                    }
+                });
+            });
+
+            const speakButtons = document.querySelectorAll('.speak-btn');
+            const synth = window.speechSynthesis;
+            speakButtons.forEach(button => {
+                button.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    const textToSpeak = button.dataset.text;
+                    if (synth.speaking) { synth.cancel(); }
+                    const utterance = new SpeechSynthesisUtterance(textToSpeak);
+                    utterance.lang = 'en-US';
+                    synth.speak(utterance);
+                });
+            });
+
+            // --- Practice Question 1 Logic ---
+            const q1Input = document.getElementById('q1-input');
+            const q1CheckBtn = document.getElementById('q1-check-btn');
+            const q1Feedback = document.getElementById('q1-feedback');
+            q1CheckBtn.addEventListener('click', () => {
+                if (q1Input.value.trim().toLowerCase() === 'goes') {
+                    q1Feedback.textContent = 'Correct! ✅';
+                    q1Feedback.className = 'font-semibold text-green-600';
+                } else {
+                    q1Feedback.textContent = 'Try again. Remember: He/She/It + verb-s.';
+                    q1Feedback.className = 'font-semibold text-red-600';
+                }
+            });
+
+            // --- Practice Question 2 Logic ---
+            const q2Select = document.getElementById('q2-select');
+            const q2CheckBtn = document.getElementById('q2-check-btn');
+            const q2Feedback = document.getElementById('q2-feedback');
+            q2CheckBtn.addEventListener('click', () => {
+                if (q2Select.value === 'can') {
+                    q2Feedback.textContent = 'Excellent! ✅';
+                    q2Feedback.className = 'font-semibold text-green-600';
+                } else {
+                    q2Feedback.textContent = 'Not quite. "Strong" means she has the ability.';
+                    q2Feedback.className = 'font-semibold text-red-600';
+                }
+            });
+            
+            const accordions = document.querySelectorAll('.accordion-toggle');
+            accordions.forEach(accordion => {
+                accordion.addEventListener('click', () => {
+                    const content = accordion.nextElementSibling;
+                    const arrow = accordion.querySelector('.arrow');
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                        accordion.querySelector('span').textContent = 'See example answers';
+                        arrow.textContent = '▼';
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                        accordion.querySelector('span').textContent = 'Hide example answers';
+                        arrow.textContent = '▲';
+                    }
+                });
+            });
+
+            const productionContainer = document.getElementById('production-container');
+            const productionBtn = document.getElementById('production-btn');
+            productionBtn.addEventListener('click', () => {
+                productionContainer.innerHTML = `
+                    <div class="text-center py-8">
+                        <h3 class="text-2xl font-bold text-green-800">Great Job! 🥳</h3>
+                        <p class="mt-2 text-lg text-slate-700">You finished your workout. Keep practicing!</p>
+                    </div>
+                `;
+            });
+        });
+    </script>
+</body>
+</html>
