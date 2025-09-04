@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A1 Lesson: What Do You Like to Watch? - Golden Fellows English</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400&family=Special+Elite&display=swap" rel="stylesheet">
+
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    
+    <style>
+        body { 
+            font-family: 'Source Serif Pro', serif;
+            background-color: #F7F5F2;
+            background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23DCD9D4" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+        }
+        .dark body {
+            background-color: #1a202c;
+            background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%232D3748" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+        }
+        .font-brand { font-family: 'Source Serif Pro', serif; }
+        .font-typewriter { font-family: 'Special Elite', monospace; }
+        .bg-paper {
+            background-color: #ffffff;
+            background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239C92AC' fill-opacity='0.1' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E");
+        }
+        .dark .bg-paper { background-color: #E2E8F0; }
+        .card { perspective: 1000px; }
+        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
+        .card.is-flipped .card-inner { transform: rotateY(180deg); }
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; display: flex; flex-direction: column; border-radius: 1rem; }
+        .card-back { transform: rotateY(180deg); }
+    </style>
+</head>
+<body class="text-gray-800 dark:text-gray-200 antialiased">
+
+    <header class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-sm border-b border-stone-200 dark:border-gray-700 sticky top-0 z-40">
+        <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
+            <a href="#" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
+            <button id="theme-toggle" class="p-2 rounded-md hover:bg-stone-100 dark:hover:bg-gray-700">
+                <svg id="theme-toggle-light-icon" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                <svg id="theme-toggle-dark-icon" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+            </button>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl font-brand">
+        <div class="bg-white/50 dark:bg-gray-800/50 backdrop-blur-lg p-6 sm:p-10 rounded-2xl shadow-xl border border-stone-200/50 dark:border-gray-700/50">
+
+            <header class="border-b border-stone-200 dark:border-gray-700 pb-4 mb-8">
+                <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">What Do You Like to Watch?</h1>
+                <div class="flex items-center gap-2 mt-3">
+                    <span class="text-xs font-bold px-3 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 border border-blue-200 dark:border-blue-700">A1</span>
+                    <span class="text-xs font-semibold px-3 py-1 rounded-full bg-stone-100 text-stone-800 dark:bg-gray-900/50 dark:text-stone-300 border border-stone-200 dark:border-gray-700">Hobbies</span>
+                </div>
+            </header>
+
+            <section id="introduction" class="mb-10">
+                <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-3">Talking About TV Shows</h2>
+                <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                    Watching TV is a popular hobby. How can you talk about the shows you enjoy? This lesson will teach you the basic words and grammar to share your favorites.
+                </p>
+            </section>
+            <hr class="my-10 border-stone-200 dark:border-gray-700">
+
+            <section id="vocabulary" class="mb-10">
+                <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">TV Show Genres</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="card h-96 cursor-pointer group">
+                        <div class="card-inner">
+                            <div class="card-front bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-stone-200/80 dark:border-gray-700/80 justify-between">
+                                <div>
+                                    <img src="https://images.unsplash.com/photo-1574360378693-3503f13a7343?ixlib=rb-4.0.3&q=80&w=400" alt="People laughing watching a comedy" class="rounded-xl mb-4 h-48 w-full object-cover">
+                                    <h3 class="text-2xl font-bold">comedy</h3>
+                                </div>
+                                <span class="text-sm font-semibold text-stone-500 dark:text-stone-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 text-right">Flip Card ↻</span>
+                            </div>
+                            <div class="card-back bg-paper p-6 rounded-2xl shadow-lg border border-stone-300 dark:border-gray-600">
+                                <p class="font-typewriter text-lg text-gray-900">A **comedy** is a funny show that makes you laugh.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card h-96 cursor-pointer group">
+                        <div class="card-inner">
+                             <div class="card-front bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-stone-200/80 dark:border-gray-700/80 justify-between">
+                                <div>
+                                    <img src="https://images.unsplash.com/photo-1626814026339-4134b414b33a?ixlib=rb-4.0.3&q=80&w=400" alt="Serious actors in a drama scene" class="rounded-xl mb-4 h-48 w-full object-cover">
+                                    <h3 class="text-2xl font-bold">drama</h3>
+                                </div>
+                                <span class="text-sm font-semibold text-stone-500 dark:text-stone-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 text-right">Flip Card ↻</span>
+                            </div>
+                             <div class="card-back bg-paper p-6 rounded-2xl shadow-lg border border-stone-300 dark:border-gray-600">
+                                 <p class="font-typewriter text-lg text-gray-900">A **drama** is a serious show with realistic characters and stories.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="vocabulary-quiz" class="mb-10">
+                <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Vocabulary Quiz</h2>
+                <div class="bg-white dark:bg-gray-800 p-5 rounded-xl border border-stone-200 dark:border-gray-700">
+                    <p class="mb-3 text-lg">1. A show that is funny is a ___.</p>
+                    <select id="q1-vocab" class="w-full p-2 border border-stone-300 dark:border-gray-600 rounded-md bg-transparent">
+                        <option value="">-- select a genre --</option>
+                        <option value="drama">drama</option>
+                        <option value="comedy">comedy</option>
+                    </select>
+                    <p id="q1-vocab-feedback" class="font-semibold text-sm mt-2 h-5"></p>
+                </div>
+            </section>
+            <hr class="my-10 border-stone-200 dark:border-gray-700">
+
+            <section id="grammar" class="mb-10">
+                <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Grammar Focus 📺</h2>
+                <div class="bg-stone-50 dark:bg-gray-800/50 p-6 rounded-2xl border border-stone-200 dark:border-gray-700">
+                    <h3 class="text-xl font-semibold mb-3 text-stone-800 dark:text-stone-200">Expressing Preferences with 'Like'</h3>
+                    <p class="mb-4 text-gray-600 dark:text-gray-400">You can use **like + to watch** or **like + watching**. At this level, they mean the same thing!</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-white/70 dark:bg-gray-900/40 p-4 rounded-lg">
+                            <h4 class="font-semibold">like + to watch</h4>
+                            <p>I **like to watch** comedies.</p>
+                            <p>He **likes to watch** dramas.</p>
+                        </div>
+                        <div class="bg-white/70 dark:bg-gray-900/40 p-4 rounded-lg">
+                            <h4 class="font-semibold">like + watching</h4>
+                            <p>I **like watching** comedies.</p>
+                            <p>He **likes watching** dramas.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="grammar-quiz" class="mb-10">
+                <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Grammar Quiz</h2>
+                <div class="bg-white dark:bg-gray-800 p-5 rounded-xl border border-stone-200 dark:border-gray-700">
+                    <p class="mb-3 text-lg">1. Complete the sentence: "She ___ dramas on the weekend."</p>
+                    <select id="q1-grammar" class="w-full p-2 border border-stone-300 dark:border-gray-600 rounded-md bg-transparent">
+                        <option value="">-- select --</option>
+                        <option value="like watch">like watch</option>
+                        <option value="likes to watch">likes to watch</option>
+                        <option value="likes watch">likes watch</option>
+                    </select>
+                    <p id="q1-grammar-feedback" class="font-semibold text-sm mt-2 h-5"></p>
+                </div>
+            </section>
+            <hr class="my-10 border-stone-200 dark:border-gray-700">
+            
+            <section id="speaking-task">
+                 <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Your Speaking Task 🎙️</h2>
+                 <div id="recording-container" class="bg-indigo-50 dark:bg-indigo-900/30 p-6 rounded-2xl border border-indigo-200 dark:border-indigo-700">
+                    <div id="prompt-section">
+                        <p class="mb-4 text-lg text-gray-800 dark:text-gray-200">Prepare your answer to the following questions. When you are ready, click the button to record your answer for your instructor.</p>
+                        <div class="font-brand text-gray-600 dark:text-gray-300 p-4 bg-white/50 dark:bg-gray-800/50 rounded-lg">
+                            <p class="font-semibold">"What do you like to watch? How often do you watch TV?"</p>
+                        </div>
+                        <button id="record-btn" class="mt-6 w-full px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-colors">
+                            Start Recording
+                        </button>
+                    </div>
+                    <div id="feedback-section" class="hidden text-center">
+                        <h3 class="text-xl font-bold text-indigo-900 dark:text-indigo-200">Great job!</h3>
+                        <p class="mt-2 text-gray-700 dark:text-gray-300">Your recording has been submitted. Your instructor will provide feedback soon.</p>
+                    </div>
+                 </div>
+            </section>
+        </div>
+    </main>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const lightIcon = document.getElementById('theme-toggle-light-icon');
+            const darkIcon = document.getElementById('theme-toggle-dark-icon');
+            if (localStorage.getItem('theme') === 'dark') {
+                lightIcon.classList.add('hidden');
+                darkIcon.classList.remove('hidden');
+            }
+            themeToggleBtn.addEventListener('click', () => {
+                document.documentElement.classList.toggle('dark');
+                lightIcon.classList.toggle('hidden');
+                darkIcon.classList.toggle('hidden');
+                localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+            });
+
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => card.addEventListener('click', (e) => {
+                card.classList.toggle('is-flipped');
+            }));
+            
+            // --- Vocabulary Quiz Logic ---
+            const q1Vocab = document.getElementById('q1-vocab');
+            const q1VocabFeedback = document.getElementById('q1-vocab-feedback');
+            q1Vocab.addEventListener('change', () => {
+                if (q1Vocab.value === 'comedy') {
+                    q1VocabFeedback.textContent = 'Correct! Comedies are funny. ✅';
+                    q1VocabFeedback.className = 'font-semibold text-sm mt-2 h-5 text-green-600 dark:text-green-400';
+                } else if (q1Vocab.value === 'drama') {
+                    q1VocabFeedback.textContent = 'Not quite. Dramas are usually serious.';
+                    q1VocabFeedback.className = 'font-semibold text-sm mt-2 h-5 text-red-600 dark:text-red-400';
+                } else {
+                    q1VocabFeedback.textContent = '';
+                }
+            });
+
+            // --- Grammar Quiz Logic ---
+            const q1Grammar = document.getElementById('q1-grammar');
+            const q1GrammarFeedback = document.getElementById('q1-grammar-feedback');
+            q1Grammar.addEventListener('change', () => {
+                if (q1Grammar.value === 'likes to watch') {
+                    q1GrammarFeedback.textContent = 'Perfect! "likes" for "she", and "to watch" is correct. ✅';
+                    q1GrammarFeedback.className = 'font-semibold text-sm mt-2 h-5 text-green-600 dark:text-green-400';
+                } else {
+                    q1GrammarFeedback.textContent = 'Check the verb form for "She".';
+                    q1GrammarFeedback.className = 'font-semibold text-sm mt-2 h-5 text-red-600 dark:text-red-400';
+                }
+            });
+
+            // --- Recording Activity Logic ---
+            const recordBtn = document.getElementById('record-btn');
+            const promptSection = document.getElementById('prompt-section');
+            const feedbackSection = document.getElementById('feedback-section');
+            recordBtn.addEventListener('click', () => {
+                // In a real application, this would trigger the MediaRecorder API.
+                // For this mockup, we will simulate the submission.
+                promptSection.classList.add('hidden');
+                feedbackSection.classList.remove('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
