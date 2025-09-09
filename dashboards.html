@@ -28,44 +28,15 @@
             background-color: #1a202c;
         }
         .font-brand { font-family: 'Source Serif Pro', serif; }
-        .content-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeIn 0.5s ease-out forwards;
-        }
-        @keyframes fadeIn {
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .content-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-        .tab-btn {
-            transition: color 0.2s ease, border-color 0.2s ease;
-        }
     </style>
 </head>
-<body class="text-gray-800 dark:text-gray-200 antialiased">
+<body class="text-gray-900 dark:text-gray-200 antialiased">
 
     <header class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-sm border-b border-stone-200 dark:border-gray-700 sticky top-0 z-40">
         <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
-            <a href="#" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
+            <a href="dashboard.html" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
             <div class="flex items-center gap-4">
-                <div id="level-filter-wrapper" class="relative">
-                    <button id="level-filter-btn" class="flex items-center gap-2 p-2 rounded-md hover:bg-stone-100 dark:hover:bg-gray-700">
-                        <span id="filter-btn-text" class="text-sm font-semibold font-brand">All Levels</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-stone-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                    </button>
-                    <div id="level-filter-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden font-brand z-10">
-                        <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="all">All Levels</a>
-                        <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="A1">A1 - Beginner</a>
-                        <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="A2">A2 - Elementary</a>
-                        <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="B1">B1 - Intermediate</a>
-                        <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="B2">B2 - Upper Intermediate</a>
-                    </div>
-                </div>
-                
+                <a href="lesson-library.html" class="text-sm font-semibold hover:text-indigo-600 dark:hover:text-indigo-400">Content Library</a>
                 <div class="relative">
                     <button id="profile-btn" class="flex items-center gap-3">
                          <span id="user-level-badge" class="hidden text-xs font-bold px-2 py-0.5 rounded-full"></span>
@@ -74,12 +45,8 @@
                         </div>
                     </button>
                     <div id="profile-dropdown" class="hidden absolute font-brand right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden z-10">
-                        <div class="px-4 py-2 text-sm text-stone-700 dark:text-stone-200">
-                            <p class="font-semibold">Signed in as</p>
-                            <p id="user-email-nav" class="truncate"></p>
-                        </div>
+                        <div class="px-4 py-2 text-sm text-stone-700 dark:text-stone-200"><p class="font-semibold">Signed in as</p><p id="user-email-nav" class="truncate"></p></div>
                         <div class="border-t border-stone-200 dark:border-gray-600"></div>
-                        <a href="dashboard.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Dashboard</a>
                         <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Settings</a>
                         <div class="border-t border-stone-200 dark:border-gray-600"></div>
                         <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100 dark:hover:bg-gray-700">Log Out</button>
@@ -90,21 +57,79 @@
     </header>
 
     <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-7xl font-brand">
-        <header class="mb-8 text-center">
-            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Content Library</h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-3 text-lg max-w-2xl mx-auto">Select a lesson to begin or review a grammar guide.</p>
+        <header class="mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Welcome back, <span id="user-name"></span>!</h1>
+            <p class="text-gray-600 dark:text-gray-400 mt-3 text-lg">Let's continue your journey to fluency today, Monday, September 8, 2025.</p>
         </header>
-        
-        <div class="border-b border-stone-200 dark:border-gray-700 mb-8">
-            <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-                <button id="tab-lessons" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-semibold text-lg border-indigo-500 text-indigo-600 dark:text-indigo-400" data-target="lessons-pane">Lessons</button>
-                <button id="tab-guides" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-semibold text-lg border-transparent text-stone-500 hover:text-stone-700 hover:border-stone-300 dark:text-stone-400 dark:hover:text-stone-200 dark:hover:border-stone-500" data-target="guides-pane">Grammar Guides</button>
-            </nav>
-        </div>
 
-        <div>
-            <div id="lessons-pane" class="tab-pane"><div id="lessons-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div></div>
-            <div id="guides-pane" class="tab-pane hidden"><div id="guides-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div></div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <div class="lg:col-span-2 space-y-8">
+                
+                <section id="continue-learning-section">
+                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Pick Up Where You Left Off</h2>
+                    <a href="#" id="continue-learning-card" class="block bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-stone-200 dark:border-gray-700 hover:border-indigo-500 dark:hover:border-indigo-400 transition-colors duration-300">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-900 dark:text-white">Optimizing Your Workout</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">B1 · Working Out</p>
+                            </div>
+                            <span class="text-indigo-600 dark:text-indigo-400 font-semibold">Continue →</span>
+                        </div>
+                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mt-4">
+                          <div class="bg-indigo-600 h-2.5 rounded-full" style="width: 45%"></div>
+                        </div>
+                    </a>
+                </section>
+
+                <section>
+                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Recommended For You</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <a href="b1readinghab.html" class="block bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 rounded-2xl shadow-md border border-stone-200/50 dark:border-gray-700/50 hover:shadow-xl transition-shadow">
+                            <h3 class="font-semibold text-gray-900 dark:text-white">Giving a Book Recommendation</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">B1 · Reading</p>
+                        </a>
+                        <a href="b1-some-other-lesson.html" class="block bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 rounded-2xl shadow-md border border-stone-200/50 dark:border-gray-700/50 hover:shadow-xl transition-shadow">
+                            <h3 class="font-semibold text-gray-900 dark:text-white">Making Future Plans</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">B1 · Grammar</p>
+                        </a>
+                    </div>
+                </section>
+            </div>
+
+            <aside class="space-y-8">
+
+                <section>
+                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">My Stats</h2>
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-stone-200 dark:border-gray-700 space-y-4">
+                        <div class="flex items-center">
+                            <div class="p-3 bg-green-100 dark:bg-green-900/50 rounded-lg mr-4"><svg class="h-6 w-6 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+                            <div>
+                                <p class="font-bold text-xl">12</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Lessons Completed</p>
+                            </div>
+                        </div>
+                         <div class="flex items-center">
+                            <div class="p-3 bg-yellow-100 dark:bg-yellow-900/50 rounded-lg mr-4"><svg class="h-6 w-6 text-yellow-600 dark:text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div>
+                            <div>
+                                <p class="font-bold text-xl">4 hours</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Study Time This Week</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Instructor Feedback</h2>
+                     <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-stone-200 dark:border-gray-700 space-y-4">
+                         <a href="#" class="block p-4 rounded-lg bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:hover:bg-indigo-900/50">
+                            <p class="font-semibold">New feedback on: <b>A1 Speaking Task</b></p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Received: September 7, 2025</p>
+                         </a>
+                         <p class="text-center text-sm text-gray-500 dark:text-gray-400">No other new feedback.</p>
+                     </div>
+                </section>
+            </aside>
         </div>
     </main>
 
@@ -135,24 +160,35 @@
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
+                // Populate Navbar
                 document.getElementById('user-email-nav').textContent = user.email;
                 if (user.photoURL) {
                    document.getElementById('nav-avatar-container').innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
                 }
                 
-                // Fetch and display user's level badge
+                // Fetch user data from Firestore to populate dashboard
                 try {
                     const userDocRef = doc(db, "users", user.uid);
                     const docSnap = await getDoc(userDocRef);
-                    if (docSnap.exists() && docSnap.data().cefrLevel) {
-                        const level = docSnap.data().cefrLevel;
-                        const badge = document.getElementById('user-level-badge');
-                        badge.textContent = level;
-                        badge.className = `text-xs font-bold px-2 py-0.5 rounded-full ${levelColors[level]}`;
-                        badge.classList.remove('hidden');
+
+                    if (docSnap.exists()) {
+                        const userData = docSnap.data();
+                        
+                        // Populate welcome message
+                        const displayName = userData.displayName || user.email.split('@')[0];
+                        document.getElementById('user-name').textContent = displayName;
+
+                        // Populate level badge
+                        if (userData.cefrLevel) {
+                            const level = userData.cefrLevel;
+                            const badge = document.getElementById('user-level-badge');
+                            badge.textContent = level;
+                            badge.className = `text-xs font-bold px-2 py-0.5 rounded-full ${levelColors[level]}`;
+                            badge.classList.remove('hidden');
+                        }
                     }
                 } catch (error) {
-                    console.error("Error fetching user level:", error);
+                    console.error("Error fetching user data:", error);
                 }
 
             } else {
@@ -160,18 +196,13 @@
             }
         });
         
+        // --- Navbar dropdown logic ---
         const profileBtn = document.getElementById('profile-btn');
         const profileDropdown = document.getElementById('profile-dropdown');
         const logoutBtn = document.getElementById('logout-btn');
         profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
         window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
         logoutBtn.addEventListener('click', () => { signOut(auth); });
-
-        const lessons = [ /* ... Full list of lesson objects with URLs ... */ ];
-        const guides = [ /* ... Full list of guide objects with URLs ... */ ];
-        // Full data arrays are omitted for brevity, but should be populated as in the previous turn.
-        
-        // --- The rest of the rendering and filter logic is the same as the previous response ---
 
     </script>
 </body>
