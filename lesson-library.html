@@ -13,9 +13,9 @@
     <script>
         // Theme loader script
         if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-          document.documentElement.classList.add('dark');
+            document.documentElement.classList.add('dark');
         } else {
-          document.documentElement.classList.remove('dark');
+            document.documentElement.classList.remove('dark');
         }
     </script>
     
@@ -26,10 +26,10 @@
             background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23DCD9D4" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
         }
         .dark body {
-             background-color: #1a202c;
-             background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%232D3748" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+            background-color: #1a202c;
+            background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%232D3748" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
         }
-        .lesson-card {
+        .content-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             opacity: 0;
             transform: translateY(20px);
@@ -41,60 +41,45 @@
                 transform: translateY(0);
             }
         }
-        .lesson-card:hover {
+        .content-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
         .font-brand {
-             font-family: 'Source Serif Pro', serif;
+            font-family: 'Source Serif Pro', serif;
         }
-        /* Custom ribbon colors */
-        .ribbon-red { color: #C53030; }
-        .dark .ribbon-red { color: #FC8181; }
-
     </style>
 </head>
-<body class="text-gray-800 dark:text-gray-200">
+<body class="text-gray-800 dark:text-gray-200 antialiased">
 
     <header class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-sm border-b border-stone-200 dark:border-gray-700 sticky top-0 z-40">
         <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
-             <a href="dashboard.html" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
-             <div class="flex items-center gap-6">
-                 <!-- Level Filter -->
-                 <div class="flex items-center gap-2">
-                     <div id="level-badge" class="hidden items-center">
-                        <svg class="h-8 ribbon-red" viewBox="0 0 100 100" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M0 0 H100 V100 L50 75 L0 100 Z"/>
-                        </svg>
-                        <span id="badge-text" class="relative -ml-12 text-white font-bold text-sm pr-3">A1</span>
-                     </div>
-                     <div class="relative">
-                        <button id="level-filter-btn" class="flex items-center gap-2 p-2 rounded-md hover:bg-stone-100 dark:hover:bg-gray-700">
-                            <span id="filter-btn-text" class="text-sm font-semibold font-brand">All Levels</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-stone-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                        </button>
-                        <div id="level-filter-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden font-brand">
-                            <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="all">All Levels</a>
-                            <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="A1">A1 - Beginner</a>
-                            <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="A2">A2 - Elementary</a>
-                            <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="B1">B1 - Intermediate</a>
-                            <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="B2">B2 - Upper Intermediate</a>
-                            
-                        </div>
-                     </div>
-                 </div>
-                 
-                 <!-- Profile/User section -->
-                 <div class="relative">
+            <a href="#" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
+            <div class="flex items-center gap-6">
+                <div class="relative">
+                    <button id="level-filter-btn" class="flex items-center gap-2 p-2 rounded-md hover:bg-stone-100 dark:hover:bg-gray-700">
+                        <span id="filter-btn-text" class="text-sm font-semibold font-brand">All Levels</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-stone-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </button>
+                    <div id="level-filter-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden font-brand z-10">
+                        <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="all">All Levels</a>
+                        <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="A1">A1 - Beginner</a>
+                        <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="A2">A2 - Elementary</a>
+                        <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="B1">B1 - Intermediate</a>
+                        <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="B2">B2 - Upper Intermediate</a>
+                    </div>
+                </div>
+                
+                <div class="relative">
                     <button id="profile-btn" class="flex items-center gap-2">
-                        <span id="user-email-nav" class="text-sm text-stone-600 dark:text-stone-300 hidden sm:block font-brand"></span>
+                         <span id="user-email-nav" class="text-sm text-stone-600 dark:text-stone-300 hidden sm:block font-brand"></span>
                         <div id="nav-avatar-container">
-                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
                         </div>
                     </button>
-                    <div id="profile-dropdown" class="hidden absolute font-brand right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden">
-                        <a href="dashboard.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Dashboard</a>
-                        <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Settings</a>
+                    <div id="profile-dropdown" class="hidden absolute font-brand right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden z-10">
+                        <a href="#" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Dashboard</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Settings</a>
                         <div class="border-t border-stone-200 dark:border-gray-600"></div>
                         <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100 dark:hover:bg-gray-700">Log Out</button>
                     </div>
@@ -105,13 +90,12 @@
 
     <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-7xl font-brand">
         <header class="mb-12 text-center">
-            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Lesson Library</h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-3 text-lg max-w-2xl mx-auto">Browse our collection of lessons, crafted to elevate your professional English skills.</p>
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Content Library</h1>
+            <p class="text-gray-600 dark:text-gray-400 mt-3 text-lg max-w-2xl mx-auto">Browse our collection of lessons and guides, crafted to elevate your English skills.</p>
         </header>
         
-        <div id="lessons-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            <!-- JS will populate the lessons here -->
-        </div>
+        <div id="content-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            </div>
     </main>
 
     <script type="module">
@@ -152,69 +136,64 @@
         window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
         logoutBtn.addEventListener('click', () => { signOut(auth); });
 
-        // --- Lesson Data ---
-        const lessons = [
-            { title: "My Reading Habits", description: "Learn to talk about your routine with simple present verbs.", level: "A1", url: "a1readinghab.html" },
-            { title: "Health Status & Symptoms", description: "Discussing how you feel with simple medical vocabulary.", level: "A1", url: "a1healthstatus.html" },
-            { title: "At the Gym", description: "Using verbs and vocabulary related to exercise.", level: "A1", url: "a1workout.html" },
-            { title: "What Are You Reading?", description: "Use present progressive and simple past to discuss reading.", level: "A2", url: "a2readinghab.html" },
-            { title: "Planning a Workout", description: "Using 'going to' for future plans at the gym.", level: "A2", url: "a2workout.html" },
-            { title: "Giving a Book Recommendation", description: "Use the passive voice and present perfect continuous.", level: "B1", url: "b1readinghab.html" },
-            { title: "Discussing Fitness Goals", description: "Talking about achievements with present perfect.", level: "B1", url: "b1workout.html" },
-            { title: "Debating a Book's Reputation", description: "Use the third conditional and clauses of concession.", level: "B2", url: "b2readinghab.html" },
-            { title: "Advanced Fitness Advice", description: "Using modal verbs for recommendations and advice.", level: "B2", url: "b2workout.html" },    { title: "Describing an Illness", level: "A2", topic: "Health & Medicine", status: 'not-started', progress: 0, url: "a2-health-status.html" },
-
+        // --- Content Data with Links ---
+        const content = [
+            { type: 'lesson', title: "How Are You Feeling?", description: "Learn basic phrases to describe your health status.", level: "A1", url: "a1-health-status.html" },
+            { type: 'lesson', title: "My Workout Routine", description: "Talk about exercise using the simple present and 'can'.", level: "A1", url: "a1-working-out.html" },
+            { type: 'lesson', title: "What Do You Like to Watch?", description: "Use 'like + verb' to talk about TV show genres.", level: "A1", url: "a1-watching-tv.html" },
+            { type: 'lesson', title: "Describing an Illness", description: "Give details about symptoms using the simple past.", level: "A2", url: "a2-health-status.html" },
+            { type: 'lesson', title: "Improving My Fitness", description: "Use adverbs of frequency and intensity.", level: "A2", url: "a2-working-out.html" },
+            { type: 'lesson', title: "What Have You Been Watching?", description: "Use present perfect continuous and simple past.", level: "A2", url: "a2-watching-tv.html" },
+            { type: 'lesson', title: "Optimizing Your Workout", description: "Give advice with modals, gerunds, and infinitives.", level: "B1", url: "b1-working-out.html" },
+            { type: 'lesson', title: "Advanced Fitness Strategy", description: "Discuss hypothetical scenarios and quantify goals.", level: "B2", url: "b2-working-out.html" },
+            { type: 'guide', title: "Grammar Guide: Simple Present", description: "A complete reference for facts, habits, and routines.", level: "A1", url: "guide-simple-present.html" },
+            { type: 'guide', title: "Grammar Guide: Articles", description: "Mastering a/an, the, and the zero article.", level: "A1", url: "guide-articles.html" },
+            { type: 'guide', title: "Grammar Guide: Prepositions of Time", description: "An exhaustive guide to using in, on, at, and more.", level: "A2", url: "guide-prepositions-time.html" },
+            { type: 'guide', title: "Grammar Guide: Prepositions of Location", description: "A detailed reference for describing where things are.", level: "A2", url: "guide-prepositions-location.html" },
         ];
 
-        // --- Lesson Library & Filter Logic ---
-        const lessonsGrid = document.getElementById('lessons-grid');
+        // --- Content Library & Filter Logic ---
+        const contentGrid = document.getElementById('content-grid');
         const levelFilterBtn = document.getElementById('level-filter-btn');
         const levelFilterDropdown = document.getElementById('level-filter-dropdown');
         const levelOptions = document.querySelectorAll('.level-option');
-        const levelBadge = document.getElementById('level-badge');
-        const badgeText = document.getElementById('badge-text');
         const filterBtnText = document.getElementById('filter-btn-text');
 
-        levelFilterBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            levelFilterDropdown.classList.toggle('hidden');
-        });
-        window.addEventListener('click', () => {
-            levelFilterDropdown.classList.add('hidden');
-        });
+        levelFilterBtn.addEventListener('click', (e) => { e.stopPropagation(); levelFilterDropdown.classList.toggle('hidden'); });
+        window.addEventListener('click', () => { levelFilterDropdown.classList.add('hidden'); });
 
-        function renderLessons(filterLevel) {
-            lessonsGrid.innerHTML = '';
-            const filteredLessons = filterLevel === 'all' 
-                ? lessons 
-                : lessons.filter(lesson => lesson.level === filterLevel);
-
-            if (filteredLessons.length === 0) {
-                lessonsGrid.innerHTML = `<p class="col-span-full text-center text-gray-500">No lessons found for this level yet.</p>`;
-                return;
-            }
+        function renderContent(filterLevel) {
+            contentGrid.innerHTML = '';
+            const filteredContent = filterLevel === 'all' ? content : content.filter(item => item.level === filterLevel);
             
-            filteredLessons.forEach((lesson, index) => {
+            filteredContent.forEach((item, index) => {
                 const card = document.createElement('a');
-                card.href = lesson.url;
-                card.className = 'lesson-card block bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-stone-200/50 dark:border-gray-700/50';
+                card.href = item.url;
+                card.className = 'content-card block bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-stone-200/50 dark:border-gray-700/50';
                 card.style.animationDelay = `${index * 50}ms`;
 
                 const levelColors = {
-                    A1: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 border border-blue-200 dark:border-blue-700',
-                    A2: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 border border-green-200 dark:border-green-700',
-                    B1: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-700',
-                    B2: 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300 border border-red-200 dark:border-red-700'
+                    A1: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300',
+                    A2: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300',
+                    B1: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300',
+                    B2: 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300'
                 };
+                
+                const icon = item.type === 'guide' 
+                    ? `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 dark:text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>`
+                    : '';
 
                 card.innerHTML = `
                     <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">${lesson.title}</h3>
-                        <span class="text-xs font-bold px-2 py-0.5 rounded-full ${levelColors[lesson.level]}">${lesson.level}</span>
+                        <div class="flex items-center">
+                            ${icon}
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">${item.title}</h3>
+                        </div>
+                        <span class="text-xs font-bold px-2 py-0.5 rounded-full ${levelColors[item.level]}">${item.level}</span>
                     </div>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">${lesson.description}</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">${item.description}</p>
                 `;
-                lessonsGrid.appendChild(card);
+                contentGrid.appendChild(card);
             });
         }
 
@@ -222,25 +201,14 @@
             option.addEventListener('click', (e) => {
                 e.preventDefault();
                 const selectedLevel = e.target.dataset.level;
-                
-                if (selectedLevel === 'all') {
-                    levelBadge.classList.add('hidden');
-                    filterBtnText.textContent = 'All Levels';
-                } else {
-                    levelBadge.classList.remove('hidden');
-                    levelBadge.classList.add('flex');
-                    badgeText.textContent = selectedLevel;
-                    filterBtnText.textContent = selectedLevel;
-                }
-                
-                renderLessons(selectedLevel);
+                filterBtnText.textContent = selectedLevel === 'all' ? 'All Levels' : `${selectedLevel}`;
+                renderContent(selectedLevel);
                 levelFilterDropdown.classList.add('hidden');
             });
         });
 
         // Initial render
-        renderLessons('all');
+        renderContent('all');
     </script>
 </body>
 </html>
-
