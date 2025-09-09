@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lesson Library - Golden Fellows English</title>
+    <title>Content Library - Golden Fellows English</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -48,6 +48,9 @@
         .font-brand {
             font-family: 'Source Serif Pro', serif;
         }
+        .tab-btn {
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
     </style>
 </head>
 <body class="text-gray-800 dark:text-gray-200 antialiased">
@@ -56,7 +59,7 @@
         <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
             <a href="#" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
             <div class="flex items-center gap-6">
-                <div class="relative">
+                <div id="level-filter-wrapper" class="relative">
                     <button id="level-filter-btn" class="flex items-center gap-2 p-2 rounded-md hover:bg-stone-100 dark:hover:bg-gray-700">
                         <span id="filter-btn-text" class="text-sm font-semibold font-brand">All Levels</span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-stone-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
@@ -89,13 +92,33 @@
     </header>
 
     <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-7xl font-brand">
-        <header class="mb-12 text-center">
+        <header class="mb-8 text-center">
             <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Content Library</h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-3 text-lg max-w-2xl mx-auto">Browse our collection of lessons and guides, crafted to elevate your English skills.</p>
+            <p class="text-gray-600 dark:text-gray-400 mt-3 text-lg max-w-2xl mx-auto">Select a lesson to begin or review a grammar guide.</p>
         </header>
         
-        <div id="content-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        <div class="border-b border-stone-200 dark:border-gray-700 mb-8">
+            <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                <button id="tab-lessons" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-semibold text-lg border-indigo-500 text-indigo-600 dark:text-indigo-400" data-target="lessons-pane">
+                    Lessons
+                </button>
+                <button id="tab-guides" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-semibold text-lg border-transparent text-stone-500 hover:text-stone-700 hover:border-stone-300 dark:text-stone-400 dark:hover:text-stone-200 dark:hover:border-stone-500" data-target="guides-pane">
+                    Grammar Guides
+                </button>
+            </nav>
+        </div>
+
+        <div>
+            <div id="lessons-pane" class="tab-pane">
+                 <div id="lessons-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                    </div>
             </div>
+
+            <div id="guides-pane" class="tab-pane hidden">
+                <div id="guides-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                     </div>
+            </div>
+        </div>
     </main>
 
     <script type="module">
@@ -114,101 +137,129 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // --- Auth Guard ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 document.getElementById('user-email-nav').textContent = user.email;
-                const navAvatarContainer = document.getElementById('nav-avatar-container');
                 if (user.photoURL) {
-                   navAvatarContainer.innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
+                   document.getElementById('nav-avatar-container').innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
                 }
             } else {
                 window.location.href = 'Login.html'; 
             }
         });
         
-        // --- Navbar Logic ---
         const profileBtn = document.getElementById('profile-btn');
         const profileDropdown = document.getElementById('profile-dropdown');
         const logoutBtn = document.getElementById('logout-btn');
-        
         profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
         window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
         logoutBtn.addEventListener('click', () => { signOut(auth); });
 
-        // --- Content Data with Links ---
-        const content = [
-            { type: 'lesson', title: "How Are You Feeling?", description: "Learn basic phrases to describe your health status.", level: "A1", url: "a1-health-status.html" },
-            { type: 'lesson', title: "My Workout Routine", description: "Talk about exercise using the simple present and 'can'.", level: "A1", url: "a1-working-out.html" },
-            { type: 'lesson', title: "What Do You Like to Watch?", description: "Use 'like + verb' to talk about TV show genres.", level: "A1", url: "a1-watching-tv.html" },
-            { type: 'lesson', title: "Describing an Illness", description: "Give details about symptoms using the simple past.", level: "A2", url: "a2-health-status.html" },
-            { type: 'lesson', title: "Improving My Fitness", description: "Use adverbs of frequency and intensity.", level: "A2", url: "a2-working-out.html" },
-            { type: 'lesson', title: "What Have You Been Watching?", description: "Use present perfect continuous and simple past.", level: "A2", url: "a2-watching-tv.html" },
-            { type: 'lesson', title: "Optimizing Your Workout", description: "Give advice with modals, gerunds, and infinitives.", level: "B1", url: "b1-working-out.html" },
-            { type: 'lesson', title: "Advanced Fitness Strategy", description: "Discuss hypothetical scenarios and quantify goals.", level: "B2", url: "b2-working-out.html" },
-            { type: 'guide', title: "Grammar Guide: Simple Present", description: "A complete reference for facts, habits, and routines.", level: "A1", url: "guide-simple-present.html" },
-            { type: 'guide', title: "Grammar Guide: Articles", description: "Mastering a/an, the, and the zero article.", level: "A1", url: "guide-articles.html" },
-            { type: 'guide', title: "Grammar Guide: Prepositions of Time", description: "An exhaustive guide to using in, on, at, and more.", level: "A2", url: "guide-prepositions-time.html" },
-            { type: 'guide', title: "Grammar Guide: Prepositions of Location", description: "A detailed reference for describing where things are.", level: "A2", url: "guide-prepositions-location.html" },
+        const lessons = [
+            { title: "How Are You Feeling?", description: "Learn basic phrases to describe your health status.", level: "A1", url: "a1-health-status.html" },
+            { title: "My Workout Routine", description: "Talk about exercise using the simple present and 'can'.", level: "A1", url: "a1-working-out.html" },
+            { title: "What Do You Like to Watch?", description: "Use 'like + verb' to talk about TV show genres.", level: "A1", url: "a1-watching-tv.html" },
+            { title: "Describing an Illness", description: "Give details about symptoms using the simple past.", level: "A2", url: "a2-health-status.html" },
+            { title: "Improving My Fitness", description: "Use adverbs of frequency and intensity.", level: "A2", url: "a2-working-out.html" },
+            { title: "What Have You Been Watching?", description: "Use present perfect continuous and simple past.", level: "A2", url: "a2-watching-tv.html" },
+            { title: "Optimizing Your Workout", description: "Give advice with modals, gerunds, and infinitives.", level: "B1", url: "b1-working-out.html" },
+            { title: "Advanced Fitness Strategy", description: "Discuss hypothetical scenarios and quantify goals.", level: "B2", url: "b2-working-out.html" },
         ];
 
-        // --- Content Library & Filter Logic ---
-        const contentGrid = document.getElementById('content-grid');
+        const guides = [
+            { title: "Grammar Guide: Simple Present", description: "A complete reference for facts, habits, and routines.", level: "A1", url: "guide-simple-present.html" },
+            { title: "Grammar Guide: Articles", description: "Mastering a/an, the, and the zero article.", level: "A1", url: "guide-articles.html" },
+            { title: "Grammar Guide: Prepositions of Time", description: "An exhaustive guide to using in, on, at, and more.", level: "A2", url: "guide-prepositions-time.html" },
+            { title: "Grammar Guide: Prepositions of Location", description: "A detailed reference for describing where things are.", level: "A2", url: "guide-prepositions-location.html" },
+        ];
+
+        const lessonsGrid = document.getElementById('lessons-grid');
+        const guidesGrid = document.getElementById('guides-grid');
+        const levelFilterWrapper = document.getElementById('level-filter-wrapper');
         const levelFilterBtn = document.getElementById('level-filter-btn');
         const levelFilterDropdown = document.getElementById('level-filter-dropdown');
         const levelOptions = document.querySelectorAll('.level-option');
         const filterBtnText = document.getElementById('filter-btn-text');
+        
+        const levelColors = {
+            A1: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300',
+            A2: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300',
+            B1: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300',
+            B2: 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300'
+        };
 
-        levelFilterBtn.addEventListener('click', (e) => { e.stopPropagation(); levelFilterDropdown.classList.toggle('hidden'); });
-        window.addEventListener('click', () => { levelFilterDropdown.classList.add('hidden'); });
-
-        function renderContent(filterLevel) {
-            contentGrid.innerHTML = '';
-            const filteredContent = filterLevel === 'all' ? content : content.filter(item => item.level === filterLevel);
+        function renderLessons(filterLevel) {
+            lessonsGrid.innerHTML = '';
+            const filteredLessons = filterLevel === 'all' ? lessons : lessons.filter(item => item.level === filterLevel);
             
-            filteredContent.forEach((item, index) => {
+            filteredLessons.forEach((item, index) => {
                 const card = document.createElement('a');
                 card.href = item.url;
                 card.className = 'content-card block bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-stone-200/50 dark:border-gray-700/50';
                 card.style.animationDelay = `${index * 50}ms`;
-
-                const levelColors = {
-                    A1: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300',
-                    A2: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300',
-                    B1: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300',
-                    B2: 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300'
-                };
-                
-                const icon = item.type === 'guide' 
-                    ? `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 dark:text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>`
-                    : '';
-
                 card.innerHTML = `
                     <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">${item.title}</h3>
+                        <span class="text-xs font-bold px-2 py-0.5 rounded-full ${levelColors[item.level]}">${item.level}</span>
+                    </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">${item.description}</p>
+                `;
+                lessonsGrid.appendChild(card);
+            });
+        }
+
+        function renderGuides() {
+            guidesGrid.innerHTML = '';
+            guides.forEach((item, index) => {
+                const card = document.createElement('a');
+                card.href = item.url;
+                card.className = 'content-card block bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-stone-200/50 dark:border-gray-700/50';
+                card.style.animationDelay = `${index * 50}ms`;
+                card.innerHTML = `
+                     <div class="flex justify-between items-start mb-4">
                         <div class="flex items-center">
-                            ${icon}
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 dark:text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
                             <h3 class="text-lg font-semibold text-gray-900 dark:text-white">${item.title}</h3>
                         </div>
                         <span class="text-xs font-bold px-2 py-0.5 rounded-full ${levelColors[item.level]}">${item.level}</span>
                     </div>
                     <p class="text-sm text-gray-600 dark:text-gray-400">${item.description}</p>
                 `;
-                contentGrid.appendChild(card);
+                guidesGrid.appendChild(card);
             });
         }
-
+        
+        levelFilterBtn.addEventListener('click', (e) => { e.stopPropagation(); levelFilterDropdown.classList.toggle('hidden'); });
+        window.addEventListener('click', () => { levelFilterDropdown.classList.add('hidden'); });
         levelOptions.forEach(option => {
             option.addEventListener('click', (e) => {
                 e.preventDefault();
                 const selectedLevel = e.target.dataset.level;
                 filterBtnText.textContent = selectedLevel === 'all' ? 'All Levels' : `${selectedLevel}`;
-                renderContent(selectedLevel);
+                renderLessons(selectedLevel);
                 levelFilterDropdown.classList.add('hidden');
             });
         });
 
+        const tabs = document.querySelectorAll('.tab-btn');
+        const panes = document.querySelectorAll('.tab-pane');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => { t.classList.remove('border-indigo-500', 'text-indigo-600', 'dark:text-indigo-400'); t.classList.add('border-transparent', 'text-stone-500'); });
+                tab.classList.add('border-indigo-500', 'text-indigo-600', 'dark:text-indigo-400');
+                tab.classList.remove('border-transparent', 'text-stone-500');
+                
+                const targetPaneId = tab.dataset.target;
+                panes.forEach(pane => pane.id === targetPaneId ? pane.classList.remove('hidden') : pane.classList.add('hidden'));
+
+                // Show/hide filter button
+                levelFilterWrapper.style.display = targetPaneId === 'lessons-pane' ? 'block' : 'none';
+            });
+        });
+
         // Initial render
-        renderContent('all');
+        renderLessons('all');
+        renderGuides();
     </script>
 </body>
 </html>
