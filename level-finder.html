@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Content Library - Golden Fellows English</title>
+    <title>English Level Finder - Golden Fellows English</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,98 +20,68 @@
     </script>
     
     <style>
-        body { 
-            font-family: 'Source Serif Pro', serif;
-            background-color: #F7F5F2; /* Warm off-white */
-            background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23DCD9D4" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
-        }
-        .dark body {
-            background-color: #1a202c;
-            background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%232D3748" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
-        }
-        .content-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeIn 0.5s ease-out forwards;
-        }
-        @keyframes fadeIn {
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .content-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
+        body { font-family: 'Source Serif Pro', serif; background-color: #F7F5F2; }
+        .dark body { background-color: #1a202c; }
         .font-brand { font-family: 'Source Serif Pro', serif; }
-        .tab-btn { transition: color 0.2s ease, border-color 0.2s ease; }
+        .mcq-option { transition: background-color 0.2s, border-color 0.2s; }
+        .draggable-word { cursor: grab; }
+        .draggable-word:active { cursor: grabbing; }
+        .dragging { opacity: 0.5; }
+        .drop-zone { transition: background-color 0.2s, border-color 0.2s; }
+        .drag-over { border-style: dashed; border-color: #4f46e5; }
+        .correct { border-color: #16a34a !important; background-color: #f0fdf4 !important; }
+        .dark .correct { border-color: #22c55e !important; background-color: rgba(34, 197, 94, 0.1) !important; }
+        .incorrect { border-color: #dc2626 !important; background-color: #fef2f2 !important; }
+        .dark .incorrect { border-color: #ef4444 !important; background-color: rgba(239, 68, 68, 0.1) !important; }
     </style>
 </head>
-<body class="text-gray-800 dark:text-gray-200 antialiased">
+<body class="text-gray-900 dark:text-gray-200 antialiased">
 
     <header class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-sm border-b border-stone-200 dark:border-gray-700 sticky top-0 z-40">
         <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
-            <a href="#" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
-            <div class="flex items-center gap-4">
-                <div id="level-filter-wrapper" class="relative">
-                    <button id="level-filter-btn" class="flex items-center gap-2 p-2 rounded-md hover:bg-stone-100 dark:hover:bg-gray-700">
-                        <span id="filter-btn-text" class="text-sm font-semibold font-brand">All Levels</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-stone-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                    </button>
-                    <div id="level-filter-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden font-brand z-10">
-                        <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="all">All Levels</a>
-                        <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="A1">A1 - Beginner</a>
-                        <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="A2">A2 - Elementary</a>
-                        <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="B1">B1 - Intermediate</a>
-                        <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="B2">B2 - Upper Intermediate</a>
-                    </div>
-                </div>
-                
-                <div class="relative">
-                    <button id="profile-btn" class="flex items-center gap-3">
-                         <span id="user-level-badge" class="hidden text-xs font-bold px-2 py-0.5 rounded-full"></span>
-                        <div id="nav-avatar-container">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
-                        </div>
-                    </button>
-                    <div id="profile-dropdown" class="hidden absolute font-brand right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden z-10">
-                        <div class="px-4 py-2 text-sm text-stone-700 dark:text-stone-200">
-                            <p class="font-semibold">Signed in as</p>
-                            <p id="user-email-nav" class="truncate"></p>
-                        </div>
-                        <div class="border-t border-stone-200 dark:border-gray-600"></div>
-                        <a href="dashboard.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Dashboard</a>
-                        <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Settings</a>
-                        <div class="border-t border-stone-200 dark:border-gray-600"></div>
-                        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100 dark:hover:bg-gray-700">Log Out</button>
-                    </div>
-                </div>
-            </div>
+            <a href="dashboard.html" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
         </div>
     </header>
 
-    <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-7xl font-brand">
-        <header class="mb-8 text-center">
-            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Content Library</h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-3 text-lg max-w-2xl mx-auto">Select a lesson to begin or review a grammar guide.</p>
-        </header>
-        
-        <div class="border-b border-stone-200 dark:border-gray-700 mb-8">
-            <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-                <button id="tab-lessons" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-semibold text-lg border-indigo-500 text-indigo-600 dark:text-indigo-400" data-target="lessons-pane">Lessons</button>
-                <button id="tab-guides" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-semibold text-lg border-transparent text-stone-500 hover:text-stone-700 hover:border-stone-300 dark:text-stone-400 dark:hover:text-stone-200 dark:hover:border-stone-500" data-target="guides-pane">Grammar Guides</button>
-            </nav>
+    <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-2xl font-brand">
+        <div id="start-screen" class="text-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">English Level Finder</h1>
+            <p class="text-gray-600 dark:text-gray-400 mt-4 text-lg max-w-xl mx-auto">
+                This adaptive quiz will help you find your English level. The result will be saved to your profile as a badge.
+            </p>
+            <button id="start-btn" class="mt-8 bg-indigo-600 text-white font-semibold px-8 py-3 rounded-lg shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
+                Start Quiz
+            </button>
         </div>
 
-        <div>
-            <div id="lessons-pane" class="tab-pane"><div id="lessons-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div></div>
-            <div id="guides-pane" class="tab-pane hidden"><div id="guides-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div></div>
+        <div id="quiz-screen" class="hidden bg-white/50 dark:bg-gray-800/50 backdrop-blur-lg p-8 sm:p-10 rounded-2xl shadow-xl border border-stone-200/50 dark:border-gray-700/50">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Question</h2>
+                <div id="level-indicator" class="text-sm font-bold px-3 py-1 rounded-full"></div>
+            </div>
+            <p id="question-text" class="text-xl text-gray-800 dark:text-gray-200 mb-6"></p>
+            <div id="answer-area" class="space-y-3"></div>
+            <div id="feedback-area" class="mt-4 h-6 text-lg font-semibold"></div>
+            <button id="submit-btn" class="mt-6 w-full py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-sm hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed">
+                Submit Answer
+            </button>
+        </div>
+
+        <div id="result-screen" class="hidden text-center bg-white/50 dark:bg-gray-800/50 backdrop-blur-lg p-8 sm:p-12 rounded-2xl shadow-xl border border-stone-200/50 dark:border-gray-700/50">
+            <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200">Quiz Complete!</h2>
+            <p class="mt-2 text-gray-600 dark:text-gray-400">Your estimated level has been saved to your profile.</p>
+            <h1 class="text-6xl font-bold text-indigo-600 dark:text-indigo-400 my-4" id="result-level"></h1>
+            <p class="text-lg text-gray-700 dark:text-gray-300" id="result-description"></p>
+            <a href="lesson-library.html" class="mt-8 inline-block bg-indigo-600 text-white font-semibold px-8 py-3 rounded-lg shadow-sm hover:bg-indigo-700">
+                Go to Content Library
+            </a>
         </div>
     </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
@@ -126,126 +96,156 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        const levelColors = {
-            A1: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300',
-            A2: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300',
-            B1: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300',
-            B2: 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300'
-        };
-
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                document.getElementById('user-email-nav').textContent = user.email;
-                if (user.photoURL) {
-                   document.getElementById('nav-avatar-container').innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
-                }
-                
-                // Fetch user's level badge
-                try {
-                    const userDocRef = doc(db, "users", user.uid);
-                    const docSnap = await getDoc(userDocRef);
-                    if (docSnap.exists() && docSnap.data().cefrLevel) {
-                        const level = docSnap.data().cefrLevel;
-                        const badge = document.getElementById('user-level-badge');
-                        badge.textContent = level;
-                        badge.className = `text-xs font-bold px-2 py-0.5 rounded-full ${levelColors[level]}`;
-                        badge.classList.remove('hidden');
-                    }
-                } catch (error) {
-                    console.error("Error fetching user level:", error);
-                }
-
-            } else {
-                window.location.href = 'Login.html'; 
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                // If no user is logged in, redirect to the login page.
+                window.location.href = 'Login.html';
             }
         });
-        
-        const profileBtn = document.getElementById('profile-btn');
-        const profileDropdown = document.getElementById('profile-dropdown');
-        const logoutBtn = document.getElementById('logout-btn');
-        profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
-        window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
-        logoutBtn.addEventListener('click', () => { signOut(auth); });
 
-        const lessons = [
-            { title: "My Reading Habits", description: "Learn to talk about your routine with simple present verbs.", level: "A1", url: "a1readinghab.html" },
-            { title: "How Are You Feeling?", description: "Learn basic phrases to describe your health status.", level: "A1", url: "a1healthstatus.html" },
-            { title: "My Workout Routine", description: "Talk about exercise using the simple present and 'can'.", level: "A1", url: "a1workout.html" },
-            { title: "What Do You Like to Watch?", description: "Use 'like + verb' to talk about TV show genres.", level: "A1", url: "a1tv.html" },
-            { title: "What Are You Reading?", description: "Use present progressive and simple past to discuss reading.", level: "A2", url: "a2readinghab.html" },
-            { title: "Improving My Fitness", description: "Use adverbs of frequency and intensity.", level: "A2", url: "a2workout.html" },
-            { title: "Giving a Book Recommendation", description: "Use the passive voice and present perfect continuous.", level: "B1", url: "b1readinghab.html" },
-            { title: "Optimizing Your Workout", description: "Give advice with modals, gerunds, and infinitives.", level: "B1", url: "b1workout.html" },
-            { title: "Debating a Book's Reputation", description: "Use the third conditional and clauses of concession.", level: "B2", url: "b2readinghab.html" },
-            { title: "Advanced Fitness Strategy", description: "Discuss hypothetical scenarios and quantify goals.", level: "B2", url: "b2workout.html" },
-        ];
-        const guides = [
-            { title: "Grammar Guide: Simple Present", description: "A complete reference for facts, habits, and routines.", level: "A1", url: "simplepresent.html" },
-            { title: "Grammar Guide: Articles", description: "Mastering a/an, the, and the zero article.", level: "A1", url: "articles.html" },
-            { title: "Grammar Guide: Prepositions of Time", description: "An exhaustive guide to using in, on, at, and more.", level: "A2", url: "potime.html" },
-            { title: "Grammar Guide: Prepositions of Location", description: "A detailed reference for describing where things are.", level: "A2", url: "polocation.html" },
-        ];
+        const questionBank = {
+            'A1': [{ type: 'mcq', question: 'My name ___ John.', options: ['is', 'are', 'am'], answer: 'is' },{ type: 'mcq', question: 'I ___ from Mexico.', options: ['is', 'are', 'am'], answer: 'am' },{ type: 'mcq', question: 'She ___ a doctor.', options: ['is', 'are', 'am'], answer: 'is' },],
+            'A2': [{ type: 'mcq', question: 'I ___ to the cinema yesterday.', options: ['go', 'goes', 'went'], answer: 'went' },{ type: 'mcq', question: 'What ___ you doing right now?', options: ['is', 'are', 'do'], answer: 'are' },{ type: 'mcq', question: 'There isn\'t ___ milk in the fridge.', options: ['some', 'any', 'a'], answer: 'any' },],
+            'B1': [{ type: 'mcq', question: 'If I had more money, I ___ travel the world.', options: ['will', 'would', 'am'], answer: 'would' },{ type: 'mcq', question: 'I have ___ living here for three years.', options: ['be', 'been', 'being'], answer: 'been' },{ type: 'drag-drop', question: 'Drag the word to complete the sentence: "I avoid ___ junk food."', words: ['eating', 'to eat'], answer: 'eating' }],
+            'B2': [{ type: 'mcq', question: 'By the time you arrive, I ___ finished the report.', options: ['will have', 'have', 'had'], answer: 'will have' },{ type: 'mcq', question: '___ the bad weather, the flight was on time.', options: ['Although', 'Despite', 'However'], answer: 'Despite' },{ type: 'drag-drop', question: 'Complete the phrasal verb: "It was difficult, but we managed to ___ it off."', words: ['pull', 'push'], answer: 'pull' }],
+            'C1': [{ type: 'mcq', question: 'Not only ___ the exam, but she also got the top score.', options: ['she passed', 'did she pass', 'she did pass'], answer: 'did she pass' },{ type: 'mcq', question: 'The decision was postponed, ___ was a source of frustration for everyone.', options: ['that', 'what', 'which'], answer: 'which' },{ type: 'drag-drop', question: 'Choose the correct idiom: "He is feeling a bit under the ___."', words: ['weather', 'table'], answer: 'weather' }]
+        };
+        const levels = ['A1', 'A2', 'B1', 'B2', 'C1'];
+        const levelColors = { A1: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300', A2: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300', B1: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300', B2: 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300', C1: 'bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300', };
 
-        const lessonsGrid = document.getElementById('lessons-grid');
-        const guidesGrid = document.getElementById('guides-grid');
-        const levelFilterWrapper = document.getElementById('level-filter-wrapper');
-        const levelFilterBtn = document.getElementById('level-filter-btn');
-        const levelFilterDropdown = document.getElementById('level-filter-dropdown');
-        const levelOptions = document.querySelectorAll('.level-option');
-        const filterBtnText = document.getElementById('filter-btn-text');
-        
-        function renderContent(container, data, filterLevel, isGuide = false) {
-            container.innerHTML = '';
-            const filteredContent = filterLevel === 'all' ? data : data.filter(item => item.level === filterLevel);
+        const startScreen = document.getElementById('start-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultScreen = document.getElementById('result-screen');
+        const startBtn = document.getElementById('start-btn');
+        const submitBtn = document.getElementById('submit-btn');
+
+        let currentLevelIndex = 1; // Start at A2
+        let currentQuestionInLevel = 0;
+        let scoreForCurrentLevel = 0;
+        let finalLevel = 'A1';
+
+        startBtn.addEventListener('click', startQuiz);
+        submitBtn.addEventListener('click', handleSubmit);
+
+        function startQuiz() {
+            startScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            currentLevelIndex = 1;
+            finalLevel = 'A1';
+            resetLevelState();
+            loadQuestion();
+        }
+
+        function resetLevelState() {
+            currentQuestionInLevel = 0;
+            scoreForCurrentLevel = 0;
+        }
+
+        function loadQuestion() {
+            const level = levels[currentLevelIndex];
+            const questionData = questionBank[level][currentQuestionInLevel];
             
-            filteredContent.forEach((item, index) => {
-                const card = document.createElement('a');
-                card.href = item.url;
-                card.className = 'content-card block bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-stone-200/50 dark:border-gray-700/50';
-                card.style.animationDelay = `${index * 50}ms`;
-                
-                const icon = isGuide ? `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 dark:text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>` : '';
+            document.getElementById('level-indicator').textContent = level;
+            document.getElementById('level-indicator').className = `text-sm font-bold px-3 py-1 rounded-full ${levelColors[level]}`;
+            document.getElementById('question-text').textContent = questionData.question;
+            
+            const answerArea = document.getElementById('answer-area');
+            answerArea.innerHTML = '';
 
-                card.innerHTML = `
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="flex items-center pr-2"><h3 class="text-lg font-semibold text-gray-900 dark:text-white">${icon}${item.title}</h3></div>
-                        <span class="text-xs font-bold px-2 py-0.5 rounded-full ${levelColors[item.level]} flex-shrink-0">${item.level}</span>
-                    </div>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">${item.description}</p>
-                `;
-                container.appendChild(card);
-            });
+            if (questionData.type === 'mcq') {
+                questionData.options.forEach(option => {
+                    answerArea.innerHTML += `<label class="block mcq-option bg-white dark:bg-gray-800 p-4 rounded-lg border border-stone-200 dark:border-gray-700 cursor-pointer hover:border-indigo-500"><input type="radio" name="answer" value="${option}" class="mr-3"><span>${option}</span></label>`;
+                });
+            } else if (questionData.type === 'drag-drop') {
+                answerArea.innerHTML = `<div class="flex items-center gap-2"><div id="drop-zone" class="drop-zone border-2 border-stone-300 dark:border-gray-600 rounded-lg p-3 min-w-[100px] h-12"></div></div><div id="word-bank" class="flex gap-2 mt-4">${questionData.words.map(word => `<div class="draggable-word bg-stone-200 dark:bg-gray-700 p-3 rounded-lg" draggable="true" data-word="${word}">${word}</div>`).join('')}</div>`;
+                setupDragDrop();
+            }
+            submitBtn.disabled = false;
+            document.getElementById('feedback-area').textContent = '';
         }
         
-        levelFilterBtn.addEventListener('click', (e) => { e.stopPropagation(); levelFilterDropdown.classList.toggle('hidden'); });
-        window.addEventListener('click', () => { levelFilterDropdown.classList.add('hidden'); });
-        levelOptions.forEach(option => {
-            option.addEventListener('click', (e) => {
-                e.preventDefault();
-                const selectedLevel = e.target.dataset.level;
-                filterBtnText.textContent = selectedLevel === 'all' ? 'All Levels' : `${selectedLevel}`;
-                renderContent(lessonsGrid, lessons, selectedLevel, false);
-                levelFilterDropdown.classList.add('hidden');
+        function setupDragDrop() {
+            const draggables = document.querySelectorAll('.draggable-word');
+            const dropZone = document.getElementById('drop-zone');
+            draggables.forEach(d => {
+                d.addEventListener('dragstart', e => { e.dataTransfer.setData('text/plain', d.dataset.word); d.classList.add('dragging'); });
+                d.addEventListener('dragend', () => d.classList.remove('dragging'));
             });
-        });
+            dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+            dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+            dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('drag-over'); const word = e.dataTransfer.getData('text/plain'); dropZone.textContent = word; dropZone.dataset.answer = word; });
+        }
 
-        const tabs = document.querySelectorAll('.tab-btn');
-        const panes = document.querySelectorAll('.tab-pane');
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                tabs.forEach(t => { t.classList.remove('border-indigo-500', 'text-indigo-600', 'dark:text-indigo-400'); t.classList.add('border-transparent', 'text-stone-500'); });
-                tab.classList.add('border-indigo-500', 'text-indigo-600', 'dark:text-indigo-400');
-                tab.classList.remove('border-transparent', 'text-stone-500');
-                
-                const targetPaneId = tab.dataset.target;
-                panes.forEach(pane => pane.id === targetPaneId ? pane.classList.remove('hidden') : pane.classList.add('hidden'));
+        function handleSubmit() {
+            const level = levels[currentLevelIndex];
+            const questionData = questionBank[level][currentQuestionInLevel];
+            let isCorrect = false;
 
-                levelFilterWrapper.style.display = targetPaneId === 'lessons-pane' ? 'block' : 'none';
-            });
-        });
+            if (questionData.type === 'mcq') {
+                const selected = document.querySelector('input[name="answer"]:checked');
+                if (selected && selected.value === questionData.answer) isCorrect = true;
+            } else if (questionData.type === 'drag-drop') {
+                const dropZone = document.getElementById('drop-zone');
+                if (dropZone && dropZone.dataset.answer === questionData.answer) isCorrect = true;
+            }
+            
+            showFeedback(isCorrect);
+            if (isCorrect) scoreForCurrentLevel++;
 
-        renderContent(lessonsGrid, lessons, 'all', false);
-        renderContent(guidesGrid, guides, 'all', true);
+            submitBtn.disabled = true;
+            setTimeout(decideNextStep, 1500);
+        }
+
+        function showFeedback(isCorrect) {
+             const feedbackArea = document.getElementById('feedback-area');
+             feedbackArea.className = `mt-4 h-6 text-lg font-semibold ${isCorrect ? 'text-green-600' : 'text-red-600'}`;
+             feedbackArea.textContent = isCorrect ? 'Correct!' : 'Incorrect.';
+        }
+
+        function decideNextStep() {
+            currentQuestionInLevel++;
+            const level = levels[currentLevelIndex];
+            const questionsInLevel = questionBank[level].length;
+
+            if (currentQuestionInLevel >= questionsInLevel) {
+                const scorePercentage = (scoreForCurrentLevel / questionsInLevel);
+                if (scorePercentage > 0.66) {
+                    finalLevel = level;
+                    currentLevelIndex++;
+                    if (currentLevelIndex >= levels.length) {
+                        endQuiz(levels[levels.length - 1]);
+                    } else {
+                        resetLevelState();
+                        loadQuestion();
+                    }
+                } else {
+                    endQuiz(finalLevel);
+                }
+            } else {
+                loadQuestion();
+            }
+        }
+        
+        async function endQuiz(level) {
+            quizScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+            const descriptions = { 'A1': 'You have a basic understanding and can use familiar everyday expressions.', 'A2': 'You can communicate in simple and routine tasks, describing your background and immediate needs.', 'B1': 'You are an independent user and can handle most situations while traveling and can describe experiences and ambitions.', 'B2': 'You have a good degree of fluency and spontaneity, allowing for regular interaction with native speakers.', 'C1': 'You can use English flexibly for social, academic, and professional purposes with a high degree of accuracy.' };
+            
+            document.getElementById('result-level').textContent = level;
+            document.getElementById('result-description').textContent = descriptions[level] || descriptions['C1'];
+
+            const user = auth.currentUser;
+            if (user) {
+                try {
+                    const userDocRef = doc(db, "users", user.uid);
+                    await setDoc(userDocRef, { cefrLevel: level }, { merge: true });
+                    console.log("User level badge saved successfully!");
+                } catch (error) {
+                    console.error("Error writing document: ", error);
+                }
+            }
+        }
     </script>
 </body>
 </html>
