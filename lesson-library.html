@@ -81,8 +81,8 @@
                         </div>
                     </button>
                     <div id="profile-dropdown" class="hidden absolute font-brand right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden z-10">
-                        <a href="#" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Dashboard</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Settings</a>
+                        <a href="dashboard.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Dashboard</a>
+                        <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Settings</a>
                         <div class="border-t border-stone-200 dark:border-gray-600"></div>
                         <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100 dark:hover:bg-gray-700">Log Out</button>
                     </div>
@@ -156,21 +156,23 @@
         logoutBtn.addEventListener('click', () => { signOut(auth); });
 
         const lessons = [
-            { title: "How Are You Feeling?", description: "Learn basic phrases to describe your health status.", level: "A1", url: "a1-health-status.html" },
-            { title: "My Workout Routine", description: "Talk about exercise using the simple present and 'can'.", level: "A1", url: "a1-working-out.html" },
-            { title: "What Do You Like to Watch?", description: "Use 'like + verb' to talk about TV show genres.", level: "A1", url: "a1-watching-tv.html" },
-            { title: "Describing an Illness", description: "Give details about symptoms using the simple past.", level: "A2", url: "a2-health-status.html" },
-            { title: "Improving My Fitness", description: "Use adverbs of frequency and intensity.", level: "A2", url: "a2-working-out.html" },
-            { title: "What Have You Been Watching?", description: "Use present perfect continuous and simple past.", level: "A2", url: "a2-watching-tv.html" },
-            { title: "Optimizing Your Workout", description: "Give advice with modals, gerunds, and infinitives.", level: "B1", url: "b1-working-out.html" },
-            { title: "Advanced Fitness Strategy", description: "Discuss hypothetical scenarios and quantify goals.", level: "B2", url: "b2-working-out.html" },
+            { title: "My Reading Habits", description: "Learn to talk about your routine with simple present verbs.", level: "A1", url: "a1readinghab.html" },
+            { title: "How Are You Feeling?", description: "Learn basic phrases to describe your health status.", level: "A1", url: "a1healthstatus.html" },
+            { title: "My Workout Routine", description: "Talk about exercise using the simple present and 'can'.", level: "A1", url: "a1workout.html" },
+            { title: "What Do You Like to Watch?", description: "Use 'like + verb' to talk about TV show genres.", level: "A1", url: "a1tv.html" },
+            { title: "What Are You Reading?", description: "Use present progressive and simple past to discuss reading.", level: "A2", url: "a2readinghab.html" },
+            { title: "Improving My Fitness", description: "Use adverbs of frequency and intensity.", level: "A2", url: "a2workout.html" },
+            { title: "Giving a Book Recommendation", description: "Use the passive voice and present perfect continuous.", level: "B1", url: "b1readinghab.html" },
+            { title: "Optimizing Your Workout", description: "Give advice with modals, gerunds, and infinitives.", level: "B1", url: "b1workout.html" },
+            { title: "Debating a Book's Reputation", description: "Use the third conditional and clauses of concession.", level: "B2", url: "b2readinghab.html" },
+            { title: "Advanced Fitness Strategy", description: "Discuss hypothetical scenarios and quantify goals.", level: "B2", url: "b2workout.html" },
         ];
 
         const guides = [
-            { title: "Grammar Guide: Simple Present", description: "A complete reference for facts, habits, and routines.", level: "A1", url: "guide-simple-present.html" },
-            { title: "Grammar Guide: Articles", description: "Mastering a/an, the, and the zero article.", level: "A1", url: "guide-articles.html" },
-            { title: "Grammar Guide: Prepositions of Time", description: "An exhaustive guide to using in, on, at, and more.", level: "A2", url: "guide-prepositions-time.html" },
-            { title: "Grammar Guide: Prepositions of Location", description: "A detailed reference for describing where things are.", level: "A2", url: "guide-prepositions-location.html" },
+            { title: "Grammar Guide: Simple Present", description: "A complete reference for facts, habits, and routines.", level: "A1", url: "simplepresent.html" },
+            { title: "Grammar Guide: Articles", description: "Mastering a/an, the, and the zero article.", level: "A1", url: "articles.html" },
+            { title: "Grammar Guide: Prepositions of Time", description: "An exhaustive guide to using in, on, at, and more.", level: "A2", url: "potime.html" },
+            { title: "Grammar Guide: Prepositions of Location", description: "A detailed reference for describing where things are.", level: "A2", url: "polocation.html" },
         ];
 
         const lessonsGrid = document.getElementById('lessons-grid');
@@ -252,12 +254,10 @@
                 const targetPaneId = tab.dataset.target;
                 panes.forEach(pane => pane.id === targetPaneId ? pane.classList.remove('hidden') : pane.classList.add('hidden'));
 
-                // Show/hide filter button
                 levelFilterWrapper.style.display = targetPaneId === 'lessons-pane' ? 'block' : 'none';
             });
         });
 
-        // Initial render
         renderLessons('all');
         renderGuides();
     </script>
