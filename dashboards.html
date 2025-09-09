@@ -59,13 +59,23 @@
     <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-7xl font-brand">
         <header class="mb-12">
             <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Welcome back, <span id="user-name"></span>!</h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-3 text-lg">Let's continue your journey to fluency today, Monday, September 8, 2025.</p>
+            <p class="text-gray-600 dark:text-gray-400 mt-3 text-lg">Your journey to fluency continues today.</p>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             <div class="lg:col-span-2 space-y-8">
                 
+                <section id="level-finder-cta" class="hidden">
+                    <div class="bg-indigo-50 dark:bg-indigo-900/30 p-8 rounded-2xl shadow-lg border border-indigo-200 dark:border-indigo-700 text-center">
+                        <h2 class="text-3xl font-bold text-indigo-900 dark:text-indigo-200">Discover Your English Level</h2>
+                        <p class="mt-2 text-lg text-gray-700 dark:text-gray-300 max-w-md mx-auto">Take our quick, adaptive quiz to find your CEFR level and unlock personalized lesson recommendations.</p>
+                        <a href="level-finder.html" class="mt-6 inline-block bg-indigo-600 text-white font-semibold px-8 py-3 rounded-lg shadow-sm hover:bg-indigo-700 transition-transform hover:scale-105">
+                            Take the Quiz Now →
+                        </a>
+                    </div>
+                </section>
+
                 <section id="continue-learning-section">
                     <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Pick Up Where You Left Off</h2>
                     <a href="#" id="continue-learning-card" class="block bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-stone-200 dark:border-gray-700 hover:border-indigo-500 dark:hover:border-indigo-400 transition-colors duration-300">
@@ -89,7 +99,7 @@
                             <h3 class="font-semibold text-gray-900 dark:text-white">Giving a Book Recommendation</h3>
                             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">B1 · Reading</p>
                         </a>
-                        <a href="b1-some-other-lesson.html" class="block bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 rounded-2xl shadow-md border border-stone-200/50 dark:border-gray-700/50 hover:shadow-xl transition-shadow">
+                         <a href="#" class="block bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 rounded-2xl shadow-md border border-stone-200/50 dark:border-gray-700/50 hover:shadow-xl transition-shadow">
                             <h3 class="font-semibold text-gray-900 dark:text-white">Making Future Plans</h3>
                             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">B1 · Grammar</p>
                         </a>
@@ -98,38 +108,7 @@
             </div>
 
             <aside class="space-y-8">
-
-                <section>
-                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">My Stats</h2>
-                    <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-stone-200 dark:border-gray-700 space-y-4">
-                        <div class="flex items-center">
-                            <div class="p-3 bg-green-100 dark:bg-green-900/50 rounded-lg mr-4"><svg class="h-6 w-6 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
-                            <div>
-                                <p class="font-bold text-xl">12</p>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">Lessons Completed</p>
-                            </div>
-                        </div>
-                         <div class="flex items-center">
-                            <div class="p-3 bg-yellow-100 dark:bg-yellow-900/50 rounded-lg mr-4"><svg class="h-6 w-6 text-yellow-600 dark:text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div>
-                            <div>
-                                <p class="font-bold text-xl">4 hours</p>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">Study Time This Week</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <section>
-                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Instructor Feedback</h2>
-                     <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-stone-200 dark:border-gray-700 space-y-4">
-                         <a href="#" class="block p-4 rounded-lg bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:hover:bg-indigo-900/50">
-                            <p class="font-semibold">New feedback on: <b>A1 Speaking Task</b></p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">Received: September 7, 2025</p>
-                         </a>
-                         <p class="text-center text-sm text-gray-500 dark:text-gray-400">No other new feedback.</p>
-                     </div>
-                </section>
-            </aside>
+                </aside>
         </div>
     </main>
 
@@ -166,7 +145,10 @@
                    document.getElementById('nav-avatar-container').innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
                 }
                 
-                // Fetch user data from Firestore to populate dashboard
+                // --- UPDATED LOGIC FOR CONDITIONAL WIDGETS ---
+                const levelFinderCTA = document.getElementById('level-finder-cta');
+                const continueLearningSection = document.getElementById('continue-learning-section');
+
                 try {
                     const userDocRef = doc(db, "users", user.uid);
                     const docSnap = await getDoc(userDocRef);
@@ -174,18 +156,30 @@
                     if (docSnap.exists()) {
                         const userData = docSnap.data();
                         
-                        // Populate welcome message
-                        const displayName = userData.displayName || user.email.split('@')[0];
-                        document.getElementById('user-name').textContent = displayName;
+                        document.getElementById('user-name').textContent = userData.displayName || user.email.split('@')[0];
 
-                        // Populate level badge
+                        // Check for level badge
                         if (userData.cefrLevel) {
                             const level = userData.cefrLevel;
                             const badge = document.getElementById('user-level-badge');
                             badge.textContent = level;
                             badge.className = `text-xs font-bold px-2 py-0.5 rounded-full ${levelColors[level]}`;
                             badge.classList.remove('hidden');
+
+                            // User has a level, so show "Continue Learning"
+                            levelFinderCTA.classList.add('hidden');
+                            continueLearningSection.classList.remove('hidden');
+
+                        } else {
+                            // User does NOT have a level, show the CTA
+                            levelFinderCTA.classList.remove('hidden');
+                            continueLearningSection.classList.add('hidden');
                         }
+                    } else {
+                         // New user, document doesn't exist yet
+                         document.getElementById('user-name').textContent = user.email.split('@')[0];
+                         levelFinderCTA.classList.remove('hidden');
+                         continueLearningSection.classList.add('hidden');
                     }
                 } catch (error) {
                     console.error("Error fetching user data:", error);
@@ -196,14 +190,12 @@
             }
         });
         
-        // --- Navbar dropdown logic ---
         const profileBtn = document.getElementById('profile-btn');
         const profileDropdown = document.getElementById('profile-dropdown');
         const logoutBtn = document.getElementById('logout-btn');
         profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
         window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
         logoutBtn.addEventListener('click', () => { signOut(auth); });
-
     </script>
 </body>
 </html>
