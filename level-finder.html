@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Level Finder - Golden Fellows English</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    
+    <style>
+        body { font-family: 'Source Serif Pro', serif; background-color: #F7F5F2; }
+        .dark body { background-color: #1a202c; }
+        .font-brand { font-family: 'Source Serif Pro', serif; }
+        .mcq-option { transition: background-color 0.2s, border-color 0.2s; }
+        .draggable-word { cursor: grab; }
+        .draggable-word:active { cursor: grabbing; }
+        .dragging { opacity: 0.5; }
+        .drop-zone { transition: background-color 0.2s, border-color 0.2s; }
+        .drag-over { border-style: dashed; border-color: #4f46e5; }
+        .correct { border-color: #16a34a !important; background-color: #f0fdf4 !important; }
+        .dark .correct { border-color: #22c55e !important; background-color: rgba(34, 197, 94, 0.1) !important; }
+        .incorrect { border-color: #dc2626 !important; background-color: #fef2f2 !important; }
+        .dark .incorrect { border-color: #ef4444 !important; background-color: rgba(239, 68, 68, 0.1) !important; }
+    </style>
+</head>
+<body class="text-gray-900 dark:text-gray-200 antialiased">
+
+    <header class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-sm border-b border-stone-200 dark:border-gray-700 sticky top-0 z-40">
+        <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
+            <a href="#" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-2xl font-brand">
+        <div id="start-screen" class="text-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">English Level Finder</h1>
+            <p class="text-gray-600 dark:text-gray-400 mt-4 text-lg max-w-xl mx-auto">
+                This adaptive quiz will help you find your English level. The questions will get easier or harder based on your answers. Please answer to the best of your ability.
+            </p>
+            <button id="start-btn" class="mt-8 bg-indigo-600 text-white font-semibold px-8 py-3 rounded-lg shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
+                Start Quiz
+            </button>
+        </div>
+
+        <div id="quiz-screen" class="hidden bg-white/50 dark:bg-gray-800/50 backdrop-blur-lg p-8 sm:p-10 rounded-2xl shadow-xl border border-stone-200/50 dark:border-gray-700/50">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Question</h2>
+                <div id="level-indicator" class="text-sm font-bold px-3 py-1 rounded-full"></div>
+            </div>
+            <p id="question-text" class="text-xl text-gray-800 dark:text-gray-200 mb-6"></p>
+            <div id="answer-area" class="space-y-3"></div>
+            <div id="feedback-area" class="mt-4 h-6 text-lg font-semibold"></div>
+            <button id="submit-btn" class="mt-6 w-full py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-sm hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed">
+                Submit Answer
+            </button>
+        </div>
+
+        <div id="result-screen" class="hidden text-center bg-white/50 dark:bg-gray-800/50 backdrop-blur-lg p-8 sm:p-12 rounded-2xl shadow-xl border border-stone-200/50 dark:border-gray-700/50">
+            <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200">Quiz Complete!</h2>
+            <h1 class="text-6xl font-bold text-indigo-600 dark:text-indigo-400 my-4" id="result-level"></h1>
+            <p class="text-lg text-gray-700 dark:text-gray-300" id="result-description"></p>
+            <p class="mt-6 text-gray-600 dark:text-gray-400">This is a great starting point for your learning journey.</p>
+            <button onclick="location.reload()" class="mt-8 bg-stone-200 text-stone-800 dark:bg-gray-700 dark:text-stone-200 font-semibold px-6 py-2 rounded-lg shadow-sm hover:bg-stone-300 dark:hover:bg-gray-600">
+                Take Again
+            </button>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const questionBank = {
+                'A1': [
+                    { type: 'mcq', question: 'My name ___ John.', options: ['is', 'are', 'am'], answer: 'is' },
+                    { type: 'mcq', question: 'I ___ from Mexico.', options: ['is', 'are', 'am'], answer: 'am' },
+                    { type: 'mcq', question: 'She ___ a doctor.', options: ['is', 'are', 'am'], answer: 'is' },
+                ],
+                'A2': [
+                    { type: 'mcq', question: 'I ___ to the cinema yesterday.', options: ['go', 'goes', 'went'], answer: 'went' },
+                    { type: 'mcq', question: 'What ___ you doing right now?', options: ['is', 'are', 'do'], answer: 'are' },
+                    { type: 'mcq', question: 'There isn\'t ___ milk in the fridge.', options: ['some', 'any', 'a'], answer: 'any' },
+                ],
+                'B1': [
+                    { type: 'mcq', question: 'If I had more money, I ___ travel the world.', options: ['will', 'would', 'am'], answer: 'would' },
+                    { type: 'mcq', question: 'I have ___ living here for three years.', options: ['be', 'been', 'being'], answer: 'been' },
+                    { type: 'drag-drop', question: 'Drag the word to complete the sentence: "I avoid ___ junk food."', words: ['eating', 'to eat'], answer: 'eating' }
+                ],
+                'B2': [
+                    { type: 'mcq', question: 'By the time you arrive, I ___ finished the report.', options: ['will have', 'have', 'had'], answer: 'will have' },
+                    { type: 'mcq', question: '___ the bad weather, the flight was on time.', options: ['Although', 'Despite', 'However'], answer: 'Despite' },
+                    { type: 'drag-drop', question: 'Complete the phrasal verb: "It was difficult, but we managed to ___ it off."', words: ['pull', 'push'], answer: 'pull' }
+                ],
+                 'C1': [
+                    { type: 'mcq', question: 'Not only ___ the exam, but she also got the top score.', options: ['she passed', 'did she pass', 'she did pass'], answer: 'did she pass' },
+                    { type:liayout: 'mcq', question: 'The decision was postponed, ___ was a source of frustration for everyone.', options: ['that', 'what', 'which'], answer: 'which' },
+                    { type: 'drag-drop', question: 'Choose the correct idiom: "He is feeling a bit under the ___."', words: ['weather', 'table'], answer: 'weather' }
+                ]
+            };
+            const levels = ['A1', 'A2', 'B1', 'B2', 'C1'];
+            const levelColors = {
+                A1: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300',
+                A2: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300',
+                B1: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300',
+                B2: 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300',
+                C1: 'bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300',
+            };
+
+            const startScreen = document.getElementById('start-screen');
+            const quizScreen = document.getElementById('quiz-screen');
+            const resultScreen = document.getElementById('result-screen');
+            const startBtn = document.getElementById('start-btn');
+            const submitBtn = document.getElementById('submit-btn');
+
+            let currentLevelIndex = 1; // Start at A2
+            let currentQuestionInLevel = 0;
+            let scoreForCurrentLevel = 0;
+            let finalLevel = 'A1'; // Default
+
+            startBtn.addEventListener('click', startQuiz);
+            submitBtn.addEventListener('click', handleSubmit);
+
+            function startQuiz() {
+                startScreen.classList.add('hidden');
+                resultScreen.classList.add('hidden');
+                quizScreen.classList.remove('hidden');
+                currentLevelIndex = 1; // Start at A2
+                finalLevel = 'A1';
+                resetLevelState();
+                loadQuestion();
+            }
+
+            function resetLevelState() {
+                currentQuestionInLevel = 0;
+                scoreForCurrentLevel = 0;
+            }
+
+            function loadQuestion() {
+                const level = levels[currentLevelIndex];
+                const questionData = questionBank[level][currentQuestionInLevel];
+                
+                document.getElementById('level-indicator').textContent = level;
+                document.getElementById('level-indicator').className = `text-sm font-bold px-3 py-1 rounded-full ${levelColors[level]}`;
+                document.getElementById('question-text').textContent = questionData.question;
+                
+                const answerArea = document.getElementById('answer-area');
+                answerArea.innerHTML = '';
+
+                if (questionData.type === 'mcq') {
+                    questionData.options.forEach(option => {
+                        answerArea.innerHTML += `
+                            <label class="block mcq-option bg-white dark:bg-gray-800 p-4 rounded-lg border border-stone-200 dark:border-gray-700 cursor-pointer hover:border-indigo-500">
+                                <input type="radio" name="answer" value="${option}" class="mr-3">
+                                <span>${option}</span>
+                            </label>
+                        `;
+                    });
+                } else if (questionData.type === 'drag-drop') {
+                    answerArea.innerHTML = `
+                        <div id="drop-zone-container" class="flex items-center gap-2">
+                             <div id="drop-zone" class="drop-zone border-2 border-stone-300 dark:border-gray-600 rounded-lg p-3 min-w-[100px] h-12"></div>
+                        </div>
+                        <div id="word-bank" class="flex gap-2 mt-4">
+                            ${questionData.words.map(word => `<div class="draggable-word bg-stone-200 dark:bg-gray-700 p-3 rounded-lg" draggable="true" data-word="${word}">${word}</div>`).join('')}
+                        </div>
+                    `;
+                    setupDragDrop();
+                }
+                submitBtn.disabled = false;
+                document.getElementById('feedback-area').textContent = '';
+            }
+            
+            function setupDragDrop() {
+                const draggables = document.querySelectorAll('.draggable-word');
+                const dropZone = document.getElementById('drop-zone');
+                draggables.forEach(d => {
+                    d.addEventListener('dragstart', e => {
+                        e.dataTransfer.setData('text/plain', d.dataset.word);
+                        d.classList.add('dragging');
+                    });
+                    d.addEventListener('dragend', () => d.classList.remove('dragging'));
+                });
+                dropZone.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    dropZone.classList.add('drag-over');
+                });
+                dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+                dropZone.addEventListener('drop', e => {
+                    e.preventDefault();
+                    dropZone.classList.remove('drag-over');
+                    const word = e.dataTransfer.getData('text/plain');
+                    dropZone.textContent = word;
+                    dropZone.dataset.answer = word;
+                });
+            }
+
+            function handleSubmit() {
+                const level = levels[currentLevelIndex];
+                const questionData = questionBank[level][currentQuestionInLevel];
+                let isCorrect = false;
+
+                if (questionData.type === 'mcq') {
+                    const selected = document.querySelector('input[name="answer"]:checked');
+                    if (selected && selected.value === questionData.answer) {
+                        isCorrect = true;
+                    }
+                } else if (questionData.type === 'drag-drop') {
+                    const dropZone = document.getElementById('drop-zone');
+                    if (dropZone && dropZone.dataset.answer === questionData.answer) {
+                        isCorrect = true;
+                    }
+                }
+                
+                showFeedback(isCorrect);
+                if (isCorrect) scoreForCurrentLevel++;
+
+                submitBtn.disabled = true;
+                setTimeout(decideNextStep, 1500);
+            }
+
+            function showFeedback(isCorrect) {
+                 const feedbackArea = document.getElementById('feedback-area');
+                 if(isCorrect) {
+                     feedbackArea.textContent = 'Correct!';
+                     feedbackArea.className = 'mt-4 h-6 text-lg font-semibold text-green-600';
+                 } else {
+                     feedbackArea.textContent = 'Incorrect.';
+                     feedbackArea.className = 'mt-4 h-6 text-lg font-semibold text-red-600';
+                 }
+            }
+
+            function decideNextStep() {
+                currentQuestionInLevel++;
+                const level = levels[currentLevelIndex];
+                const questionsInLevel = questionBank[level].length;
+
+                if (currentQuestionInLevel >= questionsInLevel) {
+                    // Level block is finished, evaluate performance
+                    const scorePercentage = (scoreForCurrentLevel / questionsInLevel);
+                    if (scorePercentage > 0.66) { // Passed the level
+                        finalLevel = level;
+                        currentLevelIndex++;
+                        if (currentLevelIndex >= levels.length) {
+                            // Passed the highest level
+                            endQuiz(levels[levels.length - 1]);
+                        } else {
+                            resetLevelState();
+                            loadQuestion();
+                        }
+                    } else { // Failed the level
+                        endQuiz(finalLevel);
+                    }
+                } else {
+                    loadQuestion();
+                }
+            }
+            
+            function endQuiz(level) {
+                quizScreen.classList.add('hidden');
+                resultScreen.classList.remove('hidden');
+                const descriptions = {
+                    'Pre-A1': 'You are at the beginning of your journey. You are ready to learn the fundamentals!',
+                    'A1': 'You have a basic understanding and can use familiar everyday expressions.',
+                    'A2': 'You can communicate in simple and routine tasks, describing your background and immediate needs.',
+                    'B1': 'You are an independent user and can handle most situations while traveling and can describe experiences and ambitions.',
+                    'B2': 'You have a good degree of fluency and spontaneity, allowing for regular interaction with native speakers.',
+                    'C1': 'You can use English flexibly for social, academic, and professional purposes with a high degree of accuracy.'
+                };
+                document.getElementById('result-level').textContent = level;
+                document.getElementById('result-description').textContent = descriptions[level];
+            }
+        });
+    </script>
+</body>
+</html>
