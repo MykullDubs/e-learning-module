@@ -102,7 +102,8 @@
                 ],
                  'C1': [
                     { type: 'mcq', question: 'Not only ___ the exam, but she also got the top score.', options: ['she passed', 'did she pass', 'she did pass'], answer: 'did she pass' },
-                    { type:liayout: 'mcq', question: 'The decision was postponed, ___ was a source of frustration for everyone.', options: ['that', 'what', 'which'], answer: 'which' },
+                    // *** THIS LINE IS NOW FIXED ***
+                    { type: 'mcq', question: 'The decision was postponed, ___ was a source of frustration for everyone.', options: ['that', 'what', 'which'], answer: 'which' },
                     { type: 'drag-drop', question: 'Choose the correct idiom: "He is feeling a bit under the ___."', words: ['weather', 'table'], answer: 'weather' }
                 ]
             };
@@ -276,7 +277,7 @@
                     'C1': 'You can use English flexibly for social, academic, and professional purposes with a high degree of accuracy.'
                 };
                 document.getElementById('result-level').textContent = level;
-                document.getElementById('result-description').textContent = descriptions[level];
+                document.getElementById('result-description').textContent = descriptions[level] || descriptions['C1'];
             }
         });
     </script>
