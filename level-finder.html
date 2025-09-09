@@ -39,7 +39,28 @@
 
     <header class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-sm border-b border-stone-200 dark:border-gray-700 sticky top-0 z-40">
         <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
-            <a href="dashboard.html" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
+            <a href="lesson-library.html" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <button id="profile-btn" class="flex items-center gap-3">
+                         <span id="user-level-badge" class="hidden text-xs font-bold px-2 py-0.5 rounded-full"></span>
+                        <div id="nav-avatar-container">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
+                        </div>
+                    </button>
+                    <div id="profile-dropdown" class="hidden absolute font-brand right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden z-10">
+                        <div class="px-4 py-2 text-sm text-stone-700 dark:text-stone-200">
+                            <p class="font-semibold">Signed in as</p>
+                            <p id="user-email-nav" class="truncate"></p>
+                        </div>
+                        <div class="border-t border-stone-200 dark:border-gray-600"></div>
+                        <a href="lesson-library.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Content Library</a>
+                        <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Settings</a>
+                        <div class="border-t border-stone-200 dark:border-gray-600"></div>
+                        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100 dark:hover:bg-gray-700">Log Out</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -80,8 +101,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
@@ -96,13 +117,43 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                // If no user is logged in, redirect to the login page.
-                window.location.href = 'Login.html';
+        const levelColors = { A1: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300', A2: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300', B1: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300', B2: 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300', C1: 'bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300' };
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // Populate Navbar
+                document.getElementById('user-email-nav').textContent = user.email;
+                if (user.photoURL) {
+                   document.getElementById('nav-avatar-container').innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
+                }
+                
+                // Fetch and display user's level badge
+                try {
+                    const userDocRef = doc(db, "users", user.uid);
+                    const docSnap = await getDoc(userDocRef);
+                    if (docSnap.exists() && docSnap.data().cefrLevel) {
+                        const level = docSnap.data().cefrLevel;
+                        const badge = document.getElementById('user-level-badge');
+                        badge.textContent = level;
+                        badge.className = `text-xs font-bold px-2 py-0.5 rounded-full ${levelColors[level]}`;
+                        badge.classList.remove('hidden');
+                    }
+                } catch (error) { console.error("Error fetching user level:", error); }
+
+            } else {
+                window.location.href = 'Login.html'; 
             }
         });
+        
+        // --- Navbar dropdown logic ---
+        const profileBtn = document.getElementById('profile-btn');
+        const profileDropdown = document.getElementById('profile-dropdown');
+        const logoutBtn = document.getElementById('logout-btn');
+        profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
+        window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
+        logoutBtn.addEventListener('click', () => { signOut(auth); });
 
+        // --- Quiz logic ---
         const questionBank = {
             'A1': [{ type: 'mcq', question: 'My name ___ John.', options: ['is', 'are', 'am'], answer: 'is' },{ type: 'mcq', question: 'I ___ from Mexico.', options: ['is', 'are', 'am'], answer: 'am' },{ type: 'mcq', question: 'She ___ a doctor.', options: ['is', 'are', 'am'], answer: 'is' },],
             'A2': [{ type: 'mcq', question: 'I ___ to the cinema yesterday.', options: ['go', 'goes', 'went'], answer: 'went' },{ type: 'mcq', question: 'What ___ you doing right now?', options: ['is', 'are', 'do'], answer: 'are' },{ type: 'mcq', question: 'There isn\'t ___ milk in the fridge.', options: ['some', 'any', 'a'], answer: 'any' },],
@@ -111,18 +162,13 @@
             'C1': [{ type: 'mcq', question: 'Not only ___ the exam, but she also got the top score.', options: ['she passed', 'did she pass', 'she did pass'], answer: 'did she pass' },{ type: 'mcq', question: 'The decision was postponed, ___ was a source of frustration for everyone.', options: ['that', 'what', 'which'], answer: 'which' },{ type: 'drag-drop', question: 'Choose the correct idiom: "He is feeling a bit under the ___."', words: ['weather', 'table'], answer: 'weather' }]
         };
         const levels = ['A1', 'A2', 'B1', 'B2', 'C1'];
-        const levelColors = { A1: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300', A2: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300', B1: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300', B2: 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300', C1: 'bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300', };
-
         const startScreen = document.getElementById('start-screen');
         const quizScreen = document.getElementById('quiz-screen');
         const resultScreen = document.getElementById('result-screen');
         const startBtn = document.getElementById('start-btn');
         const submitBtn = document.getElementById('submit-btn');
 
-        let currentLevelIndex = 1; // Start at A2
-        let currentQuestionInLevel = 0;
-        let scoreForCurrentLevel = 0;
-        let finalLevel = 'A1';
+        let currentLevelIndex = 1, currentQuestionInLevel = 0, scoreForCurrentLevel = 0, finalLevel = 'A1';
 
         startBtn.addEventListener('click', startQuiz);
         submitBtn.addEventListener('click', handleSubmit);
@@ -131,8 +177,7 @@
             startScreen.classList.add('hidden');
             resultScreen.classList.add('hidden');
             quizScreen.classList.remove('hidden');
-            currentLevelIndex = 1;
-            finalLevel = 'A1';
+            currentLevelIndex = 1; finalLevel = 'A1';
             resetLevelState();
             loadQuestion();
         }
@@ -144,21 +189,16 @@
 
         function loadQuestion() {
             const level = levels[currentLevelIndex];
-            const questionData = questionBank[level][currentQuestionInLevel];
-            
+            const q = questionBank[level][currentQuestionInLevel];
             document.getElementById('level-indicator').textContent = level;
             document.getElementById('level-indicator').className = `text-sm font-bold px-3 py-1 rounded-full ${levelColors[level]}`;
-            document.getElementById('question-text').textContent = questionData.question;
-            
+            document.getElementById('question-text').textContent = q.question;
             const answerArea = document.getElementById('answer-area');
             answerArea.innerHTML = '';
-
-            if (questionData.type === 'mcq') {
-                questionData.options.forEach(option => {
-                    answerArea.innerHTML += `<label class="block mcq-option bg-white dark:bg-gray-800 p-4 rounded-lg border border-stone-200 dark:border-gray-700 cursor-pointer hover:border-indigo-500"><input type="radio" name="answer" value="${option}" class="mr-3"><span>${option}</span></label>`;
-                });
-            } else if (questionData.type === 'drag-drop') {
-                answerArea.innerHTML = `<div class="flex items-center gap-2"><div id="drop-zone" class="drop-zone border-2 border-stone-300 dark:border-gray-600 rounded-lg p-3 min-w-[100px] h-12"></div></div><div id="word-bank" class="flex gap-2 mt-4">${questionData.words.map(word => `<div class="draggable-word bg-stone-200 dark:bg-gray-700 p-3 rounded-lg" draggable="true" data-word="${word}">${word}</div>`).join('')}</div>`;
+            if (q.type === 'mcq') {
+                q.options.forEach(o => { answerArea.innerHTML += `<label class="block mcq-option bg-white dark:bg-gray-800 p-4 rounded-lg border border-stone-200 dark:border-gray-700 cursor-pointer hover:border-indigo-500"><input type="radio" name="answer" value="${o}" class="mr-3"><span>${o}</span></label>`; });
+            } else if (q.type === 'drag-drop') {
+                answerArea.innerHTML = `<div class="flex items-center gap-2"><div id="drop-zone" class="drop-zone border-2 border-stone-300 dark:border-gray-600 rounded-lg p-3 min-w-[100px] h-12"></div></div><div id="word-bank" class="flex gap-2 mt-4">${q.words.map(w => `<div class="draggable-word bg-stone-200 dark:bg-gray-700 p-3 rounded-lg" draggable="true" data-word="${w}">${w}</div>`).join('')}</div>`;
                 setupDragDrop();
             }
             submitBtn.disabled = false;
@@ -178,21 +218,16 @@
         }
 
         function handleSubmit() {
-            const level = levels[currentLevelIndex];
-            const questionData = questionBank[level][currentQuestionInLevel];
+            const q = questionBank[levels[currentLevelIndex]][currentQuestionInLevel];
             let isCorrect = false;
-
-            if (questionData.type === 'mcq') {
+            if (q.type === 'mcq') {
                 const selected = document.querySelector('input[name="answer"]:checked');
-                if (selected && selected.value === questionData.answer) isCorrect = true;
-            } else if (questionData.type === 'drag-drop') {
-                const dropZone = document.getElementById('drop-zone');
-                if (dropZone && dropZone.dataset.answer === questionData.answer) isCorrect = true;
+                if (selected && selected.value === q.answer) isCorrect = true;
+            } else if (q.type === 'drag-drop') {
+                if (document.getElementById('drop-zone')?.dataset.answer === q.answer) isCorrect = true;
             }
-            
             showFeedback(isCorrect);
             if (isCorrect) scoreForCurrentLevel++;
-
             submitBtn.disabled = true;
             setTimeout(decideNextStep, 1500);
         }
@@ -207,31 +242,20 @@
             currentQuestionInLevel++;
             const level = levels[currentLevelIndex];
             const questionsInLevel = questionBank[level].length;
-
             if (currentQuestionInLevel >= questionsInLevel) {
-                const scorePercentage = (scoreForCurrentLevel / questionsInLevel);
-                if (scorePercentage > 0.66) {
+                if ((scoreForCurrentLevel / questionsInLevel) > 0.66) {
                     finalLevel = level;
                     currentLevelIndex++;
-                    if (currentLevelIndex >= levels.length) {
-                        endQuiz(levels[levels.length - 1]);
-                    } else {
-                        resetLevelState();
-                        loadQuestion();
-                    }
-                } else {
-                    endQuiz(finalLevel);
-                }
-            } else {
-                loadQuestion();
-            }
+                    if (currentLevelIndex >= levels.length) { endQuiz(levels[levels.length - 1]); } 
+                    else { resetLevelState(); loadQuestion(); }
+                } else { endQuiz(finalLevel); }
+            } else { loadQuestion(); }
         }
         
         async function endQuiz(level) {
             quizScreen.classList.add('hidden');
             resultScreen.classList.remove('hidden');
-            const descriptions = { 'A1': 'You have a basic understanding and can use familiar everyday expressions.', 'A2': 'You can communicate in simple and routine tasks, describing your background and immediate needs.', 'B1': 'You are an independent user and can handle most situations while traveling and can describe experiences and ambitions.', 'B2': 'You have a good degree of fluency and spontaneity, allowing for regular interaction with native speakers.', 'C1': 'You can use English flexibly for social, academic, and professional purposes with a high degree of accuracy.' };
-            
+            const descriptions = { 'A1': 'You have a basic understanding and can use familiar everyday expressions.', 'A2': 'You can communicate in simple and routine tasks.', 'B1': 'You are an independent user and can handle most situations.', 'B2': 'You have a good degree of fluency and spontaneity.', 'C1': 'You can use English flexibly for academic and professional purposes.' };
             document.getElementById('result-level').textContent = level;
             document.getElementById('result-description').textContent = descriptions[level] || descriptions['C1'];
 
@@ -240,10 +264,7 @@
                 try {
                     const userDocRef = doc(db, "users", user.uid);
                     await setDoc(userDocRef, { cefrLevel: level }, { merge: true });
-                    console.log("User level badge saved successfully!");
-                } catch (error) {
-                    console.error("Error writing document: ", error);
-                }
+                } catch (error) { console.error("Error writing document: ", error); }
             }
         }
     </script>
