@@ -41,11 +41,19 @@
         }
         .portfolio-card {
             position: relative; 
-            transition: opacity 0.4s ease, transform 0.4s ease;
+            transition: opacity 0.4s ease, transform 0.4s ease, border-color 0.3s ease;
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
+         .portfolio-card.active {
+            transform: translateY(-8px);
+            border-color: #6366F1 !important; /* Indigo-500 */
+        }
+        .dark .portfolio-card.active {
+             border-color: #818CF8 !important; /* Indigo-400 */
+        }
+
         .card-content-collapsed, .card-content-expanded {
             position: absolute;
             inset: 0;
@@ -68,7 +76,6 @@
             text-align: left;
         }
         
-        /* HOVER STATES */
         .portfolio-grid.hover-active .card-content-collapsed {
             opacity: 0;
             transform: translateY(-15px);
@@ -77,6 +84,13 @@
             opacity: 1;
             transform: translateY(0px);
             transition-delay: 0.2s;
+        }
+
+        .project-detail-container {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.6s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.6s ease, margin-top 0.6s ease;
+            opacity: 0;
         }
 
         @media (max-width: 1024px) {
@@ -102,90 +116,148 @@
                 <p class="text-gray-600 dark:text-gray-300 mt-4 text-lg leading-relaxed">
                     Hi, I'm Michael. I help my clients build and deploy human-centered learning experiences. I specialize in bridging the gap between instructional theory and modern technology to create training that is effective, engaging, and scalable.
                 </p>
-                <p class="text-gray-600 dark:text-gray-300 mt-2 text-lg leading-relaxed">
-                    Check out some of my portfolio projects below to get an idea of how I can help your organization through effective virtual learning tools and experiences.
-                </p>
             </div>
         </header>
         
-        <div id="portfolio-grid" class="portfolio-grid">
-            <!-- Project 1 -->
-            <div data-project="gfe" class="portfolio-card bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border border-stone-200/50 dark:border-gray-700/50">
-                <div class="card-content-collapsed">
-                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Golden Fellows English</h3>
-                    <p class="mt-2 text-gray-600 dark:text-gray-400">A full-scale LMS, curriculum library, and connection point for ESL teachers and students.</p>
-                </div>
-                <div class="card-content-expanded bg-gradient-to-br from-white via-indigo-50 to-white dark:from-gray-800 dark:via-indigo-900/20 dark:to-gray-800 rounded-2xl">
-                </div>
+        <div id="portfolio-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div data-project="gfe" class="portfolio-card bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border-2 border-transparent cursor-pointer">
+                <div class="card-content-collapsed"><h3 class="text-2xl font-bold text-gray-900 dark:text-white">Golden Fellows English</h3><p class="mt-2 text-gray-600 dark:text-gray-400">A full-scale LMS, curriculum library, and connection point for ESL teachers and students.</p></div>
+                <div class="card-content-expanded bg-gradient-to-br from-white via-indigo-50 to-white dark:from-gray-800 dark:via-indigo-900/20 dark:to-gray-800 rounded-2xl"></div>
             </div>
-            <!-- Project 2 -->
-            <div data-project="ai-course" class="portfolio-card bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border border-stone-200/50 dark:border-gray-700/50">
-                 <div class="card-content-collapsed">
-                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white">AI for Instructional Design</h3>
-                    <p class="mt-2 text-gray-600 dark:text-gray-400">An 8-module course teaching L&D professionals to leverage AI for rapid prototyping.</p>
-                </div>
-                <div class="card-content-expanded bg-gradient-to-br from-white via-green-50 to-white dark:from-gray-800 dark:via-green-900/20 dark:to-gray-800 rounded-2xl">
-                </div>
+            <div data-project="ai-course" class="portfolio-card bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border-2 border-transparent cursor-pointer">
+                 <div class="card-content-collapsed"><h3 class="text-2xl font-bold text-gray-900 dark:text-white">AI for Instructional Design</h3><p class="mt-2 text-gray-600 dark:text-gray-400">An 8-module course teaching L&D professionals to leverage AI for rapid prototyping.</p></div>
+                <div class="card-content-expanded bg-gradient-to-br from-white via-green-50 to-white dark:from-gray-800 dark:via-green-900/20 dark:to-gray-800 rounded-2xl"></div>
             </div>
-             <!-- Project 3 -->
-            <div data-project="leadership" class="portfolio-card bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border border-stone-200/50 dark:border-gray-700/50">
-                 <div class="card-content-collapsed">
-                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Leadership Skills Workshop</h3>
-                    <p class="mt-2 text-gray-600 dark:text-gray-400">A blended learning program for emerging leaders in the tech industry.</p>
-                </div>
-                 <div class="card-content-expanded bg-gradient-to-br from-white via-amber-50 to-white dark:from-gray-800 dark:via-amber-900/20 dark:to-gray-800 rounded-2xl">
-                </div>
+            <div data-project="leadership" class="portfolio-card bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border-2 border-transparent cursor-pointer">
+                 <div class="card-content-collapsed"><h3 class="text-2xl font-bold text-gray-900 dark:text-white">Leadership Skills Workshop</h3><p class="mt-2 text-gray-600 dark:text-gray-400">A blended learning program for emerging leaders in the tech industry.</p></div>
+                 <div class="card-content-expanded bg-gradient-to-br from-white via-amber-50 to-white dark:from-gray-800 dark:via-amber-900/20 dark:to-gray-800 rounded-2xl"></div>
             </div>
         </div>
 
+        <div id="project-detail-container" class="project-detail-container">
+            <!-- JS will inject the expanded detail content here -->
+        </div>
     </main>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const grid = document.getElementById('portfolio-grid');
             const cards = document.querySelectorAll('.portfolio-card');
+            const detailContainer = document.getElementById('project-detail-container');
+            let activeProject = null;
             
             const projectData = {
                 gfe: {
-                    goal: `<h4 class="font-bold text-2xl mb-3 text-indigo-800 dark:text-indigo-300">Project Goal</h4><p class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">Design and develop a complete, scalable e-learning platform to deliver high-quality, interactive ESL lessons while supporting premium, instructor-led services.</p>`,
-                    role: `<h4 class="font-bold text-2xl mb-3 text-indigo-800 dark:text-indigo-300">My Role & Process</h4><p class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">As the lead LXD and developer, I used a rapid prototyping model (SAM) to build a secure, Firebase-powered backend and an intuitive frontend for students and instructors.</p>`,
-                    features: `<h4 class="font-bold text-2xl mb-3 text-indigo-800 dark:text-indigo-300">Key Features</h4><ul class="space-y-2 text-gray-700 dark:text-gray-300 list-disc list-inside text-lg"><li>CEFR-aligned lesson library</li><li>Secure user authentication</li><li>Stripe payment integration</li><li>Audio submission portal</li><li>Real-time discussion forums</li></ul>`
+                    title: "Golden Fellows English",
+                    hover: {
+                        goal: `<h4 class="font-bold text-2xl mb-3 text-indigo-800 dark:text-indigo-300">Project Goal</h4><p class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">Design and develop a complete, scalable e-learning platform...</p>`,
+                        role: `<h4 class="font-bold text-2xl mb-3 text-indigo-800 dark:text-indigo-300">My Role & Process</h4><p class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">As the lead LXD and developer, I used a rapid prototyping model (SAM)...</p>`,
+                        features: `<h4 class="font-bold text-2xl mb-3 text-indigo-800 dark:text-indigo-300">Key Features</h4><ul class="space-y-2 text-gray-700 dark:text-gray-300 list-disc list-inside text-lg"><li>CEFR-aligned lesson library</li><li>Secure user authentication</li><li>Stripe payment integration</li></ul>`
+                    },
+                    detail: {
+                        content: `<p>This project involved the end-to-end design and development of a complete, scalable e-learning platform. The core challenge was to create a system that could deliver high-quality, interactive ESL lessons while also supporting premium, instructor-led services such as audio feedback and private lessons. Using a rapid prototyping model (SAM), we built a secure, Firebase-powered backend to manage users, progress, and submissions, and a beautiful, intuitive frontend for both students and instructors.</p>`,
+                        tech: ["HTML5", "Tailwind CSS", "JavaScript", "Firebase", "Stripe", "Vercel"]
+                    }
                 },
                 'ai-course': {
-                    goal: `<h4 class="font-bold text-2xl mb-3 text-green-800 dark:text-green-300">Project Goal</h4><p class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">Empower Learning & Development professionals to dramatically accelerate their workflow by mastering AI-powered tools for rapid instructional design and development.</p>`,
-                    role: `<h4 class="font-bold text-2xl mb-3 text-green-800 dark:text-green-300">My Role & Process</h4><p class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">I designed and built the entire 8-module curriculum as a hands-on, project-based learning experience. The course guides learners through building a complete web app from scratch, focusing on the art and science of effective prompting.</p>`,
-                    features: `<h4 class="font-bold text-2xl mb-3 text-green-800 dark:text-green-300">Key Learning Outcomes</h4><ul class="space-y-2 text-gray-700 dark:text-gray-300 list-disc list-inside text-lg"><li>Crafting structured prompts</li><li>Generating interactive components</li><li>Implementing a secure backend</li><li>Integrating with APIs like Stripe</li><li>Applying the SAM model with AI</li></ul>`
+                     title: "AI for Instructional Design",
+                    hover: {
+                        goal: `<h4 class="font-bold text-2xl mb-3 text-green-800 dark:text-green-300">Project Goal</h4><p class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">Empower L&D professionals to dramatically accelerate their workflow...</p>`,
+                        role: `<h4 class="font-bold text-2xl mb-3 text-green-800 dark:text-green-300">My Role & Process</h4><p class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">I designed and built the entire 8-module curriculum as a hands-on, project-based learning experience...</p>`,
+                        features: `<h4 class="font-bold text-2xl mb-3 text-green-800 dark:text-green-300">Key Outcomes</h4><ul class="space-y-2 text-gray-700 dark:text-gray-300 list-disc list-inside text-lg"><li>Crafting structured prompts</li><li>Generating interactive components</li><li>Implementing a secure backend</li></ul>`
+                    },
+                    detail: {
+                        content: `<p>This 8-module course was designed to teach Learning & Development professionals how to leverage AI for rapid instructional design. As the lead curriculum designer and developer, I crafted a hands-on, project-based learning experience. The course guides learners through building a complete web application from scratch using AI, focusing on the art and science of effective prompting for creating engaging, interactive, and instructionally sound learning content.</p>`,
+                        tech: ["HTML5", "Tailwind CSS", "JavaScript", "Firebase", "Resend", "Vercel"]
+                    }
                 },
                 leadership: {
-                    goal: `<h4 class="font-bold text-2xl mb-3 text-amber-800 dark:text-amber-300">Project Goal</h4><p class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">Develop a six-week blended learning program to equip newly promoted managers in the tech industry with essential leadership and communication skills.</p>`,
-                    role: `<h4 class="font-bold text-2xl mb-3 text-amber-800 dark:text-amber-300">My Role & Process</h4><p class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">I conducted needs analysis, designed the curriculum, and developed all learning materials, including interactive e-learning scenarios, video coaching scripts, and facilitator guides for the live virtual sessions.</p>`,
-                    features: `<h4 class="font-bold text-2xl mb-3 text-amber-800 dark:text-amber-300">Key Features</h4><ul class="space-y-2 text-gray-700 dark:text-gray-300 list-disc list-inside text-lg"><li>Interactive Scenarios</li><li>Video Coaching Modules</li><li>Peer Feedback System</li><li>Personalized Development Plans</li><li>Live Virtual Workshops</li></ul>`
+                    title: "Leadership Skills Workshop",
+                     hover: {
+                        goal: `<h4 class="font-bold text-2xl mb-3 text-amber-800 dark:text-amber-300">Project Goal</h4><p class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">Develop a six-week blended learning program to equip newly promoted managers...</p>`,
+                        role: `<h4 class="font-bold text-2xl mb-3 text-amber-800 dark:text-amber-300">My Role & Process</h4><p class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">I conducted needs analysis, designed the curriculum, and developed all learning materials...</p>`,
+                        features: `<h4 class="font-bold text-2xl mb-3 text-amber-800 dark:text-amber-300">Key Features</h4><ul class="space-y-2 text-gray-700 dark:text-gray-300 list-disc list-inside text-lg"><li>Interactive Scenarios</li><li>Video Coaching Modules</li><li>Peer Feedback System</li></ul>`
+                    },
+                    detail: {
+                        content: `<p>This six-week blended learning program was created to equip newly promoted managers in the tech industry with essential leadership and communication skills. I conducted needs analysis with stakeholders, designed the full curriculum arc, and developed all learning materials. This included interactive e-learning scenarios built in Articulate Storyline, video coaching scripts, and detailed facilitator guides for the live virtual workshops held on Zoom.</p>`,
+                        tech: ["Articulate Storyline", "Canva", "Zoom", "Miro", "Figma"]
+                    }
                 }
             };
 
-            cards.forEach(card => {
-                const cardFront = card.querySelector('.card-content-collapsed');
-                const cardBack = card.querySelector('.card-content-expanded');
+            function createDetailHTML(projectKey) {
+                const project = projectData[projectKey];
+                const techStackHTML = project.detail.tech.map(tech => `
+                    <div class="flex items-center gap-2 bg-stone-100 dark:bg-gray-700 p-2 rounded-md">
+                        <span class="text-sm font-semibold">${tech}</span>
+                    </div>`).join('');
 
-                card.addEventListener('mouseenter', () => {
-                    const project = card.dataset.project;
-                    const data = projectData[project];
-                    
-                    grid.classList.add('hover-active');
-                    
-                    // Populate all three cards with the hovered project's data
-                    const card1Back = document.querySelector('[data-project="gfe"] .card-content-expanded');
-                    const card2Back = document.querySelector('[data-project="ai-course"] .card-content-expanded');
-                    const card3Back = document.querySelector('[data-project="leadership"] .card-content-expanded');
-
-                    card1Back.innerHTML = data.goal;
-                    card2Back.innerHTML = data.role;
-                    card3Back.innerHTML = data.features;
-                });
-            });
+                return `
+                    <div class="mt-8 bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg p-8 rounded-2xl shadow-2xl border border-stone-200/50 dark:border-gray-700/50">
+                        <div class="flex justify-between items-start mb-6">
+                            <h2 class="text-3xl font-bold font-brand text-gray-900 dark:text-white">${project.title}</h2>
+                            <button class="close-detail-btn text-3xl text-gray-400 hover:text-gray-800 dark:hover:text-white">&times;</button>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <div class="md:col-span-2 text-lg text-gray-600 dark:text-gray-300 space-y-4">${project.detail.content}</div>
+                            <div>
+                                <h3 class="font-bold text-xl mb-3 font-brand">Tech Stack</h3>
+                                <div class="flex flex-wrap gap-2">${techStackHTML}</div>
+                            </div>
+                        </div>
+                    </div>`;
+            }
             
-            grid.addEventListener('mouseleave', () => {
-                grid.classList.remove('hover-active');
+            cards.forEach(card => {
+                const card1Back = document.querySelector('[data-project="gfe"] .card-content-expanded');
+                const card2Back = document.querySelector('[data-project="ai-course"] .card-content-expanded');
+                const card3Back = document.querySelector('[data-project="leadership"] .card-content-expanded');
+                
+                card.addEventListener('mouseenter', () => {
+                    if (activeProject) return; // Don't trigger hover if a detail is open
+                    const project = projectData[card.dataset.project];
+                    grid.classList.add('hover-active');
+                    card1Back.innerHTML = project.hover.goal;
+                    card2Back.innerHTML = project.hover.role;
+                    card3Back.innerHTML = project.hover.features;
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    grid.classList.remove('hover-active');
+                });
+
+                card.addEventListener('click', () => {
+                    const projectKey = card.dataset.project;
+
+                    if (activeProject === projectKey) {
+                        // Clicked the active card, so close it
+                        detailContainer.style.maxHeight = '0px';
+                        detailContainer.style.opacity = 0;
+                        detailContainer.style.marginTop = '0';
+                        card.classList.remove('active');
+                        activeProject = null;
+                    } else {
+                        // Clicked a new card
+                        cards.forEach(c => c.classList.remove('active'));
+                        card.classList.add('active');
+                        activeProject = projectKey;
+
+                        detailContainer.innerHTML = createDetailHTML(projectKey);
+                        setTimeout(() => {
+                            detailContainer.style.maxHeight = detailContainer.scrollHeight + 'px';
+                            detailContainer.style.opacity = 1;
+                            detailContainer.style.marginTop = '2rem';
+
+                            detailContainer.querySelector('.close-detail-btn').addEventListener('click', () => {
+                                detailContainer.style.maxHeight = '0px';
+                                detailContainer.style.opacity = 0;
+                                detailContainer.style.marginTop = '0';
+                                card.classList.remove('active');
+                                activeProject = null;
+                            });
+                        }, 10);
+                    }
+                });
             });
         });
     </script>
