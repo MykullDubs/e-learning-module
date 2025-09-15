@@ -208,13 +208,13 @@
                     </div>`;
             }
             
+            const card1Back = document.querySelector('[data-project="gfe"] .card-content-expanded');
+            const card2Back = document.querySelector('[data-project="ai-course"] .card-content-expanded');
+            const card3Back = document.querySelector('[data-project="leadership"] .card-content-expanded');
+
             cards.forEach(card => {
-                const card1Back = document.querySelector('[data-project="gfe"] .card-content-expanded');
-                const card2Back = document.querySelector('[data-project="ai-course"] .card-content-expanded');
-                const card3Back = document.querySelector('[data-project="leadership"] .card-content-expanded');
-                
-                card.addEventListener('mouseenter', () => {
-                    if (activeProject) return; // Don't trigger hover if a detail is open
+                card.addEventListener('mouseover', () => {
+                    if (activeProject) return;
                     const project = projectData[card.dataset.project];
                     grid.classList.add('hover-active');
                     card1Back.innerHTML = project.hover.goal;
@@ -222,32 +222,23 @@
                     card3Back.innerHTML = project.hover.features;
                 });
 
-                card.addEventListener('mouseleave', () => {
-                    grid.classList.remove('hover-active');
-                });
-
                 card.addEventListener('click', () => {
                     const projectKey = card.dataset.project;
-
                     if (activeProject === projectKey) {
-                        // Clicked the active card, so close it
                         detailContainer.style.maxHeight = '0px';
                         detailContainer.style.opacity = 0;
                         detailContainer.style.marginTop = '0';
                         card.classList.remove('active');
                         activeProject = null;
                     } else {
-                        // Clicked a new card
                         cards.forEach(c => c.classList.remove('active'));
                         card.classList.add('active');
                         activeProject = projectKey;
-
                         detailContainer.innerHTML = createDetailHTML(projectKey);
                         setTimeout(() => {
                             detailContainer.style.maxHeight = detailContainer.scrollHeight + 'px';
                             detailContainer.style.opacity = 1;
                             detailContainer.style.marginTop = '2rem';
-
                             detailContainer.querySelector('.close-detail-btn').addEventListener('click', () => {
                                 detailContainer.style.maxHeight = '0px';
                                 detailContainer.style.opacity = 0;
@@ -258,6 +249,11 @@
                         }, 10);
                     }
                 });
+            });
+            
+            grid.addEventListener('mouseleave', () => {
+                if (activeProject) return;
+                grid.classList.remove('hover-active');
             });
         });
     </script>
