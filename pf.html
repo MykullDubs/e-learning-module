@@ -211,19 +211,31 @@
             const card1Back = document.querySelector('[data-project="gfe"] .card-content-expanded');
             const card2Back = document.querySelector('[data-project="ai-course"] .card-content-expanded');
             const card3Back = document.querySelector('[data-project="leadership"] .card-content-expanded');
-
-            cards.forEach(card => {
-                card.addEventListener('mouseover', () => {
-                    if (activeProject) return;
-                    const project = projectData[card.dataset.project];
+            
+            // --- Corrected Hover and Click Logic ---
+            grid.addEventListener('mouseover', (e) => {
+                if (activeProject) return; // Don't do hover effect if a detail view is open
+                const hoveredCard = e.target.closest('.portfolio-card');
+                if (hoveredCard) {
+                    const project = projectData[hoveredCard.dataset.project];
                     grid.classList.add('hover-active');
                     card1Back.innerHTML = project.hover.goal;
                     card2Back.innerHTML = project.hover.role;
                     card3Back.innerHTML = project.hover.features;
-                });
+                }
+            });
 
+            grid.addEventListener('mouseleave', () => {
+                if (activeProject) return;
+                grid.classList.remove('hover-active');
+            });
+
+            cards.forEach(card => {
                 card.addEventListener('click', () => {
                     const projectKey = card.dataset.project;
+                    
+                    grid.classList.remove('hover-active'); // Turn off hover effect when clicking
+
                     if (activeProject === projectKey) {
                         detailContainer.style.maxHeight = '0px';
                         detailContainer.style.opacity = 0;
@@ -249,11 +261,6 @@
                         }, 10);
                     }
                 });
-            });
-            
-            grid.addEventListener('mouseleave', () => {
-                if (activeProject) return;
-                grid.classList.remove('hover-active');
             });
         });
     </script>
