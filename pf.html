@@ -42,43 +42,59 @@
             grid-column: span 1;
             transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
             overflow: hidden;
+            position: relative;
         }
         .portfolio-card .card-content-collapsed {
              transition: opacity 0.3s ease-out;
+             height: 100%;
         }
         .portfolio-card .card-content-expanded {
             opacity: 0;
-            max-height: 0;
-            overflow: hidden;
-            transition: opacity 0.5s ease-in 0.2s, max-height 0.5s ease-in;
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease-in 0.2s;
         }
         
-        /* Hover states for the grid */
-        .portfolio-grid.item-1-hover .portfolio-card:not(:nth-child(1)) {
+        /* General hover state for any item */
+        .portfolio-grid.hover-active .portfolio-card.active {
+            grid-column: span 3;
+        }
+        .portfolio-grid.hover-active .portfolio-card:not(.active) {
             opacity: 0;
             transform: scale(0.95);
         }
-        .portfolio-grid.item-1-hover .portfolio-card:nth-child(1) {
-            grid-column: span 3;
-        }
-
-        .portfolio-grid.item-1-hover .portfolio-card:nth-child(1) .card-content-collapsed {
+        .portfolio-grid.hover-active .portfolio-card.active .card-content-collapsed {
             opacity: 0;
         }
-        .portfolio-grid.item-1-hover .portfolio-card:nth-child(1) .card-content-expanded {
+        .portfolio-grid.hover-active .portfolio-card.active .card-content-expanded {
             opacity: 1;
-            max-height: 1000px; /* Large enough to not clip content */
+            pointer-events: auto;
         }
         
+        /* Tri-fold animation */
+        .trifold-panel {
+            transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transform: scaleY(0.95);
+            opacity: 0;
+        }
+        .portfolio-grid.hover-active .portfolio-card.active .trifold-panel {
+            transform: scaleY(1);
+            opacity: 1;
+        }
+        .portfolio-grid.hover-active .portfolio-card.active .trifold-panel-2 { transition-delay: 0.1s; }
+        .portfolio-grid.hover-active .portfolio-card.active .trifold-panel-3 { transition-delay: 0.2s; }
+
+
         @media (max-width: 1024px) {
             .portfolio-grid,
-            .portfolio-grid.item-1-hover {
+            .portfolio-grid.hover-active {
                 grid-template-columns: 1fr;
             }
-             .portfolio-grid.item-1-hover .portfolio-card:not(:nth-child(1)) {
+             .portfolio-grid.hover-active .portfolio-card:not(.active) {
                 display: none;
             }
-            .portfolio-grid.item-1-hover .portfolio-card:nth-child(1) {
+            .portfolio-grid.hover-active .portfolio-card.active {
                 grid-column: span 1;
             }
         }
@@ -107,25 +123,28 @@
 
         <div id="portfolio-grid" class="portfolio-grid">
             <!-- Project 1 -->
-            <div class="portfolio-card bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-stone-200/50 dark:border-gray-700/50 cursor-pointer" data-item="1">
-                <div class="card-content-collapsed">
+            <div class="portfolio-card bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-stone-200/50 dark:border-gray-700/50 cursor-pointer">
+                <div class="card-content-collapsed flex flex-col justify-center h-full">
                     <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Golden Fellows English</h3>
                     <p class="mt-2 text-gray-600 dark:text-gray-400">An 8-module course on AI-powered instructional design and development.</p>
                 </div>
-                <div class="card-content-expanded">
-                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white">Golden Fellows English Platform</h3>
-                    <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div>
-                            <p class="text-gray-600 dark:text-gray-300 leading-relaxed">This project involved the end-to-end design and development of a complete, scalable e-learning platform. The core challenge was to create a system that could deliver high-quality, interactive ESL lessons while also supporting premium, instructor-led services.</p>
-                            <p class="text-gray-600 dark:text-gray-300 leading-relaxed mt-4">Using a rapid prototyping model, we built a secure, Firebase-powered backend to manage users, progress, and submissions, and a beautiful, intuitive frontend for both students and instructors.</p>
+                <div class="card-content-expanded p-8">
+                    <div class="grid grid-cols-3 gap-8">
+                        <div class="trifold-panel trifold-panel-1">
+                            <h4 class="font-bold text-lg mb-2">Project Goal</h4>
+                            <p class="text-gray-600 dark:text-gray-300 leading-relaxed text-sm">Design and develop a complete, scalable e-learning platform to deliver high-quality, interactive ESL lessons while supporting premium, instructor-led services.</p>
                         </div>
-                        <div>
-                            <h4 class="font-bold">Key Features Implemented:</h4>
-                            <ul class="mt-2 space-y-2 text-gray-600 dark:text-gray-400 list-disc list-inside">
-                                <li>CEFR-aligned lesson library with dynamic filtering</li>
-                                <li>Secure user authentication and profile management</li>
-                                <li>Subscription tiers with Stripe integration</li>
-                                <li>Audio submission portal for instructor feedback</li>
+                        <div class="trifold-panel trifold-panel-2">
+                             <h4 class="font-bold text-lg mb-2">My Role & Process</h4>
+                            <p class="text-gray-600 dark:text-gray-300 leading-relaxed text-sm">As the lead LXD and developer, I used a rapid prototyping model (SAM) to build a secure, Firebase-powered backend and an intuitive frontend for students and instructors.</p>
+                        </div>
+                        <div class="trifold-panel trifold-panel-3">
+                             <h4 class="font-bold text-lg mb-2">Key Features</h4>
+                            <ul class="space-y-1 text-gray-600 dark:text-gray-400 list-disc list-inside text-sm">
+                                <li>CEFR-aligned lesson library</li>
+                                <li>Secure user authentication</li>
+                                <li>Stripe payment integration</li>
+                                <li>Audio submission portal</li>
                                 <li>Real-time discussion forums</li>
                             </ul>
                         </div>
@@ -133,14 +152,24 @@
                 </div>
             </div>
             <!-- Project 2 -->
-            <div class="portfolio-card bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-stone-200/50 dark:border-gray-700/50" data-item="2">
-                 <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Corporate Onboarding Simulation</h3>
-                 <p class="mt-2 text-gray-600 dark:text-gray-400">An interactive scenario-based simulation for new hires at a Fortune 500 company.</p>
+            <div class="portfolio-card bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-stone-200/50 dark:border-gray-700/50 cursor-pointer">
+                 <div class="card-content-collapsed flex flex-col justify-center h-full">
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Corporate Onboarding Simulation</h3>
+                    <p class="mt-2 text-gray-600 dark:text-gray-400">An interactive scenario-based simulation for new hires at a Fortune 500 company.</p>
+                </div>
+                <div class="card-content-expanded p-8">
+                    <!-- Expanded content for Project 2 would go here -->
+                </div>
             </div>
              <!-- Project 3 -->
-            <div class="portfolio-card bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-stone-200/50 dark:border-gray-700/50" data-item="3">
-                 <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Leadership Skills Workshop</h3>
-                 <p class="mt-2 text-gray-600 dark:text-gray-400">A blended learning program for emerging leaders in the tech industry.</p>
+            <div class="portfolio-card bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-stone-200/50 dark:border-gray-700/50 cursor-pointer">
+                 <div class="card-content-collapsed flex flex-col justify-center h-full">
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Leadership Skills Workshop</h3>
+                    <p class="mt-2 text-gray-600 dark:text-gray-400">A blended learning program for emerging leaders in the tech industry.</p>
+                </div>
+                 <div class="card-content-expanded p-8">
+                    <!-- Expanded content for Project 3 would go here -->
+                </div>
             </div>
         </div>
 
@@ -153,21 +182,17 @@
 
             cards.forEach(card => {
                 card.addEventListener('mouseenter', () => {
-                    const item = card.dataset.item;
-                    // For now, we only have the logic for item 1 as per the wireframe
-                    if (item === '1') {
-                        grid.classList.add(`item-${item}-hover`);
-                    }
+                    grid.classList.add('hover-active');
+                    card.classList.add('active');
                 });
 
                 card.addEventListener('mouseleave', () => {
-                    const item = card.dataset.item;
-                     if (item === '1') {
-                        grid.classList.remove(`item-${item}-hover`);
-                    }
+                    grid.classList.remove('hover-active');
+                    card.classList.remove('active');
                 });
             });
         });
     </script>
 </body>
 </html>
+
