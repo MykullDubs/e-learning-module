@@ -44,7 +44,7 @@
             transition: opacity 0.4s ease, transform 0.4s ease;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* Hide content that overflows during animation */
+            overflow: hidden;
         }
         .card-content-collapsed, .card-content-expanded {
             position: absolute;
@@ -60,15 +60,15 @@
         .card-content-expanded {
             opacity: 0;
             pointer-events: none;
-            transform: translateY(10px);
-            align-items: flex-start; /* Align expanded content to the top-left */
+            transform: translateY(15px);
+            align-items: flex-start;
             text-align: left;
         }
         
         /* HOVER STATES */
         .portfolio-grid.hover-active .card-content-collapsed {
             opacity: 0;
-            transform: translateY(-10px);
+            transform: translateY(-15px);
         }
         .portfolio-grid.hover-active .card-content-expanded {
             opacity: 1;
@@ -112,9 +112,9 @@
                     <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Golden Fellows English</h3>
                     <p class="mt-2 text-gray-600 dark:text-gray-400">An 8-module course on AI-powered instructional design and development.</p>
                 </div>
-                <div class="card-content-expanded">
-                    <h4 class="font-bold text-lg mb-2">Project Goal</h4>
-                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed text-sm">Design and develop a complete, scalable e-learning platform to deliver high-quality, interactive ESL lessons while supporting premium, instructor-led services.</p>
+                <div class="card-content-expanded bg-gradient-to-br from-white via-indigo-50 to-white dark:from-gray-800 dark:via-indigo-900/20 dark:to-gray-800 rounded-2xl">
+                    <h4 class="font-bold text-xl mb-3 text-indigo-800 dark:text-indigo-300">Project Goal</h4>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-base">Design and develop a complete, scalable e-learning platform to deliver high-quality, interactive ESL lessons while supporting premium, instructor-led services.</p>
                 </div>
             </div>
             <!-- Project 2 -->
@@ -123,9 +123,9 @@
                     <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Corporate Onboarding Simulation</h3>
                     <p class="mt-2 text-gray-600 dark:text-gray-400">An interactive scenario-based simulation for new hires at a Fortune 500 company.</p>
                 </div>
-                <div class="card-content-expanded">
-                    <h4 class="font-bold text-lg mb-2">My Role & Process</h4>
-                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed text-sm">As the lead LXD and developer, I used a rapid prototyping model (SAM) to build a secure, Firebase-powered backend and an intuitive frontend for students and instructors.</p>
+                <div class="card-content-expanded bg-gradient-to-br from-white via-rose-50 to-white dark:from-gray-800 dark:via-rose-900/20 dark:to-gray-800 rounded-2xl">
+                    <h4 class="font-bold text-xl mb-3 text-rose-800 dark:text-rose-300">My Role & Process</h4>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-base">As the lead LXD and developer, I used a rapid prototyping model (SAM) to build a secure, Firebase-powered backend and an intuitive frontend for students and instructors.</p>
                 </div>
             </div>
              <!-- Project 3 -->
@@ -134,9 +134,9 @@
                     <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Leadership Skills Workshop</h3>
                     <p class="mt-2 text-gray-600 dark:text-gray-400">A blended learning program for emerging leaders in the tech industry.</p>
                 </div>
-                 <div class="card-content-expanded">
-                    <h4 class="font-bold text-lg mb-2">Key Features</h4>
-                    <ul class="space-y-1 text-gray-600 dark:text-gray-400 list-disc list-inside text-sm">
+                 <div class="card-content-expanded bg-gradient-to-br from-white via-amber-50 to-white dark:from-gray-800 dark:via-amber-900/20 dark:to-gray-800 rounded-2xl">
+                    <h4 class="font-bold text-xl mb-3 text-amber-800 dark:text-amber-300">Key Features</h4>
+                    <ul class="space-y-2 text-gray-700 dark:text-gray-300 list-disc list-inside text-base">
                         <li>CEFR-aligned lesson library</li>
                         <li>Secure user authentication</li>
                         <li>Stripe payment integration</li>
