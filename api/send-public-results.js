@@ -16,7 +16,7 @@ export default async function handler(req, res) {
 
     // --- 1. Send the results email to the USER who took the test ---
     await resend.emails.send({
-      from: 'results@commonwealthlinguistics.org',
+      from: 'results@commonwealthlingustics.org',
       to: userEmail,
       subject: `Your Results for: ${assessment.title}`,
       html: `
@@ -31,7 +31,7 @@ export default async function handler(req, res) {
 
     // --- 2. Send a notification email to YOU, the instructor ---
     await resend.emails.send({
-      from: 'results@commonwealthlinguistics.org', // Using a consistent "from" address
+      from: 'results@commonwealthlingustics.org', // Using a consistent "from" address
       to: instructorEmail,
       subject: `New Public Assessment Submission: ${userEmail}`,
       html: `
