@@ -31,7 +31,7 @@ export default async function handler(req, res) {
 
     // --- 2. Send a notification email to YOU, the instructor ---
     await resend.emails.send({
-      from: 'results@commonwealthlinguistics.org', // CORRECTED: Using a consistent "from" address
+      from: 'results@commonwealthlinguistics.org', // Using a consistent "from" address
       to: instructorEmail,
       subject: `New Public Assessment Submission: ${userEmail}`,
       html: `
@@ -52,4 +52,3 @@ export default async function handler(req, res) {
     res.status(500).json({ error: 'Failed to send emails.' });
   }
 }
-
