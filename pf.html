@@ -42,7 +42,6 @@
         .portfolio-card {
             position: relative; 
             display: flex;
-            flex-direction: column;
             overflow: hidden;
         }
         .card-content {
@@ -51,12 +50,10 @@
             padding: 2rem;
             display: flex;
             flex-direction: column;
-            transition: opacity 0.4s ease, transform 0.4s ease;
-        }
-        .card-content-collapsed {
             justify-content: center;
             align-items: center;
             text-align: center;
+            transition: opacity 0.4s ease, transform 0.4s ease;
         }
         .card-content-expanded {
             opacity: 0;
@@ -67,11 +64,13 @@
             text-align: left;
         }
         
-        .portfolio-grid.hover-active .card-content-collapsed {
+        /* The CSS Magic */
+        .portfolio-grid:hover .card-content-collapsed {
             opacity: 0;
             transform: translateY(-15px);
         }
-        .portfolio-grid.hover-active .card-content-expanded {
+
+        .portfolio-grid:hover .card-content-expanded {
             opacity: 1;
             transform: translateY(0px);
             transition-delay: 0.2s;
@@ -103,27 +102,36 @@
             </div>
         </header>
         
-        <div id="portfolio-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div data-project="gfe" class="portfolio-card bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border-2 border-transparent">
+        <div id="portfolio-grid" class="portfolio-grid">
+            <!-- Card 1 -->
+            <div id="card-1" data-project="gfe" class="portfolio-card bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border-2 border-transparent">
                 <div class="card-content card-content-collapsed">
                     <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Golden Fellows English</h3>
-                    <p class="mt-2 text-gray-600 dark:text-gray-400">A full-scale LMS, curriculum library, and connection point for ESL teachers and students.</p>
+                    <p class="mt-2 text-gray-600 dark:text-gray-400">A full-scale LMS for ESL teachers and students.</p>
                 </div>
-                <div class="card-content card-content-expanded bg-gradient-to-br from-white via-indigo-50 to-white dark:from-gray-800 dark:via-indigo-900/20 dark:to-gray-800 rounded-2xl"></div>
+                <div class="card-content card-content-expanded bg-gradient-to-br from-white via-indigo-50 to-white dark:from-gray-800 dark:via-indigo-900/20 dark:to-gray-800 rounded-2xl">
+                    <!-- JS will populate this -->
+                </div>
             </div>
-            <div data-project="ai-course" class="portfolio-card bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border-2 border-transparent">
+            <!-- Card 2 -->
+            <div id="card-2" data-project="ai-course" class="portfolio-card bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border-2 border-transparent">
                  <div class="card-content card-content-collapsed">
                     <h3 class="text-2xl font-bold text-gray-900 dark:text-white">AI for Instructional Design</h3>
-                    <p class="mt-2 text-gray-600 dark:text-gray-400">An 8-module course teaching L&D professionals to leverage AI for rapid prototyping.</p>
+                    <p class="mt-2 text-gray-600 dark:text-gray-400">An 8-module course for L&D professionals.</p>
                 </div>
-                <div class="card-content card-content-expanded bg-gradient-to-br from-white via-green-50 to-white dark:from-gray-800 dark:via-green-900/20 dark:to-gray-800 rounded-2xl"></div>
+                <div class="card-content card-content-expanded bg-gradient-to-br from-white via-green-50 to-white dark:from-gray-800 dark:via-green-900/20 dark:to-gray-800 rounded-2xl">
+                   <!-- JS will populate this -->
+                </div>
             </div>
-            <div data-project="leadership" class="portfolio-card bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border-2 border-transparent">
+             <!-- Card 3 -->
+            <div id="card-3" data-project="leadership" class="portfolio-card bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border-2 border-transparent">
                  <div class="card-content card-content-collapsed">
                     <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Leadership Skills Workshop</h3>
-                    <p class="mt-2 text-gray-600 dark:text-gray-400">A blended learning program for emerging leaders in the tech industry.</p>
+                    <p class="mt-2 text-gray-600 dark:text-gray-400">A blended learning program for emerging leaders.</p>
                 </div>
-                 <div class="card-content card-content-expanded bg-gradient-to-br from-white via-amber-50 to-white dark:from-gray-800 dark:via-amber-900/20 dark:to-gray-800 rounded-2xl"></div>
+                 <div class="card-content card-content-expanded bg-gradient-to-br from-white via-amber-50 to-white dark:from-gray-800 dark:via-amber-900/20 dark:to-gray-800 rounded-2xl">
+                    <!-- JS will populate this -->
+                </div>
             </div>
         </div>
     </main>
@@ -151,23 +159,19 @@
                 }
             };
             
-            const card1Back = document.querySelector('[data-project="gfe"] .card-content-expanded');
-            const card2Back = document.querySelector('[data-project="ai-course"] .card-content-expanded');
-            const card3Back = document.querySelector('[data-project="leadership"] .card-content-expanded');
+            const card1Back = document.querySelector('#card-1 .card-content-expanded');
+            const card2Back = document.querySelector('#card-2 .card-content-expanded');
+            const card3Back = document.querySelector('#card-3 .card-content-expanded');
             
-            grid.addEventListener('mouseover', (e) => {
-                const hoveredCard = e.target.closest('.portfolio-card');
-                if (hoveredCard) {
-                    const project = projectData[hoveredCard.dataset.project];
-                    grid.classList.add('hover-active');
-                    card1Back.innerHTML = project.goal;
-                    card2Back.innerHTML = project.role;
-                    card3Back.innerHTML = project.features;
-                }
-            });
+            cards.forEach(card => {
+                card.addEventListener('mouseover', () => {
+                    const projectKey = card.dataset.project;
+                    const data = projectData[projectKey];
 
-            grid.addEventListener('mouseleave', () => {
-                grid.classList.remove('hover-active');
+                    card1Back.innerHTML = data.goal;
+                    card2Back.innerHTML = data.role;
+                    card3Back.innerHTML = data.features;
+                });
             });
         });
     </script>
