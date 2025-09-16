@@ -214,7 +214,7 @@
             
             // --- Corrected Hover and Click Logic ---
             grid.addEventListener('mouseover', (e) => {
-                if (activeProject) return; // Don't do hover effect if a detail view is open
+                if (activeProject) return; 
                 const hoveredCard = e.target.closest('.portfolio-card');
                 if (hoveredCard) {
                     const project = projectData[hoveredCard.dataset.project];
@@ -234,7 +234,7 @@
                 card.addEventListener('click', () => {
                     const projectKey = card.dataset.project;
                     
-                    grid.classList.remove('hover-active'); // Turn off hover effect when clicking
+                    grid.classList.remove('hover-active');
 
                     if (activeProject === projectKey) {
                         detailContainer.style.maxHeight = '0px';
