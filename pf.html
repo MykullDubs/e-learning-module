@@ -212,7 +212,6 @@
             const card2Back = document.querySelector('[data-project="ai-course"] .card-content-expanded');
             const card3Back = document.querySelector('[data-project="leadership"] .card-content-expanded');
             
-            // --- Corrected Hover and Click Logic ---
             grid.addEventListener('mouseover', (e) => {
                 if (activeProject) return; 
                 const hoveredCard = e.target.closest('.portfolio-card');
