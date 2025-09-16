@@ -42,18 +42,21 @@
         .portfolio-card {
             position: relative; 
             display: flex;
+            flex-direction: column;
             overflow: hidden;
         }
-        .card-content {
+        .card-content-collapsed, .card-content-expanded {
             position: absolute;
             inset: 0;
             padding: 2rem;
             display: flex;
             flex-direction: column;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .card-content-collapsed {
             justify-content: center;
             align-items: center;
             text-align: center;
-            transition: opacity 0.4s ease, transform 0.4s ease;
         }
         .card-content-expanded {
             opacity: 0;
@@ -64,20 +67,12 @@
             text-align: left;
         }
         
-        /* The CSS Magic */
-        #card-1:hover ~ #card-2 .card-content-collapsed,
-        #card-1:hover ~ #card-3 .card-content-collapsed {
+        /* HOVER STATES */
+        .portfolio-grid.hover-active .card-content-collapsed {
             opacity: 0;
             transform: translateY(-15px);
         }
-        #card-1:hover .card-content-collapsed {
-             opacity: 0;
-            transform: translateY(-15px);
-        }
-
-        #card-1:hover .card-content-expanded,
-        #card-1:hover ~ #card-2 .card-content-expanded,
-        #card-1:hover ~ #card-3 .card-content-expanded {
+        .portfolio-grid.hover-active .card-content-expanded {
             opacity: 1;
             transform: translateY(0px);
             transition-delay: 0.2s;
@@ -109,52 +104,64 @@
             </div>
         </header>
         
-        <div id="portfolio-grid" class="portfolio-grid">
-            <!-- Card 1 -->
-            <div id="card-1" class="portfolio-card bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border-2 border-transparent">
-                <div class="card-content card-content-collapsed">
-                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Golden Fellows English</h3>
-                    <p class="mt-2 text-gray-600 dark:text-gray-400">A full-scale LMS for ESL teachers and students.</p>
-                </div>
-                <div class="card-content card-content-expanded bg-gradient-to-br from-white via-indigo-50 to-white dark:from-gray-800 dark:via-indigo-900/20 dark:to-gray-800 rounded-2xl">
-                    <h4 class="font-bold text-2xl mb-3 text-indigo-800 dark:text-indigo-300">Project Goal</h4>
-                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">Design and develop a complete, scalable e-learning platform to deliver high-quality, interactive ESL lessons while supporting premium, instructor-led services.</p>
-                </div>
+        <div id="portfolio-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div data-project="gfe" class="portfolio-card bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border-2 border-transparent">
+                <div class="card-content-collapsed"><h3 class="text-2xl font-bold text-gray-900 dark:text-white">Golden Fellows English</h3><p class="mt-2 text-gray-600 dark:text-gray-400">A full-scale LMS, curriculum library, and connection point for ESL teachers and students.</p></div>
+                <div class="card-content-expanded bg-gradient-to-br from-white via-indigo-50 to-white dark:from-gray-800 dark:via-indigo-900/20 dark:to-gray-800 rounded-2xl"></div>
             </div>
-            <!-- Card 2 -->
-            <div id="card-2" class="portfolio-card bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border-2 border-transparent">
-                 <div class="card-content card-content-collapsed">
-                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white">AI for Instructional Design</h3>
-                    <p class="mt-2 text-gray-600 dark:text-gray-400">An 8-module course for L&D professionals.</p>
-                </div>
-                <div class="card-content card-content-expanded bg-gradient-to-br from-white via-indigo-50 to-white dark:from-gray-800 dark:via-indigo-900/20 dark:to-gray-800 rounded-2xl">
-                    <h4 class="font-bold text-2xl mb-3 text-indigo-800 dark:text-indigo-300">My Role & Process</h4>
-                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">As the lead LXD and developer, I used a rapid prototyping model (SAM) to build a secure, Firebase-powered backend and an intuitive frontend for students and instructors.</p>
-                </div>
+            <div data-project="ai-course" class="portfolio-card bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border-2 border-transparent">
+                 <div class="card-content-collapsed"><h3 class="text-2xl font-bold text-gray-900 dark:text-white">AI for Instructional Design</h3><p class="mt-2 text-gray-600 dark:text-gray-400">An 8-module course teaching L&D professionals to leverage AI for rapid prototyping.</p></div>
+                <div class="card-content-expanded bg-gradient-to-br from-white via-green-50 to-white dark:from-gray-800 dark:via-green-900/20 dark:to-gray-800 rounded-2xl"></div>
             </div>
-             <!-- Card 3 -->
-            <div id="card-3" class="portfolio-card bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border-2 border-transparent">
-                 <div class="card-content card-content-collapsed">
-                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Leadership Skills Workshop</h3>
-                    <p class="mt-2 text-gray-600 dark:text-gray-400">A blended learning program for emerging leaders.</p>
-                </div>
-                 <div class="card-content card-content-expanded bg-gradient-to-br from-white via-indigo-50 to-white dark:from-gray-800 dark:via-indigo-900/20 dark:to-gray-800 rounded-2xl">
-                    <h4 class="font-bold text-2xl mb-3 text-indigo-800 dark:text-indigo-300">Key Features</h4>
-                    <ul class="space-y-2 text-gray-700 dark:text-gray-300 list-disc list-inside text-lg">
-                        <li>CEFR-aligned lesson library</li>
-                        <li>Secure user authentication</li>
-                        <li>Stripe payment integration</li>
-                        <li>Audio submission portal</li>
-                    </ul>
-                </div>
+            <div data-project="leadership" class="portfolio-card bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border-2 border-transparent">
+                 <div class="card-content-collapsed"><h3 class="text-2xl font-bold text-gray-900 dark:text-white">Leadership Skills Workshop</h3><p class="mt-2 text-gray-600 dark:text-gray-400">A blended learning program for emerging leaders in the tech industry.</p></div>
+                 <div class="card-content-expanded bg-gradient-to-br from-white via-amber-50 to-white dark:from-gray-800 dark:via-amber-900/20 dark:to-gray-800 rounded-2xl"></div>
             </div>
         </div>
     </main>
 
     <script>
-        // No JavaScript needed for this version! 
-        // The hover effect is handled entirely by CSS for stability.
+        document.addEventListener('DOMContentLoaded', () => {
+            const grid = document.getElementById('portfolio-grid');
+            const cards = document.querySelectorAll('.portfolio-card');
+            
+            const projectData = {
+                gfe: {
+                    goal: `<h4 class="font-bold text-2xl mb-3 text-indigo-800 dark:text-indigo-300">Project Goal</h4><p class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">Design and develop a complete, scalable e-learning platform...</p>`,
+                    role: `<h4 class="font-bold text-2xl mb-3 text-indigo-800 dark:text-indigo-300">My Role & Process</h4><p class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">As the lead LXD and developer, I used a rapid prototyping model (SAM)...</p>`,
+                    features: `<h4 class="font-bold text-2xl mb-3 text-indigo-800 dark:text-indigo-300">Key Features</h4><ul class="space-y-2 text-gray-700 dark:text-gray-300 list-disc list-inside text-lg"><li>CEFR-aligned lesson library</li><li>Secure user authentication</li><li>Stripe payment integration</li></ul>`
+                },
+                'ai-course': {
+                    goal: `<h4 class="font-bold text-2xl mb-3 text-green-800 dark:text-green-300">Project Goal</h4><p class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">Empower L&D professionals to dramatically accelerate their workflow...</p>`,
+                    role: `<h4 class="font-bold text-2xl mb-3 text-green-800 dark:text-green-300">My Role & Process</h4><p class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">I designed and built the entire 8-module curriculum as a hands-on, project-based learning experience...</p>`,
+                    features: `<h4 class="font-bold text-2xl mb-3 text-green-800 dark:text-green-300">Key Outcomes</h4><ul class="space-y-2 text-gray-700 dark:text-gray-300 list-disc list-inside text-lg"><li>Crafting structured prompts</li><li>Generating interactive components</li><li>Implementing a secure backend</li></ul>`
+                },
+                leadership: {
+                    goal: `<h4 class="font-bold text-2xl mb-3 text-amber-800 dark:text-amber-300">Project Goal</h4><p class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">Develop a six-week blended learning program to equip newly promoted managers...</p>`,
+                    role: `<h4 class="font-bold text-2xl mb-3 text-amber-800 dark:text-amber-300">My Role & Process</h4><p class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">I conducted needs analysis, designed the curriculum, and developed all learning materials...</p>`,
+                    features: `<h4 class="font-bold text-2xl mb-3 text-amber-800 dark:text-amber-300">Key Features</h4><ul class="space-y-2 text-gray-700 dark:text-gray-300 list-disc list-inside text-lg"><li>Interactive Scenarios</li><li>Video Coaching Modules</li><li>Peer Feedback System</li></ul>`
+                }
+            };
+            
+            const card1Back = document.querySelector('[data-project="gfe"] .card-content-expanded');
+            const card2Back = document.querySelector('[data-project="ai-course"] .card-content-expanded');
+            const card3Back = document.querySelector('[data-project="leadership"] .card-content-expanded');
+            
+            grid.addEventListener('mouseover', (e) => {
+                const hoveredCard = e.target.closest('.portfolio-card');
+                if (hoveredCard) {
+                    const project = projectData[hoveredCard.dataset.project];
+                    grid.classList.add('hover-active');
+                    card1Back.innerHTML = project.goal;
+                    card2Back.innerHTML = project.role;
+                    card3Back.innerHTML = project.features;
+                }
+            });
+
+            grid.addEventListener('mouseleave', () => {
+                grid.classList.remove('hover-active');
+            });
+        });
     </script>
 </body>
 </html>
-
