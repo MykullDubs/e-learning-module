@@ -66,8 +66,6 @@
                         </div>
                     </button>
                     <div id="profile-dropdown" class="hidden absolute font-brand right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden z-10">
-                        <div class="px-4 py-2 text-sm text-stone-700 dark:text-stone-200"><p class="font-semibold">Signed in as</p><p id="user-email-dropdown" class="truncate"></p></div>
-                        <div class="border-t border-stone-200 dark:border-gray-600"></div>
                         <a href="dashboard.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Dashboard</a>
                         <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Settings</a>
                         <div class="border-t border-stone-200 dark:border-gray-600"></div>
@@ -81,7 +79,7 @@
     <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-7xl font-brand">
         <header class="mb-12 animate-in">
             <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white"><span id="time-greeting">Good morning</span>, <span id="user-name">User</span>!</h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-3 text-lg">Here's your space to grow. What will you discover today?</p>
+            <p class="text-gray-600 dark:text-gray-400 mt-3 text-lg">Here is your overview for Friday, September 19, 2025.</p>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -97,12 +95,22 @@
             </div>
             <aside class="space-y-8">
                 <section class="animate-in" style="animation-delay: 300ms;">
+                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Upcoming Classes</h2>
+                    <div class="widget-card bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-stone-200 dark:border-slate-700 transition">
+                        <div id="schedule-widget-list" class="space-y-4">
+                            </div>
+                        <a href="schedule.html" class="block text-center mt-6 text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">
+                            View Full Calendar →
+                        </a>
+                    </div>
+                </section>
+                <section class="animate-in" style="animation-delay: 400ms;">
                     <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Your Progress</h2>
                     <div class="widget-card bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-stone-200 dark:border-slate-700 space-y-5 transition"><div><div class="flex justify-between items-end mb-1"><p class="text-sm font-semibold text-gray-600 dark:text-gray-400">Lessons Completed</p><p class="font-bold text-lg">12 <span class="text-sm font-normal text-gray-400">/ 50</span></p></div><div class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2.5"><div class="bg-green-500 h-2.5 rounded-full" style="width: 24%"></div></div></div><div><div class="flex justify-between items-end mb-1"><p class="text-sm font-semibold text-gray-600 dark:text-gray-400">Weekly Study Goal</p><p class="font-bold text-lg">4h <span class="text-sm font-normal text-gray-400">/ 5h</span></p></div><div class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2.5"><div class="bg-yellow-500 h-2.5 rounded-full" style="width: 80%"></div></div></div></div>
                 </section>
-                <section class="animate-in" style="animation-delay: 400ms;">
+                <section class="animate-in" style="animation-delay: 500ms;">
                     <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Instructor Feedback</h2>
-                    <div class="widget-card bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-stone-200 dark:border-slate-700 space-y-4 transition"><a href="#" class="block p-4 rounded-lg bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-900/40 dark:hover:bg-indigo-900/60"><p class="font-semibold text-indigo-900 dark:text-indigo-200">New feedback on: <b>A1 Speaking Task</b></p><p class="text-sm text-gray-500 dark:text-gray-400">Received: September 7, 2025</p></a><p class="text-center text-sm text-gray-500 dark:text-gray-400">No other new feedback.</p></div>
+                    <div class="widget-card bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-stone-200 dark:border-slate-700 space-y-4 transition"><a href="#" class="block p-4 rounded-lg bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-900/40 dark:hover:bg-indigo-900/60"><p class="font-semibold text-indigo-900 dark:text-indigo-200">New feedback on: <b>A1 Speaking Task</b></p><p class="text-sm text-gray-500 dark:text-gray-400">Received: September 17, 2025</p></a><p class="text-center text-sm text-gray-500 dark:text-gray-400">No other new feedback.</p></div>
                 </section>
             </aside>
         </div>
@@ -121,7 +129,31 @@
 
         const levelColors = { A1: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300', A2: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300', B1: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300', B2: 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300' };
 
-        // --- Navbar Logic ---
+        const events = [
+            { date: '2025-09-19', time: '5:00 PM', title: 'B2 Writing Feedback Session' },
+            { date: '2025-09-22', time: '10:00 AM', title: 'B1 Grammar Workshop' },
+            { date: '2025-09-24', time: '6:00 PM', title: 'C1 Advanced Conversation' },
+        ];
+
+        function renderScheduleWidget() {
+            const container = document.getElementById('schedule-widget-list');
+            const today = new Date('2025-09-19T00:00:00');
+            today.setHours(0, 0, 0, 0);
+
+            const upcomingEvents = events.filter(event => new Date(event.date + 'T00:00:00') >= today).sort((a, b) => new Date(a.date) - new Date(b.date)).slice(0, 3);
+
+            if (upcomingEvents.length > 0) {
+                container.innerHTML = upcomingEvents.map(event => {
+                    const eventDate = new Date(event.date + 'T00:00:00');
+                    const isToday = eventDate.getTime() === today.getTime();
+                    const dateLabel = isToday ? 'Today' : eventDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+                    return `<div class="flex items-start gap-4"><div class="flex-shrink-0 w-12 text-center bg-stone-100 dark:bg-slate-700 p-2 rounded-lg"><p class="font-bold text-sm">${isToday ? 'TODAY' : eventDate.toLocaleDateString('en-US', { month: 'short' }).toUpperCase()}</p><p class="text-xl font-bold">${eventDate.getDate()}</p></div><div><p class="font-semibold">${event.title}</p><p class="text-sm text-gray-500 dark:text-gray-400">${dateLabel} at ${event.time}</p></div></div>`;
+                }).join('');
+            } else {
+                container.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-400">No upcoming classes.</p>`;
+            }
+        }
+
         const profileBtn = document.getElementById('profile-btn');
         const profileDropdown = document.getElementById('profile-dropdown');
         const logoutBtn = document.getElementById('logout-btn');
@@ -132,9 +164,7 @@
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 document.getElementById('user-email-nav').textContent = user.email;
-                if (user.photoURL) {
-                   document.getElementById('nav-avatar-container').innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
-                }
+                if (user.photoURL) { document.getElementById('nav-avatar-container').innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`; }
                 
                 const hour = new Date().getHours();
                 const greetingEl = document.getElementById('time-greeting');
@@ -170,6 +200,8 @@
                         focusContainer.innerHTML = `<div class="widget-card bg-gradient-to-br from-teal-400 to-blue-500 dark:from-teal-500 dark:to-blue-600 p-8 rounded-2xl shadow-xl text-center text-white transition"><h2 class="text-3xl font-bold">Discover Your English Level</h2><p class="mt-2 text-lg text-blue-100 max-w-md mx-auto">Take our adaptive quiz to find your starting point.</p><a href="level-finder.html" class="mt-6 inline-block bg-white text-blue-600 font-semibold px-8 py-3 rounded-lg shadow-sm hover:scale-105 transition-transform">Take the Quiz Now</a></div>`;
                     }
                 } catch (error) { console.error("Error fetching user data:", error); }
+
+                renderScheduleWidget(); // Render the schedule widget once user is confirmed.
 
             } else { 
                 window.location.href = 'Login.html'; 
