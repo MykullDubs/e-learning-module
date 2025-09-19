@@ -59,12 +59,13 @@
                 <div class="relative">
                     <button id="profile-btn" class="flex items-center gap-3">
                          <span id="user-level-badge" class="hidden text-xs font-bold px-2 py-0.5 rounded-full"></span>
+                         <span id="user-email-header" class="text-sm text-stone-600 dark:text-stone-300 hidden sm:block font-brand"></span>
                         <div id="nav-avatar-container">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
                         </div>
                     </button>
                     <div id="profile-dropdown" class="hidden absolute font-brand right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden z-10">
-                        <div class="px-4 py-2 text-sm text-stone-700 dark:text-stone-200"><p class="font-semibold">Signed in as</p><p id="user-email-nav" class="truncate"></p></div>
+                        <div class="px-4 py-2 text-sm text-stone-700 dark:text-stone-200"><p class="font-semibold">Signed in as</p><p id="user-email-dropdown" class="truncate"></p></div>
                         <div class="border-t border-stone-200 dark:border-gray-600"></div>
                         <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Settings</a>
                         <div class="border-t border-stone-200 dark:border-gray-600"></div>
@@ -95,8 +96,8 @@
                             <h3 class="font-semibold text-gray-900 dark:text-white">Giving a Book Recommendation</h3>
                             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">B1 · Reading</p>
                         </a>
-                        <a href="lesson-library.html" class="widget-card block bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm p-6 rounded-2xl shadow-md border border-stone-200/50 dark:border-slate-700/50 hover:shadow-xl transition flex flex-col items-center justify-center text-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-500 dark:text-indigo-400 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
+                         <a href="lesson-library.html" class="widget-card block bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm p-6 rounded-2xl shadow-md border border-stone-200/50 dark:border-slate-700/50 hover:shadow-xl transition flex flex-col items-center justify-center text-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-500 dark:text-indigo-400 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
                             <h3 class="font-semibold text-gray-900 dark:text-white">Explore the Full Library</h3>
                             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Browse all lessons & guides</p>
                         </a>
@@ -105,7 +106,7 @@
             </div>
 
             <aside class="space-y-8">
-                </aside>
+                 </aside>
         </div>
     </main>
 
@@ -120,12 +121,13 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        const levelColors = { /* ... colors ... */ };
+        const levelColors = { A1: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300', A2: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300', B1: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300', B2: 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300' };
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // Populate Navbar user info (email, avatar)
-                document.getElementById('user-email-nav').textContent = user.email;
+                // Populate Navbar user info
+                document.getElementById('user-email-header').textContent = user.email;
+                document.getElementById('user-email-dropdown').textContent = user.email;
                 if (user.photoURL) {
                    document.getElementById('nav-avatar-container').innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
                 }
@@ -147,28 +149,21 @@
                         const userData = docSnap.data();
                         document.getElementById('user-name').textContent = userData.displayName || user.email.split('@')[0];
                         
-                        // Populate level badge
                         if (userData.cefrLevel) {
                             const level = userData.cefrLevel;
                             const badge = document.getElementById('user-level-badge');
                             badge.textContent = level;
                             badge.className = `text-xs font-bold px-2 py-0.5 rounded-full ${levelColors[level]}`;
                             badge.classList.remove('hidden');
-                            
-                            // User has a level, show "Continue Learning"
                             focusContainer.innerHTML = `<h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Focus For Today</h2><a href="#" class="widget-card block bg-gradient-to-br from-indigo-500 to-purple-600 dark:from-indigo-600 dark:to-purple-700 p-8 rounded-2xl shadow-xl border border-indigo-400/50 dark:border-purple-600/50 text-white transition"><h3 class="text-3xl font-bold">Optimizing Your Workout</h3><p class="text-sm text-indigo-200 mt-1">B1 · Working Out</p><div class="w-full bg-white/20 rounded-full h-2.5 mt-6"><div class="bg-white h-2.5 rounded-full" style="width: 45%"></div></div><div class="text-right text-indigo-100 font-semibold mt-4 text-lg">Continue Lesson →</div></a>`;
-
                         } else {
-                            // User does NOT have a level, show "Find Your Level" CTA
                             focusContainer.innerHTML = `<div class="widget-card bg-gradient-to-br from-teal-400 to-blue-500 dark:from-teal-500 dark:to-blue-600 p-8 rounded-2xl shadow-xl text-center text-white transition"><h2 class="text-3xl font-bold">Discover Your English Level</h2><p class="mt-2 text-lg text-blue-100 max-w-md mx-auto">Take our adaptive quiz to find your starting point.</p><a href="level-finder.html" class="mt-6 inline-block bg-white text-blue-600 font-semibold px-8 py-3 rounded-lg shadow-sm hover:scale-105 transition-transform">Take the Quiz Now</a></div>`;
                         }
                     } else {
                         document.getElementById('user-name').textContent = user.email.split('@')[0];
-                        // Also show CTA for brand new users
                         focusContainer.innerHTML = `<div class="widget-card bg-gradient-to-br from-teal-400 to-blue-500 dark:from-teal-500 dark:to-blue-600 p-8 rounded-2xl shadow-xl text-center text-white transition"><h2 class="text-3xl font-bold">Discover Your English Level</h2><p class="mt-2 text-lg text-blue-100 max-w-md mx-auto">Take our adaptive quiz to find your starting point.</p><a href="level-finder.html" class="mt-6 inline-block bg-white text-blue-600 font-semibold px-8 py-3 rounded-lg shadow-sm hover:scale-105 transition-transform">Take the Quiz Now</a></div>`;
                     }
                 } catch (error) { console.error("Error fetching user data:", error); }
-
             } else { window.location.href = 'Login.html'; }
         });
         
@@ -176,6 +171,7 @@
         const profileBtn = document.getElementById('profile-btn');
         const profileDropdown = document.getElementById('profile-dropdown');
         const logoutBtn = document.getElementById('logout-btn');
+        
         profileBtn.addEventListener('click', (e) => { 
             e.stopPropagation(); 
             profileDropdown.classList.toggle('hidden'); 
