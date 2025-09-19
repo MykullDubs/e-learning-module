@@ -49,7 +49,7 @@
 </head>
 <body class="text-gray-900 dark:text-gray-200 antialiased">
 
-    <header class="bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm shadow-sm border-b border-stone-200 dark:border-slate-800 sticky top-0 z-40">
+    <header class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-sm border-b border-stone-200 dark:border-gray-700 sticky top-0 z-40">
         <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
             <a href="dashboard.html" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
             <div class="flex items-center gap-6">
@@ -62,8 +62,6 @@
                         </div>
                     </button>
                     <div id="profile-dropdown" class="hidden absolute font-brand right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden z-10">
-                        <div class="px-4 py-2 text-sm text-stone-700 dark:text-stone-200"><p class="font-semibold">Signed in as</p><p id="user-email-dropdown" class="truncate"></p></div>
-                        <div class="border-t border-stone-200 dark:border-gray-600"></div>
                         <a href="dashboard.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Dashboard</a>
                         <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Settings</a>
                         <div class="border-t border-stone-200 dark:border-gray-600"></div>
@@ -80,8 +78,7 @@
             <p class="text-gray-600 dark:text-gray-400 mt-3 text-lg">Here is your overview for Friday, September 19, 2025.</p>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-            
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div class="lg:col-span-2 space-y-8">
                 <section id="focus-widget-container" class="animate-in" style="animation-delay: 100ms;"></section>
                 <section class="animate-in" style="animation-delay: 200ms;">
@@ -93,7 +90,7 @@
                 </section>
             </div>
             
-            <div class="lg:col-span-1 space-y-8">
+            <aside class="lg:col-span-1 space-y-8">
                 <section class="animate-in" style="animation-delay: 300ms;">
                     <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Upcoming Classes</h2>
                     <div class="widget-card bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-stone-200 dark:border-slate-700 transition">
@@ -109,7 +106,7 @@
                     <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Instructor Feedback</h2>
                     <div class="widget-card bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-stone-200 dark:border-slate-700 space-y-4 transition"><a href="#" class="block p-4 rounded-lg bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-900/40 dark:hover:bg-indigo-900/60"><p class="font-semibold text-indigo-900 dark:text-indigo-200">New feedback on: <b>A1 Speaking Task</b></p><p class="text-sm text-gray-500 dark:text-gray-400">Received: September 17, 2025</p></a><p class="text-center text-sm text-gray-500 dark:text-gray-400">No other new feedback.</p></div>
                 </section>
-            </div>
+            </aside>
         </div>
     </main>
 
@@ -118,14 +115,20 @@
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        const firebaseConfig = { /* ... your config ... */ };
+        const firebaseConfig = {
+            apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
+            authDomain: "elearning-e83cb.firebaseapp.com",
+            projectId: "elearning-e83cb",
+            storageBucket: "elearning-e83cb.appspot.com",
+            messagingSenderId: "25473938624",
+            appId: "1:25473938624:web:5b56738933543f32a7e925"
+        };
         
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
         const levelColors = { A1: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300', A2: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300', B1: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300', B2: 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300' };
-
         const events = [ { date: '2025-09-19', time: '5:00 PM', title: 'B2 Writing Feedback Session' }, { date: '2025-09-22', time: '10:00 AM', title: 'B1 Grammar Workshop' }];
 
         function renderScheduleWidget() { /* ... function remains the same ... */ }
@@ -141,7 +144,6 @@
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 document.getElementById('user-email-nav').textContent = user.email;
-                document.getElementById('user-email-dropdown').textContent = user.email;
                 if (user.photoURL) { document.getElementById('nav-avatar-container').innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`; }
                 
                 const hour = new Date().getHours();
