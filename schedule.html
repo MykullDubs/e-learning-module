@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Schedule - Golden Fellows English</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <script>
+        // Theme loader script
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    
+    <style>
+        body { 
+            font-family: 'Source Serif Pro', serif;
+            background-color: #F7F5F2;
+        }
+        .dark body {
+            background-color: #0F172A;
+        }
+        .font-brand { font-family: 'Source Serif Pro', serif; }
+        .calendar-day {
+            transition: all 0.2s ease-in-out;
+        }
+        /* Green circle for days with classes */
+        .has-event {
+            position: relative;
+        }
+        .has-event::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 38px;
+            height: 38px;
+            border: 2px solid #22c55e; /* green-500 */
+            border-radius: 50%;
+            z-index: 0;
+        }
+        .dark .has-event::after {
+            border-color: #4ade80; /* green-400 */
+        }
+        .calendar-day span {
+            position: relative;
+            z-index: 1;
+        }
+        .selected {
+            background-color: #4f46e5 !important; /* indigo-600 */
+            color: white !important;
+        }
+        .today {
+             background-color: #e5e7eb; /* gray-200 */
+        }
+        .dark .today {
+             background-color: #374151; /* gray-700 */
+        }
+    </style>
+</head>
+<body class="text-gray-900 dark:text-gray-200 antialiased">
+
+    <header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm shadow-sm border-b border-stone-200 dark:border-slate-800 sticky top-0 z-40">
+        <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
+            <a href="dashboard.html" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
+            </div>
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-7xl font-brand">
+        <header class="mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">My Schedule</h1>
+            <p class="text-gray-600 dark:text-gray-400 mt-3 text-lg">View your upcoming classes and manage your learning time.</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2">
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-stone-200/50 dark:border-slate-700/50">
+                    <div class="flex justify-between items-center mb-4">
+                        <button id="prev-month-btn" class="p-2 rounded-full hover:bg-stone-100 dark:hover:bg-slate-700">&lt;</button>
+                        <h2 id="month-year-header" class="text-xl font-bold"></h2>
+                        <button id="next-month-btn" class="p-2 rounded-full hover:bg-stone-100 dark:hover:bg-slate-700">&gt;</button>
+                    </div>
+                    <div class="grid grid-cols-7 text-center font-semibold text-sm text-gray-500 dark:text-gray-400 mb-2">
+                        <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+                    </div>
+                    <div id="calendar-grid" class="grid grid-cols-7">
+                       </div>
+                </div>
+            </div>
+            
+            <aside>
+                <div class="sticky top-24">
+                    <h2 id="agenda-header" class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4"></h2>
+                    <div id="agenda-container" class="space-y-4">
+                        </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const monthYearHeader = document.getElementById('month-year-header');
+            const calendarGrid = document.getElementById('calendar-grid');
+            const agendaHeader = document.getElementById('agenda-header');
+            const agendaContainer = document.getElementById('agenda-container');
+            const prevMonthBtn = document.getElementById('prev-month-btn');
+            const nextMonthBtn = document.getElementById('next-month-btn');
+
+            // --- Mock Data: In a real app, this would be fetched from Firestore ---
+            const events = [
+                { date: '2025-09-22', time: '10:00 AM - 11:00 AM CST', title: 'B1 Grammar Workshop' },
+                { date: '2025-09-22', time: '2:00 PM - 2:30 PM CST', title: 'A2 Speaking Practice' },
+                { date: '2025-09-24', time: '6:00 PM - 7:00 PM CST', title: 'C1 Advanced Conversation' },
+                { date: '2025-10-01', time: '9:00 AM - 10:00 AM CST', title: 'A1 Vocabulary Review' },
+            ];
+
+            let currentDate = new Date(2025, 8, 19); // Set to September 19, 2025
+
+            function renderCalendar(date) {
+                calendarGrid.innerHTML = '';
+                const year = date.getFullYear();
+                const month = date.getMonth();
+                
+                monthYearHeader.textContent = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+                
+                const firstDayOfMonth = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                const today = new Date();
+
+                // Add blank cells for the start of the month
+                for (let i = 0; i < firstDayOfMonth; i++) {
+                    calendarGrid.innerHTML += '<div></div>';
+                }
+
+                // Add days of the month
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dayEl = document.createElement('div');
+                    const fullDateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    
+                    dayEl.className = 'calendar-day h-14 flex items-center justify-center rounded-full cursor-pointer hover:bg-stone-100 dark:hover:bg-slate-700';
+                    dayEl.dataset.date = fullDateStr;
+                    dayEl.innerHTML = `<span>${day}</span>`;
+                    
+                    if (events.some(e => e.date === fullDateStr)) {
+                        dayEl.classList.add('has-event');
+                    }
+
+                    if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                        dayEl.classList.add('today');
+                    }
+                    
+                    calendarGrid.appendChild(dayEl);
+                }
+            }
+
+            function updateAgenda(dateStr) {
+                const selectedDate = new Date(dateStr + 'T00:00:00');
+                agendaHeader.textContent = `Schedule for ${selectedDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}`;
+
+                const dailyEvents = events.filter(e => e.date === dateStr);
+                
+                if (dailyEvents.length > 0) {
+                    agendaContainer.innerHTML = dailyEvents.map(event => `
+                        <div class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow border border-stone-200/50 dark:border-slate-700/50">
+                            <p class="font-bold">${event.title}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">${event.time}</p>
+                            <a href="#" class="text-sm font-semibold text-indigo-600 dark:text-indigo-400 mt-2 inline-block">Join Classroom →</a>
+                        </div>
+                    `).join('');
+                } else {
+                    agendaContainer.innerHTML = `
+                        <div class="bg-white dark:bg-slate-800 p-4 rounded-xl text-center">
+                            <p class="text-gray-500 dark:text-gray-400">You have no classes scheduled for this day.</p>
+                        </div>`;
+                }
+            }
+            
+            // Event Listeners
+            prevMonthBtn.addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                renderCalendar(currentDate);
+            });
+
+            nextMonthBtn.addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                renderCalendar(currentDate);
+            });
+
+            calendarGrid.addEventListener('click', (e) => {
+                const dayEl = e.target.closest('.calendar-day');
+                if (dayEl) {
+                    // Remove selected from others
+                    document.querySelectorAll('.calendar-day.selected').forEach(d => d.classList.remove('selected'));
+                    // Add selected to clicked
+                    dayEl.classList.add('selected');
+                    updateAgenda(dayEl.dataset.date);
+                }
+            });
+
+            // Initial Render
+            renderCalendar(currentDate);
+            const todayStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
+            updateAgenda(todayStr);
+            document.querySelector(`.calendar-day[data-date="${todayStr}"]`)?.classList.add('selected');
+
+        });
+    </script>
+</body>
+</html>
