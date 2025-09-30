@@ -183,14 +183,20 @@
         async function createClass() { /* ... */ }
         async function addLessonToClass(lessonId, lessonData) { /* ... */ }
 
-        async function enrollStudentInClass(studentId, studentData) {
-            if(!activeClassId) return;
-            const studentInClassRef = doc(db, "classes", activeClassId, "students", studentId);
-            await setDoc(studentInClassRef, { displayName: studentData.displayName, photoURL: studentData.photoURL || '' });
-            const userDocRef = doc(db, "users", studentId);
-            await updateDoc(userDocRef, { currentClassId: activeClassId });
-            // onSnapshot will handle the UI update
-        }
+      async function enrollStudentInClass(studentId, studentData) {
+    if(!activeClassId) return;
+    
+    // 1. Add the student to the class's subcollection
+    const studentInClassRef = doc(db, "classes", activeClassId, "students", studentId);
+    await setDoc(studentInClassRef, { displayName: studentData.displayName, photoURL: studentData.photoURL || '' });
+
+    // 2. Update the 'currentClassId' on the student's user document
+    // This is the key modification to make the dream a reality. 
+    const userDocRef = doc(db, "users", studentId);
+    await updateDoc(userDocRef, { currentClassId: activeClassId }); // This line is the magic.
+
+    console.log(`Student ${studentData.displayName} has been enrolled and their dashboard will now show this class.`);
+}
         
         async function unenrollStudent(studentId) {
             if (!activeClassId || !studentId) return;
