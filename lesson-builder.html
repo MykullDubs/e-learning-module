@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson Builder - Golden Fellows English</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <script>
+        // Theme loader script
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    
+    <style>
+        body { font-family: 'Source Serif Pro', serif; background-color: #F7F5F2; }
+        .dark body { background-color: #0F172A; }
+        .font-brand { font-family: 'Source Serif Pro', serif; }
+    </style>
+</head>
+<body class="text-gray-900 dark:text-gray-200 antialiased">
+
+    <header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm shadow-sm border-b border-stone-200 dark:border-slate-800 sticky top-0 z-40">
+        <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
+            <a href="dashboard.html" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
+            </div>
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl font-brand">
+        <header class="mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Lesson Builder</h1>
+            <p class="text-gray-600 dark:text-gray-400 mt-2 text-lg">Create custom lessons for your students from scratch.</p>
+        </header>
+
+        <div class="bg-white/50 dark:bg-slate-800/50 backdrop-blur-lg p-8 rounded-2xl shadow-xl border border-stone-200/50 dark:border-slate-700/50">
+            
+            <section class="space-y-4">
+                <div>
+                    <label for="lesson-title" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Lesson Title</label>
+                    <input type="text" id="lesson-title" placeholder="e.g., A2: Discussing Past Events" class="mt-1 block w-full p-2 border border-stone-300 dark:border-gray-600 rounded-md bg-transparent focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                     <div>
+                        <label for="lesson-level" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Level</label>
+                        <select id="lesson-level" class="mt-1 block w-full p-2 border border-stone-300 dark:border-gray-600 rounded-md bg-transparent focus:ring-2 focus:ring-indigo-500">
+                            <option>A1</option><option>A2</option><option>B1</option><option>B2</option><option>C1</option>
+                        </select>
+                    </div>
+                     <div>
+                        <label for="lesson-topic" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Topic</label>
+                        <input type="text" id="lesson-topic" placeholder="e.g., Conversation" class="mt-1 block w-full p-2 border border-stone-300 dark:border-gray-600 rounded-md bg-transparent focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                </div>
+            </section>
+            
+            <hr class="my-8 border-stone-300 dark:border-slate-600">
+
+            <section>
+                <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Lesson Content</h2>
+                <div id="content-blocks-container" class="space-y-4">
+                    </div>
+
+                <div class="mt-6 text-center">
+                    <div id="add-block-buttons" class="flex justify-center gap-2 flex-wrap">
+                        <button data-type="introduction" class="add-block-btn bg-stone-200 dark:bg-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-stone-300">Introduction</button>
+                        <button data-type="vocabulary" class="add-block-btn bg-stone-200 dark:bg-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-stone-300">Vocabulary</button>
+                        <button data-type="grammar" class="add-block-btn bg-stone-200 dark:bg-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-stone-300">Grammar Rule</button>
+                        <button data-type="quiz" class="add-block-btn bg-stone-200 dark:bg-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-stone-300">Quiz Question</button>
+                    </div>
+                    <div id="add-block-form-container" class="mt-4 text-left"></div>
+                </div>
+            </section>
+            
+            <div class="mt-8 pt-6 border-t border-stone-300 dark:border-slate-600 text-right">
+                <p id="save-status" class="text-green-600 dark:text-green-400 font-semibold mr-4 h-6 inline-block"></p>
+                <button id="save-lesson-btn" class="bg-indigo-600 text-white font-semibold px-8 py-3 rounded-lg shadow-sm hover:bg-indigo-700 disabled:opacity-50">Save Lesson</button>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = { /* ... your config ... */ };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                // In a real app, you would add an instructor role check here
+            } else {
+                window.location.href = 'Login.html';
+            }
+        });
+
+        const contentBlocksContainer = document.getElementById('content-blocks-container');
+        const addBlockButtons = document.getElementById('add-block-buttons');
+        const addBlockFormContainer = document.getElementById('add-block-form-container');
+        const saveLessonBtn = document.getElementById('save-lesson-btn');
+        const saveStatus = document.getElementById('save-status');
+
+        let lessonContent = [];
+
+        function renderContentBlocks() {
+            contentBlocksContainer.innerHTML = '';
+            lessonContent.sort((a, b) => a.order - b.order).forEach((block, index) => {
+                const blockEl = document.createElement('div');
+                blockEl.className = 'bg-stone-50 dark:bg-slate-900/50 p-4 rounded-lg border border-stone-200 dark:border-slate-700';
+                
+                if (block.type === 'introduction') {
+                    blockEl.innerHTML = `<p class="font-semibold text-indigo-600">Introduction</p><p class="mt-1 whitespace-pre-wrap">${block.text}</p>`;
+                } else if (block.type === 'vocabulary') {
+                    blockEl.innerHTML = `<p class="font-semibold text-teal-600">Vocabulary</p><p class="mt-1"><b>Word:</b> ${block.word}</p><p><b>Definition:</b> ${block.definition}</p>`;
+                } else if (block.type === 'grammar') {
+                    blockEl.innerHTML = `<p class="font-semibold text-amber-600">Grammar</p><p class="mt-1"><b>${block.title}</b>: ${block.explanation}</p>`;
+                } else if (block.type === 'quiz') {
+                     blockEl.innerHTML = `<p class="font-semibold text-rose-600">Quiz</p><p class="mt-1"><b>Question:</b> ${block.question}</p><p><b>Answer:</b> ${block.answer}</p>`;
+                }
+                
+                contentBlocksContainer.appendChild(blockEl);
+            });
+        }
+
+        addBlockButtons.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('add-block-btn')) return;
+            const type = e.target.dataset.type;
+            let formHTML = '';
+
+            const baseFormClasses = "p-4 bg-stone-100 dark:bg-slate-700 rounded-lg space-y-2";
+            const inputClasses = "w-full p-2 border rounded bg-transparent border-stone-300 dark:border-gray-600";
+            const buttonClasses = "mt-2 bg-teal-500 text-white px-4 py-1 rounded hover:bg-teal-600";
+
+            switch (type) {
+                case 'introduction':
+                    formHTML = `<div class="${baseFormClasses}"><textarea id="intro-text" placeholder="Introduction text..." class="${inputClasses}" rows="3"></textarea><button id="save-block-btn" class="${buttonClasses}">Add Block</button></div>`;
+                    break;
+                case 'vocabulary':
+                    formHTML = `<div class="${baseFormClasses}"><input id="vocab-word" type="text" placeholder="Vocabulary Word" class="${inputClasses}"><input id="vocab-def" type="text" placeholder="Definition" class="${inputClasses}"><button id="save-block-btn" class="${buttonClasses}">Add Block</button></div>`;
+                    break;
+                case 'grammar':
+                    formHTML = `<div class="${baseFormClasses}"><input id="grammar-title" type="text" placeholder="Grammar Rule Title" class="${inputClasses}"><textarea id="grammar-exp" placeholder="Explanation..." class="${inputClasses}" rows="2"></textarea><button id="save-block-btn" class="${buttonClasses}">Add Block</button></div>`;
+                    break;
+                case 'quiz':
+                    formHTML = `<div class="${baseFormClasses}"><input id="quiz-q" type="text" placeholder="Quiz Question" class="${inputClasses}"><input id="quiz-a" type="text" placeholder="Correct Answer" class="${inputClasses}"><button id="save-block-btn" class="${buttonClasses}">Add Block</button></div>`;
+                    break;
+            }
+            addBlockFormContainer.innerHTML = formHTML;
+            addBlockFormContainer.dataset.currentType = type;
+        });
+
+        addBlockFormContainer.addEventListener('click', (e) => {
+            if (e.target.id !== 'save-block-btn') return;
+            const type = addBlockFormContainer.dataset.currentType;
+            const newBlock = { type: type, order: lessonContent.length + 1 };
+
+            switch (type) {
+                case 'introduction':
+                    newBlock.text = document.getElementById('intro-text').value;
+                    break;
+                case 'vocabulary':
+                    newBlock.word = document.getElementById('vocab-word').value;
+                    newBlock.definition = document.getElementById('vocab-def').value;
+                    break;
+                case 'grammar':
+                    newBlock.title = document.getElementById('grammar-title').value;
+                    newBlock.explanation = document.getElementById('grammar-exp').value;
+                    break;
+                case 'quiz':
+                    newBlock.question = document.getElementById('quiz-q').value;
+                    newBlock.answer = document.getElementById('quiz-a').value;
+                    break;
+            }
+
+            if (Object.values(newBlock).some(val => !val)) {
+                alert("Please fill out all fields for the content block.");
+                return;
+            }
+            
+            lessonContent.push(newBlock);
+            renderContentBlocks();
+            addBlockFormContainer.innerHTML = '';
+        });
+
+        saveLessonBtn.addEventListener('click', async () => {
+            if (!currentUser) {
+                alert("You must be logged in to save a lesson.");
+                return;
+            }
+            saveLessonBtn.disabled = true;
+            saveStatus.textContent = "Saving...";
+
+            const lessonData = {
+                title: document.getElementById('lesson-title').value,
+                level: document.getElementById('lesson-level').value,
+                topic: document.getElementById('lesson-topic').value,
+                contentBlocks: lessonContent,
+                instructorId: currentUser.uid,
+                instructorName: currentUser.displayName || currentUser.email,
+                createdAt: serverTimestamp()
+            };
+
+            if (!lessonData.title || lessonContent.length === 0) {
+                alert("Please add a title and at least one content block.");
+                saveLessonBtn.disabled = false;
+                saveStatus.textContent = "";
+                return;
+            }
+            
+            try {
+                const lessonsRef = collection(db, "lessons");
+                const docRef = await addDoc(lessonsRef, lessonData);
+                console.log("Lesson saved with ID:", docRef.id);
+                saveStatus.textContent = "✅ Lesson Saved!";
+                setTimeout(() => {
+                    // Redirect or clear the form
+                    window.location.reload(); 
+                }, 2000);
+            } catch (error) {
+                console.error("Error saving lesson:", error);
+                saveStatus.textContent = "Error saving lesson.";
+                saveLessonBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
