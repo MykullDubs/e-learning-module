@@ -36,7 +36,23 @@
     <header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm shadow-sm border-b border-stone-200 dark:border-slate-800 sticky top-0 z-40">
         <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
             <a href="dashboard.html" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
-            <a href="dashboard.html" class="text-sm font-semibold hover:text-indigo-600 dark:hover:text-indigo-400">Dashboard</a>
+            <div class="flex items-center gap-6">
+                 <a href="class-lessons-library.html" class="text-sm font-semibold hover:text-indigo-600 dark:hover:text-indigo-400">Lesson Library</a>
+                <div class="relative">
+                    <button id="profile-btn" class="flex items-center gap-2">
+                         <span id="user-email-nav" class="text-sm text-stone-600 dark:text-stone-300 hidden sm:block font-brand"></span>
+                        <div id="nav-avatar-container">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
+                        </div>
+                    </button>
+                    <div id="profile-dropdown" class="hidden absolute font-brand right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden z-10">
+                        <a href="dashboard.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Dashboard</a>
+                        <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Settings</a>
+                        <div class="border-t border-stone-200 dark:border-gray-600"></div>
+                        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100 dark:hover:bg-gray-700">Log Out</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -101,8 +117,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
@@ -118,13 +134,22 @@
         const db = getFirestore(app);
 
         let currentUser = null;
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                currentUser = user;
-            } else {
-                window.location.href = 'Login.html';
+        let currentLessonId = null;
+
+        const profileBtn = document.getElementById('profile-btn');
+        const profileDropdown = document.getElementById('profile-dropdown');
+        const logoutBtn = document.getElementById('logout-btn');
+        profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
+        window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
+        logoutBtn.addEventListener('click', () => { signOut(auth); });
+
+        // Helper function to render user info and greeting
+        function renderUserInfo(user, userData) {
+            document.getElementById('user-email-nav').textContent = user.email;
+            if (user.photoURL) {
+                document.getElementById('nav-avatar-container').innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
             }
-        });
+        }
 
         const contentBlocksContainer = document.getElementById('content-blocks-container');
         const addBlockFormContainer = document.getElementById('add-block-form-container');
@@ -329,15 +354,65 @@
             }
             
             try {
-                const lessonsRef = collection(db, "lessons");
-                const docRef = await addDoc(lessonsRef, lessonData);
-                console.log("Lesson saved with ID:", docRef.id);
-                saveStatus.textContent = "✅ Lesson Saved!";
+                if (currentLessonId) {
+                    await updateDoc(doc(db, "lessons", currentLessonId), lessonData);
+                    saveStatus.textContent = "✅ Lesson Updated!";
+                } else {
+                    const lessonsRef = collection(db, "lessons");
+                    const docRef = await addDoc(lessonsRef, lessonData);
+                    currentLessonId = docRef.id;
+                    saveStatus.textContent = "✅ Lesson Saved!";
+                }
                 setTimeout(() => { window.location.reload(); }, 2000);
             } catch (error) {
                 console.error("Error saving lesson:", error);
                 saveStatus.textContent = "Error saving lesson.";
                 saveLessonBtn.disabled = false;
+            }
+        });
+
+        async function loadLessonForEditing(lessonId) {
+            try {
+                const lessonDocRef = doc(db, "lessons", lessonId);
+                const lessonSnap = await getDoc(lessonDocRef);
+                if (lessonSnap.exists()) {
+                    const lessonData = lessonSnap.data();
+                    currentLessonId = lessonSnap.id;
+                    document.getElementById('lesson-title').value = lessonData.title || '';
+                    document.getElementById('lesson-level').value = lessonData.level || 'A1';
+                    document.getElementById('lesson-topic').value = lessonData.topic || '';
+                    lessonContent = lessonData.contentBlocks || [];
+                    renderContentBlocks();
+                } else {
+                    console.error("No such lesson exists!");
+                }
+            } catch (error) {
+                console.error("Error loading lesson:", error);
+            }
+        }
+        
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                let userData = { displayName: user.email.split('@')[0] };
+                try {
+                    const userDocRef = doc(db, "users", user.uid);
+                    const docSnap = await getDoc(userDocRef);
+                    if (docSnap.exists()) {
+                        userData = docSnap.data();
+                    }
+                } catch (error) {
+                    console.error("Error fetching user data:", error);
+                }
+                renderUserInfo(user, userData);
+
+                const urlParams = new URLSearchParams(window.location.search);
+                const lessonIdFromUrl = urlParams.get('lessonId');
+                if (lessonIdFromUrl) {
+                    await loadLessonForEditing(lessonIdFromUrl);
+                }
+            } else {
+                window.location.href = 'Login.html';
             }
         });
     </script>
