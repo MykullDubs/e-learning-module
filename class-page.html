@@ -161,15 +161,15 @@
             <h2 id="game-status-text" class="text-3xl font-bold text-center text-gray-900 dark:text-white"></h2>
             
             <div id="game-board" class="grid grid-cols-3 gap-2 w-full aspect-square bg-gray-200 dark:bg-slate-700 p-2 rounded-lg">
-                <div class="game-cell flex items-center justify-center text-5xl font-bold rounded-lg cursor-pointer transition bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700" data-row="0" data-col="0"></div>
-                <div class="game-cell flex items-center justify-center text-5xl font-bold rounded-lg cursor-pointer transition bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700" data-row="0" data-col="1"></div>
-                <div class="game-cell flex items-center justify-center text-5xl font-bold rounded-lg cursor-pointer transition bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700" data-row="0" data-col="2"></div>
-                <div class="game-cell flex items-center justify-center text-5xl font-bold rounded-lg cursor-pointer transition bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700" data-row="1" data-col="0"></div>
-                <div class="game-cell flex items-center justify-center text-5xl font-bold rounded-lg cursor-pointer transition bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700" data-row="1" data-col="1"></div>
-                <div class="game-cell flex items-center justify-center text-5xl font-bold rounded-lg cursor-pointer transition bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700" data-row="1" data-col="2"></div>
-                <div class="game-cell flex items-center justify-center text-5xl font-bold rounded-lg cursor-pointer transition bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700" data-row="2" data-col="0"></div>
-                <div class="game-cell flex items-center justify-center text-5xl font-bold rounded-lg cursor-pointer transition bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700" data-row="2" data-col="1"></div>
-                <div class="game-cell flex items-center justify-center text-5xl font-bold rounded-lg cursor-pointer transition bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700" data-row="2" data-col="2"></div>
+                <div class="game-cell flex items-center justify-center text-5xl font-bold rounded-lg cursor-pointer transition bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700" data-index="0"></div>
+                <div class="game-cell flex items-center justify-center text-5xl font-bold rounded-lg cursor-pointer transition bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700" data-index="1"></div>
+                <div class="game-cell flex items-center justify-center text-5xl font-bold rounded-lg cursor-pointer transition bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700" data-index="2"></div>
+                <div class="game-cell flex items-center justify-center text-5xl font-bold rounded-lg cursor-pointer transition bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700" data-index="3"></div>
+                <div class="game-cell flex items-center justify-center text-5xl font-bold rounded-lg cursor-pointer transition bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700" data-index="4"></div>
+                <div class="game-cell flex items-center justify-center text-5xl font-bold rounded-lg cursor-pointer transition bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700" data-index="5"></div>
+                <div class="game-cell flex items-center justify-center text-5xl font-bold rounded-lg cursor-pointer transition bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700" data-index="6"></div>
+                <div class="game-cell flex items-center justify-center text-5xl font-bold rounded-lg cursor-pointer transition bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700" data-index="7"></div>
+                <div class="game-cell flex items-center justify-center text-5xl font-bold rounded-lg cursor-pointer transition bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700" data-index="8"></div>
             </div>
 
             <div id="game-question-section" class="text-center space-y-4 hidden">
@@ -180,7 +180,7 @@
 
             <div id="waiting-section" class="text-center space-y-4">
                 <h3 class="text-xl font-bold">Waiting for another player to join...</h3>
-                <p>Share this Class ID with a friend: <code id="waiting-game-id" class="text-xs bg-stone-100 dark:bg-slate-700 p-1 rounded"></code></p>
+                <p>Share this Game ID with a friend: <code id="waiting-game-id" class="text-xs bg-stone-100 dark:bg-slate-700 p-1 rounded"></code></p>
                 <p>... or join an existing game.</p>
                 <input type="text" id="join-game-input" placeholder="Enter Game ID to join" class="w-full p-2 border rounded-lg bg-stone-50 dark:bg-slate-700 dark:border-slate-600 focus:outline-none focus:ring focus:border-indigo-500">
                 <button id="join-game-btn" class="w-full bg-indigo-600 text-white font-semibold py-2 rounded-lg hover:bg-indigo-700">Join Game</button>
@@ -211,6 +211,7 @@
         let classId = null;
         let currentLessonId = null;
         let currentGameId = null;
+        let gameUnsubscribe = null;
 
         // Flashcard variables
         let vocab = [];
@@ -376,7 +377,7 @@
             }
         };
 
-        // NEW: Function to create a game
+        // Game functions
         async function createGame() {
             if (!currentUser || !classId) {
                 alert("You must be logged in and in a class to start a game.");
@@ -388,7 +389,6 @@
             }
 
             try {
-                // Get the lesson ID from the lessons subcollection (for now, we'll get the first one)
                 const lessonsRef = collection(db, "classes", classId, "lessons");
                 const lessonsSnap = await getDocs(lessonsRef);
                 const lessonId = lessonsSnap.docs[0]?.id;
@@ -403,7 +403,7 @@
                     classId: classId,
                     lessonId: lessonId,
                     players: [currentUser.uid],
-                    board: [['', '', ''], ['', '', ''], ['', '', '']],
+                    board: Array(9).fill({ value: '' }), // The corrected, flat array of objects
                     currentPlayer: currentUser.uid,
                     status: 'waiting_for_player',
                     flashcardQuestions: vocab,
@@ -422,7 +422,19 @@
                 alert("An error occurred while creating the game.");
             }
         }
+        
+        // This function needs to be written to handle real-time game updates
+        function setupGameListener(gameId) {
+            // ... (future implementation) ...
+        }
+
+        // Game event listeners
         document.getElementById('start-game-btn').addEventListener('click', createGame);
+        document.getElementById('close-game-btn').addEventListener('click', () => {
+             document.getElementById('game-overlay').classList.remove('flex');
+             document.getElementById('game-overlay').classList.add('hidden');
+             // TODO: Clean up game state if necessary, unsubscribe from listeners
+        });
 
         // Function to load class content
         async function loadClassContent(classId) {
@@ -443,13 +455,12 @@
                 ${classData.classDay && classData.classTime ? `| <span>Schedule: ${classData.classDay}, ${classData.classTime}</span>` : ''}
             `;
 
-            // Listen for lessons and discussions in real-time
             const lessonsRef = collection(db, "classes", classId, "lessons");
             const discussionsRef = collection(db, "classes", classId, "discussions");
             
             onSnapshot(query(lessonsRef), (snapshot) => {
                 const lesson = snapshot.docs.length > 0 ? snapshot.docs[0].data() : null;
-                currentLessonId = snapshot.docs[0]?.id; // Get the lesson ID to use in the game creation
+                currentLessonId = snapshot.docs[0]?.id;
                 renderLessonContent(lesson);
             });
             
@@ -474,7 +485,6 @@
                 }
             });
 
-            // Handle new comment post
             document.getElementById('post-comment-btn').addEventListener('click', async () => {
                 const commentInput = document.getElementById('comment-input');
                 const text = commentInput.value.trim();
@@ -494,7 +504,6 @@
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
-                // Get classId from URL parameter
                 const urlParams = new URLSearchParams(window.location.search);
                 classId = urlParams.get('classId');
                 if (classId) {
