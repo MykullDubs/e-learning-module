@@ -2,7 +2,7 @@
 <html lang="en" class="">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale-1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instructor Dashboard - Golden Fellows English</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -25,7 +25,7 @@
             background-color: #F7F5F2;
         }
         .dark body {
-            background-color: #0F172A;
+            background-color: #0F172A; /* Smokey Dark Blue/Slate */
         }
         .font-brand { font-family: 'Source Serif Pro', serif; }
         @keyframes slideUpFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -59,7 +59,7 @@
     <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-7xl font-brand">
         <header class="mb-12 animate-in">
             <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Welcome, <span id="user-name">Instructor</span>!</h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-3 text-lg">Here's your dashboard for Tuesday, September 30, 2025.</p>
+            <p class="text-gray-600 dark:text-gray-400 mt-3 text-lg">Here is your overview for Tuesday, September 30, 2025.</p>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
@@ -68,7 +68,7 @@
                  <section class="animate-in" style="animation-delay: 100ms;">
                     <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
                         Feedback Queue
-                        <span id="feedback-count" class="ml-2 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full"></span>
+                        <span id="feedback-count" class="ml-2 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full hidden"></span>
                     </h2>
                     <div id="inbox-container" class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-stone-200/50 dark:border-slate-700/50 space-y-4">
                         </div>
@@ -84,8 +84,15 @@
                 <section class="animate-in sticky top-24" style="animation-delay: 300ms;">
                     <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Builder Tools</h2>
                     <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-stone-200/50 dark:border-slate-700/50 space-y-4">
-                        <a href="lesson-builder.html" class="block text-center bg-teal-600 text-white font-semibold py-3 px-6 rounded-lg shadow-sm hover:bg-teal-700">Lesson Builder</a>
-                        <a href="class-builder.html" class="block text-center bg-indigo-600 text-white font-semibold py-3 px-6 rounded-lg shadow-sm hover:bg-indigo-700">Class Builder</a>
+                        <a href="lesson-builder.html" class="block text-center bg-teal-600 text-white font-semibold py-3 px-6 rounded-lg shadow-sm hover:bg-teal-700">
+                            Lesson Builder
+                        </a>
+                        <a href="class-builder.html" class="block text-center bg-indigo-600 text-white font-semibold py-3 px-6 rounded-lg shadow-sm hover:bg-indigo-700">
+                            Class Builder
+                        </a>
+                        <a href="forum-builder.html" class="block text-center bg-stone-500 text-white font-semibold py-3 px-6 rounded-lg shadow-sm hover:bg-stone-600">
+                            Forum Builder
+                        </a>
                     </div>
                 </section>
             </aside>
@@ -97,21 +104,26 @@
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        const firebaseConfig = { /* ... your config ... */ };
+        const firebaseConfig = {
+            apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
+            authDomain: "elearning-e83cb.firebaseapp.com",
+            projectId: "elearning-e83cb",
+            storageBucket: "elearning-e83cb.appspot.com",
+            messagingSenderId: "25473938624",
+            appId: "1:25473938624:web:5b56738933543f32a7e925"
+        };
         
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- Navbar Logic ---
         const profileBtn = document.getElementById('profile-btn');
         const profileDropdown = document.getElementById('profile-dropdown');
         const logoutBtn = document.getElementById('logout-btn');
         profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
         window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
         logoutBtn.addEventListener('click', () => { signOut(auth); });
-
-        // --- Auth Guard & Dashboard Population ---
+        
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const userDocRef = doc(db, "users", user.uid);
@@ -121,7 +133,7 @@
                     const userData = docSnap.data();
                     loadDashboard(user, userData);
                 } else {
-                    window.location.href = 'dashboard.html'; // Redirect non-instructors
+                    window.location.href = 'dashboard.html';
                 }
             } else { 
                 window.location.href = 'Login.html'; 
@@ -129,12 +141,10 @@
         });
 
         function loadDashboard(user, userData) {
-            // Populate user-specific elements
             document.getElementById('user-name').textContent = userData.displayName || user.email;
             document.getElementById('user-email-nav').textContent = user.email;
             if (user.photoURL) { document.getElementById('nav-avatar-container').innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`; }
             
-            // Fetch and render widgets
             fetchAndRenderFeedbackQueue(user.uid);
             fetchAndRenderAppointments(user.uid);
         }
@@ -142,7 +152,7 @@
         async function fetchAndRenderFeedbackQueue(instructorId) {
             const inboxContainer = document.getElementById('inbox-container');
             const feedbackCount = document.getElementById('feedback-count');
-            inboxContainer.innerHTML = '<p>Loading feedback requests...</p>';
+            inboxContainer.innerHTML = '<p class="text-sm text-gray-500">Loading feedback requests...</p>';
             
             try {
                 const q = query(collection(db, "submissions"), where("instructorId", "==", instructorId), where("status", "==", "awaiting-feedback"));
@@ -157,7 +167,7 @@
                 feedbackCount.textContent = querySnapshot.size;
                 feedbackCount.classList.remove('hidden');
                 
-                inboxContainer.innerHTML = ''; // Clear loader
+                inboxContainer.innerHTML = '';
                 querySnapshot.forEach(doc => {
                     const submission = doc.data();
                     const itemEl = document.createElement('div');
@@ -179,9 +189,8 @@
 
         async function fetchAndRenderAppointments(instructorId) {
             const container = document.getElementById('appointments-container');
-            container.innerHTML = '<p>Loading appointments...</p>';
+            container.innerHTML = '<p class="text-sm text-gray-500">Loading appointments...</p>';
 
-            // This is mock data. In a real app, you would query your 'appointments' collection.
             const mockAppointments = [
                 { studentName: 'Maria Garcia', time: '10:00 AM', lesson: 'B1 Conversation Practice' },
                 { studentName: 'Chen Wei', time: '2:00 PM', lesson: 'B2 Writing Review' }
@@ -202,7 +211,6 @@
                 </div>
             `).join('');
         }
-
     </script>
 </body>
 </html>
