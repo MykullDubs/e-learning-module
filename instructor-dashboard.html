@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instructor Dashboard - Golden Fellows English</title>
+    <title>Dashboard - Golden Fellows English</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,20 +25,38 @@
             background-color: #F7F5F2;
         }
         .dark body {
-            background-color: #0F172A; /* Smokey Dark Blue/Slate */
+            background-color: #0F172A;
         }
         .font-brand { font-family: 'Source Serif Pro', serif; }
-        @keyframes slideUpFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-in { animation: slideUpFadeIn 0.6s ease-out forwards; opacity: 0; }
+
+        @keyframes slideUpFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-in {
+            animation: slideUpFadeIn 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        .widget-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .widget-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 0 15px 0 rgba(13, 148, 136, 0.2);
+        }
+        .dark .widget-card:hover {
+             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 0 25px 0 rgba(20, 184, 166, 0.2);
+        }
     </style>
 </head>
 <body class="text-gray-900 dark:text-gray-200 antialiased">
 
     <header class="bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm shadow-sm border-b border-stone-200 dark:border-slate-800 sticky top-0 z-40">
         <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
-            <a href="instructor-dashboard.html" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
-            <div class="flex items-center gap-4">
-                <span class="text-sm font-semibold text-teal-600 dark:text-teal-400">Instructor Portal</span>
+            <a href="dashboard.html" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
+            <div class="flex items-center gap-6">
+                 <a href="class-lessons-library.html" class="text-sm font-semibold hover:text-indigo-600 dark:hover:text-indigo-400">Lesson Library</a>
                 <div class="relative">
                     <button id="profile-btn" class="flex items-center gap-2">
                          <span id="user-email-nav" class="text-sm text-stone-600 dark:text-stone-300 hidden sm:block font-brand"></span>
@@ -47,6 +65,7 @@
                         </div>
                     </button>
                     <div id="profile-dropdown" class="hidden absolute font-brand right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden z-10">
+                        <a href="dashboard.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Dashboard</a>
                         <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Settings</a>
                         <div class="border-t border-stone-200 dark:border-gray-600"></div>
                         <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100 dark:hover:bg-gray-700">Log Out</button>
@@ -58,51 +77,43 @@
 
     <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-7xl font-brand">
         <header class="mb-12 animate-in">
-            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Welcome, <span id="user-name">Instructor</span>!</h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-3 text-lg">Here is your overview for Tuesday, September 30, 2025.</p>
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white"><span id="time-greeting">Good morning</span>, <span id="user-name">User</span>!</h1>
+            <p class="text-gray-600 dark:text-gray-400 mt-3 text-lg">Here is your overview for Monday, September 29, 2025.</p>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
             
             <div class="lg:col-span-2 space-y-8">
-                 <section class="animate-in" style="animation-delay: 100ms;">
-                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
-                        Feedback Queue
-                        <span id="feedback-count" class="ml-2 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full hidden"></span>
-                    </h2>
-                    <div id="inbox-container" class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-stone-200/50 dark:border-slate-700/50 space-y-4">
-                        </div>
+                <section id="focus-widget-container" class="animate-in" style="animation-delay: 100ms;"></section>
+                
+                <section class="animate-in" id="instructor-classes-widget" style="animation-delay: 200ms;">
+                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">My Classes</h2>
+                    <div id="instructor-classes-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <p class="text-gray-500 text-center mt-8">Loading your classes...</p>
+                    </div>
                 </section>
-                <section class="animate-in" style="animation-delay: 200ms;">
-    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Explore</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <a href="class-lesson-library.html" class="widget-card block bg-white/80 dark:bg-slate-800/80 p-6 rounded-2xl shadow-md border border-stone-200/50 dark:border-slate-700/50 hover:shadow-xl transition flex flex-col items-center justify-center text-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-500 dark:text-indigo-400 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.49 9.208 5 7.5 5S4.168 5.49 3 6.253v13C4.168 18.49 5.792 18 7.5 18s3.332.49 4.5 1.253m0-13C13.168 5.49 14.792 5 16.5 5S19.832 5.49 21 6.253v13C19.832 18.49 18.208 18 16.5 18s-3.332-.49-4.5-1.253"/></svg>
-            <h3 class="font-semibold text-gray-900 dark:text-white">Class Lesson Library</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Browse all available lessons</p>
-        </a>
-        </div>
-</section>
-
-                <section class="animate-in" style="animation-delay: 200ms;">
-                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Today's Appointments</h2>
-                     <div id="appointments-container" class="space-y-3">
-                        </div>
+                
+                <section class="animate-in" id="explore-widget" style="animation-delay: 300ms;">
+                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Explore</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <a href="game.html" class="widget-card block bg-white/80 dark:bg-slate-800/80 p-6 rounded-2xl shadow-md border border-stone-200/50 dark:border-slate-700/50 hover:shadow-xl transition flex flex-col items-center justify-center text-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-teal-500 dark:text-teal-400 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                            <h3 class="font-semibold text-gray-900 dark:text-white">Play Speak-Tactics</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Challenge a friend and practice your speaking!</p>
+                        </a>
+                        <a href="lesson-library.html" class="widget-card block bg-white/80 dark:bg-slate-800/80 p-6 rounded-2xl shadow-md border border-stone-200/50 dark:border-slate-700/50 hover:shadow-xl transition flex flex-col items-center justify-center text-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-500 dark:text-indigo-400 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg><h3 class="font-semibold text-gray-900 dark:text-white">Explore the Full Library</h3><p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Browse all lessons & guides</p></a>
+                    </div>
                 </section>
             </div>
             
             <aside class="lg:col-span-1 space-y-8">
-                <section class="animate-in sticky top-24" style="animation-delay: 300ms;">
-                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Builder Tools</h2>
-                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-stone-200/50 dark:border-slate-700/50 space-y-4">
-                        <a href="lesson-builder.html" class="block text-center bg-teal-600 text-white font-semibold py-3 px-6 rounded-lg shadow-sm hover:bg-teal-700">
-                            Lesson Builder
-                        </a>
-                        <a href="class-builder.html" class="block text-center bg-indigo-600 text-white font-semibold py-3 px-6 rounded-lg shadow-sm hover:bg-indigo-700">
-                            Class Builder
-                        </a>
-                        <a href="forum-builder.html" class="block text-center bg-stone-500 text-white font-semibold py-3 px-6 rounded-lg shadow-sm hover:bg-stone-600">
-                            Forum Builder
+                <section class="animate-in" style="animation-delay: 400ms;">
+                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Latest Discussion</h2>
+                    <div class="widget-card bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-stone-200 dark:border-slate-700 transition">
+                        <h3 class="font-bold text-lg">What are the pros and cons of democracy?</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Join the conversation with your classmates and share your point of view.</p>
+                        <a href="forum.html" class="block text-center mt-4 text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">
+                            Join the Conversation →
                         </a>
                     </div>
                 </section>
@@ -113,7 +124,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, updateDoc, collection, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
@@ -135,93 +146,154 @@
         window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
         logoutBtn.addEventListener('click', () => { signOut(auth); });
         
+        // Helper function to render user info and greeting
+        function renderUserInfo(user, userData) {
+            document.getElementById('user-email-nav').textContent = user.email;
+            if (user.photoURL) {
+                document.getElementById('nav-avatar-container').innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
+            }
+
+            const hour = new Date().getHours();
+            const greetingEl = document.getElementById('time-greeting');
+            if (hour < 12) greetingEl.textContent = 'Good morning';
+            else if (hour < 18) greetingEl.textContent = 'Good afternoon';
+            else greetingEl.textContent = 'Good evening';
+
+            document.getElementById('user-name').textContent = userData.displayName || user.email.split('@')[0];
+        }
+        
+        // Helper function to render the main focus widget
+        function renderFocusWidget(userData) {
+            const focusContainer = document.getElementById('focus-widget-container');
+            if (userData.role === 'instructor') {
+                focusContainer.innerHTML = `
+                    <div class="widget-card bg-gradient-to-br from-indigo-500 to-purple-600 p-8 rounded-2xl shadow-xl text-center text-white transition">
+                        <h2 class="text-3xl font-bold">Manage Your Curriculum</h2>
+                        <p class="mt-2 text-lg text-indigo-100 max-w-md mx-auto">Create new lessons and classes to guide your students' learning journey.</p>
+                        <div class="mt-6 flex justify-center gap-4">
+                            <a href="lesson-builder.html" class="inline-block bg-white text-indigo-600 font-semibold px-8 py-3 rounded-lg shadow-sm hover:scale-105 transition-transform">Lesson Builder</a>
+                            <a href="class-builder.html" class="inline-block bg-white text-indigo-600 font-semibold px-8 py-3 rounded-lg shadow-sm hover:scale-105 transition-transform">Class Builder</a>
+                        </div>
+                    </div>
+                `;
+            } else if (userData.currentClassId) {
+                const classDocRef = doc(db, "classes", userData.currentClassId);
+                getDoc(classDocRef).then(classDocSnap => {
+                    if (classDocSnap.exists()) {
+                        const classData = classDocSnap.data();
+                        const lessonLevel = classData.cefrLevel || 'Unknown';
+                        const lessonTitle = classData.className || 'New Class';
+                        const lessonDesc = classData.description || 'Welcome to your new class!';
+                        const teacherName = classData.teacherName || 'Not specified';
+                        const classDay = classData.classDay || 'Not specified';
+                        const classTime = classData.classTime || 'Not specified';
+
+                        focusContainer.innerHTML = `
+                            <a href="class-page.html?classId=${userData.currentClassId}" class="widget-card block bg-gradient-to-br from-teal-500 to-emerald-600 dark:from-teal-600 dark:to-emerald-700 p-8 rounded-2xl shadow-xl border border-teal-400/50 dark:border-emerald-600/50 text-white transition">
+                                <h2 class="text-xl font-semibold mb-2">Your New Class</h2>
+                                <span class="text-xs font-bold px-3 py-1 rounded-full bg-yellow-100/30 text-white">${lessonLevel}</span>
+                                <h3 class="text-3xl font-bold mt-2">${lessonTitle}</h3>
+                                <p class="text-teal-100 mt-2 max-w-lg">${lessonDesc}</p>
+                                <div class="mt-4 text-sm space-y-1">
+                                    <p><strong>Teacher:</strong> ${teacherName}</p>
+                                    <p><strong>Schedule:</strong> ${classDay}, ${classTime}</p>
+                                </div>
+                                <span class="mt-6 inline-block bg-white text-teal-700 font-bold px-8 py-3 rounded-lg shadow-sm hover:scale-105 transition-transform">Enter Classroom →</span>
+                            </a>
+                        `;
+                    } else {
+                        updateDoc(doc(db, "users", auth.currentUser.uid), { currentClassId: null }).then(() => {
+                            renderDefaultFocusWidget(userData);
+                        });
+                    }
+                }).catch(error => {
+                    console.error("Error fetching class data:", error);
+                    renderDefaultFocusWidget(userData);
+                });
+            } else {
+                renderDefaultFocusWidget(userData);
+            }
+        }
+        
+        function renderDefaultFocusWidget(userData) {
+            const focusContainer = document.getElementById('focus-widget-container');
+            if (userData.cefrLevel) {
+                focusContainer.innerHTML = `
+                    <div class="widget-card block bg-gradient-to-br from-teal-500 to-emerald-600 dark:from-teal-600 dark:to-emerald-700 p-8 rounded-2xl shadow-xl border border-teal-400/50 dark:border-emerald-600/50 text-white transition">
+                        <h2 class="text-xl font-semibold mb-2">This Week's Class</h2>
+                        <span class="text-xs font-bold px-3 py-1 rounded-full bg-yellow-100/30 text-white">B1</span>
+                        <h3 class="text-3xl font-bold mt-2">Giving Advice with Modals</h3>
+                        <p class="text-teal-100 mt-2 max-w-lg">Learn to use 'should', 'must', and 'have to' for clear recommendations.</p>
+                        <a href="class-page.html" class="mt-6 inline-block bg-white text-teal-700 font-bold px-8 py-3 rounded-lg shadow-sm hover:scale-105 transition-transform">Enter Classroom →</a>
+                    </div>
+                `;
+            } else {
+                focusContainer.innerHTML = `
+                    <div class="widget-card bg-gradient-to-br from-indigo-500 to-purple-600 p-8 rounded-2xl shadow-xl text-center text-white transition">
+                        <h2 class="text-3xl font-bold">Discover Your English Level</h2>
+                        <p class="mt-2 text-lg text-indigo-100 max-w-md mx-auto">Take our adaptive quiz to find your starting point.</p>
+                        <a href="level-finder.html" class="mt-6 inline-block bg-white text-indigo-600 font-semibold px-8 py-3 rounded-lg shadow-sm hover:scale-105 transition-transform">Take the Quiz Now</a>
+                    </div>
+                `;
+            }
+        }
+
+        async function fetchInstructorClasses(instructorId) {
+            const classesListEl = document.getElementById('instructor-classes-list');
+            classesListEl.innerHTML = '<p class="text-gray-500 text-center mt-8">Loading your classes...</p>';
+
+            const q = query(collection(db, "classes"), where("instructorId", "==", instructorId), orderBy("createdAt", "desc"));
+            const querySnapshot = await getDocs(q);
+
+            classesListEl.innerHTML = '';
+            if (querySnapshot.empty) {
+                classesListEl.innerHTML = '<p class="text-gray-500 text-center mt-8">You have not created any classes yet.</p>';
+            } else {
+                querySnapshot.forEach((doc) => {
+                    const classData = doc.data();
+                    const classCard = document.createElement('a');
+                    classCard.href = `class-builder.html?classId=${doc.id}`;
+                    classCard.className = 'widget-card block bg-white/80 dark:bg-slate-800/80 p-6 rounded-2xl shadow-md border border-stone-200/50 dark:border-slate-700/50 hover:shadow-xl transition';
+                    classCard.innerHTML = `
+                        <h3 class="text-xl font-bold">${classData.className}</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">${classData.cefrLevel ? `Level: ${classData.cefrLevel}` : 'No Level'}</p>
+                        <div class="mt-4 text-right">
+                             <span class="text-indigo-600 font-semibold text-sm hover:underline dark:text-indigo-400">Manage Class →</span>
+                        </div>
+                    `;
+                    classesListEl.appendChild(classCard);
+                });
+            }
+        }
+        
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                const userDocRef = doc(db, "users", user.uid);
-                const docSnap = await getDoc(userDocRef);
-
-                if (docSnap.exists() && docSnap.data().role === 'instructor') {
-                    const userData = docSnap.data();
-                    loadDashboard(user, userData);
-                } else {
-                    window.location.href = 'dashboard.html';
+                let userData = { displayName: user.email.split('@')[0] };
+                try {
+                    const userDocRef = doc(db, "users", user.uid);
+                    const docSnap = await getDoc(userDocRef);
+                    if (docSnap.exists()) {
+                        userData = docSnap.data();
+                    }
+                } catch (error) {
+                    console.error("Error fetching user data:", error);
                 }
-            } else { 
-                window.location.href = 'Login.html'; 
+                
+                renderUserInfo(user, userData);
+                renderFocusWidget(userData);
+                
+                // Show/hide instructor-specific widgets
+                const instructorClassesWidget = document.getElementById('instructor-classes-widget');
+                if (userData.role === 'instructor') {
+                    instructorClassesWidget.classList.remove('hidden');
+                    await fetchInstructorClasses(user.uid);
+                } else {
+                    instructorClassesWidget.classList.add('hidden');
+                }
+            } else {
+                window.location.href = 'Login.html';
             }
         });
-
-        function loadDashboard(user, userData) {
-            document.getElementById('user-name').textContent = userData.displayName || user.email;
-            document.getElementById('user-email-nav').textContent = user.email;
-            if (user.photoURL) { document.getElementById('nav-avatar-container').innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`; }
-            
-            fetchAndRenderFeedbackQueue(user.uid);
-            fetchAndRenderAppointments(user.uid);
-        }
-
-        async function fetchAndRenderFeedbackQueue(instructorId) {
-            const inboxContainer = document.getElementById('inbox-container');
-            const feedbackCount = document.getElementById('feedback-count');
-            inboxContainer.innerHTML = '<p class="text-sm text-gray-500">Loading feedback requests...</p>';
-            
-            try {
-                const q = query(collection(db, "submissions"), where("instructorId", "==", instructorId), where("status", "==", "awaiting-feedback"));
-                const querySnapshot = await getDocs(q);
-                
-                if (querySnapshot.empty) {
-                    inboxContainer.innerHTML = '<p class="text-center text-gray-500">Your feedback queue is empty. Great job!</p>';
-                    feedbackCount.classList.add('hidden');
-                    return;
-                }
-
-                feedbackCount.textContent = querySnapshot.size;
-                feedbackCount.classList.remove('hidden');
-                
-                inboxContainer.innerHTML = '';
-                querySnapshot.forEach(doc => {
-                    const submission = doc.data();
-                    const itemEl = document.createElement('div');
-                    itemEl.className = 'flex justify-between items-center bg-stone-50 dark:bg-slate-900/50 p-4 rounded-lg';
-                    itemEl.innerHTML = `
-                        <div>
-                            <p class="font-bold">${submission.studentName || submission.studentEmail}</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">${submission.lessonTitle}</p>
-                        </div>
-                        <a href="#" class="bg-teal-600 text-white font-semibold px-4 py-2 text-sm rounded-lg hover:bg-teal-700">Review</a>
-                    `;
-                    inboxContainer.appendChild(itemEl);
-                });
-            } catch (error) {
-                console.error("Error fetching feedback queue:", error);
-                inboxContainer.innerHTML = '<p class="text-red-500">Could not load feedback requests.</p>';
-            }
-        }
-
-        async function fetchAndRenderAppointments(instructorId) {
-            const container = document.getElementById('appointments-container');
-            container.innerHTML = '<p class="text-sm text-gray-500">Loading appointments...</p>';
-
-            const mockAppointments = [
-                { studentName: 'Maria Garcia', time: '10:00 AM', lesson: 'B1 Conversation Practice' },
-                { studentName: 'Chen Wei', time: '2:00 PM', lesson: 'B2 Writing Review' }
-            ];
-
-            if (mockAppointments.length === 0) {
-                container.innerHTML = '<p class="text-center text-gray-500">No appointments scheduled for today.</p>';
-                return;
-            }
-
-            container.innerHTML = mockAppointments.map(appt => `
-                <div class="bg-white/80 dark:bg-slate-800/80 p-4 rounded-xl border border-stone-200/50 dark:border-slate-700/50 flex items-center justify-between">
-                    <div>
-                        <p class="font-semibold">${appt.studentName}</p>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">${appt.lesson}</p>
-                    </div>
-                    <span class="text-sm font-bold px-3 py-1 rounded-full bg-stone-100 dark:bg-slate-700">${appt.time}</span>
-                </div>
-            `).join('');
-        }
     </script>
 </body>
 </html>
