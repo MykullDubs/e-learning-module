@@ -105,6 +105,12 @@
                         <p class="text-gray-500 dark:text-gray-400">No lessons assigned yet. Please contact your instructor.</p>
                     </div>
                 </section>
+                <section id="lesson-exercises" class="mt-8">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Exercises</h2>
+                    <div id="exercise-content" class="space-y-4">
+                        <p class="text-gray-500 dark:text-gray-400">No exercises assigned for this lesson.</p>
+                    </div>
+                </section>
             </div>
             
             <aside class="lg:col-span-1 space-y-8">
@@ -214,6 +220,70 @@
             }
         });
 
+        // Function to render the lesson content and exercises
+        function renderLessonContent(lesson) {
+            const lessonTextEl = document.getElementById('lesson-text');
+            const exerciseContentEl = document.getElementById('exercise-content');
+            let lessonTextHtml = '';
+            let exerciseHtml = '';
+            vocab = [];
+
+            if (!lesson || !lesson.contentBlocks || lesson.contentBlocks.length === 0) {
+                lessonTextEl.innerHTML = `<p class="text-gray-500 dark:text-gray-400">No lesson content has been added to this class yet.</p>`;
+                exerciseContentEl.innerHTML = `<p class="text-gray-500 dark:text-gray-400">No exercises assigned for this lesson.</p>`;
+                return;
+            }
+
+            lesson.contentBlocks.forEach(block => {
+                switch(block.type) {
+                    case 'text':
+                        lessonTextHtml += `<div class="mt-4 prose dark:prose-invert"><p>${block.text}</p></div>`;
+                        break;
+                    case 'vocabulary':
+                        if (block.isFlashcard) {
+                            vocab.push({ word: block.word, definition: block.definition, example: block.example });
+                        }
+                        break;
+                    case 'multiple-choice':
+                        exerciseHtml += `
+                            <div class="p-4 rounded-lg bg-white dark:bg-slate-700 shadow-sm">
+                                <p class="font-semibold text-gray-800 dark:text-gray-200">Multiple Choice:</p>
+                                <p class="mt-1">${block.question}</p>
+                                <ul class="mt-2 space-y-2">
+                                    ${block.options.map(option => `<li class="p-2 border rounded-md hover:bg-stone-100 dark:hover:bg-slate-600 cursor-pointer">${option}</li>`).join('')}
+                                </ul>
+                            </div>
+                        `;
+                        break;
+                    case 'fill-in-the-blank':
+                        const sentenceWithBlank = block.sentence.replace(/_/g, `<span class="inline-block w-24 border-b-2 border-dashed border-gray-400"></span>`);
+                        exerciseHtml += `
+                            <div class="p-4 rounded-lg bg-white dark:bg-slate-700 shadow-sm">
+                                <p class="font-semibold text-gray-800 dark:text-gray-200">Fill-in-the-Blank:</p>
+                                <p class="mt-1">${sentenceWithBlank}</p>
+                            </div>
+                        `;
+                        break;
+                    case 'discussion-prompt':
+                        // The discussion prompt is handled by the discussion board widget
+                        // No need to render it here, but we can if we want a prominent spot
+                        break;
+                    case 'video':
+                        const videoId = block.url.split('v=')[1];
+                        if (videoId) {
+                            lessonTextHtml += `<div class="mt-4 aspect-w-16 aspect-h-9"><iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+                        }
+                        break;
+                }
+            });
+
+            lessonTextEl.innerHTML = lessonTextHtml || `<p class="text-gray-500 dark:text-gray-400">No lesson content to display.</p>`;
+            exerciseContentEl.innerHTML = exerciseHtml || `<p class="text-gray-500 dark:text-gray-400">No exercises assigned for this lesson.</p>`;
+
+            currentCardIndex = 0;
+            updateFlashcardUI();
+        }
+
         // Function to load class content
         async function loadClassContent(classId) {
             const classDocRef = doc(db, "classes", classId);
@@ -233,53 +303,15 @@
                 ${classData.classDay && classData.classTime ? `| <span>Schedule: ${classData.classDay}, ${classData.classTime}</span>` : ''}
             `;
 
-            // Listen for lesson and vocab updates in real-time
+            // Listen for lessons and discussions in real-time
             const lessonsRef = collection(db, "classes", classId, "lessons");
-            onSnapshot(lessonsRef, (snapshot) => {
-                const lessonTextEl = document.getElementById('lesson-text');
-                let lessonTextHtml = '';
-                vocab = [];
-                snapshot.forEach(lessonDoc => {
-                    const lesson = lessonDoc.data();
-                    if (lesson.contentBlocks && Array.isArray(lesson.contentBlocks)) {
-                        lesson.contentBlocks.forEach(block => {
-                            switch(block.type) {
-                                case 'text':
-                                    lessonTextHtml += `<div class="mt-4"><p>${block.text}</p></div>`;
-                                    break;
-                                case 'vocabulary':
-                                    if (block.isFlashcard) {
-                                        vocab.push({ word: block.word, definition: block.definition, example: block.example });
-                                    }
-                                    break;
-                                case 'multiple-choice':
-                                case 'fill-in-the-blank':
-                                    // You can add logic here to render exercises
-                                    // For now, we'll just display a placeholder
-                                    lessonTextHtml += `<div class="mt-4"><strong>Exercise:</strong> A quiz question here...</div>`;
-                                    break;
-                                case 'discussion-prompt':
-                                    // You can add logic here to render the prompt prominently
-                                    lessonTextHtml += `<div class="mt-4 p-4 bg-indigo-100 dark:bg-indigo-900/50 rounded-lg"><h3 class="font-semibold text-lg">Discussion Prompt</h3><p>${block.prompt}</p></div>`;
-                                    break;
-                                case 'video':
-                                    // You can embed the video here
-                                    const videoId = block.url.split('v=')[1];
-                                    if (videoId) {
-                                        lessonTextHtml += `<div class="mt-4 aspect-w-16 aspect-h-9"><iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
-                                    }
-                                    break;
-                            }
-                        });
-                    }
-                });
-                lessonTextEl.innerHTML = lessonTextHtml || `<p class="text-gray-500 dark:text-gray-400">No lessons assigned yet. Please contact your instructor.</p>`;
-                currentCardIndex = 0;
-                updateFlashcardUI();
-            });
-
-            // Listen for discussion board updates
             const discussionsRef = collection(db, "classes", classId, "discussions");
+            
+            onSnapshot(query(lessonsRef), (snapshot) => {
+                const lesson = snapshot.docs.length > 0 ? snapshot.docs[0].data() : null;
+                renderLessonContent(lesson);
+            });
+            
             onSnapshot(query(discussionsRef, orderBy("timestamp", "desc")), (snapshot) => {
                 const discussionBoardEl = document.getElementById('discussion-board');
                 discussionBoardEl.innerHTML = '';
