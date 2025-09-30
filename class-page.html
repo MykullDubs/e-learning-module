@@ -3,107 +3,314 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B1 Class: Giving Advice - Golden Fellows English</title>
+    <title>Class - Golden Fellows English</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400&family=Special+Elite&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
-    <script>
-        // Theme loader script
-    </script>
-    
     <style>
-        body { font-family: 'Source Serif Pro', serif; background-color: #F7F5F2; }
-        .dark body { background-color: #0F172A; }
+        body { 
+            font-family: 'Source Serif Pro', serif;
+            background-color: #F7F5F2;
+        }
+        .dark body {
+            background-color: #0F172A;
+        }
         .font-brand { font-family: 'Source Serif Pro', serif; }
-        .font-typewriter { font-family: 'Special Elite', monospace; }
-        .bg-paper { background-color: #ffffff; background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239C92AC' fill-opacity='0.1' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E"); }
-        .dark .bg-paper { background-color: #E2E8F0; }
-        .card { perspective: 1000px; height: 12rem; }
-        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
-        .card.is-flipped .card-inner { transform: rotateY(180deg); }
-        .card-front, .card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; display: flex; flex-direction: column; border-radius: 1rem; }
-        .card-back { transform: rotateY(180deg); }
+        .widget-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .widget-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 0 15px 0 rgba(13, 148, 136, 0.2);
+        }
+        .dark .widget-card:hover {
+             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 0 25px 0 rgba(20, 184, 166, 0.2);
+        }
+        .flashcard-container {
+            perspective: 1000px;
+        }
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+        .flashcard.is-flipped {
+            transform: rotateY(180deg);
+        }
+        .flashcard-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .flashcard-face-front {
+            background-color: #fff;
+            color: #172a3a;
+        }
+        .dark .flashcard-face-front {
+            background-color: #1e293b;
+            color: #d1d5db;
+        }
+        .flashcard-face-back {
+            background-color: #2dd4bf;
+            color: #fff;
+            transform: rotateY(180deg);
+        }
+        .dark .flashcard-face-back {
+            background-color: #0d9488;
+        }
     </style>
 </head>
 <body class="text-gray-900 dark:text-gray-200 antialiased">
 
-    <header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm shadow-sm border-b border-stone-200 dark:border-slate-800 sticky top-0 z-40">
+    <header class="bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm shadow-sm border-b border-stone-200 dark:border-slate-800 sticky top-0 z-40">
         <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
             <a href="dashboard.html" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
-            </div>
+            <a href="dashboard.html" class="text-sm font-semibold hover:text-indigo-600 dark:hover:text-indigo-400">Dashboard</a>
+        </div>
     </header>
 
-    <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl font-brand">
-        <div class="bg-white/50 dark:bg-slate-800/50 backdrop-blur-lg p-6 sm:p-10 rounded-2xl shadow-xl border border-stone-200/50 dark:border-slate-700/50">
+    <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-7xl font-brand">
+        <header class="mb-8">
+            <h1 id="class-title" class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Loading Class...</h1>
+            <p id="class-description" class="text-gray-600 dark:text-gray-400 mt-2 text-lg"></p>
+            <div class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                <span id="class-metadata"></span>
+            </div>
+        </header>
 
-            <header class="border-b border-stone-200 dark:border-gray-700 pb-4 mb-8">
-                <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white">Giving Advice with Modals</h1>
-                <div class="flex items-center gap-2 mt-3">
-                    <span class="text-xs font-bold px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300">B1</span>
-                    <span class="text-xs font-semibold px-3 py-1 rounded-full bg-stone-100 text-stone-800 dark:bg-gray-900/50 dark:text-stone-300">Grammar</span>
-                     <span class="text-xs font-semibold px-3 py-1 rounded-full bg-stone-100 text-stone-800 dark:bg-gray-900/50 dark:text-stone-300">Speaking</span>
-                </div>
-            </header>
-
-            <section class="mb-10 bg-indigo-50 dark:bg-indigo-900/30 p-6 rounded-2xl border border-indigo-200 dark:border-indigo-700 text-center">
-                 <h2 class="text-2xl font-bold text-indigo-900 dark:text-indigo-200">Live Session</h2>
-                 <p class="mt-1 text-gray-700 dark:text-gray-300">Your next class is scheduled for:</p>
-                 <p class="text-xl font-semibold my-2">Wednesday, October 1, 2025 at 4:00 PM CST</p>
-                 <a href="#" class="mt-2 inline-block bg-indigo-600 text-white font-semibold px-8 py-3 rounded-lg shadow-sm hover:bg-indigo-700">Join Video Call</a>
-            </section>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
             
-            <hr class="my-10 border-stone-200 dark:border-gray-700">
+            <div class="lg:col-span-2 space-y-8 bg-white/50 dark:bg-slate-800/50 backdrop-blur-lg p-8 rounded-2xl shadow-xl border border-stone-200/50 dark:border-slate-700/50">
+                <section id="lesson-content">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Lesson Content</h2>
+                    <div id="lesson-text" class="prose dark:prose-invert max-w-none">
+                        <p class="text-gray-500 dark:text-gray-400">Loading lesson content...</p>
+                    </div>
+                </section>
+                <section id="lesson-exercises" class="mt-8">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Exercises</h2>
+                    <div id="exercise-content">
+                        <p class="text-gray-500 dark:text-gray-400">Loading exercises...</p>
+                    </div>
+                </section>
+            </div>
+            
+            <aside class="lg:col-span-1 space-y-8">
 
-            <section class="mb-10">
-                <h2 class="text-3xl font-bold mb-4">Lesson Materials</h2>
-                <div class="space-y-4">
-                    <div>
-                        <h3 class="text-2xl font-semibold mb-3">Vocabulary</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="card cursor-pointer group"><div class="card-inner"><div class="card-front bg-white dark:bg-slate-800 p-6 shadow-lg border border-stone-200/80 dark:border-slate-700/80 justify-center items-center"><h3 class="text-3xl font-bold text-center">should</h3></div><div class="card-back bg-paper p-6 shadow-lg border border-stone-300 dark:border-gray-600 justify-center"><p class="font-typewriter text-lg text-gray-900">(modal v.) Used to give advice or a recommendation.</p></div></div></div>
-                            <div class="card cursor-pointer group"><div class="card-inner"><div class="card-front bg-white dark:bg-slate-800 p-6 shadow-lg border border-stone-200/80 dark:border-slate-700/80 justify-center items-center"><h3 class="text-3xl font-bold text-center">must</h3></div><div class="card-back bg-paper p-6 shadow-lg border border-stone-300 dark:border-gray-600 justify-center"><p class="font-typewriter text-lg text-gray-900">(modal v.) Used for a strong obligation or necessity, often a rule.</p></div></div></div>
+                <section>
+                    <div class="widget-card bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-stone-200 dark:border-slate-700">
+                        <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">Weekly Vocabulary</h2>
+                        <div id="flashcard-container" class="flashcard-container h-48">
+                            <div id="flashcard" class="flashcard">
+                                <div id="flashcard-front" class="flashcard-face flashcard-face-front p-6 flex flex-col justify-center items-center">
+                                    <p class="text-lg font-semibold text-gray-700 dark:text-gray-300">No words to display.</p>
+                                </div>
+                                <div id="flashcard-back" class="flashcard-face flashcard-face-back p-6 flex flex-col justify-center items-center">
+                                    <p class="text-base text-white">Definition & Example</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 flex justify-between items-center">
+                            <button id="prev-card-btn" class="text-gray-500 dark:text-gray-400 font-semibold text-sm hover:text-indigo-600 dark:hover:text-indigo-400 transition">← Previous</button>
+                            <span id="flashcard-counter" class="text-sm font-semibold text-gray-500 dark:text-gray-400">0/0</span>
+                            <button id="next-card-btn" class="text-indigo-600 dark:text-indigo-400 font-semibold text-sm hover:underline transition">Next →</button>
                         </div>
                     </div>
-                    <div>
-                         <h3 class="text-2xl font-semibold mt-6 mb-3">Grammar Guide</h3>
-                         <a href="#" class="block p-4 rounded-lg bg-stone-100 dark:bg-slate-900/50 hover:bg-stone-200 dark:hover:bg-slate-700">
-                            <p class="font-semibold text-indigo-600 dark:text-indigo-400">View Guide: Modals of Advice (should, must, have to)</p>
-                         </a>
+                </section>
+
+                <section>
+                    <div class="widget-card bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-stone-200 dark:border-slate-700">
+                        <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">Weekly Discussion</h2>
+                        <div id="discussion-board" class="space-y-4">
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Loading discussion posts...</p>
+                        </div>
+                        <div class="mt-4">
+                            <h3 class="font-semibold mb-2">Leave a comment:</h3>
+                            <textarea id="comment-input" rows="3" class="w-full p-2 border rounded-lg bg-stone-50 dark:bg-slate-700 dark:border-slate-600 focus:outline-none focus:ring focus:border-indigo-500 transition"></textarea>
+                            <button id="post-comment-btn" class="w-full mt-2 bg-indigo-600 text-white font-semibold py-2 rounded-lg hover:bg-indigo-700 transition">Post Comment</button>
+                        </div>
                     </div>
-                </div>
-            </section>
-
-             <hr class="my-10 border-stone-200 dark:border-gray-700">
-
-            <section id="speaking-task">
-                 <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Speaking Task & Feedback 🎙️</h2>
-                 <div id="recording-container" class="bg-teal-50 dark:bg-teal-900/30 p-6 rounded-2xl border border-teal-200 dark:border-teal-700">
-                    <p class="font-semibold">Prompt: "Your colleague is very stressed. Give them advice using 'should', 'must', and 'have to'."</p>
-                    <div class="mt-4 text-center">
-                        <button class="bg-teal-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-teal-700">Start Recording</button>
-                    </div>
-                 </div>
-                 
-                 <div id="feedback-display" class="mt-6 bg-white dark:bg-slate-800 p-6 rounded-2xl shadow">
-                    <h3 class="text-2xl font-semibold mb-3">Instructor Feedback</h3>
-                    <p class="text-gray-600 dark:text-gray-400 mb-4">Your instructor has reviewed your submission. Listen to their comments below.</p>
-                    <audio controls class="w-full">
-                        <source src="#" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
-                 </div>
-            </section>
-
+                </section>
+            </aside>
         </div>
     </main>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-             // --- Card Flip Logic ---
-            document.querySelectorAll('.card').forEach(card => card.addEventListener('click', () => card.classList.toggle('is-flipped')));
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
+            authDomain: "elearning-e83cb.firebaseapp.com",
+            projectId: "elearning-e83cb",
+            storageBucket: "elearning-e83cb.appspot.com",
+            messagingSenderId: "25473938624",
+            appId: "1:25473938624:web:5b56738933543f32a7e925"
+        };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        let currentUser = null;
+        let classId = null;
+
+        // Flashcard variables
+        let vocab = [];
+        let currentCardIndex = 0;
+
+        // Function to update flashcard UI
+        function updateFlashcardUI() {
+            const card = document.getElementById('flashcard');
+            const front = document.getElementById('flashcard-front');
+            const back = document.getElementById('flashcard-back');
+            const counter = document.getElementById('flashcard-counter');
+
+            if (vocab.length > 0) {
+                const currentWord = vocab[currentCardIndex];
+                front.innerHTML = `<p class="text-3xl font-bold">${currentWord.word}</p>`;
+                back.innerHTML = `<p class="text-xl font-semibold">${currentWord.definition}</p><p class="mt-2 text-sm italic opacity-80">${currentWord.example}</p>`;
+                counter.textContent = `${currentCardIndex + 1}/${vocab.length}`;
+            } else {
+                front.innerHTML = `<p class="text-lg font-semibold text-gray-700 dark:text-gray-300">No words to display.</p>`;
+                back.innerHTML = `<p class="text-base text-white">Definition & Example</p>`;
+                counter.textContent = `0/0`;
+            }
+            card.classList.remove('is-flipped');
+        }
+
+        // Event listeners for flashcards
+        document.getElementById('flashcard-container').addEventListener('click', () => {
+            document.getElementById('flashcard').classList.toggle('is-flipped');
+        });
+        document.getElementById('next-card-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (currentCardIndex < vocab.length - 1) {
+                currentCardIndex++;
+                updateFlashcardUI();
+            } else {
+                alert("You've reached the end of the deck!");
+            }
+        });
+        document.getElementById('prev-card-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (currentCardIndex > 0) {
+                currentCardIndex--;
+                updateFlashcardUI();
+            } else {
+                alert("You are at the start of the deck!");
+            }
+        });
+
+        // Function to load class content
+        async function loadClassContent(classId) {
+            const classDocRef = doc(db, "classes", classId);
+            const classDocSnap = await getDoc(classDocRef);
+            if (!classDocSnap.exists()) {
+                document.getElementById('class-title').textContent = "Class Not Found";
+                document.getElementById('lesson-text').innerHTML = "<p>The class you are looking for does not exist.</p>";
+                return;
+            }
+
+            const classData = classDocSnap.data();
+            document.getElementById('class-title').textContent = classData.className;
+            document.getElementById('class-description').textContent = classData.description;
+            document.getElementById('class-metadata').innerHTML = `
+                ${classData.cefrLevel ? `<span>Level: ${classData.cefrLevel}</span>` : ''} 
+                ${classData.teacherName ? `| <span>Teacher: ${classData.teacherName}</span>` : ''} 
+                ${classData.classDay && classData.classTime ? `| <span>Schedule: ${classData.classDay}, ${classData.classTime}</span>` : ''}
+            `;
+
+            // Listen for lesson and vocab updates in real-time
+            const lessonsRef = collection(db, "classes", classId, "lessons");
+            onSnapshot(lessonsRef, (snapshot) => {
+                let lessonTextHtml = '';
+                vocab = [];
+                snapshot.forEach(lessonDoc => {
+                    const lesson = lessonDoc.data();
+                    // Append lesson content
+                    lessonTextHtml += `<div class="mt-8"><h3>${lesson.title}</h3><p>${lesson.description}</p></div>`;
+                    // Populate vocab array
+                    if (lesson.vocab) {
+                        vocab = vocab.concat(lesson.vocab);
+                    }
+                });
+                document.getElementById('lesson-text').innerHTML = lessonTextHtml;
+                // Initialize flashcards
+                currentCardIndex = 0;
+                updateFlashcardUI();
+            });
+
+            // Listen for discussion board updates
+            const discussionsRef = collection(db, "classes", classId, "discussions");
+            onSnapshot(query(discussionsRef, orderBy("timestamp", "desc")), (snapshot) => {
+                const discussionBoardEl = document.getElementById('discussion-board');
+                discussionBoardEl.innerHTML = '';
+                if (snapshot.empty) {
+                    discussionBoardEl.innerHTML = `<p class="text-sm text-gray-500 dark:text-gray-400">No comments yet. Be the first to start the discussion!</p>`;
+                } else {
+                    snapshot.forEach(doc => {
+                        const post = doc.data();
+                        const postEl = document.createElement('div');
+                        postEl.className = 'p-3 bg-stone-50 dark:bg-slate-900/50 rounded-lg shadow-sm';
+                        const postTime = post.timestamp ? new Date(post.timestamp.toDate()).toLocaleString() : 'Just now';
+                        postEl.innerHTML = `
+                            <p class="font-semibold text-gray-800 dark:text-gray-200">${post.authorName}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">${post.text}</p>
+                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">${postTime}</p>
+                        `;
+                        discussionBoardEl.appendChild(postEl);
+                    });
+                }
+            });
+
+            // Handle new comment post
+            document.getElementById('post-comment-btn').addEventListener('click', async () => {
+                const commentInput = document.getElementById('comment-input');
+                const text = commentInput.value.trim();
+                if (text && currentUser) {
+                    await addDoc(discussionsRef, {
+                        authorId: currentUser.uid,
+                        authorName: currentUser.displayName || currentUser.email,
+                        text: text,
+                        timestamp: serverTimestamp()
+                    });
+                    commentInput.value = '';
+                }
+            });
+        }
+
+        // Initial loading logic
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                // Get classId from URL parameter
+                const urlParams = new URLSearchParams(window.location.search);
+                classId = urlParams.get('classId');
+                if (classId) {
+                    await loadClassContent(classId);
+                } else {
+                    document.getElementById('class-title').textContent = "No Class Selected";
+                    document.getElementById('lesson-text').innerHTML = "<p>Please return to your dashboard and select a class.</p>";
+                }
+            } else {
+                window.location.href = 'Login.html';
+            }
         });
     </script>
 </body>
