@@ -52,17 +52,37 @@
         .dark .player1-turn { color: #818cf8; }
         .player2-turn { color: #14b8a6; }
         .dark .player2-turn { color: #5eead4; }
+        .difficulty-easy { color: #0d9488; } .dark .difficulty-easy { color: #2dd4bf; }
+        .difficulty-medium { color: #d97706; } .dark .difficulty-medium { color: #f59e0b; }
+        .difficulty-hard { color: #be123c; } .dark .difficulty-hard { color: #f43f5e; }
     </style>
 </head>
 <body class="text-gray-900 dark:text-gray-200 antialiased font-brand">
-    <div class="container mx-auto max-w-5xl p-6">
-        <header class="text-center mb-12">
-            <h1 class="text-5xl font-bold text-gray-800 dark:text-gray-100">
-                Speak-Tactics
-            </h1>
-            <p class="text-xl text-gray-500 dark:text-gray-400 mt-2">A Golden Fellows English Language Game</p>
-        </header>
 
+    <header class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-sm border-b border-stone-200 dark:border-gray-700 sticky top-0 z-40">
+        <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
+            <a href="dashboard.html" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
+            <div class="flex items-center gap-6">
+                 <a href="lesson-library.html" class="text-sm font-semibold hover:text-indigo-600 dark:hover:text-indigo-400">Content Library</a>
+                <div class="relative">
+                    <button id="profile-btn" class="flex items-center gap-2">
+                         <span id="user-email-nav" class="text-sm text-stone-600 dark:text-stone-300 hidden sm:block font-brand"></span>
+                        <div id="nav-avatar-container">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
+                        </div>
+                    </button>
+                    <div id="profile-dropdown" class="hidden absolute font-brand right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden z-10">
+                        <a href="dashboard.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Dashboard</a>
+                        <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Settings</a>
+                        <div class="border-t border-stone-200 dark:border-gray-600"></div>
+                        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100 dark:hover:bg-gray-700">Log Out</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto max-w-5xl p-6 pt-12">
         <div class="flex justify-between items-center mb-8 text-2xl font-bold">
             <div class="text-center p-4 rounded-lg bg-white/50 dark:bg-slate-800/50 w-48">
                 <p id="player1-name-display" class="text-xl font-bold">Player 1</p>
@@ -78,83 +98,53 @@
             <p id="turn-display" class="text-2xl font-bold mb-2"></p>
         </div>
         
-        <div id="game-grid" class="grid grid-cols-3 gap-4 p-4 bg-white/50 dark:bg-slate-800/50 backdrop-blur-lg rounded-2xl shadow-xl border border-stone-200/50 dark:border-slate-700/50 hidden">
-            </div>
-
-        <div id="prompt-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-            <div class="bg-white dark:bg-slate-800 p-8 rounded-lg shadow-xl border border-stone-200 dark:border-slate-700 text-center w-full max-w-lg">
-                <h3 id="prompt-topic" class="text-4xl font-bold mb-4 text-indigo-600 dark:text-indigo-400"></h3>
-                <p id="prompt-text" class="text-xl mb-6 leading-relaxed text-gray-700 dark:text-gray-300"></p>
-                <div id="timer-bar-container" class="w-full max-w-sm mx-auto bg-gray-200 dark:bg-slate-700 h-4 rounded-full overflow-hidden mb-6">
-                    <div id="timer-bar" class="h-full bg-green-500" style="width: 100%;"></div>
-                </div>
-                <div class="flex justify-center space-x-4">
-                    <button id="end-turn-btn" class="bg-indigo-600 text-white font-semibold px-8 py-3 rounded-lg shadow-sm hover:bg-indigo-700">Ready</button>
-                    <button id="fail-turn-btn" class="bg-stone-500 text-white font-semibold px-8 py-3 rounded-lg shadow-sm hover:bg-stone-600">Skip</button>
-                </div>
-            </div>
-        </div>
+        <div id="game-grid" class="grid grid-cols-3 gap-4 p-4 bg-white/50 dark:bg-slate-800/50 backdrop-blur-lg rounded-2xl shadow-xl border border-stone-200/50 dark:border-slate-700/50 hidden"></div>
         
-        <div id="start-modal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-            <div class="bg-white dark:bg-slate-800 p-8 rounded-lg shadow-xl border border-stone-200 dark:border-slate-700 text-center w-full max-w-md">
-                <h2 class="text-3xl font-bold mb-2">Start a New Game</h2>
-                <p class="text-gray-600 dark:text-gray-400 mb-6">Enter player names and choose your deck.</p>
-                <div class="flex flex-col space-y-4 mb-6">
-                    <input type="text" id="player1-name-input" placeholder="Player 1 Name" class="p-2 border border-stone-300 dark:border-gray-600 rounded-md bg-transparent focus:ring-2 focus:ring-indigo-500">
-                    <input type="text" id="player2-name-input" placeholder="Player 2 Name" class="p-2 border border-stone-300 dark:border-gray-600 rounded-md bg-transparent focus:ring-2 focus:ring-indigo-500">
-                </div>
-                <div id="category-selection-container" class="flex flex-col space-y-4"></div>
-                <div id="deck-selection-container" class="flex flex-col space-y-4 mt-4 hidden"></div>
-                <button id="manage-decks-btn" class="mt-4 text-sm font-semibold text-stone-600 dark:text-stone-400 hover:text-indigo-600 dark:hover:text-indigo-400">Manage Decks</button>
-            </div>
-        </div>
-
-        <div id="deck-management-modal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-            <div class="bg-white dark:bg-slate-800 p-8 rounded-lg shadow-xl border border-stone-200 dark:border-slate-700 text-center w-full max-w-lg">
-                <h2 class="text-3xl font-bold mb-4">Deck Management</h2>
-                <div id="deck-list-container" class="flex flex-col space-y-2 mb-6 text-gray-700 dark:text-gray-200"></div>
-                <button id="create-deck-btn" class="bg-indigo-600 text-white font-semibold py-3 px-6 rounded-lg shadow-sm hover:bg-indigo-700 mb-4">Create New Deck</button>
-                <button id="close-manage-decks-btn" class="bg-stone-200 dark:bg-slate-700 font-semibold py-3 px-6 rounded-lg">Close</button>
-            </div>
-        </div>
-
-        <div id="edit-deck-modal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-            <div class="bg-white dark:bg-slate-800 p-8 rounded-lg shadow-xl border border-stone-200 dark:border-slate-700 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-                <h2 id="edit-deck-title" class="text-3xl font-bold mb-6 text-center"></h2>
-                <div class="flex flex-col space-y-4">
-                    <input type="text" id="new-card-topic" placeholder="Topic" class="p-2 border border-stone-300 dark:border-gray-600 rounded-md bg-transparent focus:ring-2 focus:ring-indigo-500">
-                    <input type="text" id="new-card-prompt" placeholder="Prompt" class="p-2 border border-stone-300 dark:border-gray-600 rounded-md bg-transparent focus:ring-2 focus:ring-indigo-500">
-                    <div class="flex justify-center space-x-4">
-                        <select id="new-card-difficulty" class="p-2 border border-stone-300 dark:border-gray-600 rounded-md bg-transparent focus:ring-2 focus:ring-indigo-500">
-                            <option value="Easy">Easy</option><option value="Medium">Medium</option><option value="Hard">Hard</option>
-                        </select>
-                        <input type="number" id="new-card-points" placeholder="Points" class="p-2 w-24 border border-stone-300 dark:border-gray-600 rounded-md bg-transparent focus:ring-2 focus:ring-indigo-500">
-                    </div>
-                    <textarea id="new-card-definition" placeholder="Definition (for Phrasal Verbs)" class="p-2 border border-stone-300 dark:border-gray-600 rounded-md bg-transparent focus:ring-2 focus:ring-indigo-500"></textarea>
-                    <button id="add-card-btn" class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg shadow-sm">Add Card</button>
-                </div>
-                <div id="current-deck-cards" class="mt-8 text-left"></div>
-                <div class="flex justify-center space-x-4 mt-6">
-                    <button id="save-deck-btn" class="bg-indigo-600 text-white font-semibold py-3 px-6 rounded-lg shadow-sm hover:bg-indigo-700">Save Deck</button>
-                    <button id="close-edit-deck-btn" class="bg-stone-200 dark:bg-slate-700 font-semibold py-3 px-6 rounded-lg">Close</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="end-game-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-            <div class="bg-white dark:bg-slate-800 p-8 rounded-lg shadow-xl border border-stone-200 dark:border-slate-700 text-center w-full max-w-md">
-                <h3 id="end-game-message" class="text-4xl font-extrabold mb-4 text-indigo-600 dark:text-indigo-400"></h3>
-                <p class="text-xl font-bold mb-2">Final Score</p>
-                <div class="flex justify-around text-3xl font-bold mb-6">
-                    <span id="end-game-p1-score"></span>
-                    <span id="end-game-p2-score"></span>
-                </div>
-                <button id="play-again-btn" class="bg-indigo-600 text-white font-semibold px-8 py-3 rounded-lg shadow-sm hover:bg-indigo-700">New Game</button>
-            </div>
-        </div>
-
+        <div id="prompt-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50"></div>
+        <div id="start-modal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 z-50"></div>
+        <div id="deck-management-modal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 z-50"></div>
+        <div id="edit-deck-modal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 z-50"></div>
+        <div id="end-game-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50"></div>
+        
         <div class="tooltip"></div>
     </div>
+    
     <script src="game.js"></script> 
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
+            authDomain: "elearning-e83cb.firebaseapp.com",
+            projectId: "elearning-e83cb",
+            storageBucket: "elearning-e83cb.appspot.com",
+            messagingSenderId: "25473938624",
+            appId: "1:25473938624:web:5b56738933543f32a7e925"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // --- Navbar Logic ---
+        const profileBtn = document.getElementById('profile-btn');
+        const profileDropdown = document.getElementById('profile-dropdown');
+        const logoutBtn = document.getElementById('logout-btn');
+        profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
+        window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
+        logoutBtn.addEventListener('click', () => { signOut(auth); });
+        
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('user-email-nav').textContent = user.email;
+                if (user.photoURL) { 
+                    document.getElementById('nav-avatar-container').innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`; 
+                }
+            } else { 
+                window.location.href = 'Login.html'; 
+            }
+        });
+    </script>
 </body>
 </html>
