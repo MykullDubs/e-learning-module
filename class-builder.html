@@ -46,7 +46,10 @@
             <div id="editor-panel" class="lg:col-span-2 space-y-8 hidden">
                 <section>
                     <form id="class-form" class="bg-white/50 dark:bg-slate-800/50 backdrop-blur-lg p-8 rounded-2xl shadow-xl border border-stone-200/50 dark:border-slate-700/50">
-                        <h2 class="text-3xl font-bold mb-4">Edit Class</h2>
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-3xl font-bold">Edit Class</h2>
+                            <button type="button" id="delete-class-btn" class="bg-red-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-700 transition">Delete Class</button>
+                        </div>
                         <p class="text-gray-500 dark:text-gray-400 mb-6">Class ID: <code id="editor-class-id" class="text-xs bg-stone-100 dark:bg-slate-700 p-1 rounded"></code></p>
                         
                         <div class="space-y-4">
@@ -135,7 +138,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, updateDoc, addDoc, deleteDoc, serverTimestamp, getDocs, getDoc, query, where, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, updateDoc, addDoc, deleteDoc, serverTimestamp, getDocs, getDoc, query, where, orderBy, onSnapshot, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
@@ -162,7 +165,6 @@
                     window.location.href = 'dashboard.html';
                 } else {
                     fetchClasses(user.uid);
-                    // Check for classId in URL to pre-select it
                     const urlParams = new URLSearchParams(window.location.search);
                     const classIdFromUrl = urlParams.get('classId');
                     if (classIdFromUrl) {
@@ -205,7 +207,6 @@
             document.getElementById('editor-placeholder').classList.add('hidden');
             document.getElementById('editor-panel').classList.remove('hidden');
             
-            // Populate the form fields with the loaded data
             document.getElementById('editor-class-id').textContent = classId;
             document.getElementById('className').value = classData.className || '';
             document.getElementById('classDescription').value = classData.description || '';
@@ -324,11 +325,56 @@
             }
         }
         
+        async function deleteClass() {
+            if (!activeClassId) {
+                alert("Please select a class to delete.");
+                return;
+            }
+            if (!confirm("WARNING: This will permanently delete the class and all its lessons and student data. Are you sure?")) {
+                return;
+            }
+            try {
+                // Delete subcollections first
+                const lessonsRef = collection(db, "classes", activeClassId, "lessons");
+                const lessonsSnap = await getDocs(lessonsRef);
+                const studentsRef = collection(db, "classes", activeClassId, "students");
+                const studentsSnap = await getDocs(studentsRef);
+                const discussionsRef = collection(db, "classes", activeClassId, "discussions");
+                const discussionsSnap = await getDocs(discussionsRef);
+
+                const batch = writeBatch(db);
+
+                lessonsSnap.forEach(doc => batch.delete(doc.ref));
+                studentsSnap.forEach(doc => batch.delete(doc.ref));
+                discussionsSnap.forEach(doc => batch.delete(doc.ref));
+
+                // Find all enrolled students and clear their currentClassId
+                const studentsInClassQuery = query(collection(db, "users"), where("currentClassId", "==", activeClassId));
+                const studentsInClassSnap = await getDocs(studentsInClassQuery);
+                studentsInClassSnap.forEach(doc => {
+                    batch.update(doc.ref, { currentClassId: null });
+                });
+
+                // Finally, delete the class document itself
+                const classRef = doc(db, "classes", activeClassId);
+                batch.delete(classRef);
+
+                await batch.commit();
+
+                alert("Class deleted successfully!");
+                window.location.reload(); // Refresh the page to clear the editor
+            } catch (error) {
+                console.error("Error deleting class:", error);
+                alert("An error occurred while deleting the class.");
+            }
+        }
+        
         // --- MODALS AND EVENT LISTENERS ---
         const enrollStudentModal = document.getElementById('enroll-student-modal');
         
         document.getElementById('class-form').addEventListener('submit', saveClass);
         document.getElementById('create-class-btn').addEventListener('click', createClass);
+        document.getElementById('delete-class-btn').addEventListener('click', deleteClass);
 
         document.getElementById('enroll-student-btn').addEventListener('click', async () => {
             if(!activeClassId) { alert("Please select a class first."); return; }
