@@ -234,7 +234,7 @@
                 return;
             }
 
-            lesson.contentBlocks.forEach(block => {
+            lesson.contentBlocks.forEach((block, index) => {
                 switch(block.type) {
                     case 'text':
                         lessonTextHtml += `<div class="mt-4 prose dark:prose-invert"><p>${block.text}</p></div>`;
@@ -245,28 +245,33 @@
                         }
                         break;
                     case 'multiple-choice':
+                        // Render a multiple-choice question with validation
                         exerciseHtml += `
-                            <div class="p-4 rounded-lg bg-white dark:bg-slate-700 shadow-sm">
+                            <div class="p-4 rounded-lg bg-white dark:bg-slate-700 shadow-sm" data-question-id="mc-${index}">
                                 <p class="font-semibold text-gray-800 dark:text-gray-200">Multiple Choice:</p>
                                 <p class="mt-1">${block.question}</p>
-                                <ul class="mt-2 space-y-2">
-                                    ${block.options.map(option => `<li class="p-2 border rounded-md hover:bg-stone-100 dark:hover:bg-slate-600 cursor-pointer">${option}</li>`).join('')}
-                                </ul>
+                                <div class="mt-2 space-y-2">
+                                    ${block.options.map(option => `<button onclick="checkMCAnswer(this, '${block.correctAnswer}')" class="w-full text-left p-2 border rounded-md hover:bg-stone-100 dark:hover:bg-slate-600">${option}</button>`).join('')}
+                                </div>
+                                <div class="mt-2 text-sm font-semibold hidden"></div>
                             </div>
                         `;
                         break;
                     case 'fill-in-the-blank':
-                        const sentenceWithBlank = block.sentence.replace(/_/g, `<span class="inline-block w-24 border-b-2 border-dashed border-gray-400"></span>`);
+                        // Render a fill-in-the-blank question with input field
                         exerciseHtml += `
-                            <div class="p-4 rounded-lg bg-white dark:bg-slate-700 shadow-sm">
+                            <div class="p-4 rounded-lg bg-white dark:bg-slate-700 shadow-sm" data-question-id="fitb-${index}">
                                 <p class="font-semibold text-gray-800 dark:text-gray-200">Fill-in-the-Blank:</p>
-                                <p class="mt-1">${sentenceWithBlank}</p>
+                                <div class="mt-1">
+                                    <span class="inline">${block.sentence.replace(/_/g, `<input type="text" data-correct-answer="${block.correctAnswer}" class="w-24 p-1 text-sm bg-transparent border-b-2 border-stone-300 dark:border-gray-600 focus:outline-none focus:border-indigo-500">`)}</span>
+                                </div>
+                                <button onclick="checkFITBAnswer(this)" class="mt-4 bg-indigo-600 text-white font-semibold py-2 px-4 text-sm rounded-lg hover:bg-indigo-700 transition">Check Answer</button>
+                                <div class="mt-2 text-sm font-semibold hidden"></div>
                             </div>
                         `;
                         break;
                     case 'discussion-prompt':
                         // The discussion prompt is handled by the discussion board widget
-                        // No need to render it here, but we can if we want a prominent spot
                         break;
                     case 'video':
                         const videoId = block.url.split('v=')[1];
@@ -283,6 +288,43 @@
             currentCardIndex = 0;
             updateFlashcardUI();
         }
+        
+        // Validation for Multiple Choice
+        window.checkMCAnswer = (button, correctAnswer) => {
+            const parent = button.closest('[data-question-id]');
+            const feedbackEl = parent.querySelector('div:last-child');
+            if (button.textContent.trim() === correctAnswer.trim()) {
+                feedbackEl.textContent = '✅ Correct!';
+                feedbackEl.classList.remove('hidden', 'text-red-600');
+                feedbackEl.classList.add('text-green-600');
+                parent.querySelectorAll('button').forEach(btn => btn.disabled = true);
+            } else {
+                feedbackEl.textContent = '❌ Incorrect. Try again.';
+                feedbackEl.classList.remove('hidden', 'text-green-600');
+                feedbackEl.classList.add('text-red-600');
+            }
+        };
+
+        // Validation for Fill-in-the-Blank
+        window.checkFITBAnswer = (button) => {
+            const parent = button.closest('[data-question-id]');
+            const inputEl = parent.querySelector('input');
+            const feedbackEl = parent.querySelector('div:last-child');
+            const userAnswer = inputEl.value.trim().toLowerCase();
+            const correctAnswer = inputEl.dataset.correctAnswer.trim().toLowerCase();
+            
+            if (userAnswer === correctAnswer) {
+                feedbackEl.textContent = '✅ Correct!';
+                feedbackEl.classList.remove('hidden', 'text-red-600');
+                feedbackEl.classList.add('text-green-600');
+                inputEl.disabled = true;
+                button.disabled = true;
+            } else {
+                feedbackEl.textContent = '❌ Incorrect. Try again.';
+                feedbackEl.classList.remove('hidden', 'text-green-600');
+                feedbackEl.classList.add('text-red-600');
+            }
+        };
 
         // Function to load class content
         async function loadClassContent(classId) {
@@ -360,7 +402,7 @@
                     await loadClassContent(classId);
                 } else {
                     document.getElementById('class-title').textContent = "No Class Selected";
-                    document.getElementById('lesson-content').innerHTML = "<p>Please return to your dashboard and select a class.</p>";
+                    document.getElementById('lesson-content-container').innerHTML = "<p class='text-gray-500 text-center mt-8'>Please return to your dashboard and select a class.</p>";
                 }
             } else {
                 window.location.href = 'Login.html';
