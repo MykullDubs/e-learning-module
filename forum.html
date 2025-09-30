@@ -30,14 +30,21 @@
     <header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm shadow-sm border-b border-stone-200 dark:border-slate-800 sticky top-0 z-40">
         <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
             <a href="dashboard.html" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
-            <div id="nav-user-profile" class="relative hidden">
-                 <button id="profile-btn" class="flex items-center gap-2">
-                    <span id="user-email-nav" class="text-sm text-stone-600 dark:text-stone-300 hidden sm:block font-brand"></span>
-                    <div id="nav-avatar-container">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
+            <div class="flex items-center gap-6">
+                 <a href="lesson-library.html" class="text-sm font-semibold hover:text-indigo-600 dark:hover:text-indigo-400">Content Library</a>
+                <div class="relative">
+                    <button id="profile-btn" class="flex items-center gap-2">
+                         <span id="user-email-nav" class="text-sm text-stone-600 dark:text-stone-300 hidden sm:block font-brand"></span>
+                        <div id="nav-avatar-container">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
+                        </div>
+                    </button>
+                    <div id="profile-dropdown" class="hidden absolute font-brand right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden z-10">
+                        <a href="dashboard.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Dashboard</a>
+                        <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Settings</a>
+                        <div class="border-t border-stone-200 dark:border-gray-600"></div>
+                        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100 dark:hover:bg-gray-700">Log Out</button>
                     </div>
-                </button>
-                <div id="profile-dropdown" class="hidden absolute font-brand right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden z-10">
                 </div>
             </div>
         </div>
@@ -92,71 +99,70 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // --- Navbar Logic ---
+        const profileBtn = document.getElementById('profile-btn');
+        const profileDropdown = document.getElementById('profile-dropdown');
+        const logoutBtn = document.getElementById('logout-btn');
+        profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
+        window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
+        logoutBtn.addEventListener('click', () => { signOut(auth); });
+
+        // --- Forum Logic ---
         const threadTitleEl = document.getElementById('thread-title');
         const threadPromptEl = document.getElementById('thread-prompt');
         const repliesContainer = document.getElementById('replies-container');
         const replyForm = document.getElementById('reply-form');
         const replyInput = document.getElementById('reply-input');
-
-        // This ID tells the script which discussion to load. In a real app, this might come from the URL.
         const threadId = "democracy-pros-cons"; 
         let currentUser = null;
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
-                // Once user is confirmed, load the forum content
+                // Populate navbar
+                document.getElementById('user-email-nav').textContent = user.email;
+                if (user.photoURL) {
+                    document.getElementById('nav-avatar-container').innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
+                }
+                // Load forum content
                 loadThread();
                 listenForReplies();
-                // You can also populate the navbar here if it's part of the template
             } else {
-                // If no user, redirect them to the login page
                 window.location.href = 'Login.html';
             }
         });
 
-        // --- Load the main discussion prompt from the 'forums' collection ---
         async function loadThread() {
             const threadRef = doc(db, "forums", threadId);
             const docSnap = await getDoc(threadRef);
-
             if (docSnap.exists()) {
                 const thread = docSnap.data();
                 threadTitleEl.textContent = thread.title;
                 threadPromptEl.textContent = thread.prompt;
             } else {
-                console.error("Error: Discussion thread not found in Firestore!");
+                console.error("Error: Discussion thread not found!");
                 threadTitleEl.textContent = "Discussion Not Found";
-                threadPromptEl.textContent = "Please ensure you have created this thread in your Firestore database.";
             }
         }
 
-        // --- Listen for new replies in real-time ---
         function listenForReplies() {
             const repliesRef = collection(db, "forums", threadId, "replies");
             const q = query(repliesRef, orderBy("createdAt", "asc"));
-
             onSnapshot(q, (snapshot) => {
                 repliesContainer.innerHTML = '';
                 if (snapshot.empty) {
                     repliesContainer.innerHTML = '<p class="text-center text-gray-500">No replies yet. Be the first!</p>';
                     return;
                 }
-
                 snapshot.forEach(doc => {
                     const reply = doc.data();
                     const replyEl = document.createElement('div');
                     replyEl.className = 'flex items-start gap-4';
-                    
                     const formattedTime = reply.createdAt ? new Date(reply.createdAt.toDate()).toLocaleString() : 'Just now';
-
                     replyEl.innerHTML = `
                         <img src="${reply.authorAvatar || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(reply.authorName)}" alt="avatar" class="w-10 h-10 rounded-full flex-shrink-0">
                         <div class="bg-stone-50 dark:bg-slate-900/50 p-4 rounded-lg flex-grow">
-                            <div class="flex justify-between items-center">
-                                <p class="font-bold text-indigo-600 dark:text-indigo-400">${reply.authorName}</p>
-                                <p class="text-xs text-gray-500">${formattedTime}</p>
-                            </div>
+                            <div class="flex justify-between items-center"><p class="font-bold text-indigo-600 dark:text-indigo-400">${reply.authorName}</p><p class="text-xs text-gray-500">${formattedTime}</p></div>
                             <p class="mt-2 text-gray-700 dark:text-gray-300 whitespace-pre-wrap">${reply.text}</p>
                         </div>
                     `;
@@ -165,11 +171,9 @@
             });
         }
 
-        // --- Post a new reply to Firestore ---
         replyForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const replyText = replyInput.value.trim();
-
             if (replyText && currentUser) {
                 try {
                     const repliesRef = collection(db, "forums", threadId, "replies");
@@ -180,10 +184,9 @@
                         authorAvatar: currentUser.photoURL || '',
                         createdAt: serverTimestamp()
                     });
-                    replyInput.value = ''; // Clear input after sending
+                    replyInput.value = '';
                 } catch (error) {
                     console.error("Error sending reply: ", error);
-                    alert("There was an error sending your message. Please try again.");
                 }
             }
         });
