@@ -79,7 +79,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, collection, query, where, getDocs, orderBy, startAt, endAt } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, query, where, getDocs, orderBy, startAt, endAt, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
@@ -132,8 +132,9 @@
                         <span>Topic: ${lesson.topic || 'N/A'}</span>
                     </div>
                     <p class="mt-4 text-sm">${lesson.contentBlocks[0]?.text?.substring(0, 100) || 'No description available.'}...</p>
-                    <div class="mt-4 text-right">
+                    <div class="mt-4 flex justify-between items-center">
                         <a href="lesson-builder.html?lessonId=${lesson.id}" class="text-indigo-600 font-semibold text-sm hover:underline dark:text-indigo-400">View/Edit →</a>
+                        <button onclick="assignLessonToClass('${lesson.id}', '${lesson.title}')" class="bg-indigo-600 text-white font-semibold py-2 px-4 text-sm rounded-lg hover:bg-indigo-700 transition">Assign</button>
                     </div>
                 `;
                 lessonListContainer.appendChild(lessonCard);
@@ -154,11 +155,34 @@
         filterLevelEl.addEventListener('change', filterAndRender);
         filterTopicEl.addEventListener('input', filterAndRender);
 
+        // Global function to be called by the "Assign" button
+        window.assignLessonToClass = async (lessonId, lessonTitle) => {
+            const classId = prompt(`Enter the Class ID to assign "${lessonTitle}" to:`);
+            if (!classId) return;
+
+            try {
+                // Fetch the full lesson data from the lessons collection
+                const lessonRef = doc(db, "lessons", lessonId);
+                const lessonSnap = await getDoc(lessonRef);
+                if (!lessonSnap.exists()) {
+                    alert("Lesson not found!");
+                    return;
+                }
+                const lessonData = lessonSnap.data();
+
+                // Add a document to the class's subcollection
+                const classLessonRef = doc(db, "classes", classId, "lessons", lessonId);
+                await setDoc(classLessonRef, lessonData);
+
+                alert(`Lesson "${lessonTitle}" assigned to class successfully!`);
+            } catch (error) {
+                console.error("Error assigning lesson:", error);
+                alert("Error assigning lesson. Please check the Class ID and your permissions.");
+            }
+        };
+
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // Ensure only instructors can access this page, as per security rules
-                // A user's role can be checked by fetching their user document
-                // For simplicity, we assume this page is only linked from instructor dashboard
                 await fetchLessons();
             } else {
                 window.location.href = 'Login.html';
