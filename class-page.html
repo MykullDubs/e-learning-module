@@ -329,7 +329,6 @@
             lessonTextEl.innerHTML = lessonTextHtml || `<p class="text-gray-500 dark:text-gray-400">No lesson content to display.</p>`;
             exerciseContentEl.innerHTML = exerciseHtml || `<p class="text-gray-500 dark:text-gray-400">No exercises assigned for this lesson.</p>`;
 
-            // Show the game button if there are vocabulary words
             if (vocab.length > 0) {
                 document.getElementById('start-game-btn').classList.remove('hidden');
             } else {
@@ -340,7 +339,6 @@
             updateFlashcardUI();
         }
         
-        // Validation for Multiple Choice
         window.checkMCAnswer = (button, correctAnswer) => {
             const parent = button.closest('[data-question-id]');
             const feedbackEl = parent.querySelector('div:last-child');
@@ -356,7 +354,6 @@
             }
         };
 
-        // Validation for Fill-in-the-Blank
         window.checkFITBAnswer = (button) => {
             const parent = button.closest('[data-question-id]');
             const inputEl = parent.querySelector('input');
@@ -376,8 +373,7 @@
                 feedbackEl.classList.add('text-red-600');
             }
         };
-
-        // Game functions
+        
         async function createGame() {
             if (!currentUser || !classId) {
                 alert("You must be logged in and in a class to start a game.");
@@ -387,7 +383,7 @@
                 alert("You need at least 9 vocabulary words to play Tic-Tac-Toe.");
                 return;
             }
-
+        
             try {
                 const lessonsRef = collection(db, "classes", classId, "lessons");
                 const lessonsSnap = await getDocs(lessonsRef);
@@ -397,13 +393,13 @@
                     alert("No lesson assigned to this class.");
                     return;
                 }
-
+        
                 const gamesRef = collection(db, "games");
                 const newGameData = {
                     classId: classId,
                     lessonId: lessonId,
                     players: [currentUser.uid],
-                    board: Array(9).fill({ value: '' }), // The corrected, flat array of objects
+                    board: Array(9).fill({ value: '' }),
                     currentPlayer: currentUser.uid,
                     status: 'waiting_for_player',
                     flashcardQuestions: vocab,
@@ -412,25 +408,108 @@
                 const gameDocRef = await addDoc(gamesRef, newGameData);
                 currentGameId = gameDocRef.id;
                 
-                // Show the game overlay and update the waiting section
                 document.getElementById('game-overlay').classList.remove('hidden');
                 document.getElementById('game-overlay').classList.add('flex');
                 document.getElementById('waiting-game-id').textContent = currentGameId;
                 
+                setupGameListener(currentGameId);
+        
             } catch (error) {
                 console.error("Error creating game:", error);
                 alert("An error occurred while creating the game.");
             }
         }
         
-        // This function needs to be written to handle real-time game updates
-        function setupGameListener(gameId) {
-            // ... (future implementation) ...
+        // NEW: Function to join an existing game
+        async function joinGame() {
+            const gameId = document.getElementById('join-game-input').value.trim();
+            if (!gameId) {
+                alert("Please enter a valid game ID.");
+                return;
+            }
+            if (!currentUser || !classId) {
+                alert("You must be logged in and in a class to join a game.");
+                return;
+            }
+        
+            const gameRef = doc(db, "games", gameId);
+            try {
+                const gameDoc = await getDoc(gameRef);
+                if (!gameDoc.exists()) {
+                    alert("Game not found. Please check the ID.");
+                    return;
+                }
+        
+                const gameData = gameDoc.data();
+                if (gameData.status !== 'waiting_for_player') {
+                    alert("This game is already in progress or has finished.");
+                    return;
+                }
+                if (gameData.players.includes(currentUser.uid)) {
+                    alert("You are already in this game.");
+                    return;
+                }
+                
+                // Add the second player and start the game
+                const updatedPlayers = [...gameData.players, currentUser.uid];
+                await updateDoc(gameRef, {
+                    players: updatedPlayers,
+                    status: 'in_progress',
+                });
+        
+                currentGameId = gameId;
+                document.getElementById('game-overlay').classList.remove('hidden');
+                document.getElementById('game-overlay').classList.add('flex');
+                setupGameListener(currentGameId);
+        
+            } catch (error) {
+                console.error("Error joining game:", error);
+                alert("An error occurred while joining the game.");
+            }
         }
-
-        // Game event listeners
+        
+        // NEW: Game listener to update UI in real-time
+        function setupGameListener(gameId) {
+            if (gameUnsubscribe) gameUnsubscribe();
+        
+            const gameRef = doc(db, "games", gameId);
+            gameUnsubscribe = onSnapshot(gameRef, (doc) => {
+                const game = doc.data();
+                if (!game) {
+                    console.log("Game ended.");
+                    document.getElementById('game-overlay').classList.remove('flex');
+                    document.getElementById('game-overlay').classList.add('hidden');
+                    return;
+                }
+        
+                // Update UI based on game status
+                if (game.status === 'in_progress') {
+                    document.getElementById('waiting-section').classList.add('hidden');
+                    document.getElementById('game-question-section').classList.remove('hidden');
+                } else if (game.status === 'waiting_for_player') {
+                    document.getElementById('waiting-section').classList.remove('hidden');
+                    document.getElementById('game-question-section').classList.add('hidden');
+                }
+        
+                // Update board
+                game.board.forEach((cell, index) => {
+                    document.querySelector(`[data-index="${index}"]`).textContent = cell.value;
+                });
+        
+                // Update status text
+                if (game.status === 'in_progress') {
+                    const playerNames = game.players.join(' vs ');
+                    document.getElementById('game-status-text').textContent = `Game in Progress: ${playerNames}`;
+                } else if (game.status === 'waiting_for_player') {
+                    document.getElementById('game-status-text').textContent = `Waiting for Player...`;
+                }
+            });
+        }
+        
         document.getElementById('start-game-btn').addEventListener('click', createGame);
+        document.getElementById('join-game-btn').addEventListener('click', joinGame);
         document.getElementById('close-game-btn').addEventListener('click', () => {
+             if (gameUnsubscribe) gameUnsubscribe();
              document.getElementById('game-overlay').classList.remove('flex');
              document.getElementById('game-overlay').classList.add('hidden');
              // TODO: Clean up game state if necessary, unsubscribe from listeners
@@ -500,7 +579,6 @@
             });
         }
 
-        // Initial loading logic
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
