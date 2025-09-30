@@ -29,6 +29,9 @@
         .drag-handle:active {
             cursor: grabbing;
         }
+        .drag-over {
+            border: 2px dashed #6366f1; /* Highlight style for drop zone */
+        }
     </style>
 </head>
 <body class="text-gray-900 dark:text-gray-200 antialiased">
@@ -136,6 +139,7 @@
 
         let currentUser = null;
         let currentLessonId = null;
+        let draggedIndex = null;
 
         const profileBtn = document.getElementById('profile-btn');
         const profileDropdown = document.getElementById('profile-dropdown');
@@ -144,7 +148,6 @@
         window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
         logoutBtn.addEventListener('click', () => { signOut(auth); });
 
-        // Helper function to render user info and greeting
         function renderUserInfo(user, userData) {
             document.getElementById('user-email-nav').textContent = user.email;
             if (user.photoURL) {
@@ -169,11 +172,17 @@
                 const blockEl = document.createElement('div');
                 blockEl.className = 'bg-stone-50 dark:bg-slate-900/50 p-4 rounded-lg border border-stone-200 dark:border-slate-700 relative group';
                 blockEl.dataset.index = index;
+                blockEl.setAttribute('draggable', 'true');
 
                 let contentHTML = '';
                 const blockHeader = `<div class="flex items-center justify-between mb-2">
                     <span class="font-semibold text-sm text-gray-700 dark:text-gray-300">${block.type.toUpperCase().replace('-', ' ')}</span>
-                    <button class="remove-block-btn text-red-500 hover:text-red-700 text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Remove</button>
+                    <div class="flex items-center gap-2">
+                         <svg class="drag-handle h-4 w-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v2a1 1 0 11-2 0V4a1 1 0 011-1zm-2 5a1 1 0 100 2h4a1 1 0 100-2H8zm-2 5a1 1 0 100 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                        </svg>
+                        <button class="remove-block-btn text-red-500 hover:text-red-700 text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Remove</button>
+                    </div>
                 </div>`;
                 
                 switch (block.type) {
@@ -340,6 +349,38 @@
                 lessonContent.splice(index, 1);
                 renderContentBlocks();
             }
+        });
+
+        contentBlocksContainer.addEventListener('dragstart', (e) => {
+            draggedIndex = e.target.dataset.index;
+            e.dataTransfer.effectAllowed = 'move';
+        });
+
+        contentBlocksContainer.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            const target = e.target.closest('[data-index]');
+            if (target) {
+                target.classList.add('drag-over');
+            }
+        });
+
+        contentBlocksContainer.addEventListener('dragleave', (e) => {
+            const target = e.target.closest('[data-index]');
+            if (target) {
+                target.classList.remove('drag-over');
+            }
+        });
+
+        contentBlocksContainer.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const droppedOn = e.target.closest('[data-index]');
+            if (droppedOn) {
+                const dropIndex = droppedOn.dataset.index;
+                const draggedItem = lessonContent.splice(draggedIndex, 1)[0];
+                lessonContent.splice(dropIndex, 0, draggedItem);
+                renderContentBlocks();
+            }
+            document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
         });
 
         saveLessonBtn.addEventListener('click', async () => {
