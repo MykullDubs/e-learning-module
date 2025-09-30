@@ -245,25 +245,23 @@
                         }
                         break;
                     case 'multiple-choice':
-                        // Render a multiple-choice question with validation
                         exerciseHtml += `
                             <div class="p-4 rounded-lg bg-white dark:bg-slate-700 shadow-sm" data-question-id="mc-${index}">
                                 <p class="font-semibold text-gray-800 dark:text-gray-200">Multiple Choice:</p>
                                 <p class="mt-1">${block.question}</p>
                                 <div class="mt-2 space-y-2">
-                                    ${block.options.map(option => `<button onclick="checkMCAnswer(this, '${block.correctAnswer}')" class="w-full text-left p-2 border rounded-md hover:bg-stone-100 dark:hover:bg-slate-600">${option}</button>`).join('')}
+                                    ${block.options.map(option => `<button onclick="checkMCAnswer(this, '${block.correctAnswer.replace(/'/g, "\\'")}')" class="w-full text-left p-2 border rounded-md hover:bg-stone-100 dark:hover:bg-slate-600">${option}</button>`).join('')}
                                 </div>
                                 <div class="mt-2 text-sm font-semibold hidden"></div>
                             </div>
                         `;
                         break;
                     case 'fill-in-the-blank':
-                        // Render a fill-in-the-blank question with input field
                         exerciseHtml += `
                             <div class="p-4 rounded-lg bg-white dark:bg-slate-700 shadow-sm" data-question-id="fitb-${index}">
                                 <p class="font-semibold text-gray-800 dark:text-gray-200">Fill-in-the-Blank:</p>
                                 <div class="mt-1">
-                                    <span class="inline">${block.sentence.replace(/_/g, `<input type="text" data-correct-answer="${block.correctAnswer}" class="w-24 p-1 text-sm bg-transparent border-b-2 border-stone-300 dark:border-gray-600 focus:outline-none focus:border-indigo-500">`)}</span>
+                                    <span class="inline">${block.sentence.replace(/_/g, `<input type="text" data-correct-answer="${block.correctAnswer.replace(/'/g, "\\'")}" class="w-24 p-1 text-sm bg-transparent border-b-2 border-stone-300 dark:border-gray-600 focus:outline-none focus:border-indigo-500">`)}</span>
                                 </div>
                                 <button onclick="checkFITBAnswer(this)" class="mt-4 bg-indigo-600 text-white font-semibold py-2 px-4 text-sm rounded-lg hover:bg-indigo-700 transition">Check Answer</button>
                                 <div class="mt-2 text-sm font-semibold hidden"></div>
@@ -272,12 +270,16 @@
                         break;
                     case 'discussion-prompt':
                         // The discussion prompt is handled by the discussion board widget
+                        // No need to render it here, but we can if we want a prominent spot
                         break;
                     case 'video':
                         const videoId = block.url.split('v=')[1];
                         if (videoId) {
                             lessonTextHtml += `<div class="mt-4 aspect-w-16 aspect-h-9"><iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
                         }
+                        break;
+                    case 'quote':
+                        lessonTextHtml += `<div class="relative pl-8 my-8 font-bold text-xl leading-relaxed italic"><span class="absolute top-0 left-0 text-gray-400 dark:text-gray-600 text-6xl leading-none">“</span><p class="ml-4">${block.text}</p><span class="absolute bottom-0 right-0 text-gray-400 dark:text-gray-600 text-6xl leading-none">”</span></div>`;
                         break;
                 }
             });
