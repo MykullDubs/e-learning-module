@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en" class="">
 <head>
@@ -12,6 +10,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
+    <script>
+        // Theme loader script
+    </script>
+    
     <style>
         body { font-family: 'Source Serif Pro', serif; background-color: #F7F5F2; }
         .dark body { background-color: #0F172A; }
@@ -34,12 +36,8 @@
             <aside class="lg:col-span-1 sticky top-24">
                 <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-stone-200/50 dark:border-slate-700/50">
                     <h2 class="text-2xl font-semibold mb-4">Your Classes</h2>
-                    <div id="class-list" class="space-y-2">
-                        <p class="text-sm text-gray-500">Loading classes...</p>
-                    </div>
-                    <button id="create-class-btn" class="w-full mt-4 bg-teal-600 text-white font-semibold py-2 rounded-lg hover:bg-teal-700">
-                        + Create New Class
-                    </button>
+                    <div id="class-list" class="space-y-2"><p class="text-sm text-gray-500">Loading classes...</p></div>
+                    <button id="create-class-btn" class="w-full mt-4 bg-teal-600 text-white font-semibold py-2 rounded-lg hover:bg-teal-700">+ Create New Class</button>
                 </div>
             </aside>
 
@@ -67,8 +65,20 @@
         </div>
     </main>
 
-    <div id="add-lesson-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50"></div>
-    <div id="enroll-student-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50"></div>
+    <div id="add-lesson-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-white dark:bg-slate-800 p-8 rounded-lg shadow-xl w-full max-w-lg">
+            <h2 class="text-2xl font-bold mb-4">Add a Lesson to the Class</h2>
+            <div id="all-lessons-list" class="max-h-96 overflow-y-auto space-y-2"></div>
+            <button id="close-lesson-modal-btn" class="w-full mt-4 bg-stone-200 dark:bg-slate-700 font-semibold py-2 rounded-lg">Cancel</button>
+        </div>
+    </div>
+    <div id="enroll-student-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-white dark:bg-slate-800 p-8 rounded-lg shadow-xl w-full max-w-lg">
+            <h2 class="text-2xl font-bold mb-4">Enroll a Student</h2>
+            <div id="all-students-list" class="max-h-96 overflow-y-auto space-y-2"></div>
+            <button id="close-student-modal-btn" class="w-full mt-4 bg-stone-200 dark:bg-slate-700 font-semibold py-2 rounded-lg">Cancel</button>
+        </div>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -91,9 +101,43 @@
         let currentUser = null;
         let activeClassId = null;
 
-        onAuthStateChanged(auth, async (user) => { /* ... Auth Guard Logic ... */ });
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                const userDocRef = doc(db, "users", user.uid);
+                const docSnap = await getDoc(userDocRef);
+                if (!docSnap.exists() || docSnap.data().role !== 'instructor') {
+                    window.location.href = 'dashboard.html';
+                } else {
+                    fetchClasses(user.uid);
+                }
+            } else {
+                window.location.href = 'Login.html';
+            }
+        });
 
-        async function fetchClasses(instructorId) { /* ... same as before ... */ }
+        async function fetchClasses(instructorId) {
+            const classListEl = document.getElementById('class-list');
+            classListEl.innerHTML = '<p class="text-sm text-gray-500">Loading...</p>';
+            const q = query(collection(db, "classes"), where("instructorId", "==", instructorId), orderBy("createdAt", "desc"));
+            const querySnapshot = await getDocs(q);
+            
+            classListEl.innerHTML = '';
+            querySnapshot.forEach((doc) => {
+                const classData = doc.data();
+                const classEl = document.createElement('a');
+                classEl.href = `#${doc.id}`;
+                classEl.className = 'block p-3 rounded-lg hover:bg-stone-100 dark:hover:bg-slate-700';
+                classEl.innerHTML = `<p class="font-semibold">${classData.className}</p>`;
+                classEl.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.querySelectorAll('#class-list a').forEach(a => a.classList.remove('bg-indigo-100', 'dark:bg-indigo-900/50', 'border-l-4', 'border-indigo-500'));
+                    classEl.classList.add('bg-indigo-100', 'dark:bg-indigo-900/50', 'border-l-4', 'border-indigo-500');
+                    loadClassForEditing(doc.id, classData);
+                });
+                classListEl.appendChild(classEl);
+            });
+        }
 
         function loadClassForEditing(classId, classData) {
             activeClassId = classId;
@@ -102,70 +146,45 @@
             document.getElementById('editor-class-name').textContent = classData.className;
             document.getElementById('editor-class-id').textContent = classId;
 
-            // Fetch the lists once on load
-            renderAssignedLessons(classId);
-            renderEnrolledStudents(classId);
-        }
-        
-        async function renderAssignedLessons(classId) {
-            const list = document.getElementById('assigned-lessons-list');
-            list.innerHTML = '<li><p class="text-sm text-gray-500">Loading lessons...</p></li>';
-            const lessonsQuery = query(collection(db, "classes", classId, "lessons"), orderBy("order"));
-            const snapshot = await getDocs(lessonsQuery);
+            const assignedLessonsList = document.getElementById('assigned-lessons-list');
+            onSnapshot(query(collection(db, "classes", classId, "lessons"), orderBy("order")), (snapshot) => {
+                assignedLessonsList.innerHTML = '<li><p class="text-sm text-gray-500">No lessons assigned.</p></li>';
+                if(!snapshot.empty) assignedLessonsList.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const lesson = doc.data();
+                    const li = document.createElement('li');
+                    li.className = 'flex justify-between items-center bg-stone-50 dark:bg-slate-900/50 p-3 rounded-lg';
+                    li.innerHTML = `<span>${lesson.order}. <b>${lesson.level}:</b> ${lesson.title}</span><button class="text-red-500 text-sm font-semibold">Remove</button>`;
+                    assignedLessonsList.appendChild(li);
+                });
+            });
 
-            if(snapshot.empty) {
-                list.innerHTML = '<li><p class="text-sm text-gray-500">No lessons assigned.</p></li>';
-                return;
-            }
-            list.innerHTML = '';
-            snapshot.forEach(doc => { /* ... render logic ... */ });
-        }
-
-        // --- NEW dedicated render function for students ---
-        async function renderEnrolledStudents(classId) {
-            const list = document.getElementById('enrolled-students-list');
-            list.innerHTML = '<li><p class="text-sm text-gray-500">Loading students...</p></li>';
-            const studentsQuery = query(collection(db, "classes", classId, "students"));
-            const snapshot = await getDocs(studentsQuery);
-
-            if(snapshot.empty) {
-                list.innerHTML = '<li><p class="text-sm text-gray-500">No students enrolled.</p></li>';
-                return;
-            }
-            list.innerHTML = '';
-            snapshot.forEach(doc => {
-                const student = doc.data();
-                const li = document.createElement('li');
-                li.className = 'flex justify-between items-center bg-stone-50 dark:bg-slate-900/50 p-3 rounded-lg';
-                li.innerHTML = `<div class="flex items-center gap-3"><img src="${student.photoURL || `https://ui-avatars.com/api/?name=${student.displayName}`}" class="w-8 h-8 rounded-full"><span>${student.displayName}</span></div><button class="text-red-500 text-sm font-semibold">Unenroll</button>`;
-                list.appendChild(li);
+            const enrolledStudentsList = document.getElementById('enrolled-students-list');
+            onSnapshot(query(collection(db, "classes", classId, "students")), (snapshot) => {
+                enrolledStudentsList.innerHTML = '<li><p class="text-sm text-gray-500">No students enrolled.</p></li>';
+                if(!snapshot.empty) enrolledStudentsList.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const student = doc.data();
+                    const li = document.createElement('li');
+                    li.className = 'flex justify-between items-center bg-stone-50 dark:bg-slate-900/50 p-3 rounded-lg';
+                    li.innerHTML = `<div class="flex items-center gap-3"><img src="${student.photoURL || `https://ui-avatars.com/api/?name=${student.displayName}`}" class="w-8 h-8 rounded-full"><span>${student.displayName}</span></div><button class="text-red-500 text-sm font-semibold">Unenroll</button>`;
+                    enrolledStudentsList.appendChild(li);
+                });
             });
         }
 
-        async function createClass() { /* ... same as before ... */ }
-        async function addLessonToClass(lessonId, lessonData) { /* ... same as before ... */ }
-
-        // --- UPDATED enrollStudentInClass function ---
-        async function enrollStudentInClass(studentId, studentData) {
-            if(!activeClassId) return;
-            
+        async function createClass() {
+            if (!currentUser) return;
+            const className = prompt("Enter a name for your new class (e.g., B1 Intermediate Group):");
+            if (!className) return;
             try {
-                // 1. Add student to the class's subcollection
-                const studentInClassRef = doc(db, "classes", activeClassId, "students", studentId);
-                await setDoc(studentInClassRef, { displayName: studentData.displayName, photoURL: studentData.photoURL || '' });
-                
-                // 2. Update the user's main profile
-                const userDocRef = doc(db, "users", studentId);
-                await updateDoc(userDocRef, { currentClassId: activeClassId });
-
-                // 3. EXPLICITLY refresh the UI
-                renderEnrolledStudents(activeClassId);
-                console.log(`Student ${studentId} enrolled. UI has been refreshed.`);
-
-            } catch (error) {
-                console.error("Error enrolling student:", error);
-            }
+                await addDoc(collection(db, "classes"), {
+                    className: className, instructorId: currentUser.uid, instructorName: currentUser.displayName || currentUser.email, createdAt: serverTimestamp()
+                });
+                fetchClasses(currentUser.uid);
+            } catch (error) { console.error("Error creating class:", error); }
         }
+
         async function addLessonToClass(lessonId, lessonData) {
             if(!activeClassId) return;
             const lessonRef = doc(db, "classes", activeClassId, "lessons", lessonId);
@@ -183,7 +202,6 @@
             await updateDoc(userDocRef, { currentClassId: activeClassId });
         }
 
-        // --- MODAL LOGIC & EVENT LISTENERS ---
         const addLessonModal = document.getElementById('add-lesson-modal');
         const enrollStudentModal = document.getElementById('enroll-student-modal');
 
