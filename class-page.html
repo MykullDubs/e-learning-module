@@ -155,11 +155,45 @@
             </aside>
         </div>
     </main>
+    
+    <div id="game-overlay" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-xl w-full max-w-lg space-y-6">
+            <h2 id="game-status-text" class="text-3xl font-bold text-center text-gray-900 dark:text-white"></h2>
+            
+            <div id="game-board" class="grid grid-cols-3 gap-2 w-full aspect-square bg-gray-200 dark:bg-slate-700 p-2 rounded-lg">
+                <div class="game-cell flex items-center justify-center text-5xl font-bold rounded-lg cursor-pointer transition bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700" data-row="0" data-col="0"></div>
+                <div class="game-cell flex items-center justify-center text-5xl font-bold rounded-lg cursor-pointer transition bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700" data-row="0" data-col="1"></div>
+                <div class="game-cell flex items-center justify-center text-5xl font-bold rounded-lg cursor-pointer transition bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700" data-row="0" data-col="2"></div>
+                <div class="game-cell flex items-center justify-center text-5xl font-bold rounded-lg cursor-pointer transition bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700" data-row="1" data-col="0"></div>
+                <div class="game-cell flex items-center justify-center text-5xl font-bold rounded-lg cursor-pointer transition bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700" data-row="1" data-col="1"></div>
+                <div class="game-cell flex items-center justify-center text-5xl font-bold rounded-lg cursor-pointer transition bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700" data-row="1" data-col="2"></div>
+                <div class="game-cell flex items-center justify-center text-5xl font-bold rounded-lg cursor-pointer transition bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700" data-row="2" data-col="0"></div>
+                <div class="game-cell flex items-center justify-center text-5xl font-bold rounded-lg cursor-pointer transition bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700" data-row="2" data-col="1"></div>
+                <div class="game-cell flex items-center justify-center text-5xl font-bold rounded-lg cursor-pointer transition bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700" data-row="2" data-col="2"></div>
+            </div>
 
+            <div id="game-question-section" class="text-center space-y-4 hidden">
+                <h3 id="question-text" class="text-2xl font-bold"></h3>
+                <input type="text" id="answer-input" placeholder="Type your answer here..." class="w-full p-2 border rounded-lg bg-stone-50 dark:bg-slate-700 dark:border-slate-600 focus:outline-none focus:ring focus:border-indigo-500">
+                <button id="submit-answer-btn" class="w-full bg-teal-600 text-white font-semibold py-2 rounded-lg hover:bg-teal-700">Submit Answer</button>
+            </div>
+
+            <div id="waiting-section" class="text-center space-y-4">
+                <h3 class="text-xl font-bold">Waiting for another player to join...</h3>
+                <p>Share this Class ID with a friend: <code id="waiting-game-id" class="text-xs bg-stone-100 dark:bg-slate-700 p-1 rounded"></code></p>
+                <p>... or join an existing game.</p>
+                <input type="text" id="join-game-input" placeholder="Enter Game ID to join" class="w-full p-2 border rounded-lg bg-stone-50 dark:bg-slate-700 dark:border-slate-600 focus:outline-none focus:ring focus:border-indigo-500">
+                <button id="join-game-btn" class="w-full bg-indigo-600 text-white font-semibold py-2 rounded-lg hover:bg-indigo-700">Join Game</button>
+            </div>
+            
+            <button id="close-game-btn" class="w-full mt-4 bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg hover:bg-gray-300">Close Game</button>
+        </div>
+    </div>
+    
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, query, orderBy, onSnapshot, addDoc, updateDoc, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         // Firebase configuration
         const firebaseConfig = {
@@ -175,6 +209,8 @@
         const db = getFirestore(app);
         let currentUser = null;
         let classId = null;
+        let currentLessonId = null;
+        let currentGameId = null;
 
         // Flashcard variables
         let vocab = [];
@@ -346,6 +382,10 @@
                 alert("You must be logged in and in a class to start a game.");
                 return;
             }
+            if (vocab.length < 9) {
+                alert("You need at least 9 vocabulary words to play Tic-Tac-Toe.");
+                return;
+            }
 
             try {
                 // Get the lesson ID from the lessons subcollection (for now, we'll get the first one)
@@ -370,9 +410,13 @@
                     createdAt: serverTimestamp()
                 };
                 const gameDocRef = await addDoc(gamesRef, newGameData);
-                alert(`Game created! Game ID: ${gameDocRef.id}`);
-
-                // TODO: Redirect or show a modal with the game interface
+                currentGameId = gameDocRef.id;
+                
+                // Show the game overlay and update the waiting section
+                document.getElementById('game-overlay').classList.remove('hidden');
+                document.getElementById('game-overlay').classList.add('flex');
+                document.getElementById('waiting-game-id').textContent = currentGameId;
+                
             } catch (error) {
                 console.error("Error creating game:", error);
                 alert("An error occurred while creating the game.");
@@ -405,6 +449,7 @@
             
             onSnapshot(query(lessonsRef), (snapshot) => {
                 const lesson = snapshot.docs.length > 0 ? snapshot.docs[0].data() : null;
+                currentLessonId = snapshot.docs[0]?.id; // Get the lesson ID to use in the game creation
                 renderLessonContent(lesson);
             });
             
