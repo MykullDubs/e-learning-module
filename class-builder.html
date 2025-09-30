@@ -12,31 +12,18 @@
 
     <script>
         // Theme loader script
-        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
     </script>
     
     <style>
-        body { 
-            font-family: 'Source Serif Pro', serif;
-            background-color: #F7F5F2;
-        }
-        .dark body {
-            background-color: #0F172A;
-        }
+        body { font-family: 'Source Serif Pro', serif; background-color: #F7F5F2; }
+        .dark body { background-color: #0F172A; }
         .font-brand { font-family: 'Source Serif Pro', serif; }
     </style>
 </head>
 <body class="text-gray-900 dark:text-gray-200 antialiased">
 
     <header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm shadow-sm border-b border-stone-200 dark:border-slate-800 sticky top-0 z-40">
-        <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
-            <a href="dashboard.html" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
-            </div>
-    </header>
+        </header>
 
     <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-7xl font-brand">
         <header class="mb-8">
@@ -50,12 +37,7 @@
                 <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-stone-200/50 dark:border-slate-700/50">
                     <h2 class="text-2xl font-semibold mb-4">Your Classes</h2>
                     <div id="class-list" class="space-y-2">
-                        <a href="#" class="block p-3 rounded-lg bg-indigo-100 dark:bg-indigo-900/50 border-l-4 border-indigo-500">
-                            <p class="font-bold text-indigo-800 dark:text-indigo-200">B1 Intermediate Group</p>
-                        </a>
-                        <a href="#" class="block p-3 rounded-lg hover:bg-stone-100 dark:hover:bg-slate-700">
-                            <p class="font-semibold">A2 Beginners Cohort</p>
-                        </a>
+                        <p class="text-sm text-gray-500">Loading classes...</p>
                     </div>
                     <button id="create-class-btn" class="w-full mt-4 bg-teal-600 text-white font-semibold py-2 rounded-lg hover:bg-teal-700">
                         + Create New Class
@@ -63,86 +45,68 @@
                 </div>
             </aside>
 
-            <div class="lg:col-span-2 space-y-8">
+            <div id="editor-panel" class="lg:col-span-2 space-y-8 hidden">
                 <section>
                     <div class="bg-white/50 dark:bg-slate-800/50 backdrop-blur-lg p-8 rounded-2xl shadow-xl border border-stone-200/50 dark:border-slate-700/50">
-                        <h2 class="text-3xl font-bold mb-1">B1 Intermediate Group</h2>
-                        <p class="text-gray-500 dark:text-gray-400 mb-6">Class ID: <code class="text-xs bg-stone-100 dark:bg-slate-700 p-1 rounded">b1-inter-g1</code></p>
-                        
+                        <h2 id="editor-class-name" class="text-3xl font-bold mb-1"></h2>
+                        <p class="text-gray-500 dark:text-gray-400 mb-6">Class ID: <code id="editor-class-id" class="text-xs bg-stone-100 dark:bg-slate-700 p-1 rounded"></code></p>
                         <hr class="my-6 border-stone-200 dark:border-slate-700">
-                        
                         <div>
-                            <h3 class="text-2xl font-semibold mb-4 flex justify-between items-center">
-                                Assigned Lessons
-                                <button class="bg-indigo-600 text-white font-semibold px-4 py-1 text-sm rounded-lg shadow-sm hover:bg-indigo-700">+ Add Lesson</button>
-                            </h3>
-                            <ul id="assigned-lessons-list" class="space-y-3">
-                                <li class="flex justify-between items-center bg-stone-50 dark:bg-slate-900/50 p-3 rounded-lg"><span>1. <b>B1:</b> Optimizing Your Workout</span><button class="text-red-500 hover:text-red-700 text-sm font-semibold">Remove</button></li>
-                                <li class="flex justify-between items-center bg-stone-50 dark:bg-slate-900/50 p-3 rounded-lg"><span>2. <b>B1:</b> Giving a Book Recommendation</span><button class="text-red-500 hover:text-red-700 text-sm font-semibold">Remove</button></li>
-                            </ul>
+                            <h3 class="text-2xl font-semibold mb-4 flex justify-between items-center">Assigned Lessons <button id="add-lesson-btn" class="bg-indigo-600 text-white font-semibold px-4 py-1 text-sm rounded-lg shadow-sm hover:bg-indigo-700">+ Add</button></h3>
+                            <ul id="assigned-lessons-list" class="space-y-3"></ul>
                         </div>
-
                         <hr class="my-6 border-stone-200 dark:border-slate-700">
-                        
                         <div>
-                            <h3 class="text-2xl font-semibold mb-4 flex justify-between items-center">
-                                Enrolled Students
-                                <button class="bg-indigo-600 text-white font-semibold px-4 py-1 text-sm rounded-lg shadow-sm hover:bg-indigo-700">+ Enroll Student</button>
-                            </h3>
-                             <ul id="enrolled-students-list" class="space-y-3">
-                                <li class="flex justify-between items-center bg-stone-50 dark:bg-slate-900/50 p-3 rounded-lg">
-                                    <div class="flex items-center gap-3">
-                                        <img src="https://i.pravatar.cc/40?u=student1" class="w-8 h-8 rounded-full">
-                                        <span>Alejandra V.</span>
-                                    </div>
-                                    <button class="text-red-500 hover:text-red-700 text-sm font-semibold">Unenroll</button>
-                                </li>
-                                 <li class="flex justify-between items-center bg-stone-50 dark:bg-slate-900/50 p-3 rounded-lg">
-                                     <div class="flex items-center gap-3">
-                                        <img src="https://i.pravatar.cc/40?u=student2" class="w-8 h-8 rounded-full">
-                                        <span>Ben Carter</span>
-                                    </div>
-                                    <button class="text-red-500 hover:text-red-700 text-sm font-semibold">Unenroll</button>
-                                </li>
-                            </ul>
+                            <h3 class="text-2xl font-semibold mb-4 flex justify-between items-center">Enrolled Students <button id="enroll-student-btn" class="bg-indigo-600 text-white font-semibold px-4 py-1 text-sm rounded-lg shadow-sm hover:bg-indigo-700">+ Enroll</button></h3>
+                             <ul id="enrolled-students-list" class="space-y-3"></ul>
                         </div>
                     </div>
                 </section>
             </div>
+             <div id="editor-placeholder" class="lg:col-span-2 flex items-center justify-center h-96 bg-stone-50 dark:bg-slate-800/50 rounded-2xl border-2 border-dashed border-stone-300 dark:border-slate-700">
+                <p class="text-gray-500 font-semibold">Select a class on the left or create a new one.</p>
+            </div>
         </div>
     </main>
+
+    <div id="add-lesson-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-white dark:bg-slate-800 p-8 rounded-lg shadow-xl w-full max-w-lg">
+            <h2 class="text-2xl font-bold mb-4">Add a Lesson to the Class</h2>
+            <div id="all-lessons-list" class="max-h-96 overflow-y-auto space-y-2"></div>
+            <button id="close-lesson-modal-btn" class="w-full mt-4 bg-stone-200 dark:bg-slate-700 font-semibold py-2 rounded-lg">Cancel</button>
+        </div>
+    </div>
+    <div id="enroll-student-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-white dark:bg-slate-800 p-8 rounded-lg shadow-xl w-full max-w-lg">
+            <h2 class="text-2xl font-bold mb-4">Enroll a Student</h2>
+            <div id="all-students-list" class="max-h-96 overflow-y-auto space-y-2"></div>
+            <button id="close-student-modal-btn" class="w-full mt-4 bg-stone-200 dark:bg-slate-700 font-semibold py-2 rounded-lg">Cancel</button>
+        </div>
+    </div>
+
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, updateDoc, addDoc, serverTimestamp, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, updateDoc, addDoc, serverTimestamp, getDocs, getDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
-            authDomain: "elearning-e83cb.firebaseapp.com",
-            projectId: "elearning-e83cb",
-            storageBucket: "elearning-e83cb.appspot.com",
-            messagingSenderId: "25473938624",
-            appId: "1:25473938624:web:5b56738933543f32a7e925"
-        };
+        const firebaseConfig = { /* ... your config ... */ };
         
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
         let currentUser = null;
+        let activeClassId = null;
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
-                // --- Auth Guard for Instructors ---
                 const userDocRef = doc(db, "users", user.uid);
                 const docSnap = await getDoc(userDocRef);
                 if (!docSnap.exists() || docSnap.data().role !== 'instructor') {
-                    // Redirect non-instructors
                     window.location.href = 'dashboard.html';
                 } else {
-                    // User is an instructor, load their classes
                     fetchClasses(user.uid);
                 }
             } else {
@@ -150,60 +114,139 @@
             }
         });
 
-        // --- Core Firestore Functions ---
-
-        async function createClass() {
-            if (!currentUser) return;
-
-            const className = prompt("Enter a name for your new class:");
-            if (!className) return;
-
-            const classDesc = prompt("Enter a short description for the class:");
-
-            try {
-                const classesCollectionRef = collection(db, "classes");
-                await addDoc(classesCollectionRef, {
-                    className: className,
-                    description: classDesc,
-                    instructorId: currentUser.uid,
-                    instructorName: currentUser.displayName || currentUser.email,
-                    createdAt: serverTimestamp()
-                });
-                fetchClasses(currentUser.uid); // Refresh the list
-            } catch (error) {
-                console.error("Error creating class:", error);
-            }
-        }
-
+        // --- DATA FETCHING AND RENDERING ---
         async function fetchClasses(instructorId) {
             const classListEl = document.getElementById('class-list');
-            classListEl.innerHTML = '<p>Loading classes...</p>';
-            const q = query(collection(db, "classes"), where("instructorId", "==", instructorId));
+            classListEl.innerHTML = '<p class="text-sm text-gray-500">Loading...</p>';
+            const q = query(collection(db, "classes"), where("instructorId", "==", instructorId), orderBy("createdAt", "desc"));
             const querySnapshot = await getDocs(q);
             
-            classListEl.innerHTML = ''; // Clear loader
+            classListEl.innerHTML = '';
             querySnapshot.forEach((doc) => {
                 const classData = doc.data();
                 const classEl = document.createElement('a');
-                classEl.href = `#${doc.id}`; // Use fragment to select class
+                classEl.href = `#${doc.id}`;
                 classEl.className = 'block p-3 rounded-lg hover:bg-stone-100 dark:hover:bg-slate-700';
                 classEl.innerHTML = `<p class="font-semibold">${classData.className}</p>`;
-                // Add event listener to load class details into the editor on the right
-                classEl.addEventListener('click', () => loadClassForEditing(doc.id, classData));
+                classEl.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.querySelectorAll('#class-list a').forEach(a => a.classList.remove('bg-indigo-100', 'dark:bg-indigo-900/50', 'border-l-4', 'border-indigo-500'));
+                    classEl.classList.add('bg-indigo-100', 'dark:bg-indigo-900/50', 'border-l-4', 'border-indigo-500');
+                    loadClassForEditing(doc.id, classData);
+                });
                 classListEl.appendChild(classEl);
             });
         }
 
-        function loadClassForEditing(classId, classData) {
-            // This function would populate the right-hand column with the selected class's details.
-            // For this example, we've hardcoded the initial view. A full implementation
-            // would fetch the subcollections of lessons and students for the given classId.
-            console.log(`Loading editor for class: ${classData.className} (${classId})`);
-        }
-        
-        // --- Event Listeners ---
-        document.getElementById('create-class-btn').addEventListener('click', createClass);
+        async function loadClassForEditing(classId, classData) {
+            activeClassId = classId;
+            document.getElementById('editor-placeholder').classList.add('hidden');
+            document.getElementById('editor-panel').classList.remove('hidden');
 
+            document.getElementById('editor-class-name').textContent = classData.className;
+            document.getElementById('editor-class-id').textContent = classId;
+
+            // Load assigned lessons
+            const assignedLessonsList = document.getElementById('assigned-lessons-list');
+            const lessonsQuery = query(collection(db, "classes", classId, "lessons"), orderBy("order"));
+            onSnapshot(lessonsQuery, (snapshot) => {
+                assignedLessonsList.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const lesson = doc.data();
+                    const li = document.createElement('li');
+                    li.className = 'flex justify-between items-center bg-stone-50 dark:bg-slate-900/50 p-3 rounded-lg';
+                    li.innerHTML = `<span>${lesson.order}. <b>${lesson.level}:</b> ${lesson.title}</span><button class="text-red-500 text-sm font-semibold">Remove</button>`;
+                    assignedLessonsList.appendChild(li);
+                });
+            });
+
+            // Load enrolled students
+            const enrolledStudentsList = document.getElementById('enrolled-students-list');
+            const studentsQuery = query(collection(db, "classes", classId, "students"));
+            onSnapshot(studentsQuery, (snapshot) => {
+                enrolledStudentsList.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const student = doc.data();
+                    const li = document.createElement('li');
+                    li.className = 'flex justify-between items-center bg-stone-50 dark:bg-slate-900/50 p-3 rounded-lg';
+                    li.innerHTML = `<div class="flex items-center gap-3"><img src="${student.photoURL || 'https://i.pravatar.cc/40'}" class="w-8 h-8 rounded-full"><span>${student.displayName}</span></div><button class="text-red-500 text-sm font-semibold">Unenroll</button>`;
+                    enrolledStudentsList.appendChild(li);
+                });
+            });
+        }
+
+        // --- CORE FUNCTIONS ---
+        async function createClass() {
+            if (!currentUser) return;
+            const className = prompt("Enter a name for your new class (e.g., B1 Intermediate Group):");
+            if (!className) return;
+            
+            try {
+                await addDoc(collection(db, "classes"), {
+                    className: className,
+                    description: "",
+                    instructorId: currentUser.uid,
+                    instructorName: currentUser.displayName || currentUser.email,
+                    createdAt: serverTimestamp()
+                });
+                fetchClasses(currentUser.uid);
+            } catch (error) { console.error("Error creating class:", error); }
+        }
+
+        async function addLessonToClass(lessonId, lessonData) {
+            const lessonRef = doc(db, "classes", activeClassId, "lessons", lessonId);
+            // In a real app, you would calculate the 'order' properly
+            await setDoc(lessonRef, { title: lessonData.title, level: lessonData.level, order: Math.floor(Math.random() * 100) });
+        }
+
+        async function enrollStudentInClass(studentId, studentData) {
+            // Add student to class's subcollection
+            const studentInClassRef = doc(db, "classes", activeClassId, "students", studentId);
+            await setDoc(studentInClassRef, { displayName: studentData.displayName, photoURL: studentData.photoURL || '' });
+            // Update the user's main profile
+            const userDocRef = doc(db, "users", studentId);
+            await updateDoc(userDocRef, { currentClassId: activeClassId });
+        }
+
+        // --- MODAL LOGIC ---
+        const addLessonModal = document.getElementById('add-lesson-modal');
+        const enrollStudentModal = document.getElementById('enroll-student-modal');
+
+        document.getElementById('add-lesson-btn').addEventListener('click', async () => {
+            const list = document.getElementById('all-lessons-list');
+            list.innerHTML = 'Loading...';
+            const lessonsSnap = await getDocs(query(collection(db, "lessons"), orderBy("level")));
+            list.innerHTML = '';
+            lessonsSnap.forEach(doc => {
+                const lesson = doc.data();
+                const btn = document.createElement('button');
+                btn.className = 'w-full text-left p-2 rounded-md hover:bg-stone-100 dark:hover:bg-slate-700';
+                btn.innerHTML = `<b>${lesson.level}</b>: ${lesson.title}`;
+                btn.onclick = () => { addLessonToClass(doc.id, lesson); addLessonModal.classList.add('hidden'); };
+                list.appendChild(btn);
+            });
+            addLessonModal.classList.remove('hidden');
+        });
+
+        document.getElementById('enroll-student-btn').addEventListener('click', async () => {
+            const list = document.getElementById('all-students-list');
+            list.innerHTML = 'Loading...';
+            const studentsSnap = await getDocs(query(collection(db, "users"), where("role", "==", "student")));
+            list.innerHTML = '';
+            studentsSnap.forEach(doc => {
+                const student = doc.data();
+                const btn = document.createElement('button');
+                btn.className = 'w-full text-left p-2 rounded-md hover:bg-stone-100 dark:hover:bg-slate-700 flex items-center gap-3';
+                btn.innerHTML = `<img src="${student.photoURL || 'https://i.pravatar.cc/40'}" class="w-8 h-8 rounded-full"><span>${student.displayName}</span>`;
+                btn.onclick = () => { enrollStudentInClass(doc.id, student); enrollStudentModal.classList.add('hidden'); };
+                list.appendChild(btn);
+            });
+            enrollStudentModal.classList.remove('hidden');
+        });
+
+        document.getElementById('close-lesson-modal-btn').addEventListener('click', () => addLessonModal.classList.add('hidden'));
+        document.getElementById('close-student-modal-btn').addEventListener('click', () => enrollStudentModal.classList.add('hidden'));
+        document.getElementById('create-class-btn').addEventListener('click', createClass);
     </script>
 </body>
 </html>
