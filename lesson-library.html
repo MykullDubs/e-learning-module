@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Content Library - Golden Fellows English</title>
+    <title>Lesson Library - Golden Fellows English</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,59 +20,18 @@
     </script>
     
     <style>
-        body { 
-            font-family: 'Source Serif Pro', serif;
-            background-color: #F7F5F2; /* Warm off-white */
-            background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23DCD9D4" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
-        }
-        .dark body {
-            background-color: #1a202c;
-            background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%232D3748" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
-        }
-        .content-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeIn 0.5s ease-out forwards;
-        }
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .content-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-        .font-brand {
-            font-family: 'Source Serif Pro', serif;
-        }
-        .tab-btn {
-            transition: color 0.2s ease, border-color 0.2s ease;
-        }
+        body { font-family: 'Source Serif Pro', serif; background-color: #F7F5F2; }
+        .dark body { background-color: #0F172A; }
+        .font-brand { font-family: 'Source Serif Pro', serif; }
     </style>
 </head>
-<body class="text-gray-800 dark:text-gray-200 antialiased">
+<body class="text-gray-900 dark:text-gray-200 antialiased">
 
-    <header class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-sm border-b border-stone-200 dark:border-gray-700 sticky top-0 z-40">
+    <header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm shadow-sm border-b border-stone-200 dark:border-slate-800 sticky top-0 z-40">
         <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
-            <a href="#" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
+            <a href="dashboard.html" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
             <div class="flex items-center gap-6">
-                <div id="level-filter-wrapper" class="relative">
-                    <button id="level-filter-btn" class="flex items-center gap-2 p-2 rounded-md hover:bg-stone-100 dark:hover:bg-gray-700">
-                        <span id="filter-btn-text" class="text-sm font-semibold font-brand">All Levels</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-stone-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                    </button>
-                    <div id="level-filter-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden font-brand z-10">
-                        <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="all">All Levels</a>
-                        <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="A1">A1 - Beginner</a>
-                        <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="A2">A2 - Elementary</a>
-                        <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="B1">B1 - Intermediate</a>
-                        <a href="#" class="level-option block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700" data-level="B2">B2 - Upper Intermediate</a>
-                    </div>
-                </div>
-                
+                 <a href="class-lessons-library.html" class="text-sm font-semibold hover:text-indigo-600 dark:hover:text-indigo-400">Lesson Library</a>
                 <div class="relative">
                     <button id="profile-btn" class="flex items-center gap-2">
                          <span id="user-email-nav" class="text-sm text-stone-600 dark:text-stone-300 hidden sm:block font-brand"></span>
@@ -81,7 +40,7 @@
                         </div>
                     </button>
                     <div id="profile-dropdown" class="hidden absolute font-brand right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden z-10">
-                        <a href="dashboards.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Dashboard</a>
+                        <a href="dashboard.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Dashboard</a>
                         <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Settings</a>
                         <div class="border-t border-stone-200 dark:border-gray-600"></div>
                         <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100 dark:hover:bg-gray-700">Log Out</button>
@@ -92,31 +51,43 @@
     </header>
 
     <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-7xl font-brand">
-        <header class="mb-8 text-center">
-            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Content Library</h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-3 text-lg max-w-2xl mx-auto">Select a lesson to begin or review a grammar guide.</p>
-        </header>
-        
-        <div class="border-b border-stone-200 dark:border-gray-700 mb-8">
-            <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-                <button id="tab-lessons" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-semibold text-lg border-indigo-500 text-indigo-600 dark:text-indigo-400" data-target="lessons-pane">
-                    Lessons
-                </button>
-                <button id="tab-guides" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-semibold text-lg border-transparent text-stone-500 hover:text-stone-700 hover:border-stone-300 dark:text-stone-400 dark:hover:text-stone-200 dark:hover:border-stone-500" data-target="guides-pane">
-                    Grammar Guides
-                </button>
-            </nav>
-        </div>
-
-        <div>
-            <div id="lessons-pane" class="tab-pane">
-                 <div id="lessons-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                    </div>
+        <header class="mb-8 flex justify-between items-center">
+            <div>
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Lesson Library</h1>
+                <p class="text-gray-600 dark:text-gray-400 mt-2 text-lg">Browse and manage all available lessons.</p>
             </div>
+            <a href="lesson-builder.html" class="bg-indigo-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-indigo-700 transition">
+                + New Lesson
+            </a>
+        </header>
 
-            <div id="guides-pane" class="tab-pane hidden">
-                <div id="guides-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                     </div>
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
+            
+            <aside class="lg:col-span-1 sticky top-24">
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-stone-200/50 dark:border-slate-700/50">
+                    <h2 class="text-2xl font-semibold mb-4">Filters</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="filter-level" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">CEFR Level</label>
+                            <select id="filter-level" class="w-full p-2 border rounded-lg bg-stone-50 dark:bg-slate-700 dark:border-slate-600 focus:outline-none focus:ring focus:border-indigo-500 transition">
+                                <option value="all">All Levels</option>
+                                <option value="A1">A1</option>
+                                <option value="A2">A2</option>
+                                <option value="B1">B1</option>
+                                <option value="B2">B2</option>
+                                <option value="C1">C1</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="filter-topic" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Topic</label>
+                            <input type="text" id="filter-topic" placeholder="e.g., Grammar" class="w-full p-2 border rounded-lg bg-stone-50 dark:bg-slate-700 dark:border-slate-600 focus:outline-none focus:ring focus:border-indigo-500 transition">
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <div id="lesson-list-container" class="lg:col-span-3 space-y-4">
+                <p class="text-gray-500 text-center mt-8">Loading lessons...</p>
             </div>
         </div>
     </main>
@@ -124,6 +95,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, query, where, getDocs, orderBy, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
@@ -136,130 +108,131 @@
         
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getFirestore(app);
 
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                document.getElementById('user-email-nav').textContent = user.email;
-                if (user.photoURL) {
-                   document.getElementById('nav-avatar-container').innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
-                }
-            } else {
-                window.location.href = 'Login.html'; 
-            }
-        });
-        
+        let currentUser = null;
+        const lessonListContainer = document.getElementById('lesson-list-container');
+        const filterLevelEl = document.getElementById('filter-level');
+        const filterTopicEl = document.getElementById('filter-topic');
+        let allLessons = [];
+
+        // Navbar and user state management
         const profileBtn = document.getElementById('profile-btn');
         const profileDropdown = document.getElementById('profile-dropdown');
         const logoutBtn = document.getElementById('logout-btn');
+        
         profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
         window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
         logoutBtn.addEventListener('click', () => { signOut(auth); });
 
-        const lessons = [
-            { title: "My Reading Habits", description: "Learn to talk about your routine with simple present verbs.", level: "A1", url: "a1readinghab.html" },
-            { title: "How Are You Feeling?", description: "Learn basic phrases to describe your health status.", level: "A1", url: "a1healthstatus.html" },
-            { title: "My Workout Routine", description: "Talk about exercise using the simple present and 'can'.", level: "A1", url: "a1workout.html" },
-            { title: "What Do You Like to Watch?", description: "Use 'like + verb' to talk about TV show genres.", level: "A1", url: "a1tv.html" },
-            { title: "What Are You Reading?", description: "Use present progressive and simple past to discuss reading.", level: "A2", url: "a2readinghab.html" },
-            { title: "Improving My Fitness", description: "Use adverbs of frequency and intensity.", level: "A2", url: "a2workout.html" },
-            { title: "Giving a Book Recommendation", description: "Use the passive voice and present perfect continuous.", level: "B1", url: "b1readinghab.html" },
-            { title: "Optimizing Your Workout", description: "Give advice with modals, gerunds, and infinitives.", level: "B1", url: "b1workout.html" },
-            { title: "Debating a Book's Reputation", description: "Use the third conditional and clauses of concession.", level: "B2", url: "b2readinghab.html" },
-            { title: "Advanced Fitness Strategy", description: "Discuss hypothetical scenarios and quantify goals.", level: "B2", url: "b2workout.html" },
-        ];
+        function renderUserInfo(user, userData) {
+            document.getElementById('user-email-nav').textContent = user.email;
+            if (user.photoURL) {
+                document.getElementById('nav-avatar-container').innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
+            }
+        }
 
-        const guides = [
-            { title: "Grammar Guide: Simple Present", description: "A complete reference for facts, habits, and routines.", level: "A1", url: "simplepresent.html" },
-            { title: "Grammar Guide: Articles", description: "Mastering a/an, the, and the zero article.", level: "A1", url: "articles.html" },
-            { title: "Grammar Guide: Prepositions of Time", description: "An exhaustive guide to using in, on, at, and more.", level: "A2", url: "potime.html" },
-            { title: "Grammar Guide: Prepositions of Location", description: "A detailed reference for describing where things are.", level: "A2", url: "polocation.html" },
-        ];
+        async function fetchLessons() {
+            lessonListContainer.innerHTML = '<p class="text-gray-500 text-center mt-8">Loading lessons...</p>';
+            try {
+                const q = query(collection(db, "lessons"), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                allLessons = [];
+                querySnapshot.forEach((doc) => {
+                    allLessons.push({ id: doc.id, ...doc.data() });
+                });
+                renderLessons(allLessons);
+            } catch (error) {
+                console.error("Error fetching lessons:", error);
+                lessonListContainer.innerHTML = '<p class="text-red-500 text-center mt-8">Failed to load lessons. Please check your network and permissions.</p>';
+            }
+        }
 
-        const lessonsGrid = document.getElementById('lessons-grid');
-        const guidesGrid = document.getElementById('guides-grid');
-        const levelFilterWrapper = document.getElementById('level-filter-wrapper');
-        const levelFilterBtn = document.getElementById('level-filter-btn');
-        const levelFilterDropdown = document.getElementById('level-filter-dropdown');
-        const levelOptions = document.querySelectorAll('.level-option');
-        const filterBtnText = document.getElementById('filter-btn-text');
-        
-        const levelColors = {
-            A1: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300',
-            A2: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300',
-            B1: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300',
-            B2: 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300'
+        function renderLessons(lessonsToRender) {
+            lessonListContainer.innerHTML = '';
+            if (lessonsToRender.length === 0) {
+                lessonListContainer.innerHTML = '<p class="text-gray-500 text-center mt-8">No lessons found with the selected filters.</p>';
+                return;
+            }
+
+            lessonsToRender.forEach(lesson => {
+                const lessonCard = document.createElement('div');
+                lessonCard.className = 'bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-md border border-stone-200/50 dark:border-slate-700/50 hover:shadow-xl transition';
+                lessonCard.innerHTML = `
+                    <h3 class="text-xl font-bold">${lesson.title}</h3>
+                    <div class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                        <span>Level: ${lesson.level || 'N/A'}</span> |
+                        <span>Topic: ${lesson.topic || 'N/A'}</span>
+                    </div>
+                    <p class="mt-4 text-sm">${lesson.contentBlocks[0]?.text?.substring(0, 100) || 'No description available.'}...</p>
+                    <div class="mt-4 flex justify-between items-center">
+                        <a href="lesson-builder.html?lessonId=${lesson.id}" class="text-indigo-600 font-semibold text-sm hover:underline dark:text-indigo-400">View/Edit →</a>
+                        <button onclick="assignLessonToClass('${lesson.id}', '${lesson.title}')" class="bg-indigo-600 text-white font-semibold py-2 px-4 text-sm rounded-lg hover:bg-indigo-700 transition">Assign</button>
+                    </div>
+                `;
+                lessonListContainer.appendChild(lessonCard);
+            });
+        }
+
+        function filterAndRender() {
+            const level = filterLevelEl.value;
+            const topic = filterTopicEl.value.toLowerCase().trim();
+            let filteredLessons = allLessons.filter(lesson => {
+                const matchesLevel = level === 'all' || lesson.level === level;
+                const matchesTopic = !topic || (lesson.topic && lesson.topic.toLowerCase().includes(topic));
+                return matchesLevel && matchesTopic;
+            });
+            renderLessons(filteredLessons);
+        }
+
+        filterLevelEl.addEventListener('change', filterAndRender);
+        filterTopicEl.addEventListener('input', filterAndRender);
+
+        // Global function to be called by the "Assign" button
+        window.assignLessonToClass = async (lessonId, lessonTitle) => {
+            const classId = prompt(`Enter the Class ID to assign "${lessonTitle}" to:`);
+            if (!classId) return;
+
+            try {
+                // Fetch the full lesson data from the lessons collection
+                const lessonRef = doc(db, "lessons", lessonId);
+                const lessonSnap = await getDoc(lessonRef);
+                if (!lessonSnap.exists()) {
+                    alert("Lesson not found!");
+                    return;
+                }
+                const lessonData = lessonSnap.data();
+
+                // Add a document to the class's subcollection
+                const classLessonRef = doc(db, "classes", classId, "lessons", lessonId);
+                await setDoc(classLessonRef, lessonData);
+
+                alert(`Lesson "${lessonTitle}" assigned to class successfully!`);
+            } catch (error) {
+                console.error("Error assigning lesson:", error);
+                alert("Error assigning lesson. Please check the Class ID and your permissions.");
+            }
         };
 
-        function renderLessons(filterLevel) {
-            lessonsGrid.innerHTML = '';
-            const filteredLessons = filterLevel === 'all' ? lessons : lessons.filter(item => item.level === filterLevel);
-            
-            filteredLessons.forEach((item, index) => {
-                const card = document.createElement('a');
-                card.href = item.url;
-                card.className = 'content-card block bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-stone-200/50 dark:border-gray-700/50';
-                card.style.animationDelay = `${index * 50}ms`;
-                card.innerHTML = `
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">${item.title}</h3>
-                        <span class="text-xs font-bold px-2 py-0.5 rounded-full ${levelColors[item.level]}">${item.level}</span>
-                    </div>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">${item.description}</p>
-                `;
-                lessonsGrid.appendChild(card);
-            });
-        }
-
-        function renderGuides() {
-            guidesGrid.innerHTML = '';
-            guides.forEach((item, index) => {
-                const card = document.createElement('a');
-                card.href = item.url;
-                card.className = 'content-card block bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-stone-200/50 dark:border-gray-700/50';
-                card.style.animationDelay = `${index * 50}ms`;
-                card.innerHTML = `
-                     <div class="flex justify-between items-start mb-4">
-                        <div class="flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 dark:text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">${item.title}</h3>
-                        </div>
-                        <span class="text-xs font-bold px-2 py-0.5 rounded-full ${levelColors[item.level]}">${item.level}</span>
-                    </div>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">${item.description}</p>
-                `;
-                guidesGrid.appendChild(card);
-            });
-        }
-        
-        levelFilterBtn.addEventListener('click', (e) => { e.stopPropagation(); levelFilterDropdown.classList.toggle('hidden'); });
-        window.addEventListener('click', () => { levelFilterDropdown.classList.add('hidden'); });
-        levelOptions.forEach(option => {
-            option.addEventListener('click', (e) => {
-                e.preventDefault();
-                const selectedLevel = e.target.dataset.level;
-                filterBtnText.textContent = selectedLevel === 'all' ? 'All Levels' : `${selectedLevel}`;
-                renderLessons(selectedLevel);
-                levelFilterDropdown.classList.add('hidden');
-            });
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                let userData = { displayName: user.email.split('@')[0] };
+                try {
+                    const userDocRef = doc(db, "users", user.uid);
+                    const docSnap = await getDoc(userDocRef);
+                    if (docSnap.exists()) {
+                        userData = docSnap.data();
+                    }
+                } catch (error) {
+                    console.error("Error fetching user data:", error);
+                }
+                renderUserInfo(user, userData);
+                await fetchLessons();
+            } else {
+                window.location.href = 'Login.html';
+            }
         });
-
-        const tabs = document.querySelectorAll('.tab-btn');
-        const panes = document.querySelectorAll('.tab-pane');
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                tabs.forEach(t => { t.classList.remove('border-indigo-500', 'text-indigo-600', 'dark:text-indigo-400'); t.classList.add('border-transparent', 'text-stone-500'); });
-                tab.classList.add('border-indigo-500', 'text-indigo-600', 'dark:text-indigo-400');
-                tab.classList.remove('border-transparent', 'text-stone-500');
-                
-                const targetPaneId = tab.dataset.target;
-                panes.forEach(pane => pane.id === targetPaneId ? pane.classList.remove('hidden') : pane.classList.add('hidden'));
-
-                levelFilterWrapper.style.display = targetPaneId === 'lessons-pane' ? 'block' : 'none';
-            });
-        });
-
-        renderLessons('all');
-        renderGuides();
     </script>
 </body>
 </html>
