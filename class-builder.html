@@ -100,14 +100,20 @@
                 <hr class="my-6 border-stone-200 dark:border-slate-700">
                 <section>
                     <div>
-                        <h3 class="text-2xl font-semibold mb-4 flex justify-between items-center">Assigned Lessons <button id="add-lesson-btn" class="bg-indigo-600 text-white font-semibold px-4 py-1 text-sm rounded-lg shadow-sm hover:bg-indigo-700 transition">+ Add</button></h3>
+                        <h3 class="text-2xl font-semibold mb-4 flex justify-between items-center">Assigned Lessons
+                            <a href="class-lessons-library.html" class="bg-indigo-600 text-white font-semibold px-4 py-1 text-sm rounded-lg shadow-sm hover:bg-indigo-700 transition">
+                                + Add
+                            </a>
+                        </h3>
                         <ul id="assigned-lessons-list" class="space-y-3"></ul>
                     </div>
                 </section>
                 <hr class="my-6 border-stone-200 dark:border-slate-700">
                 <section>
                     <div>
-                        <h3 class="text-2xl font-semibold mb-4 flex justify-between items-center">Enrolled Students <button id="enroll-student-btn" class="bg-indigo-600 text-white font-semibold px-4 py-1 text-sm rounded-lg shadow-sm hover:bg-indigo-700 transition">+ Enroll</button></h3>
+                        <h3 class="text-2xl font-semibold mb-4 flex justify-between items-center">Enrolled Students
+                            <button id="enroll-student-btn" class="bg-indigo-600 text-white font-semibold px-4 py-1 text-sm rounded-lg shadow-sm hover:bg-indigo-700 transition">+ Enroll</button>
+                        </h3>
                         <ul id="enrolled-students-list" class="space-y-3"></ul>
                     </div>
                 </section>
@@ -118,13 +124,6 @@
         </div>
     </main>
 
-    <div id="add-lesson-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-        <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-xl w-full max-w-lg">
-            <h2 class="text-2xl font-bold mb-4">Add Lesson</h2>
-            <div id="all-lessons-list" class="space-y-2 max-h-96 overflow-y-auto"></div>
-            <button id="close-lesson-modal-btn" class="w-full mt-4 bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg hover:bg-gray-300">Close</button>
-        </div>
-    </div>
     <div id="enroll-student-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
         <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-xl w-full max-w-lg">
             <h2 class="text-2xl font-bold mb-4">Enroll Student</h2>
@@ -163,6 +162,15 @@
                     window.location.href = 'dashboard.html';
                 } else {
                     fetchClasses(user.uid);
+                    // Check for classId in URL to pre-select it
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const classIdFromUrl = urlParams.get('classId');
+                    if (classIdFromUrl) {
+                        const classDocSnap = await getDoc(doc(db, "classes", classIdFromUrl));
+                        if (classDocSnap.exists()) {
+                            loadClassForEditing(classDocSnap.id, classDocSnap.data());
+                        }
+                    }
                 }
             } else {
                 window.location.href = 'Login.html';
@@ -210,7 +218,18 @@
             onSnapshot(query(collection(db, "classes", classId, "lessons"), orderBy("order")), (snapshot) => {
                 assignedLessonsList.innerHTML = '<li><p class="text-sm text-gray-500">No lessons assigned.</p></li>';
                 if(!snapshot.empty) assignedLessonsList.innerHTML = '';
-                snapshot.forEach(doc => { /* ... render logic ... */ });
+                snapshot.forEach(doc => {
+                    const lessonData = doc.data();
+                    const li = document.createElement('li');
+                    li.className = 'flex justify-between items-center bg-stone-50 dark:bg-slate-900/50 p-3 rounded-lg';
+                    li.innerHTML = `<p>${lessonData.title || 'Untitled Lesson'}</p><button class="remove-lesson-btn text-red-500 text-sm font-semibold" data-lesson-id="${doc.id}">Remove</button>`;
+                    li.querySelector('.remove-lesson-btn').addEventListener('click', () => {
+                        if (confirm(`Are you sure you want to remove this lesson?`)) {
+                            removeLessonFromClass(doc.id);
+                        }
+                    });
+                    assignedLessonsList.appendChild(li);
+                });
             });
 
             const enrolledStudentsList = document.getElementById('enrolled-students-list');
@@ -232,7 +251,6 @@
             });
         }
 
-        // --- CORE FUNCTIONS ---
         async function createClass() { 
             const className = prompt("Enter a name for the new class:");
             if (className) {
@@ -273,8 +291,6 @@
             }
         }
         
-        async function addLessonToClass(lessonId, lessonData) { /* ... */ }
-        
         async function enrollStudentInClass(studentId, studentData) {
             if(!activeClassId) return;
             const studentInClassRef = doc(db, "classes", activeClassId, "students", studentId);
@@ -295,30 +311,24 @@
                 console.error("Error unenrolling student:", error);
             }
         }
+
+        async function removeLessonFromClass(lessonId) {
+            if (!activeClassId || !lessonId) return;
+            try {
+                const lessonInClassRef = doc(db, "classes", activeClassId, "lessons", lessonId);
+                await deleteDoc(lessonInClassRef);
+                alert("Lesson removed from class.");
+            } catch (error) {
+                console.error("Error removing lesson:", error);
+                alert("An error occurred while removing the lesson.");
+            }
+        }
         
         // --- MODALS AND EVENT LISTENERS ---
-        const addLessonModal = document.getElementById('add-lesson-modal');
         const enrollStudentModal = document.getElementById('enroll-student-modal');
         
         document.getElementById('class-form').addEventListener('submit', saveClass);
         document.getElementById('create-class-btn').addEventListener('click', createClass);
-
-        document.getElementById('add-lesson-btn').addEventListener('click', async () => {
-            if(!activeClassId) { alert("Please select a class first."); return; }
-            const list = addLessonModal.querySelector('#all-lessons-list');
-            list.innerHTML = 'Loading...';
-            const lessonsSnap = await getDocs(query(collection(db, "lessons"), orderBy("level")));
-            list.innerHTML = '';
-            lessonsSnap.forEach(doc => {
-                const lesson = doc.data();
-                const btn = document.createElement('button');
-                btn.className = 'w-full text-left p-2 rounded-md hover:bg-stone-100 dark:hover:bg-slate-700';
-                btn.innerHTML = `<b>${lesson.level}</b>: ${lesson.title}`;
-                btn.onclick = () => { addLessonToClass(doc.id, lesson); addLessonModal.classList.add('hidden'); };
-                list.appendChild(btn);
-            });
-            addLessonModal.classList.remove('hidden');
-        });
 
         document.getElementById('enroll-student-btn').addEventListener('click', async () => {
             if(!activeClassId) { alert("Please select a class first."); return; }
@@ -337,7 +347,6 @@
             enrollStudentModal.classList.remove('hidden');
         });
 
-        document.getElementById('close-lesson-modal-btn').addEventListener('click', () => addLessonModal.classList.add('hidden'));
         document.getElementById('close-student-modal-btn').addEventListener('click', () => enrollStudentModal.classList.add('hidden'));
     </script>
 </body>
