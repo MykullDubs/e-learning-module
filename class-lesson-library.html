@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lesson Library - Golden Fellows English</title>
+    <title>Lesson Builder - Golden Fellows English</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
     <script>
@@ -23,6 +23,12 @@
         body { font-family: 'Source Serif Pro', serif; background-color: #F7F5F2; }
         .dark body { background-color: #0F172A; }
         .font-brand { font-family: 'Source Serif Pro', serif; }
+        .drag-handle {
+            cursor: grab;
+        }
+        .drag-handle:active {
+            cursor: grabbing;
+        }
     </style>
 </head>
 <body class="text-gray-900 dark:text-gray-200 antialiased">
@@ -30,56 +36,89 @@
     <header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm shadow-sm border-b border-stone-200 dark:border-slate-800 sticky top-0 z-40">
         <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
             <a href="dashboard.html" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
-            <a href="dashboard.html" class="text-sm font-semibold hover:text-indigo-600 dark:hover:text-indigo-400">Dashboard</a>
+            <div class="flex items-center gap-6">
+                 <a href="class-lessons-library.html" class="text-sm font-semibold hover:text-indigo-600 dark:hover:text-indigo-400">Lesson Library</a>
+                <div class="relative">
+                    <button id="profile-btn" class="flex items-center gap-2">
+                         <span id="user-email-nav" class="text-sm text-stone-600 dark:text-stone-300 hidden sm:block font-brand"></span>
+                        <div id="nav-avatar-container">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
+                        </div>
+                    </button>
+                    <div id="profile-dropdown" class="hidden absolute font-brand right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden z-10">
+                        <a href="dashboard.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Dashboard</a>
+                        <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Settings</a>
+                        <div class="border-t border-stone-200 dark:border-gray-600"></div>
+                        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100 dark:hover:bg-gray-700">Log Out</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 
-    <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-7xl font-brand">
-        <header class="mb-8 flex justify-between items-center">
-            <div>
-                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Lesson Library</h1>
-                <p class="text-gray-600 dark:text-gray-400 mt-2 text-lg">Browse and manage all available lessons.</p>
-            </div>
-            <a href="lesson-builder.html" class="bg-indigo-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-indigo-700 transition">
-                + New Lesson
-            </a>
+    <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl font-brand">
+        <header class="mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Lesson Builder</h1>
+            <p class="text-gray-600 dark:text-gray-400 mt-2 text-lg">Create custom lessons with interactive content blocks.</p>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
+        <div class="bg-white/50 dark:bg-slate-800/50 backdrop-blur-lg p-8 rounded-2xl shadow-xl border border-stone-200/50 dark:border-slate-700/50">
             
-            <aside class="lg:col-span-1 sticky top-24">
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-stone-200/50 dark:border-slate-700/50">
-                    <h2 class="text-2xl font-semibold mb-4">Filters</h2>
-                    <div class="space-y-4">
-                        <div>
-                            <label for="filter-level" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">CEFR Level</label>
-                            <select id="filter-level" class="w-full p-2 border rounded-lg bg-stone-50 dark:bg-slate-700 dark:border-slate-600 focus:outline-none focus:ring focus:border-indigo-500 transition">
-                                <option value="all">All Levels</option>
-                                <option value="A1">A1</option>
-                                <option value="A2">A2</option>
-                                <option value="B1">B1</option>
-                                <option value="B2">B2</option>
-                                <option value="C1">C1</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="filter-topic" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Topic</label>
-                            <input type="text" id="filter-topic" placeholder="e.g., Grammar" class="w-full p-2 border rounded-lg bg-stone-50 dark:bg-slate-700 dark:border-slate-600 focus:outline-none focus:ring focus:border-indigo-500 transition">
-                        </div>
+            <section class="space-y-4">
+                <div>
+                    <label for="lesson-title" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Lesson Title</label>
+                    <input type="text" id="lesson-title" placeholder="e.g., A2: Discussing Past Events" class="mt-1 block w-full p-2 border border-stone-300 dark:border-gray-600 rounded-md bg-transparent focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                     <div>
+                        <label for="lesson-level" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Level</label>
+                        <select id="lesson-level" class="mt-1 block w-full p-2 border border-stone-300 dark:border-gray-600 rounded-md bg-transparent focus:ring-2 focus:ring-indigo-500">
+                            <option value="A1">A1</option>
+                            <option value="A2" selected>A2</option>
+                            <option value="B1">B1</option>
+                            <option value="B2">B2</option>
+                            <option value="C1">C1</option>
+                        </select>
+                    </div>
+                     <div>
+                        <label for="lesson-topic" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Topic</label>
+                        <input type="text" id="lesson-topic" placeholder="e.g., Conversation" class="mt-1 block w-full p-2 border border-stone-300 dark:border-gray-600 rounded-md bg-transparent focus:ring-2 focus:ring-indigo-500">
                     </div>
                 </div>
-            </aside>
+            </section>
+            
+            <hr class="my-8 border-stone-300 dark:border-slate-600">
 
-            <div id="lesson-list-container" class="lg:col-span-3 space-y-4">
-                <p class="text-gray-500 text-center mt-8">Loading lessons...</p>
+            <section>
+                <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Lesson Content</h2>
+                <div id="content-blocks-container" class="space-y-4">
+                    <p class="text-gray-500 text-center">No content blocks added yet. Use the buttons below to start building your lesson.</p>
+                </div>
+
+                <div class="mt-6 text-center">
+                    <div id="add-block-buttons" class="flex justify-center gap-2 flex-wrap">
+                        <button data-type="text" class="add-block-btn bg-stone-200 dark:bg-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-stone-300">Text Block</button>
+                        <button data-type="vocabulary" class="add-block-btn bg-stone-200 dark:bg-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-stone-300">Vocabulary</button>
+                        <button data-type="multiple-choice" class="add-block-btn bg-stone-200 dark:bg-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-stone-300">Multiple Choice</button>
+                        <button data-type="fill-in-the-blank" class="add-block-btn bg-stone-200 dark:bg-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-stone-300">Fill-in-the-Blank</button>
+                        <button data-type="discussion-prompt" class="add-block-btn bg-stone-200 dark:bg-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-stone-300">Discussion Prompt</button>
+                        <button data-type="video" class="add-block-btn bg-stone-200 dark:bg-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-stone-300">Video</button>
+                    </div>
+                    <div id="add-block-form-container" class="mt-4 text-left"></div>
+                </div>
+            </section>
+            
+            <div class="mt-8 pt-6 border-t border-stone-300 dark:border-slate-600 text-right">
+                <p id="save-status" class="text-green-600 dark:text-green-400 font-semibold mr-4 h-6 inline-block"></p>
+                <button id="save-lesson-btn" class="bg-indigo-600 text-white font-semibold px-8 py-3 rounded-lg shadow-sm hover:bg-indigo-700 disabled:opacity-50">Save Lesson</button>
             </div>
         </div>
     </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, collection, query, where, getDocs, orderBy, startAt, endAt, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
@@ -87,103 +126,291 @@
             projectId: "elearning-e83cb",
             storageBucket: "elearning-e83cb.appspot.com",
             messagingSenderId: "25473938624",
-            appId: "1:25473938624:web:5b56738933543f32a7e925"
+            appId: "1:25473938624:web:5b56738933543f32a7e925",
         };
         
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        const lessonListContainer = document.getElementById('lesson-list-container');
-        const filterLevelEl = document.getElementById('filter-level');
-        const filterTopicEl = document.getElementById('filter-topic');
-        let allLessons = [];
+        let currentUser = null;
+        let currentLessonId = null;
 
-        async function fetchLessons() {
-            lessonListContainer.innerHTML = '<p class="text-gray-500 text-center mt-8">Loading lessons...</p>';
-            try {
-                const q = query(collection(db, "lessons"), orderBy("createdAt", "desc"));
-                const querySnapshot = await getDocs(q);
-                allLessons = [];
-                querySnapshot.forEach((doc) => {
-                    allLessons.push({ id: doc.id, ...doc.data() });
-                });
-                renderLessons(allLessons);
-            } catch (error) {
-                console.error("Error fetching lessons:", error);
-                lessonListContainer.innerHTML = '<p class="text-red-500 text-center mt-8">Failed to load lessons. Please check your network and permissions.</p>';
+        const profileBtn = document.getElementById('profile-btn');
+        const profileDropdown = document.getElementById('profile-dropdown');
+        const logoutBtn = document.getElementById('logout-btn');
+        profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
+        window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
+        logoutBtn.addEventListener('click', () => { signOut(auth); });
+
+        // Helper function to render user info and greeting
+        function renderUserInfo(user, userData) {
+            document.getElementById('user-email-nav').textContent = user.email;
+            if (user.photoURL) {
+                document.getElementById('nav-avatar-container').innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
             }
         }
 
-        function renderLessons(lessonsToRender) {
-            lessonListContainer.innerHTML = '';
-            if (lessonsToRender.length === 0) {
-                lessonListContainer.innerHTML = '<p class="text-gray-500 text-center mt-8">No lessons found with the selected filters.</p>';
+        const contentBlocksContainer = document.getElementById('content-blocks-container');
+        const addBlockFormContainer = document.getElementById('add-block-form-container');
+        const saveLessonBtn = document.getElementById('save-lesson-btn');
+        const saveStatus = document.getElementById('save-status');
+        let lessonContent = [];
+
+        function renderContentBlocks() {
+            contentBlocksContainer.innerHTML = '';
+            if (lessonContent.length === 0) {
+                contentBlocksContainer.innerHTML = `<p class="text-gray-500 text-center">No content blocks added yet. Use the buttons below to start building your lesson.</p>`;
                 return;
             }
 
-            lessonsToRender.forEach(lesson => {
-                const lessonCard = document.createElement('div');
-                lessonCard.className = 'bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-md border border-stone-200/50 dark:border-slate-700/50 hover:shadow-xl transition';
-                lessonCard.innerHTML = `
-                    <h3 class="text-xl font-bold">${lesson.title}</h3>
-                    <div class="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                        <span>Level: ${lesson.level || 'N/A'}</span> |
-                        <span>Topic: ${lesson.topic || 'N/A'}</span>
-                    </div>
-                    <p class="mt-4 text-sm">${lesson.contentBlocks[0]?.text?.substring(0, 100) || 'No description available.'}...</p>
-                    <div class="mt-4 flex justify-between items-center">
-                        <a href="lesson-builder.html?lessonId=${lesson.id}" class="text-indigo-600 font-semibold text-sm hover:underline dark:text-indigo-400">View/Edit →</a>
-                        <button onclick="assignLessonToClass('${lesson.id}', '${lesson.title}')" class="bg-indigo-600 text-white font-semibold py-2 px-4 text-sm rounded-lg hover:bg-indigo-700 transition">Assign</button>
-                    </div>
-                `;
-                lessonListContainer.appendChild(lessonCard);
-            });
-        }
+            lessonContent.forEach((block, index) => {
+                const blockEl = document.createElement('div');
+                blockEl.className = 'bg-stone-50 dark:bg-slate-900/50 p-4 rounded-lg border border-stone-200 dark:border-slate-700 relative group';
+                blockEl.dataset.index = index;
 
-        function filterAndRender() {
-            const level = filterLevelEl.value;
-            const topic = filterTopicEl.value.toLowerCase().trim();
-            let filteredLessons = allLessons.filter(lesson => {
-                const matchesLevel = level === 'all' || lesson.level === level;
-                const matchesTopic = !topic || (lesson.topic && lesson.topic.toLowerCase().includes(topic));
-                return matchesLevel && matchesTopic;
-            });
-            renderLessons(filteredLessons);
-        }
-
-        filterLevelEl.addEventListener('change', filterAndRender);
-        filterTopicEl.addEventListener('input', filterAndRender);
-
-        // Global function to be called by the "Assign" button
-        window.assignLessonToClass = async (lessonId, lessonTitle) => {
-            const classId = prompt(`Enter the Class ID to assign "${lessonTitle}" to:`);
-            if (!classId) return;
-
-            try {
-                // Fetch the full lesson data from the lessons collection
-                const lessonRef = doc(db, "lessons", lessonId);
-                const lessonSnap = await getDoc(lessonRef);
-                if (!lessonSnap.exists()) {
-                    alert("Lesson not found!");
-                    return;
+                let contentHTML = '';
+                const blockHeader = `<div class="flex items-center justify-between mb-2">
+                    <span class="font-semibold text-sm text-gray-700 dark:text-gray-300">${block.type.toUpperCase().replace('-', ' ')}</span>
+                    <button class="remove-block-btn text-red-500 hover:text-red-700 text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Remove</button>
+                </div>`;
+                
+                switch (block.type) {
+                    case 'text':
+                        contentHTML = `<div class="prose dark:prose-invert"><p>${block.text}</p></div>`;
+                        break;
+                    case 'vocabulary':
+                        contentHTML = `
+                            <p class="font-bold text-lg">${block.word}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Definition: ${block.definition}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Example: ${block.example}</p>
+                            ${block.isFlashcard ? `<span class="inline-block mt-2 text-xs font-bold px-2 py-1 rounded-full bg-teal-100 text-teal-800 dark:bg-teal-900/50 dark:text-teal-300">Flashcard</span>` : ''}
+                        `;
+                        break;
+                    case 'multiple-choice':
+                        contentHTML = `
+                            <p><strong>Q:</strong> ${block.question}</p>
+                            <ul class="list-disc list-inside mt-2 text-sm">
+                                ${block.options.map(opt => `<li class="${opt === block.correctAnswer ? 'text-green-600 dark:text-green-400' : ''}">${opt}</li>`).join('')}
+                            </ul>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Correct Answer: ${block.correctAnswer}</p>
+                        `;
+                        break;
+                    case 'fill-in-the-blank':
+                        contentHTML = `
+                            <p><strong>Q:</strong> ${block.sentence}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Correct Answer: ${block.correctAnswer}</p>
+                        `;
+                        break;
+                    case 'discussion-prompt':
+                        contentHTML = `<p><strong>Discussion Prompt:</strong> ${block.prompt}</p>`;
+                        break;
+                    case 'video':
+                        contentHTML = `<p class="font-bold text-sm">Video</p><p class="mt-1">${block.url}</p>`;
+                        break;
                 }
-                const lessonData = lessonSnap.data();
+                blockEl.innerHTML = blockHeader + contentHTML;
+                contentBlocksContainer.appendChild(blockEl);
+            });
+        }
 
-                // Add a document to the class's subcollection
-                const classLessonRef = doc(db, "classes", classId, "lessons", lessonId);
-                await setDoc(classLessonRef, lessonData);
+        document.querySelectorAll('.add-block-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const type = btn.dataset.type;
+                let formHTML = '';
+                const baseFormClasses = "p-4 bg-stone-100 dark:bg-slate-700 rounded-lg space-y-2";
+                const inputClasses = "w-full p-2 border rounded bg-transparent border-stone-300 dark:border-gray-600";
+                const buttonClasses = "mt-2 bg-teal-500 text-white px-4 py-1 rounded hover:bg-teal-600";
 
-                alert(`Lesson "${lessonTitle}" assigned to class successfully!`);
-            } catch (error) {
-                console.error("Error assigning lesson:", error);
-                alert("Error assigning lesson. Please check the Class ID and your permissions.");
+                switch (type) {
+                    case 'text':
+                        formHTML = `<div class="${baseFormClasses}"><textarea id="text-content" placeholder="Enter lesson text here..." class="${inputClasses}" rows="6"></textarea><button id="save-block-btn" class="${buttonClasses}" data-type="text">Add Text Block</button></div>`;
+                        break;
+                    case 'vocabulary':
+                        formHTML = `
+                            <div class="${baseFormClasses}">
+                                <input id="vocab-word" type="text" placeholder="Vocabulary Word" class="${inputClasses}">
+                                <input id="vocab-def" type="text" placeholder="Definition" class="${inputClasses}">
+                                <input id="vocab-example" type="text" placeholder="Example sentence" class="${inputClasses}">
+                                <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                                    <input type="checkbox" id="is-flashcard" class="rounded">
+                                    <span>Add to flashcards</span>
+                                </label>
+                                <button id="save-block-btn" class="${buttonClasses}" data-type="vocabulary">Add Vocabulary</button>
+                            </div>
+                        `;
+                        break;
+                    case 'multiple-choice':
+                        formHTML = `
+                            <div class="${baseFormClasses}">
+                                <input id="mc-question" type="text" placeholder="Question" class="${inputClasses}">
+                                <input id="mc-correct" type="text" placeholder="Correct Answer" class="${inputClasses}">
+                                <input id="mc-option1" type="text" placeholder="Option 1" class="${inputClasses}">
+                                <input id="mc-option2" type="text" placeholder="Option 2" class="${inputClasses}">
+                                <input id="mc-option3" type="text" placeholder="Option 3" class="${inputClasses}">
+                                <button id="save-block-btn" class="${buttonClasses}" data-type="multiple-choice">Add Question</button>
+                            </div>
+                        `;
+                        break;
+                    case 'fill-in-the-blank':
+                        formHTML = `
+                            <div class="${baseFormClasses}">
+                                <input id="fitb-sentence" type="text" placeholder="Sentence (use _ for the blank)" class="${inputClasses}">
+                                <input id="fitb-answer" type="text" placeholder="Correct word for the blank" class="${inputClasses}">
+                                <button id="save-block-btn" class="${buttonClasses}" data-type="fill-in-the-blank">Add Question</button>
+                            </div>
+                        `;
+                        break;
+                    case 'discussion-prompt':
+                        formHTML = `<div class="${baseFormClasses}"><textarea id="discussion-prompt-text" placeholder="Enter a discussion question..." class="${inputClasses}" rows="3"></textarea><button id="save-block-btn" class="${buttonClasses}" data-type="discussion-prompt">Add Prompt</button></div>`;
+                        break;
+                    case 'video':
+                        formHTML = `<div class="${baseFormClasses}"><input id="video-url" type="url" placeholder="Paste YouTube/Vimeo URL" class="${inputClasses}"><button id="save-block-btn" class="${buttonClasses}" data-type="video">Add Video</button></div>`;
+                        break;
+                }
+                addBlockFormContainer.innerHTML = formHTML;
+            });
+        });
+
+        addBlockFormContainer.addEventListener('click', (e) => {
+            if (e.target.id !== 'save-block-btn') return;
+            const type = e.target.dataset.type;
+            const newBlock = { type: type, order: lessonContent.length + 1 };
+            
+            let isValid = true;
+            switch (type) {
+                case 'text':
+                    newBlock.text = document.getElementById('text-content').value;
+                    if (!newBlock.text) isValid = false;
+                    break;
+                case 'vocabulary':
+                    newBlock.word = document.getElementById('vocab-word').value;
+                    newBlock.definition = document.getElementById('vocab-def').value;
+                    newBlock.example = document.getElementById('vocab-example').value;
+                    newBlock.isFlashcard = document.getElementById('is-flashcard').checked;
+                    if (!newBlock.word || !newBlock.definition) isValid = false;
+                    break;
+                case 'multiple-choice':
+                    newBlock.question = document.getElementById('mc-question').value;
+                    newBlock.correctAnswer = document.getElementById('mc-correct').value;
+                    newBlock.options = [document.getElementById('mc-correct').value, document.getElementById('mc-option1').value, document.getElementById('mc-option2').value, document.getElementById('mc-option3').value].filter(Boolean);
+                    if (!newBlock.question || newBlock.options.length < 2 || !newBlock.options.includes(newBlock.correctAnswer)) isValid = false;
+                    break;
+                case 'fill-in-the-blank':
+                    newBlock.sentence = document.getElementById('fitb-sentence').value;
+                    newBlock.correctAnswer = document.getElementById('fitb-answer').value;
+                    if (!newBlock.sentence || !newBlock.correctAnswer) isValid = false;
+                    break;
+                case 'discussion-prompt':
+                    newBlock.prompt = document.getElementById('discussion-prompt-text').value;
+                    if (!newBlock.prompt) isValid = false;
+                    break;
+                case 'video':
+                    newBlock.url = document.getElementById('video-url').value;
+                    if (!newBlock.url) isValid = false;
+                    break;
             }
-        };
 
+            if (!isValid) {
+                alert("Please fill out all fields for the content block.");
+                return;
+            }
+            
+            lessonContent.push(newBlock);
+            renderContentBlocks();
+            addBlockFormContainer.innerHTML = '';
+        });
+
+        contentBlocksContainer.addEventListener('click', (e) => {
+            const btn = e.target.closest('.remove-block-btn');
+            if (btn) {
+                const blockEl = btn.closest('[data-index]');
+                const index = parseInt(blockEl.dataset.index);
+                lessonContent.splice(index, 1);
+                renderContentBlocks();
+            }
+        });
+
+        saveLessonBtn.addEventListener('click', async () => {
+            if (!currentUser) { alert("You must be logged in to save."); return; }
+            saveLessonBtn.disabled = true;
+            saveStatus.textContent = "Saving...";
+
+            const lessonData = {
+                title: document.getElementById('lesson-title').value,
+                level: document.getElementById('lesson-level').value,
+                topic: document.getElementById('lesson-topic').value,
+                contentBlocks: lessonContent,
+                instructorId: currentUser.uid,
+                instructorName: currentUser.displayName || currentUser.email,
+                createdAt: serverTimestamp()
+            };
+
+            if (!lessonData.title || lessonContent.length === 0) {
+                alert("Please add a title and at least one content block.");
+                saveLessonBtn.disabled = false;
+                saveStatus.textContent = "";
+                return;
+            }
+            
+            try {
+                if (currentLessonId) {
+                    await updateDoc(doc(db, "lessons", currentLessonId), lessonData);
+                    saveStatus.textContent = "✅ Lesson Updated!";
+                } else {
+                    const lessonsRef = collection(db, "lessons");
+                    const docRef = await addDoc(lessonsRef, lessonData);
+                    currentLessonId = docRef.id;
+                    saveStatus.textContent = "✅ Lesson Saved!";
+                }
+                setTimeout(() => { window.location.reload(); }, 2000);
+            } catch (error) {
+                console.error("Error saving lesson:", error);
+                saveStatus.textContent = "Error saving lesson.";
+                saveLessonBtn.disabled = false;
+            }
+        });
+
+        async function loadLessonForEditing(lessonId) {
+            try {
+                const lessonDocRef = doc(db, "lessons", lessonId);
+                const lessonSnap = await getDoc(lessonDocRef);
+                if (lessonSnap.exists()) {
+                    const lessonData = lessonSnap.data();
+                    currentLessonId = lessonSnap.id;
+                    document.getElementById('lesson-title').value = lessonData.title || '';
+                    document.getElementById('lesson-level').value = lessonData.level || 'A1';
+                    document.getElementById('lesson-topic').value = lessonData.topic || '';
+                    lessonContent = lessonData.contentBlocks || [];
+                    renderContentBlocks();
+                } else {
+                    console.error("No such lesson exists!");
+                }
+            } catch (error) {
+                console.error("Error loading lesson:", error);
+            }
+        }
+        
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                await fetchLessons();
+                currentUser = user;
+                let userData = { displayName: user.email.split('@')[0] };
+                try {
+                    const userDocRef = doc(db, "users", user.uid);
+                    const docSnap = await getDoc(userDocRef);
+                    if (docSnap.exists()) {
+                        userData = docSnap.data();
+                    }
+                } catch (error) {
+                    console.error("Error fetching user data:", error);
+                }
+                renderUserInfo(user, userData);
+
+                const urlParams = new URLSearchParams(window.location.search);
+                const lessonIdFromUrl = urlParams.get('lessonId');
+                if (lessonIdFromUrl) {
+                    await loadLessonForEditing(lessonIdFromUrl);
+                }
             } else {
                 window.location.href = 'Login.html';
             }
