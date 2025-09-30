@@ -133,32 +133,11 @@
                             <span id="flashcard-counter" class="text-sm font-semibold text-gray-500 dark:text-gray-400">0/0</span>
                             <button id="next-card-btn" class="text-indigo-600 dark:text-indigo-400 font-semibold text-sm hover:underline transition">Next →</button>
                         </div>
+                        <button id="start-game-btn" class="w-full mt-4 bg-indigo-600 text-white font-semibold py-2 rounded-lg hover:bg-indigo-700 hidden">
+                            Start Flashcard Tic-Tac-Toe
+                        </button>
                     </div>
                 </section>
-                <section>
-    <div class="widget-card bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-stone-200 dark:border-slate-700">
-        <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">Weekly Vocabulary</h2>
-        <div id="flashcard-container" class="flashcard-container h-48">
-            <div id="flashcard" class="flashcard">
-                <div id="flashcard-front" class="flashcard-face flashcard-face-front p-6 flex flex-col justify-center items-center">
-                    <p class="text-lg font-semibold text-gray-700 dark:text-gray-300">No words to display.</p>
-                </div>
-                <div id="flashcard-back" class="flashcard-face flashcard-face-back p-6 flex flex-col justify-center items-center">
-                    <p class="text-base text-white">Definition & Example</p>
-                </div>
-            </div>
-        </div>
-        <div class="mt-4 flex justify-between items-center">
-            <button id="prev-card-btn" class="text-gray-500 dark:text-gray-400 font-semibold text-sm hover:text-indigo-600 dark:hover:text-indigo-400 transition">← Previous</button>
-            <span id="flashcard-counter" class="text-sm font-semibold text-gray-500 dark:text-gray-400">0/0</span>
-            <button id="next-card-btn" class="text-indigo-600 dark:text-indigo-400 font-semibold text-sm hover:underline transition">Next →</button>
-        </div>
-        
-        <button id="start-game-btn" class="w-full mt-4 bg-indigo-600 text-white font-semibold py-2 rounded-lg hover:bg-indigo-700 hidden">
-            Start Flashcard Tic-Tac-Toe
-        </button>
-    </div>
-</section>
 
                 <section>
                     <div class="widget-card bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-stone-200 dark:border-slate-700">
@@ -255,6 +234,7 @@
             if (!lesson || !lesson.contentBlocks || lesson.contentBlocks.length === 0) {
                 lessonTextEl.innerHTML = `<p class="text-gray-500 dark:text-gray-400">No lesson content has been added to this class yet.</p>`;
                 exerciseContentEl.innerHTML = `<p class="text-gray-500 dark:text-gray-400">No exercises assigned for this lesson.</p>`;
+                document.getElementById('start-game-btn').classList.add('hidden');
                 return;
             }
 
@@ -296,7 +276,6 @@
                         break;
                     case 'discussion-prompt':
                         // The discussion prompt is handled by the discussion board widget
-                        // No need to render it here, but we can if we want a prominent spot
                         break;
                     case 'video':
                         const videoId = block.url.split('v=')[1];
@@ -305,19 +284,20 @@
                         }
                         break;
                     case 'quote':
-                        lessonTextHtml += `
-                            <div class="relative pl-8 my-8 font-bold text-xl leading-relaxed italic">
-                                <span class="absolute top-0 left-0 text-gray-400 dark:text-gray-600 text-6xl leading-none">“</span>
-                                <p class="ml-4">${block.text}</p>
-                                <span class="absolute bottom-0 right-0 text-gray-400 dark:text-gray-600 text-6xl leading-none">”</span>
-                            </div>
-                        `;
+                        lessonTextHtml += `<div class="relative pl-8 my-8 font-bold text-xl leading-relaxed italic"><span class="absolute top-0 left-0 text-gray-400 dark:text-gray-600 text-6xl leading-none">“</span><p class="ml-4">${block.text}</p><span class="absolute bottom-0 right-0 text-gray-400 dark:text-gray-600 text-6xl leading-none">”</span></div>`;
                         break;
                 }
             });
 
             lessonTextEl.innerHTML = lessonTextHtml || `<p class="text-gray-500 dark:text-gray-400">No lesson content to display.</p>`;
             exerciseContentEl.innerHTML = exerciseHtml || `<p class="text-gray-500 dark:text-gray-400">No exercises assigned for this lesson.</p>`;
+
+            // Show the game button if there are vocabulary words
+            if (vocab.length > 0) {
+                document.getElementById('start-game-btn').classList.remove('hidden');
+            } else {
+                document.getElementById('start-game-btn').classList.add('hidden');
+            }
 
             currentCardIndex = 0;
             updateFlashcardUI();
@@ -359,6 +339,46 @@
                 feedbackEl.classList.add('text-red-600');
             }
         };
+
+        // NEW: Function to create a game
+        async function createGame() {
+            if (!currentUser || !classId) {
+                alert("You must be logged in and in a class to start a game.");
+                return;
+            }
+
+            try {
+                // Get the lesson ID from the lessons subcollection (for now, we'll get the first one)
+                const lessonsRef = collection(db, "classes", classId, "lessons");
+                const lessonsSnap = await getDocs(lessonsRef);
+                const lessonId = lessonsSnap.docs[0]?.id;
+                
+                if (!lessonId) {
+                    alert("No lesson assigned to this class.");
+                    return;
+                }
+
+                const gamesRef = collection(db, "games");
+                const newGameData = {
+                    classId: classId,
+                    lessonId: lessonId,
+                    players: [currentUser.uid],
+                    board: [['', '', ''], ['', '', ''], ['', '', '']],
+                    currentPlayer: currentUser.uid,
+                    status: 'waiting_for_player',
+                    flashcardQuestions: vocab,
+                    createdAt: serverTimestamp()
+                };
+                const gameDocRef = await addDoc(gamesRef, newGameData);
+                alert(`Game created! Game ID: ${gameDocRef.id}`);
+
+                // TODO: Redirect or show a modal with the game interface
+            } catch (error) {
+                console.error("Error creating game:", error);
+                alert("An error occurred while creating the game.");
+            }
+        }
+        document.getElementById('start-game-btn').addEventListener('click', createGame);
 
         // Function to load class content
         async function loadClassContent(classId) {
