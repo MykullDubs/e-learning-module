@@ -119,68 +119,59 @@
     </main>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
-            authDomain: "elearning-e83cb.firebaseapp.com",
-            projectId: "elearning-e83cb",
-            storageBucket: "elearning-e83cb.appspot.com",
-            messagingSenderId: "25473938624",
-            appId: "1:25473938624:web:5b56738933543f32a7e925"
-        };
-        
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+    const firebaseConfig = {
+        apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
+        authDomain: "elearning-e83cb.firebaseapp.com",
+        projectId: "elearning-e83cb",
+        storageBucket: "elearning-e83cb.appspot.com",
+        messagingSenderId: "25473938624",
+        appId: "1:25473938624:web:5b56738933543f32a7e925"
+    };
+    
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-        const levelColors = { A1: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300', A2: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300', B1: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300', B2: 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300' };
+    const levelColors = { A1: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300', A2: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300', B1: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300', B2: 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300' };
 
-        const profileBtn = document.getElementById('profile-btn');
-        const profileDropdown = document.getElementById('profile-dropdown');
-        const logoutBtn = document.getElementById('logout-btn');
-        profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
-        window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
-        logoutBtn.addEventListener('click', () => { signOut(auth); });
-        
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                document.getElementById('user-email-nav').textContent = user.email;
-                if (user.photoURL) { document.getElementById('nav-avatar-container').innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`; }
-                
-                const hour = new Date().getHours();
-                const greetingEl = document.getElementById('time-greeting');
-                if (hour < 12) greetingEl.textContent = 'Good morning';
-                else if (hour < 18) greetingEl.textContent = 'Good afternoon';
-                else greetingEl.textContent = 'Good evening';
+    const profileBtn = document.getElementById('profile-btn');
+    const profileDropdown = document.getElementById('profile-dropdown');
+    const logoutBtn = document.getElementById('logout-btn');
+    profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
+    window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
+    logoutBtn.addEventListener('click', () => { signOut(auth); });
 
-const focusContainer = document.getElementById('focus-widget-container');
-        let userData = {};
+    // Helper function to render user info and greeting
+    function renderUserInfo(user, userData) {
+        document.getElementById('user-email-nav').textContent = user.email;
+        if (user.photoURL) {
+            document.getElementById('nav-avatar-container').innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
+        }
 
-        try {
-            const userDocRef = doc(db, "users", user.uid);
-            const docSnap = await getDoc(userDocRef);
-            if (docSnap.exists()) {
-                userData = docSnap.data();
-                document.getElementById('user-name').textContent = userData.displayName || user.email.split('@')[0];
-                if (userData.cefrLevel) { /* ... badge logic ... */ }
-            } else {
-                document.getElementById('user-name').textContent = user.email.split('@')[0];
-            }
+        const hour = new Date().getHours();
+        const greetingEl = document.getElementById('time-greeting');
+        if (hour < 12) greetingEl.textContent = 'Good morning';
+        else if (hour < 18) greetingEl.textContent = 'Good afternoon';
+        else greetingEl.textContent = 'Good evening';
 
-            // --- THE CORE LOGIC FOR DISPLAYING THE TOP WIDGET ---
-            if (userData.currentClassId) {
-                // A new class has been assigned!
-                const classDocRef = doc(db, "classes", userData.currentClassId);
-                const classDocSnap = await getDoc(classDocRef);
-                
+        document.getElementById('user-name').textContent = userData.displayName || user.email.split('@')[0];
+    }
+    
+    // Helper function to render the main focus widget
+    function renderFocusWidget(userData) {
+        const focusContainer = document.getElementById('focus-widget-container');
+        if (userData.currentClassId) {
+            const classDocRef = doc(db, "classes", userData.currentClassId);
+            getDoc(classDocRef).then(classDocSnap => {
                 if (classDocSnap.exists()) {
                     const classData = classDocSnap.data();
-                    const lessonLevel = classData.cefrLevel || 'Unknown'; // Get lesson level
-                    const lessonTitle = classData.className || 'New Class'; // Get class title
-                    const lessonDesc = classData.description || 'Welcome to your new class!'; // Get class description
+                    const lessonLevel = classData.cefrLevel || 'Unknown';
+                    const lessonTitle = classData.className || 'New Class';
+                    const lessonDesc = classData.description || 'Welcome to your new class!';
 
                     focusContainer.innerHTML = `
                         <div class="widget-card block bg-gradient-to-br from-teal-500 to-emerald-600 dark:from-teal-600 dark:to-emerald-700 p-8 rounded-2xl shadow-xl border border-teal-400/50 dark:border-emerald-600/50 text-white transition">
@@ -192,55 +183,68 @@ const focusContainer = document.getElementById('focus-widget-container');
                         </div>
                     `;
                 } else {
-                    // Class no longer exists, clear the currentClassId
-                    await updateDoc(userDocRef, { currentClassId: null });
-                    // Then proceed to the next rendering logic
-                    renderDefaultFocusWidget(userData);
+                    updateDoc(doc(db, "users", auth.currentUser.uid), { currentClassId: null }).then(() => {
+                        renderDefaultFocusWidget(userData);
+                    });
                 }
-            } else {
-                // No new class assigned, render based on CEFR level or quiz prompt
+            }).catch(error => {
+                console.error("Error fetching class data:", error);
                 renderDefaultFocusWidget(userData);
-            }
-        } catch (error) { 
-            console.error("Error fetching user or class data:", error);
-            // Fallback in case of error
+            });
+        } else {
             renderDefaultFocusWidget(userData);
         }
-
-    } else { 
-        window.location.href = 'Login.html'; 
     }
-});
 
-// A new helper function to clean up the logic
-function renderDefaultFocusWidget(userData) {
-    const focusContainer = document.getElementById('focus-widget-container');
-    if (userData.cefrLevel) {
-        focusContainer.innerHTML = `
-            <div class="widget-card block bg-gradient-to-br from-teal-500 to-emerald-600 dark:from-teal-600 dark:to-emerald-700 p-8 rounded-2xl shadow-xl border border-teal-400/50 dark:border-emerald-600/50 text-white transition">
-                <h2 class="text-xl font-semibold mb-2">This Week's Class</h2>
-                <span class="text-xs font-bold px-3 py-1 rounded-full bg-yellow-100/30 text-white">B1</span>
-                <h3 class="text-3xl font-bold mt-2">Giving Advice with Modals</h3>
-                <p class="text-teal-100 mt-2 max-w-lg">Learn to use 'should', 'must', and 'have to' for clear recommendations.</p>
-                <a href="class-page.html" class="mt-6 inline-block bg-white text-teal-700 font-bold px-8 py-3 rounded-lg shadow-sm hover:scale-105 transition-transform">Enter Classroom →</a>
-            </div>
-        `;
-    } else {
-        focusContainer.innerHTML = `
-            <div class="widget-card bg-gradient-to-br from-indigo-500 to-purple-600 p-8 rounded-2xl shadow-xl text-center text-white transition">
-                <h2 class="text-3xl font-bold">Discover Your English Level</h2>
-                <p class="mt-2 text-lg text-indigo-100 max-w-md mx-auto">Take our adaptive quiz to find your starting point.</p>
-                <a href="level-finder.html" class="mt-6 inline-block bg-white text-indigo-600 font-semibold px-8 py-3 rounded-lg shadow-sm hover:scale-105 transition-transform">Take the Quiz Now</a>
-            </div>
-        `;
+    // A new helper function to clean up the default widget rendering logic
+    function renderDefaultFocusWidget(userData) {
+        const focusContainer = document.getElementById('focus-widget-container');
+        if (userData.cefrLevel) {
+            focusContainer.innerHTML = `
+                <div class="widget-card block bg-gradient-to-br from-teal-500 to-emerald-600 dark:from-teal-600 dark:to-emerald-700 p-8 rounded-2xl shadow-xl border border-teal-400/50 dark:border-emerald-600/50 text-white transition">
+                    <h2 class="text-xl font-semibold mb-2">This Week's Class</h2>
+                    <span class="text-xs font-bold px-3 py-1 rounded-full bg-yellow-100/30 text-white">B1</span>
+                    <h3 class="text-3xl font-bold mt-2">Giving Advice with Modals</h3>
+                    <p class="text-teal-100 mt-2 max-w-lg">Learn to use 'should', 'must', and 'have to' for clear recommendations.</p>
+                    <a href="class-page.html" class="mt-6 inline-block bg-white text-teal-700 font-bold px-8 py-3 rounded-lg shadow-sm hover:scale-105 transition-transform">Enter Classroom →</a>
+                </div>
+            `;
+        } else {
+            focusContainer.innerHTML = `
+                <div class="widget-card bg-gradient-to-br from-indigo-500 to-purple-600 p-8 rounded-2xl shadow-xl text-center text-white transition">
+                    <h2 class="text-3xl font-bold">Discover Your English Level</h2>
+                    <p class="mt-2 text-lg text-indigo-100 max-w-md mx-auto">Take our adaptive quiz to find your starting point.</p>
+                    <a href="level-finder.html" class="mt-6 inline-block bg-white text-indigo-600 font-semibold px-8 py-3 rounded-lg shadow-sm hover:scale-105 transition-transform">Take the Quiz Now</a>
+                </div>
+            `;
+        }
     }
-}
-                } catch (error) { console.error("Error fetching user data:", error); }
 
-            } else { 
-                window.location.href = 'Login.html'; 
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            let userData = { displayName: user.email.split('@')[0] }; // Initialize with default display name
+            
+            try {
+                const userDocRef = doc(db, "users", user.uid);
+                const docSnap = await getDoc(userDocRef);
+                if (docSnap.exists()) {
+                    userData = docSnap.data();
+                }
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+                // The userData object will remain with the default value, so the page won't break.
             }
-        });
-    </script>
+            
+            // This is now outside the try/catch, ensuring it always runs.
+            renderUserInfo(user, userData);
+            
+            // This is now a dedicated function call
+            renderFocusWidget(userData);
+
+        } else {
+            window.location.href = 'Login.html';
+        }
+    });
+</script>
 </body>
 </html>
