@@ -34,7 +34,14 @@
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { getFirestore, collection, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        const firebaseConfig = { /* ... your config ... */ };
+        const firebaseConfig = {
+            apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
+            authDomain: "elearning-e83cb.firebaseapp.com",
+            projectId: "elearning-e83cb",
+            storageBucket: "elearning-e83cb.appspot.com",
+            messagingSenderId: "25473938624",
+            appId: "1:25473938624:web:5b56738933543f32a7e925"
+        };
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
@@ -63,13 +70,15 @@
             querySnapshot.forEach(doc => {
                 const thread = doc.data();
                 const threadEl = document.createElement('a');
-                // This link passes the unique document ID to the forum page
+                // This link passes the unique document ID to the forum page as a URL parameter
                 threadEl.href = `forum.html?thread=${doc.id}`; 
                 threadEl.className = 'block bg-stone-50 dark:bg-slate-900/50 p-4 rounded-lg border border-stone-200 dark:border-slate-700 hover:border-indigo-500 hover:shadow-md transition';
                 
+                const createdDate = thread.createdAt ? new Date(thread.createdAt.toDate()).toLocaleDateString() : 'N/A';
+
                 threadEl.innerHTML = `
                     <h3 class="font-bold text-lg text-indigo-600 dark:text-indigo-400">${thread.title}</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Started by ${thread.authorName}</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Started by ${thread.authorName} on ${createdDate}</p>
                 `;
                 container.appendChild(threadEl);
             });
