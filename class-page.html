@@ -73,6 +73,9 @@
         .dark .flashcard-face-back {
             background-color: #0d9488;
         }
+        /* Prose style for markdown rendering */
+        .prose :where(p):not(:where([class~="not-prose"] *)){margin-top:0;margin-bottom:0}
+        .prose :where(ul):not(:where([class~="not-prose"] *)){margin-top:0;margin-bottom:0}
     </style>
 </head>
 <body class="text-gray-900 dark:text-gray-200 antialiased">
@@ -95,17 +98,11 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
             
-            <div class="lg:col-span-2 space-y-8 bg-white/50 dark:bg-slate-800/50 backdrop-blur-lg p-8 rounded-2xl shadow-xl border border-stone-200/50 dark:border-slate-700/50">
+            <div id="lesson-content-container" class="lg:col-span-2 space-y-8 bg-white/50 dark:bg-slate-800/50 backdrop-blur-lg p-8 rounded-2xl shadow-xl border border-stone-200/50 dark:border-slate-700/50">
                 <section id="lesson-content">
                     <h2 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Lesson Content</h2>
                     <div id="lesson-text" class="prose dark:prose-invert max-w-none">
-                        <p class="text-gray-500 dark:text-gray-400">Loading lesson content...</p>
-                    </div>
-                </section>
-                <section id="lesson-exercises" class="mt-8">
-                    <h2 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Exercises</h2>
-                    <div id="exercise-content">
-                        <p class="text-gray-500 dark:text-gray-400">Loading exercises...</p>
+                        <p class="text-gray-500 dark:text-gray-400">No lessons assigned yet. Please contact your instructor.</p>
                     </div>
                 </section>
             </div>
@@ -239,19 +236,44 @@
             // Listen for lesson and vocab updates in real-time
             const lessonsRef = collection(db, "classes", classId, "lessons");
             onSnapshot(lessonsRef, (snapshot) => {
+                const lessonTextEl = document.getElementById('lesson-text');
                 let lessonTextHtml = '';
                 vocab = [];
                 snapshot.forEach(lessonDoc => {
                     const lesson = lessonDoc.data();
-                    // Append lesson content
-                    lessonTextHtml += `<div class="mt-8"><h3>${lesson.title}</h3><p>${lesson.description}</p></div>`;
-                    // Populate vocab array
-                    if (lesson.vocab) {
-                        vocab = vocab.concat(lesson.vocab);
+                    if (lesson.contentBlocks && Array.isArray(lesson.contentBlocks)) {
+                        lesson.contentBlocks.forEach(block => {
+                            switch(block.type) {
+                                case 'text':
+                                    lessonTextHtml += `<div class="mt-4"><p>${block.text}</p></div>`;
+                                    break;
+                                case 'vocabulary':
+                                    if (block.isFlashcard) {
+                                        vocab.push({ word: block.word, definition: block.definition, example: block.example });
+                                    }
+                                    break;
+                                case 'multiple-choice':
+                                case 'fill-in-the-blank':
+                                    // You can add logic here to render exercises
+                                    // For now, we'll just display a placeholder
+                                    lessonTextHtml += `<div class="mt-4"><strong>Exercise:</strong> A quiz question here...</div>`;
+                                    break;
+                                case 'discussion-prompt':
+                                    // You can add logic here to render the prompt prominently
+                                    lessonTextHtml += `<div class="mt-4 p-4 bg-indigo-100 dark:bg-indigo-900/50 rounded-lg"><h3 class="font-semibold text-lg">Discussion Prompt</h3><p>${block.prompt}</p></div>`;
+                                    break;
+                                case 'video':
+                                    // You can embed the video here
+                                    const videoId = block.url.split('v=')[1];
+                                    if (videoId) {
+                                        lessonTextHtml += `<div class="mt-4 aspect-w-16 aspect-h-9"><iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+                                    }
+                                    break;
+                            }
+                        });
                     }
                 });
-                document.getElementById('lesson-text').innerHTML = lessonTextHtml;
-                // Initialize flashcards
+                lessonTextEl.innerHTML = lessonTextHtml || `<p class="text-gray-500 dark:text-gray-400">No lessons assigned yet. Please contact your instructor.</p>`;
                 currentCardIndex = 0;
                 updateFlashcardUI();
             });
@@ -306,7 +328,7 @@
                     await loadClassContent(classId);
                 } else {
                     document.getElementById('class-title').textContent = "No Class Selected";
-                    document.getElementById('lesson-text').innerHTML = "<p>Please return to your dashboard and select a class.</p>";
+                    document.getElementById('lesson-content').innerHTML = "<p>Please return to your dashboard and select a class.</p>";
                 }
             } else {
                 window.location.href = 'Login.html';
