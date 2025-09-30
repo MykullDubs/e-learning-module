@@ -96,29 +96,24 @@
                         </a>
                         <a href="lesson-library.html" class="widget-card block bg-white/80 dark:bg-slate-800/80 p-6 rounded-2xl shadow-md border border-stone-200/50 dark:border-slate-700/50 hover:shadow-xl transition flex flex-col items-center justify-center text-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-500 dark:text-indigo-400 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg><h3 class="font-semibold text-gray-900 dark:text-white">Explore the Full Library</h3><p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Browse all lessons & guides</p></a>
                     </div>
-                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">This Week's Class</h2>
-<div class="widget-card block bg-gradient-to-br from-teal-500 to-emerald-600 dark:from-teal-600 dark:to-emerald-700 p-8 rounded-2xl shadow-xl border border-teal-400/50 dark:border-emerald-600/50 text-white transition">
-    <span class="text-xs font-bold px-3 py-1 rounded-full bg-yellow-100/30 text-white">B1</span>
-    <h3 class="text-3xl font-bold mt-2">Giving Advice with Modals</h3>
-    <p class="text-teal-100 mt-2 max-w-lg">Learn how to use 'should', 'must', and 'have to' to give clear and effective recommendations in professional situations.</p>
-    <a href="class-page.html" class="mt-6 inline-block bg-white text-teal-700 font-bold px-8 py-3 rounded-lg shadow-sm hover:scale-105 transition-transform">
-        Enter Classroom →
-    </a>
-</div>
                 </section>
             </div>
             
             <aside class="lg:col-span-1 space-y-8">
-                <div class="widget-card bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-stone-200 dark:border-slate-700 transition">
-    <h3 class="font-bold text-lg">What are the pros and cons of democracy?</h3>
-    <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Join the conversation with your classmates and share your point of view on this week's topic.</p>
-    <a href="forum.html" class="block text-center mt-4 text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">
-        Join the Conversation →
-    </a>
-</div>
+                <section class="animate-in" style="animation-delay: 300ms;">
+                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Latest Discussion</h2>
+                    <div class="widget-card bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-stone-200 dark:border-slate-700 transition">
+                        <h3 class="font-bold text-lg">What are the pros and cons of democracy?</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Join the conversation with your classmates and share your point of view.</p>
+                        <a href="forum.html" class="block text-center mt-4 text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">
+                            Join the Conversation →
+                        </a>
+                    </div>
+                </section>
                 </aside>
         </div>
     </main>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -139,28 +134,6 @@
 
         const levelColors = { A1: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300', A2: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300', B1: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300', B2: 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300' };
 
-        const events = [ { date: '2025-09-19', time: '5:00 PM', title: 'B2 Writing Feedback Session' }, { date: '2025-09-22', time: '10:00 AM', title: 'B1 Grammar Workshop' }];
-
-        function renderScheduleWidget() {
-            const container = document.getElementById('schedule-widget-list');
-            if (!container) return;
-            const today = new Date('2025-09-19T00:00:00');
-            today.setHours(0, 0, 0, 0);
-
-            const upcomingEvents = events.filter(event => new Date(event.date + 'T00:00:00') >= today).sort((a, b) => new Date(a.date) - new Date(b.date)).slice(0, 3);
-
-            if (upcomingEvents.length > 0) {
-                container.innerHTML = upcomingEvents.map(event => {
-                    const eventDate = new Date(event.date + 'T00:00:00');
-                    const isToday = eventDate.getTime() === today.getTime();
-                    const dateLabel = isToday ? 'Today' : eventDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-                    return `<div class="flex items-start gap-4"><div class="flex-shrink-0 w-12 text-center bg-stone-100 dark:bg-slate-700 p-2 rounded-lg"><p class="font-bold text-sm">${isToday ? 'TODAY' : eventDate.toLocaleDateString('en-US', { month: 'short' }).toUpperCase()}</p><p class="text-xl font-bold">${eventDate.getDate()}</p></div><div><p class="font-semibold">${event.title}</p><p class="text-sm text-gray-500 dark:text-gray-400">${dateLabel} at ${event.time}</p></div></div>`;
-                }).join('');
-            } else {
-                container.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-400">No upcoming classes.</p>`;
-            }
-        }
-
         const profileBtn = document.getElementById('profile-btn');
         const profileDropdown = document.getElementById('profile-dropdown');
         const logoutBtn = document.getElementById('logout-btn');
@@ -180,35 +153,41 @@
                 else greetingEl.textContent = 'Good evening';
 
                 const focusContainer = document.getElementById('focus-widget-container');
+                let userData = {};
 
                 try {
                     const userDocRef = doc(db, "users", user.uid);
                     const docSnap = await getDoc(userDocRef);
-                    let userData = {};
-
                     if (docSnap.exists()) {
                         userData = docSnap.data();
                         document.getElementById('user-name').textContent = userData.displayName || user.email.split('@')[0];
-                        
-                        if (userData.cefrLevel) {
-                            const level = userData.cefrLevel;
-                            const badge = document.getElementById('user-level-badge');
-                            badge.textContent = level;
-                            badge.className = `text-xs font-bold px-2 py-0.5 rounded-full ${levelColors[level]}`;
-                            badge.classList.remove('hidden');
-                        }
+                        if (userData.cefrLevel) { /* ... badge logic ... */ }
                     } else {
                         document.getElementById('user-name').textContent = user.email.split('@')[0];
                     }
 
                     if (userData.cefrLevel) {
-                        focusContainer.innerHTML = `<h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Focus For Today</h2><a href="#" class="widget-card block bg-gradient-to-br from-indigo-500 to-purple-600 dark:from-indigo-600 dark:to-purple-700 p-8 rounded-2xl shadow-xl border border-indigo-400/50 dark:border-purple-600/50 text-white transition"><h3 class="text-3xl font-bold">Optimizing Your Workout</h3><p class="text-sm text-indigo-200 mt-1">B1 · Working Out</p><div class="w-full bg-white/20 rounded-full h-2.5 mt-6"><div class="bg-white h-2.5 rounded-full" style="width: 45%"></div></div><div class="text-right text-indigo-100 font-semibold mt-4 text-lg">Continue Lesson →</div></a>`;
+                        // USER HAS A LEVEL: Show "This Week's Class"
+                        focusContainer.innerHTML = `
+                            <div class="widget-card block bg-gradient-to-br from-teal-500 to-emerald-600 dark:from-teal-600 dark:to-emerald-700 p-8 rounded-2xl shadow-xl border border-teal-400/50 dark:border-emerald-600/50 text-white transition">
+                                <h2 class="text-xl font-semibold mb-2">This Week's Class</h2>
+                                <span class="text-xs font-bold px-3 py-1 rounded-full bg-yellow-100/30 text-white">B1</span>
+                                <h3 class="text-3xl font-bold mt-2">Giving Advice with Modals</h3>
+                                <p class="text-teal-100 mt-2 max-w-lg">Learn to use 'should', 'must', and 'have to' for clear recommendations.</p>
+                                <a href="class-page.html" class="mt-6 inline-block bg-white text-teal-700 font-bold px-8 py-3 rounded-lg shadow-sm hover:scale-105 transition-transform">Enter Classroom →</a>
+                            </div>
+                        `;
                     } else {
-                        focusContainer.innerHTML = `<div class="widget-card bg-gradient-to-br from-teal-400 to-blue-500 dark:from-teal-500 dark:to-blue-600 p-8 rounded-2xl shadow-xl text-center text-white transition"><h2 class="text-3xl font-bold">Discover Your English Level</h2><p class="mt-2 text-lg text-blue-100 max-w-md mx-auto">Take our adaptive quiz to find your starting point.</p><a href="level-finder.html" class="mt-6 inline-block bg-white text-blue-600 font-semibold px-8 py-3 rounded-lg shadow-sm hover:scale-105 transition-transform">Take the Quiz Now</a></div>`;
+                        // USER DOES NOT HAVE A LEVEL: Show "Take Test"
+                        focusContainer.innerHTML = `
+                            <div class="widget-card bg-gradient-to-br from-indigo-500 to-purple-600 p-8 rounded-2xl shadow-xl text-center text-white transition">
+                                <h2 class="text-3xl font-bold">Discover Your English Level</h2>
+                                <p class="mt-2 text-lg text-indigo-100 max-w-md mx-auto">Take our adaptive quiz to find your starting point.</p>
+                                <a href="level-finder.html" class="mt-6 inline-block bg-white text-indigo-600 font-semibold px-8 py-3 rounded-lg shadow-sm hover:scale-105 transition-transform">Take the Quiz Now</a>
+                            </div>
+                        `;
                     }
                 } catch (error) { console.error("Error fetching user data:", error); }
-
-                renderScheduleWidget();
 
             } else { 
                 window.location.href = 'Login.html'; 
