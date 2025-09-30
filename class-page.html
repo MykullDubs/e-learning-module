@@ -245,6 +245,7 @@
                         }
                         break;
                     case 'multiple-choice':
+                        // Render a multiple-choice question with validation
                         exerciseHtml += `
                             <div class="p-4 rounded-lg bg-white dark:bg-slate-700 shadow-sm" data-question-id="mc-${index}">
                                 <p class="font-semibold text-gray-800 dark:text-gray-200">Multiple Choice:</p>
@@ -257,6 +258,7 @@
                         `;
                         break;
                     case 'fill-in-the-blank':
+                        // Render a fill-in-the-blank question with input field
                         exerciseHtml += `
                             <div class="p-4 rounded-lg bg-white dark:bg-slate-700 shadow-sm" data-question-id="fitb-${index}">
                                 <p class="font-semibold text-gray-800 dark:text-gray-200">Fill-in-the-Blank:</p>
@@ -279,7 +281,13 @@
                         }
                         break;
                     case 'quote':
-                        lessonTextHtml += `<div class="relative pl-8 my-8 font-bold text-xl leading-relaxed italic"><span class="absolute top-0 left-0 text-gray-400 dark:text-gray-600 text-6xl leading-none">“</span><p class="ml-4">${block.text}</p><span class="absolute bottom-0 right-0 text-gray-400 dark:text-gray-600 text-6xl leading-none">”</span></div>`;
+                        lessonTextHtml += `
+                            <div class="relative pl-8 my-8 font-bold text-xl leading-relaxed italic">
+                                <span class="absolute top-0 left-0 text-gray-400 dark:text-gray-600 text-6xl leading-none">“</span>
+                                <p class="ml-4">${block.text}</p>
+                                <span class="absolute bottom-0 right-0 text-gray-400 dark:text-gray-600 text-6xl leading-none">”</span>
+                            </div>
+                        `;
                         break;
                 }
             });
