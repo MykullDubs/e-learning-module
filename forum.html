@@ -54,7 +54,8 @@
         <div class="bg-white/50 dark:bg-slate-800/50 backdrop-blur-lg p-6 sm:p-10 rounded-2xl shadow-xl border border-stone-200/50 dark:border-slate-700/50">
 
             <header class="border-b border-stone-200 dark:border-gray-700 pb-4 mb-8">
-                <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white">Class Discussion Forum</h1>
+                <a href="forum-index.html" class="text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">← All Discussions</a>
+                <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mt-2">Class Discussion</h1>
             </header>
 
             <section class="mb-8 bg-indigo-50 dark:bg-indigo-900/30 p-6 rounded-2xl border border-indigo-200 dark:border-indigo-700">
@@ -113,7 +114,9 @@
         const repliesContainer = document.getElementById('replies-container');
         const replyForm = document.getElementById('reply-form');
         const replyInput = document.getElementById('reply-input');
-        const threadId = "democracy-pros-cons"; 
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const threadId = urlParams.get('thread') || "democracy-pros-cons"; // Fallback to a default ID
         let currentUser = null;
 
         onAuthStateChanged(auth, (user) => {
@@ -140,7 +143,7 @@
                 threadTitleEl.textContent = thread.title;
                 threadPromptEl.textContent = thread.prompt;
             } else {
-                console.error("Error: Discussion thread not found!");
+                console.error("Error: Discussion thread not found in Firestore!");
                 threadTitleEl.textContent = "Discussion Not Found";
             }
         }
@@ -148,6 +151,7 @@
         function listenForReplies() {
             const repliesRef = collection(db, "forums", threadId, "replies");
             const q = query(repliesRef, orderBy("createdAt", "asc"));
+
             onSnapshot(q, (snapshot) => {
                 repliesContainer.innerHTML = '';
                 if (snapshot.empty) {
@@ -157,15 +161,24 @@
                 snapshot.forEach(doc => {
                     const reply = doc.data();
                     const replyEl = document.createElement('div');
-                    replyEl.className = 'flex items-start gap-4';
+                    const isCurrentUser = currentUser && reply.authorId === currentUser.uid;
+                    replyEl.className = `flex items-start gap-4 ${isCurrentUser ? 'justify-end' : ''}`;
                     const formattedTime = reply.createdAt ? new Date(reply.createdAt.toDate()).toLocaleString() : 'Just now';
-                    replyEl.innerHTML = `
-                        <img src="${reply.authorAvatar || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(reply.authorName)}" alt="avatar" class="w-10 h-10 rounded-full flex-shrink-0">
-                        <div class="bg-stone-50 dark:bg-slate-900/50 p-4 rounded-lg flex-grow">
-                            <div class="flex justify-between items-center"><p class="font-bold text-indigo-600 dark:text-indigo-400">${reply.authorName}</p><p class="text-xs text-gray-500">${formattedTime}</p></div>
+                    const avatarHTML = `<img src="${reply.authorAvatar || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(reply.authorName)}" alt="avatar" class="w-10 h-10 rounded-full flex-shrink-0">`;
+                    const messageHTML = `
+                        <div class="bg-stone-50 dark:bg-slate-900/50 p-4 rounded-lg flex-grow max-w-lg">
+                            <div class="flex justify-between items-center">
+                                <p class="font-bold text-indigo-600 dark:text-indigo-400">${reply.authorName}</p>
+                                <p class="text-xs text-gray-500">${formattedTime}</p>
+                            </div>
                             <p class="mt-2 text-gray-700 dark:text-gray-300 whitespace-pre-wrap">${reply.text}</p>
-                        </div>
-                    `;
+                        </div>`;
+                    
+                    if (isCurrentUser) {
+                        replyEl.innerHTML = messageHTML + avatarHTML;
+                    } else {
+                        replyEl.innerHTML = avatarHTML + messageHTML;
+                    }
                     repliesContainer.appendChild(replyEl);
                 });
             });
