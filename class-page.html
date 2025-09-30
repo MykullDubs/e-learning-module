@@ -135,6 +135,30 @@
                         </div>
                     </div>
                 </section>
+                <section>
+    <div class="widget-card bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-stone-200 dark:border-slate-700">
+        <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">Weekly Vocabulary</h2>
+        <div id="flashcard-container" class="flashcard-container h-48">
+            <div id="flashcard" class="flashcard">
+                <div id="flashcard-front" class="flashcard-face flashcard-face-front p-6 flex flex-col justify-center items-center">
+                    <p class="text-lg font-semibold text-gray-700 dark:text-gray-300">No words to display.</p>
+                </div>
+                <div id="flashcard-back" class="flashcard-face flashcard-face-back p-6 flex flex-col justify-center items-center">
+                    <p class="text-base text-white">Definition & Example</p>
+                </div>
+            </div>
+        </div>
+        <div class="mt-4 flex justify-between items-center">
+            <button id="prev-card-btn" class="text-gray-500 dark:text-gray-400 font-semibold text-sm hover:text-indigo-600 dark:hover:text-indigo-400 transition">← Previous</button>
+            <span id="flashcard-counter" class="text-sm font-semibold text-gray-500 dark:text-gray-400">0/0</span>
+            <button id="next-card-btn" class="text-indigo-600 dark:text-indigo-400 font-semibold text-sm hover:underline transition">Next →</button>
+        </div>
+        
+        <button id="start-game-btn" class="w-full mt-4 bg-indigo-600 text-white font-semibold py-2 rounded-lg hover:bg-indigo-700 hidden">
+            Start Flashcard Tic-Tac-Toe
+        </button>
+    </div>
+</section>
 
                 <section>
                     <div class="widget-card bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-stone-200 dark:border-slate-700">
