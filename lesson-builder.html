@@ -6,8 +6,8 @@
     <title>Lesson Builder - Golden Fellows English</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
     <script>
@@ -23,6 +23,12 @@
         body { font-family: 'Source Serif Pro', serif; background-color: #F7F5F2; }
         .dark body { background-color: #0F172A; }
         .font-brand { font-family: 'Source Serif Pro', serif; }
+        .drag-handle {
+            cursor: grab;
+        }
+        .drag-handle:active {
+            cursor: grabbing;
+        }
     </style>
 </head>
 <body class="text-gray-900 dark:text-gray-200 antialiased">
@@ -30,13 +36,14 @@
     <header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm shadow-sm border-b border-stone-200 dark:border-slate-800 sticky top-0 z-40">
         <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
             <a href="dashboard.html" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
+            <a href="dashboard.html" class="text-sm font-semibold hover:text-indigo-600 dark:hover:text-indigo-400">Dashboard</a>
         </div>
     </header>
 
     <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl font-brand">
         <header class="mb-8">
             <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Lesson Builder</h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-2 text-lg">Create custom lessons for your students from scratch.</p>
+            <p class="text-gray-600 dark:text-gray-400 mt-2 text-lg">Create custom lessons with interactive content blocks.</p>
         </header>
 
         <div class="bg-white/50 dark:bg-slate-800/50 backdrop-blur-lg p-8 rounded-2xl shadow-xl border border-stone-200/50 dark:border-slate-700/50">
@@ -50,7 +57,11 @@
                      <div>
                         <label for="lesson-level" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Level</label>
                         <select id="lesson-level" class="mt-1 block w-full p-2 border border-stone-300 dark:border-gray-600 rounded-md bg-transparent focus:ring-2 focus:ring-indigo-500">
-                            <option>A1</option><option selected>A2</option><option>B1</option><option>B2</option><option>C1</option>
+                            <option value="A1">A1</option>
+                            <option value="A2" selected>A2</option>
+                            <option value="B1">B1</option>
+                            <option value="B2">B2</option>
+                            <option value="C1">C1</option>
                         </select>
                     </div>
                      <div>
@@ -65,14 +76,17 @@
             <section>
                 <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Lesson Content</h2>
                 <div id="content-blocks-container" class="space-y-4">
-                    </div>
+                    <p class="text-gray-500 text-center">No content blocks added yet. Use the buttons below to start building your lesson.</p>
+                </div>
 
                 <div class="mt-6 text-center">
                     <div id="add-block-buttons" class="flex justify-center gap-2 flex-wrap">
-                        <button data-type="introduction" class="add-block-btn bg-stone-200 dark:bg-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-stone-300">Introduction</button>
+                        <button data-type="text" class="add-block-btn bg-stone-200 dark:bg-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-stone-300">Text Block</button>
                         <button data-type="vocabulary" class="add-block-btn bg-stone-200 dark:bg-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-stone-300">Vocabulary</button>
-                        <button data-type="grammar" class="add-block-btn bg-stone-200 dark:bg-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-stone-300">Grammar Rule</button>
-                        <button data-type="quiz" class="add-block-btn bg-stone-200 dark:bg-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-stone-300">Quiz Question</button>
+                        <button data-type="multiple-choice" class="add-block-btn bg-stone-200 dark:bg-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-stone-300">Multiple Choice</button>
+                        <button data-type="fill-in-the-blank" class="add-block-btn bg-stone-200 dark:bg-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-stone-300">Fill-in-the-Blank</button>
+                        <button data-type="discussion-prompt" class="add-block-btn bg-stone-200 dark:bg-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-stone-300">Discussion Prompt</button>
+                        <button data-type="video" class="add-block-btn bg-stone-200 dark:bg-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-stone-300">Video</button>
                     </div>
                     <div id="add-block-form-container" class="mt-4 text-left"></div>
                 </div>
@@ -120,21 +134,57 @@
 
         function renderContentBlocks() {
             contentBlocksContainer.innerHTML = '';
-            lessonContent.sort((a, b) => a.order - b.order).forEach((block) => {
+            if (lessonContent.length === 0) {
+                contentBlocksContainer.innerHTML = `<p class="text-gray-500 text-center">No content blocks added yet. Use the buttons below to start building your lesson.</p>`;
+                return;
+            }
+
+            lessonContent.forEach((block, index) => {
                 const blockEl = document.createElement('div');
-                blockEl.className = 'bg-stone-50 dark:bg-slate-900/50 p-4 rounded-lg border border-stone-200 dark:border-slate-700';
-                
+                blockEl.className = 'bg-stone-50 dark:bg-slate-900/50 p-4 rounded-lg border border-stone-200 dark:border-slate-700 relative group';
+                blockEl.dataset.index = index;
+
                 let contentHTML = '';
-                if (block.type === 'introduction') {
-                    contentHTML = `<p class="font-semibold text-indigo-600">Introduction</p><p class="mt-1 whitespace-pre-wrap">${block.text}</p>`;
-                } else if (block.type === 'vocabulary') {
-                    contentHTML = `<p class="font-semibold text-teal-600">Vocabulary</p><p class="mt-1"><b>Word:</b> ${block.word}</p><p><b>Definition:</b> ${block.definition}</p>`;
-                } else if (block.type === 'grammar') {
-                    contentHTML = `<p class="font-semibold text-amber-600">Grammar</p><p class="mt-1"><b>${block.title}</b>: ${block.explanation}</p>`;
-                } else if (block.type === 'quiz') {
-                     contentHTML = `<p class="font-semibold text-rose-600">Quiz</p><p class="mt-1"><b>Question:</b> ${block.question}</p><p><b>Answer:</b> ${block.answer}</p>`;
+                const blockHeader = `<div class="flex items-center justify-between mb-2">
+                    <span class="font-semibold text-sm text-gray-700 dark:text-gray-300">${block.type.toUpperCase().replace('-', ' ')}</span>
+                    <button class="remove-block-btn text-red-500 hover:text-red-700 text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Remove</button>
+                </div>`;
+                
+                switch (block.type) {
+                    case 'text':
+                        contentHTML = `<div class="prose dark:prose-invert"><p>${block.text}</p></div>`;
+                        break;
+                    case 'vocabulary':
+                        contentHTML = `
+                            <p class="font-bold text-lg">${block.word}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Definition: ${block.definition}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Example: ${block.example}</p>
+                            ${block.isFlashcard ? `<span class="inline-block mt-2 text-xs font-bold px-2 py-1 rounded-full bg-teal-100 text-teal-800 dark:bg-teal-900/50 dark:text-teal-300">Flashcard</span>` : ''}
+                        `;
+                        break;
+                    case 'multiple-choice':
+                        contentHTML = `
+                            <p><strong>Q:</strong> ${block.question}</p>
+                            <ul class="list-disc list-inside mt-2 text-sm">
+                                ${block.options.map(opt => `<li class="${opt === block.correctAnswer ? 'text-green-600 dark:text-green-400' : ''}">${opt}</li>`).join('')}
+                            </ul>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Correct Answer: ${block.correctAnswer}</p>
+                        `;
+                        break;
+                    case 'fill-in-the-blank':
+                        contentHTML = `
+                            <p><strong>Q:</strong> ${block.sentence}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Correct Answer: ${block.correctAnswer}</p>
+                        `;
+                        break;
+                    case 'discussion-prompt':
+                        contentHTML = `<p><strong>Discussion Prompt:</strong> ${block.prompt}</p>`;
+                        break;
+                    case 'video':
+                        contentHTML = `<p class="font-bold text-sm">Video</p><p class="mt-1">${block.url}</p>`;
+                        break;
                 }
-                blockEl.innerHTML = contentHTML;
+                blockEl.innerHTML = blockHeader + contentHTML;
                 contentBlocksContainer.appendChild(blockEl);
             });
         }
@@ -148,17 +198,49 @@
                 const buttonClasses = "mt-2 bg-teal-500 text-white px-4 py-1 rounded hover:bg-teal-600";
 
                 switch (type) {
-                    case 'introduction':
-                        formHTML = `<div class="${baseFormClasses}"><textarea id="intro-text" placeholder="Introduction text..." class="${inputClasses}" rows="3"></textarea><button id="save-block-btn" class="${buttonClasses}" data-type="introduction">Add Block</button></div>`;
+                    case 'text':
+                        formHTML = `<div class="${baseFormClasses}"><textarea id="text-content" placeholder="Enter lesson text here..." class="${inputClasses}" rows="6"></textarea><button id="save-block-btn" class="${buttonClasses}" data-type="text">Add Text Block</button></div>`;
                         break;
                     case 'vocabulary':
-                        formHTML = `<div class="${baseFormClasses}"><input id="vocab-word" type="text" placeholder="Vocabulary Word" class="${inputClasses}"><input id="vocab-def" type="text" placeholder="Definition" class="${inputClasses}"><button id="save-block-btn" class="${buttonClasses}" data-type="vocabulary">Add Block</button></div>`;
+                        formHTML = `
+                            <div class="${baseFormClasses}">
+                                <input id="vocab-word" type="text" placeholder="Vocabulary Word" class="${inputClasses}">
+                                <input id="vocab-def" type="text" placeholder="Definition" class="${inputClasses}">
+                                <input id="vocab-example" type="text" placeholder="Example sentence" class="${inputClasses}">
+                                <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                                    <input type="checkbox" id="is-flashcard" class="rounded">
+                                    <span>Add to flashcards</span>
+                                </label>
+                                <button id="save-block-btn" class="${buttonClasses}" data-type="vocabulary">Add Vocabulary</button>
+                            </div>
+                        `;
                         break;
-                    case 'grammar':
-                        formHTML = `<div class="${baseFormClasses}"><input id="grammar-title" type="text" placeholder="Grammar Rule Title" class="${inputClasses}"><textarea id="grammar-exp" placeholder="Explanation..." class="${inputClasses}" rows="2"></textarea><button id="save-block-btn" class="${buttonClasses}" data-type="grammar">Add Block</button></div>`;
+                    case 'multiple-choice':
+                        formHTML = `
+                            <div class="${baseFormClasses}">
+                                <input id="mc-question" type="text" placeholder="Question" class="${inputClasses}">
+                                <input id="mc-correct" type="text" placeholder="Correct Answer" class="${inputClasses}">
+                                <input id="mc-option1" type="text" placeholder="Option 1" class="${inputClasses}">
+                                <input id="mc-option2" type="text" placeholder="Option 2" class="${inputClasses}">
+                                <input id="mc-option3" type="text" placeholder="Option 3" class="${inputClasses}">
+                                <button id="save-block-btn" class="${buttonClasses}" data-type="multiple-choice">Add Question</button>
+                            </div>
+                        `;
                         break;
-                    case 'quiz':
-                        formHTML = `<div class="${baseFormClasses}"><input id="quiz-q" type="text" placeholder="Quiz Question" class="${inputClasses}"><input id="quiz-a" type="text" placeholder="Correct Answer" class="${inputClasses}"><button id="save-block-btn" class="${buttonClasses}" data-type="quiz">Add Block</button></div>`;
+                    case 'fill-in-the-blank':
+                        formHTML = `
+                            <div class="${baseFormClasses}">
+                                <input id="fitb-sentence" type="text" placeholder="Sentence (use _ for the blank)" class="${inputClasses}">
+                                <input id="fitb-answer" type="text" placeholder="Correct word for the blank" class="${inputClasses}">
+                                <button id="save-block-btn" class="${buttonClasses}" data-type="fill-in-the-blank">Add Question</button>
+                            </div>
+                        `;
+                        break;
+                    case 'discussion-prompt':
+                        formHTML = `<div class="${baseFormClasses}"><textarea id="discussion-prompt-text" placeholder="Enter a discussion question..." class="${inputClasses}" rows="3"></textarea><button id="save-block-btn" class="${buttonClasses}" data-type="discussion-prompt">Add Prompt</button></div>`;
+                        break;
+                    case 'video':
+                        formHTML = `<div class="${baseFormClasses}"><input id="video-url" type="url" placeholder="Paste YouTube/Vimeo URL" class="${inputClasses}"><button id="save-block-btn" class="${buttonClasses}" data-type="video">Add Video</button></div>`;
                         break;
                 }
                 addBlockFormContainer.innerHTML = formHTML;
@@ -172,24 +254,35 @@
             
             let isValid = true;
             switch (type) {
-                case 'introduction':
-                    newBlock.text = document.getElementById('intro-text').value;
+                case 'text':
+                    newBlock.text = document.getElementById('text-content').value;
                     if (!newBlock.text) isValid = false;
                     break;
                 case 'vocabulary':
                     newBlock.word = document.getElementById('vocab-word').value;
                     newBlock.definition = document.getElementById('vocab-def').value;
+                    newBlock.example = document.getElementById('vocab-example').value;
+                    newBlock.isFlashcard = document.getElementById('is-flashcard').checked;
                     if (!newBlock.word || !newBlock.definition) isValid = false;
                     break;
-                case 'grammar':
-                    newBlock.title = document.getElementById('grammar-title').value;
-                    newBlock.explanation = document.getElementById('grammar-exp').value;
-                    if (!newBlock.title || !newBlock.explanation) isValid = false;
+                case 'multiple-choice':
+                    newBlock.question = document.getElementById('mc-question').value;
+                    newBlock.correctAnswer = document.getElementById('mc-correct').value;
+                    newBlock.options = [document.getElementById('mc-correct').value, document.getElementById('mc-option1').value, document.getElementById('mc-option2').value, document.getElementById('mc-option3').value].filter(Boolean);
+                    if (!newBlock.question || newBlock.options.length < 2 || !newBlock.options.includes(newBlock.correctAnswer)) isValid = false;
                     break;
-                case 'quiz':
-                    newBlock.question = document.getElementById('quiz-q').value;
-                    newBlock.answer = document.getElementById('quiz-a').value;
-                    if (!newBlock.question || !newBlock.answer) isValid = false;
+                case 'fill-in-the-blank':
+                    newBlock.sentence = document.getElementById('fitb-sentence').value;
+                    newBlock.correctAnswer = document.getElementById('fitb-answer').value;
+                    if (!newBlock.sentence || !newBlock.correctAnswer) isValid = false;
+                    break;
+                case 'discussion-prompt':
+                    newBlock.prompt = document.getElementById('discussion-prompt-text').value;
+                    if (!newBlock.prompt) isValid = false;
+                    break;
+                case 'video':
+                    newBlock.url = document.getElementById('video-url').value;
+                    if (!newBlock.url) isValid = false;
                     break;
             }
 
@@ -201,6 +294,16 @@
             lessonContent.push(newBlock);
             renderContentBlocks();
             addBlockFormContainer.innerHTML = '';
+        });
+
+        contentBlocksContainer.addEventListener('click', (e) => {
+            const btn = e.target.closest('.remove-block-btn');
+            if (btn) {
+                const blockEl = btn.closest('[data-index]');
+                const index = parseInt(blockEl.dataset.index);
+                lessonContent.splice(index, 1);
+                renderContentBlocks();
+            }
         });
 
         saveLessonBtn.addEventListener('click', async () => {
