@@ -375,7 +375,8 @@
             }
         };
         
-       async function createGame() {
+      async function createGame() {
+    // Check if user and class ID are available
     if (!currentUser || !classId) {
         alert("You must be logged in and in a class to start a game.");
         return;
@@ -397,7 +398,7 @@
 
         const gamesRef = collection(db, "games");
         const newGameData = {
-            classId: classId,
+            classId: classId, // Ensure classId is always explicitly sent
             lessonId: lessonId,
             players: [currentUser.uid],
             board: Array(9).fill({ value: '' }),
@@ -407,7 +408,6 @@
             createdAt: serverTimestamp()
         };
 
-        // Create a new document with a generated ID using doc() and setDoc()
         const gameDocRef = doc(gamesRef);
         await setDoc(gameDocRef, newGameData);
         currentGameId = gameDocRef.id;
