@@ -193,7 +193,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, query, orderBy, onSnapshot, addDoc, updateDoc, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, query, orderBy, onSnapshot, addDoc, updateDoc, arrayUnion, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         // Firebase configuration
         const firebaseConfig = {
@@ -420,7 +420,6 @@
             }
         }
         
-        // NEW: Function to join an existing game
         async function joinGame() {
             const gameId = document.getElementById('join-game-input').value.trim();
             if (!gameId) {
@@ -450,10 +449,8 @@
                     return;
                 }
                 
-                // Add the second player and start the game
-                const updatedPlayers = [...gameData.players, currentUser.uid];
                 await updateDoc(gameRef, {
-                    players: updatedPlayers,
+                    players: arrayUnion(currentUser.uid),
                     status: 'in_progress',
                 });
         
@@ -464,11 +461,10 @@
         
             } catch (error) {
                 console.error("Error joining game:", error);
-                alert("An error occurred while joining the game.");
+                alert("An error occurred while joining the game. The provided ID may be incorrect or you may not have the correct permissions.");
             }
         }
         
-        // NEW: Game listener to update UI in real-time
         function setupGameListener(gameId) {
             if (gameUnsubscribe) gameUnsubscribe();
         
@@ -482,7 +478,6 @@
                     return;
                 }
         
-                // Update UI based on game status
                 if (game.status === 'in_progress') {
                     document.getElementById('waiting-section').classList.add('hidden');
                     document.getElementById('game-question-section').classList.remove('hidden');
@@ -491,12 +486,10 @@
                     document.getElementById('game-question-section').classList.add('hidden');
                 }
         
-                // Update board
                 game.board.forEach((cell, index) => {
                     document.querySelector(`[data-index="${index}"]`).textContent = cell.value;
                 });
         
-                // Update status text
                 if (game.status === 'in_progress') {
                     const playerNames = game.players.join(' vs ');
                     document.getElementById('game-status-text').textContent = `Game in Progress: ${playerNames}`;
@@ -512,10 +505,8 @@
              if (gameUnsubscribe) gameUnsubscribe();
              document.getElementById('game-overlay').classList.remove('flex');
              document.getElementById('game-overlay').classList.add('hidden');
-             // TODO: Clean up game state if necessary, unsubscribe from listeners
         });
 
-        // Function to load class content
         async function loadClassContent(classId) {
             const classDocRef = doc(db, "classes", classId);
             const classDocSnap = await getDoc(classDocRef);
