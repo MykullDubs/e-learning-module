@@ -375,53 +375,54 @@
             }
         };
         
-        async function createGame() {
-            if (!currentUser || !classId) {
-                alert("You must be logged in and in a class to start a game.");
-                return;
-            }
-            if (vocab.length < 9) {
-                alert("You need at least 9 vocabulary words to play Tic-Tac-Toe.");
-                return;
-            }
+       async function createGame() {
+    if (!currentUser || !classId) {
+        alert("You must be logged in and in a class to start a game.");
+        return;
+    }
+    if (vocab.length < 9) {
+        alert("You need at least 9 vocabulary words to play Tic-Tac-Toe.");
+        return;
+    }
+
+    try {
+        const lessonsRef = collection(db, "classes", classId, "lessons");
+        const lessonsSnap = await getDocs(lessonsRef);
+        const lessonId = lessonsSnap.docs[0]?.id;
         
-            try {
-                const lessonsRef = collection(db, "classes", classId, "lessons");
-                const lessonsSnap = await getDocs(lessonsRef);
-                const lessonId = lessonsSnap.docs[0]?.id;
-                
-                if (!lessonId) {
-                    alert("No lesson assigned to this class.");
-                    return;
-                }
-        
-                const gamesRef = collection(db, "games");
-                const newGameData = {
-                    classId: classId,
-                    lessonId: lessonId,
-                    players: [currentUser.uid],
-                    board: Array(9).fill({ value: '' }),
-                    currentPlayer: currentUser.uid,
-                    status: 'waiting_for_player',
-                    flashcardQuestions: vocab,
-                    createdAt: serverTimestamp()
-                };
-                
-                const gameDocRef = doc(gamesRef);
-                await setDoc(gameDocRef, newGameData);
-                currentGameId = gameDocRef.id;
-                
-                document.getElementById('game-overlay').classList.remove('hidden');
-                document.getElementById('game-overlay').classList.add('flex');
-                document.getElementById('waiting-game-id').textContent = currentGameId;
-                
-                setupGameListener(currentGameId);
-        
-            } catch (error) {
-                console.error("Error creating game:", error);
-                alert("An error occurred while creating the game.");
-            }
+        if (!lessonId) {
+            alert("No lesson assigned to this class.");
+            return;
         }
+
+        const gamesRef = collection(db, "games");
+        const newGameData = {
+            classId: classId,
+            lessonId: lessonId,
+            players: [currentUser.uid],
+            board: Array(9).fill({ value: '' }),
+            currentPlayer: currentUser.uid,
+            status: 'waiting_for_player',
+            flashcardQuestions: vocab,
+            createdAt: serverTimestamp()
+        };
+
+        // Create a new document with a generated ID using doc() and setDoc()
+        const gameDocRef = doc(gamesRef);
+        await setDoc(gameDocRef, newGameData);
+        currentGameId = gameDocRef.id;
+        
+        document.getElementById('game-overlay').classList.remove('hidden');
+        document.getElementById('game-overlay').classList.add('flex');
+        document.getElementById('waiting-game-id').textContent = currentGameId;
+        
+        setupGameListener(currentGameId);
+
+    } catch (error) {
+        console.error("Error creating game:", error);
+        alert("An error occurred while creating the game.");
+    }
+}
         
         async function joinGame() {
             const gameId = document.getElementById('join-game-input').value.trim();
