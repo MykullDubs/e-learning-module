@@ -6,23 +6,16 @@
     <title>Lesson Library - Golden Fellows English</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
-    <script>
-        // Theme loader script
-        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    </script>
-    
     <style>
         body { font-family: 'Source Serif Pro', serif; background-color: #F7F5F2; }
         .dark body { background-color: #0F172A; }
         .font-brand { font-family: 'Source Serif Pro', serif; }
+        .widget-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .widget-card:hover { transform: translateY(-5px); }
     </style>
 </head>
 <body class="text-gray-900 dark:text-gray-200 antialiased">
@@ -31,71 +24,45 @@
         <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
             <a href="dashboard.html" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
             <div class="flex items-center gap-6">
-                 <a href="class-lessons-library.html" class="text-sm font-semibold hover:text-indigo-600 dark:hover:text-indigo-400">Lesson Library</a>
-                <div class="relative">
-                    <button id="profile-btn" class="flex items-center gap-2">
-                         <span id="user-email-nav" class="text-sm text-stone-600 dark:text-stone-300 hidden sm:block font-brand"></span>
-                        <div id="nav-avatar-container">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
-                        </div>
-                    </button>
-                    <div id="profile-dropdown" class="hidden absolute font-brand right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-stone-200 dark:border-gray-700 overflow-hidden z-10">
-                        <a href="dashboard.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Dashboard</a>
-                        <a href="settings.html" class="block px-4 py-2 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-700">Settings</a>
-                        <div class="border-t border-stone-200 dark:border-gray-600"></div>
-                        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-stone-100 dark:hover:bg-gray-700">Log Out</button>
-                    </div>
-                </div>
+                 <a href="lesson-builder.html" class="text-sm font-semibold hover:text-indigo-600 dark:hover:text-indigo-400">Lesson Builder</a>
+                 <a href="dashboard.html" class="text-sm font-semibold hover:text-indigo-600 dark:hover:text-indigo-400">Dashboard</a>
             </div>
         </div>
     </header>
 
     <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-7xl font-brand">
-        <header class="mb-8 flex justify-between items-center">
-            <div>
-                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Lesson Library</h1>
-                <p class="text-gray-600 dark:text-gray-400 mt-2 text-lg">Browse and manage all available lessons.</p>
-            </div>
-            <a href="lesson-builder.html" class="bg-indigo-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-indigo-700 transition">
-                + New Lesson
-            </a>
+        <header class="mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Lesson Library</h1>
+            <p class="text-gray-600 dark:text-gray-400 mt-2 text-lg">Manage, edit, and assign your lessons to classes.</p>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
-            
-            <aside class="lg:col-span-1 sticky top-24">
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-stone-200/50 dark:border-slate-700/50">
-                    <h2 class="text-2xl font-semibold mb-4">Filters</h2>
-                    <div class="space-y-4">
-                        <div>
-                            <label for="filter-level" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">CEFR Level</label>
-                            <select id="filter-level" class="w-full p-2 border rounded-lg bg-stone-50 dark:bg-slate-700 dark:border-slate-600 focus:outline-none focus:ring focus:border-indigo-500 transition">
-                                <option value="all">All Levels</option>
-                                <option value="A1">A1</option>
-                                <option value="A2">A2</option>
-                                <option value="B1">B1</option>
-                                <option value="B2">B2</option>
-                                <option value="C1">C1</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="filter-topic" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Topic</label>
-                            <input type="text" id="filter-topic" placeholder="e.g., Grammar" class="w-full p-2 border rounded-lg bg-stone-50 dark:bg-slate-700 dark:border-slate-600 focus:outline-none focus:ring focus:border-indigo-500 transition">
-                        </div>
-                    </div>
-                </div>
-            </aside>
-
-            <div id="lesson-list-container" class="lg:col-span-3 space-y-4">
-                <p class="text-gray-500 text-center mt-8">Loading lessons...</p>
-            </div>
+        <div id="lesson-list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <p class="text-gray-500">Loading your lessons...</p>
         </div>
     </main>
 
+    <div id="assignment-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-xl w-full max-w-md space-y-4">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Assign Lesson</h2>
+            <p>Assign "<strong id="modal-lesson-title" class="text-indigo-600 dark:text-indigo-400"></strong>" to a class:</p>
+            <div>
+                <label for="class-select" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Select a Class</label>
+                <select id="class-select" class="mt-1 block w-full p-2 border border-stone-300 dark:border-gray-600 rounded-md bg-transparent focus:ring-2 focus:ring-indigo-500">
+                    <option>Loading classes...</option>
+                </select>
+            </div>
+            <div id="modal-feedback" class="text-sm h-5"></div>
+            <div class="flex justify-end gap-4 pt-4">
+                <button id="modal-cancel-btn" class="text-gray-600 dark:text-gray-300 font-semibold px-6 py-2 rounded-lg hover:bg-stone-100 dark:hover:bg-slate-700">Cancel</button>
+                <button id="modal-confirm-btn" class="bg-indigo-600 text-white font-semibold px-6 py-2 rounded-lg shadow-sm hover:bg-indigo-700">Confirm Assignment</button>
+            </div>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, collection, query, where, getDocs, orderBy, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, query, where, getDocs, doc, setDoc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
@@ -103,132 +70,143 @@
             projectId: "elearning-e83cb",
             storageBucket: "elearning-e83cb.appspot.com",
             messagingSenderId: "25473938624",
-            appId: "1:25473938624:web:5b56738933543f32a7e925"
+            appId: "1:25473938624:web:5b56738933543f32a7e925",
         };
-        
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
         let currentUser = null;
+        let classesCache = [];
+        let lessonToAssignId = null;
+
         const lessonListContainer = document.getElementById('lesson-list-container');
-        const filterLevelEl = document.getElementById('filter-level');
-        const filterTopicEl = document.getElementById('filter-topic');
-        let allLessons = [];
+        const modal = document.getElementById('assignment-modal');
+        const modalLessonTitle = document.getElementById('modal-lesson-title');
+        const classSelect = document.getElementById('class-select');
+        const modalFeedback = document.getElementById('modal-feedback');
 
-        // Navbar and user state management
-        const profileBtn = document.getElementById('profile-btn');
-        const profileDropdown = document.getElementById('profile-dropdown');
-        const logoutBtn = document.getElementById('logout-btn');
-        
-        profileBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('hidden'); });
-        window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
-        logoutBtn.addEventListener('click', () => { signOut(auth); });
-
-        function renderUserInfo(user, userData) {
-            document.getElementById('user-email-nav').textContent = user.email;
-            if (user.photoURL) {
-                document.getElementById('nav-avatar-container').innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
-            }
-        }
-
-        async function fetchLessons() {
-            lessonListContainer.innerHTML = '<p class="text-gray-500 text-center mt-8">Loading lessons...</p>';
-            try {
-                const q = query(collection(db, "lessons"), orderBy("createdAt", "desc"));
-                const querySnapshot = await getDocs(q);
-                allLessons = [];
-                querySnapshot.forEach((doc) => {
-                    allLessons.push({ id: doc.id, ...doc.data() });
-                });
-                renderLessons(allLessons);
-            } catch (error) {
-                console.error("Error fetching lessons:", error);
-                lessonListContainer.innerHTML = '<p class="text-red-500 text-center mt-8">Failed to load lessons. Please check your network and permissions.</p>';
-            }
-        }
-
-        function renderLessons(lessonsToRender) {
+        function renderLessons(lessons) {
             lessonListContainer.innerHTML = '';
-            if (lessonsToRender.length === 0) {
-                lessonListContainer.innerHTML = '<p class="text-gray-500 text-center mt-8">No lessons found with the selected filters.</p>';
+            if (lessons.length === 0) {
+                lessonListContainer.innerHTML = `<p class="text-gray-500 col-span-full text-center">You haven't created any lessons yet. <a href="lesson-builder.html" class="text-indigo-600 font-semibold hover:underline">Create one now!</a></p>`;
                 return;
             }
 
-            lessonsToRender.forEach(lesson => {
-                const lessonCard = document.createElement('div');
-                lessonCard.className = 'bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-md border border-stone-200/50 dark:border-slate-700/50 hover:shadow-xl transition';
-                lessonCard.innerHTML = `
-                    <h3 class="text-xl font-bold">${lesson.title}</h3>
-                    <div class="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                        <span>Level: ${lesson.level || 'N/A'}</span> |
-                        <span>Topic: ${lesson.topic || 'N/A'}</span>
+            lessons.forEach(lesson => {
+                const card = document.createElement('div');
+                card.className = 'widget-card bg-white/80 dark:bg-slate-800/80 p-6 rounded-2xl shadow-md border border-stone-200/50 dark:border-slate-700/50 flex flex-col';
+                card.innerHTML = `
+                    <div class="flex-grow">
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">${lesson.title}</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Topic: ${lesson.topic || 'General'}</p>
+                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-2">${lesson.contentBlocks?.length || 0} content blocks</p>
                     </div>
-                    <p class="mt-4 text-sm">${lesson.contentBlocks[0]?.text?.substring(0, 100) || 'No description available.'}...</p>
-                    <div class="mt-4 flex justify-between items-center">
-                        <a href="lesson-builder.html?lessonId=${lesson.id}" class="text-indigo-600 font-semibold text-sm hover:underline dark:text-indigo-400">View/Edit →</a>
-                        <button onclick="assignLessonToClass('${lesson.id}', '${lesson.title}')" class="bg-indigo-600 text-white font-semibold py-2 px-4 text-sm rounded-lg hover:bg-indigo-700 transition">Assign</button>
+                    <div class="mt-6 pt-4 border-t border-stone-200 dark:border-slate-700 flex items-center justify-between gap-2">
+                        <div>
+                            <a href="lesson-builder.html?lessonId=${lesson.id}" class="text-sm font-semibold text-gray-600 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400">Edit</a>
+                            <button data-lesson-id="${lesson.id}" class="delete-btn ml-3 text-sm font-semibold text-red-500 hover:text-red-700">Delete</button>
+                        </div>
+                        <button data-lesson-id="${lesson.id}" data-lesson-title="${lesson.title}" class="assign-btn bg-teal-500 text-white font-semibold px-4 py-2 text-sm rounded-lg hover:bg-teal-600">Assign</button>
                     </div>
                 `;
-                lessonListContainer.appendChild(lessonCard);
+                lessonListContainer.appendChild(card);
             });
         }
 
-        function filterAndRender() {
-            const level = filterLevelEl.value;
-            const topic = filterTopicEl.value.toLowerCase().trim();
-            let filteredLessons = allLessons.filter(lesson => {
-                const matchesLevel = level === 'all' || lesson.level === level;
-                const matchesTopic = !topic || (lesson.topic && lesson.topic.toLowerCase().includes(topic));
-                return matchesLevel && matchesTopic;
+        async function fetchAndRenderData(instructorId) {
+            // Fetch lessons created by this instructor
+            const lessonQuery = query(collection(db, "lessons"), where("instructorId", "==", instructorId));
+            const lessonSnapshot = await getDocs(lessonQuery);
+            const lessons = lessonSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            renderLessons(lessons);
+
+            // Fetch classes taught by this instructor for the assignment modal
+            const classQuery = query(collection(db, "classes"), where("instructorId", "==", instructorId));
+            const classSnapshot = await getDocs(classQuery);
+            classesCache = classSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            
+            classSelect.innerHTML = '<option value="">-- Select a Class --</option>';
+            classesCache.forEach(c => {
+                const option = document.createElement('option');
+                option.value = c.id;
+                option.textContent = c.className;
+                classSelect.appendChild(option);
             });
-            renderLessons(filteredLessons);
         }
 
-        filterLevelEl.addEventListener('change', filterAndRender);
-        filterTopicEl.addEventListener('input', filterAndRender);
+        function showModal(lessonId, lessonTitle) {
+            lessonToAssignId = lessonId;
+            modalLessonTitle.textContent = lessonTitle;
+            modalFeedback.textContent = '';
+            classSelect.value = '';
+            modal.classList.remove('hidden');
+        }
 
-        // Global function to be called by the "Assign" button
-        window.assignLessonToClass = async (lessonId, lessonTitle) => {
-            const classId = prompt(`Enter the Class ID to assign "${lessonTitle}" to:`);
-            if (!classId) return;
+        function hideModal() {
+            modal.classList.add('hidden');
+            lessonToAssignId = null;
+        }
+
+        lessonListContainer.addEventListener('click', e => {
+            const target = e.target;
+            if (target.classList.contains('assign-btn')) {
+                showModal(target.dataset.lessonId, target.dataset.lessonTitle);
+            }
+            if (target.classList.contains('delete-btn')) {
+                const lessonId = target.dataset.lessonId;
+                if (confirm('Are you sure you want to permanently delete this lesson?')) {
+                    deleteDoc(doc(db, "lessons", lessonId))
+                        .then(() => fetchAndRenderData(currentUser.uid))
+                        .catch(err => alert("Error deleting lesson: " + err.message));
+                }
+            }
+        });
+
+        document.getElementById('modal-cancel-btn').addEventListener('click', hideModal);
+        
+        document.getElementById('modal-confirm-btn').addEventListener('click', async () => {
+            const selectedClassId = classSelect.value;
+            if (!selectedClassId) {
+                modalFeedback.textContent = 'Please select a class.';
+                modalFeedback.className = 'text-sm h-5 text-red-500';
+                return;
+            }
+            modalFeedback.textContent = 'Assigning...';
+            modalFeedback.className = 'text-sm h-5 text-gray-500';
 
             try {
-                // Fetch the full lesson data from the lessons collection
-                const lessonRef = doc(db, "lessons", lessonId);
+                // 1. Get the full lesson data from the 'lessons' collection
+                const lessonRef = doc(db, "lessons", lessonToAssignId);
                 const lessonSnap = await getDoc(lessonRef);
+                
                 if (!lessonSnap.exists()) {
-                    alert("Lesson not found!");
-                    return;
+                    throw new Error("Could not find the original lesson.");
                 }
                 const lessonData = lessonSnap.data();
 
-                // Add a document to the class's subcollection
-                const classLessonRef = doc(db, "classes", classId, "lessons", lessonId);
-                await setDoc(classLessonRef, lessonData);
+                // 2. Write (or overwrite) this lesson data into the class's 'lessons' subcollection
+                // We use the original lesson ID as the document ID in the subcollection.
+                // This ensures a class can only have one copy of any given lesson.
+                const targetRef = doc(db, "classes", selectedClassId, "lessons", lessonToAssignId);
+                await setDoc(targetRef, lessonData);
 
-                alert(`Lesson "${lessonTitle}" assigned to class successfully!`);
+                modalFeedback.textContent = '✅ Lesson assigned successfully!';
+                modalFeedback.className = 'text-sm h-5 text-green-600';
+                setTimeout(hideModal, 1500);
+
             } catch (error) {
                 console.error("Error assigning lesson:", error);
-                alert("Error assigning lesson. Please check the Class ID and your permissions.");
+                modalFeedback.textContent = 'Error assigning lesson.';
+                modalFeedback.className = 'text-sm h-5 text-red-500';
             }
-        };
+        });
 
-        onAuthStateChanged(auth, async (user) => {
+        onAuthStateChanged(auth, user => {
             if (user) {
                 currentUser = user;
-                let userData = { displayName: user.email.split('@')[0] };
-                try {
-                    const userDocRef = doc(db, "users", user.uid);
-                    const docSnap = await getDoc(userDocRef);
-                    if (docSnap.exists()) {
-                        userData = docSnap.data();
-                    }
-                } catch (error) {
-                    console.error("Error fetching user data:", error);
-                }
-                renderUserInfo(user, userData);
-                await fetchLessons();
+                // Assuming this page is for instructors, add a role check if necessary
+                fetchAndRenderData(user.uid);
             } else {
                 window.location.href = 'Login.html';
             }
