@@ -261,7 +261,9 @@
             }
         });
 
-        // Function to render the lesson content and exercises
+        // ==================================================================
+        // === START: CORRECTED RENDER LESSON CONTENT FUNCTION ================
+        // ==================================================================
         function renderLessonContent(lesson) {
             const lessonTextEl = document.getElementById('lesson-text');
             const exerciseContentEl = document.getElementById('exercise-content');
@@ -279,39 +281,44 @@
             lesson.contentBlocks.forEach((block, index) => {
                 switch(block.type) {
                     case 'title':
-                        lessonTextHtml += `<h2 class="text-3xl font-bold mb-4">${block.text}</h2>`;
+                        lessonTextHtml += `<h3 class="font-bold text-2xl mb-4">${block.text}</h3>`;
                         break;
                     case 'grammar':
-                        lessonTextHtml += `<div class="my-6 p-6 rounded-2xl bg-indigo-50 dark:bg-indigo-900/50 border border-indigo-200 dark:border-indigo-800 shadow-inner"><h3 class="font-bold text-indigo-700 dark:text-indigo-200">${block.title}</h3><p class="text-sm mt-2">${block.explanation}</p></div>`;
+                        lessonTextHtml += `<div class="my-4 bg-indigo-50 dark:bg-indigo-900/50 p-4 rounded-lg"><p class="font-bold text-indigo-700 dark:text-indigo-200">${block.title}</p><p class="text-sm mt-1">${block.explanation}</p></div>`;
                         break;
                     case 'text':
-                        lessonTextHtml += `<div class="mt-4 prose dark:prose-invert"><p>${block.text}</p></div>`;
+                        lessonTextHtml += `<div class="prose dark:prose-invert max-w-none mb-4"><p>${block.text}</p></div>`;
                         break;
                     case 'vocabulary':
                         if (block.isFlashcard) {
                             vocab.push({ word: block.word, definition: block.definition, example: block.example });
+                        } else {
+                            lessonTextHtml += `
+                                <div class="my-4 p-4 bg-stone-50 dark:bg-slate-900/50 rounded-lg border border-stone-200 dark:border-slate-700">
+                                    <p class="font-bold text-lg">${block.word}</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">Definition: ${block.definition}</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400 italic">Example: ${block.example}</p>
+                                </div>
+                            `;
                         }
                         break;
                     case 'multiple-choice':
-                        // Render a multiple-choice question with validation
                         exerciseHtml += `
                             <div class="p-4 rounded-lg bg-white dark:bg-slate-700 shadow-sm" data-question-id="mc-${index}">
-                                <p class="font-semibold text-gray-800 dark:text-gray-200">Multiple Choice:</p>
-                                <p class="mt-1">${block.question}</p>
+                                <p class="font-semibold text-gray-800 dark:text-gray-200">${block.question}</p>
                                 <div class="mt-2 space-y-2">
-                                    ${block.options.map(option => `<button onclick="checkMCAnswer(this, '${block.correctAnswer.replace(/'/g, "\\'")}')" class="w-full text-left p-2 border rounded-md hover:bg-stone-100 dark:hover:bg-slate-600">${option}</button>`).join('')}
+                                    ${block.options.sort(() => Math.random() - 0.5).map(option => `<button onclick="checkMCAnswer(this, '${block.correctAnswer.replace(/'/g, "\\'")}')" class="w-full text-left p-2 border rounded-md hover:bg-stone-100 dark:hover:bg-slate-600 transition-colors">${option}</button>`).join('')}
                                 </div>
                                 <div class="mt-2 text-sm font-semibold hidden"></div>
                             </div>
                         `;
                         break;
                     case 'fill-in-the-blank':
-                        // Render a fill-in-the-blank question with input field
                         exerciseHtml += `
                             <div class="p-4 rounded-lg bg-white dark:bg-slate-700 shadow-sm" data-question-id="fitb-${index}">
-                                <p class="font-semibold text-gray-800 dark:text-gray-200">Fill-in-the-Blank:</p>
-                                <div class="mt-1">
-                                    <span class="inline">${block.sentence.replace(/_/g, `<input type="text" data-correct-answer="${block.correctAnswer.replace(/'/g, "\\'")}" class="w-24 p-1 text-sm bg-transparent border-b-2 border-stone-300 dark:border-gray-600 focus:outline-none focus:border-indigo-500">`)}</span>
+                                <p class="font-semibold text-gray-800 dark:text-gray-200">Fill in the blank:</p>
+                                <div class="mt-1 text-gray-700 dark:text-gray-300">
+                                    ${block.sentence.replace(/_/g, `<input type="text" data-correct-answer="${block.correctAnswer.replace(/'/g, "\\'")}" class="inline-block w-32 p-1 text-base bg-transparent border-b-2 border-stone-300 dark:border-gray-600 focus:outline-none focus:border-indigo-500 mx-1">`)}
                                 </div>
                                 <button onclick="checkFITBAnswer(this)" class="mt-4 bg-indigo-600 text-white font-semibold py-2 px-4 text-sm rounded-lg hover:bg-indigo-700 transition">Check Answer</button>
                                 <div class="mt-2 text-sm font-semibold hidden"></div>
@@ -319,16 +326,25 @@
                         `;
                         break;
                     case 'discussion-prompt':
-                        // The discussion prompt is handled by the discussion board widget
+                        // This is correctly handled by the separate discussion widget.
                         break;
                     case 'video':
-                        const videoId = block.url.split('v=')[1];
+                        let videoId = '';
+                        try {
+                            const url = new URL(block.url);
+                            if (url.hostname === 'youtu.be') {
+                                videoId = url.pathname.slice(1);
+                            } else if (url.hostname.includes('youtube.com')) {
+                                videoId = url.searchParams.get('v');
+                            }
+                        } catch (e) { console.error("Invalid video URL:", block.url); }
+                        
                         if (videoId) {
-                            lessonTextHtml += `<div class="mt-4 aspect-w-16 aspect-h-9"><iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+                            lessonTextHtml += `<div class="my-4 aspect-video"><iframe class="w-full h-full rounded-lg shadow-lg" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
                         }
                         break;
                     case 'quote':
-                        lessonTextHtml += `<div class="relative pl-8 my-8 font-bold text-xl leading-relaxed italic"><span class="absolute top-0 left-0 text-gray-400 dark:text-gray-600 text-6xl leading-none">“</span><p class="ml-4">${block.text}</p><span class="absolute bottom-0 right-0 text-gray-400 dark:text-gray-600 text-6xl leading-none">”</span></div>`;
+                        lessonTextHtml += `<div class="my-4 relative pl-8 font-bold text-xl leading-relaxed italic"><span class="absolute top-0 left-0 text-gray-400 dark:text-gray-600 text-6xl leading-none">“</span><p class="ml-4">${block.text}</p><span class="absolute bottom-0 -bottom-4 right-0 text-gray-400 dark:text-gray-600 text-6xl leading-none">”</span></div>`;
                         break;
                 }
             });
@@ -345,6 +361,10 @@
             currentCardIndex = 0;
             updateFlashcardUI();
         }
+        // ==================================================================
+        // === END: CORRECTED RENDER LESSON CONTENT FUNCTION ==================
+        // ==================================================================
+
         
         window.checkMCAnswer = (button, correctAnswer) => {
             const parent = button.closest('[data-question-id]');
