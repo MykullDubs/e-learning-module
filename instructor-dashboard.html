@@ -11,7 +11,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
     <script>
-        // Theme loader script
         if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
         } else {
@@ -78,7 +77,7 @@
     <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-7xl font-brand">
         <header class="mb-12 animate-in">
             <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white"><span id="time-greeting">Good morning</span>, <span id="user-name">User</span>!</h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-3 text-lg">Here's your overview for Friday, October 3, 2025.</p>
+            <p class="text-gray-600 dark:text-gray-400 mt-3 text-lg">Here is your overview for Friday, October 3, 2025.</p>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
@@ -86,7 +85,7 @@
             <div class="lg:col-span-2 space-y-8">
                 <section id="focus-widget-container" class="animate-in" style="animation-delay: 100ms;"></section>
                 
-                <section class="animate-in" id="instructor-classes-widget" style="animation-delay: 200ms;">
+                <section class="animate-in hidden" id="instructor-classes-widget" style="animation-delay: 200ms;">
                     <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">My Classes</h2>
                     <div id="instructor-classes-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <p class="text-gray-500 text-center mt-8">Loading your classes...</p>
@@ -94,14 +93,29 @@
                 </section>
                 
                 <section class="animate-in" id="explore-widget" style="animation-delay: 300ms;">
-                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Explore</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Tools & Resources</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        
+                        <a href="lesson-library.html" class="widget-card block bg-white/80 dark:bg-slate-800/80 p-6 rounded-2xl shadow-md border border-stone-200/50 dark:border-slate-700/50 hover:shadow-xl transition flex flex-col items-center justify-center text-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-500 dark:text-indigo-400 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
+                            <h3 class="font-semibold text-gray-900 dark:text-white">Lesson Library</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Browse all lessons & guides</p>
+                        </a>
+                        
+                        <a href="quiz-library.html" class="widget-card block bg-white/80 dark:bg-slate-800/80 p-6 rounded-2xl shadow-md border border-stone-200/50 dark:border-slate-700/50 hover:shadow-xl transition flex flex-col items-center justify-center text-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-rose-500 dark:text-rose-400 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                            </svg>
+                            <h3 class="font-semibold text-gray-900 dark:text-white">Quiz Library</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage and assign your quizzes</p>
+                        </a>
+                        
                         <a href="game.html" class="widget-card block bg-white/80 dark:bg-slate-800/80 p-6 rounded-2xl shadow-md border border-stone-200/50 dark:border-slate-700/50 hover:shadow-xl transition flex flex-col items-center justify-center text-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-teal-500 dark:text-teal-400 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
                             <h3 class="font-semibold text-gray-900 dark:text-white">Play Speak-Tactics</h3>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Challenge a friend and practice your speaking!</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Challenge a friend to practice</p>
                         </a>
-                        <a href="lesson-library.html" class="widget-card block bg-white/80 dark:bg-slate-800/80 p-6 rounded-2xl shadow-md border border-stone-200/50 dark:border-slate-700/50 hover:shadow-xl transition flex flex-col items-center justify-center text-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-500 dark:text-indigo-400 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg><h3 class="font-semibold text-gray-900 dark:text-white">Explore the Full Library</h3><p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Browse all lessons & guides</p></a>
+                        
                     </div>
                 </section>
             </div>
@@ -146,7 +160,6 @@
         window.addEventListener('click', () => { profileDropdown.classList.add('hidden'); });
         logoutBtn.addEventListener('click', () => { signOut(auth); });
         
-        // Helper function to render user info and greeting
         function renderUserInfo(user, userData) {
             document.getElementById('user-email-nav').textContent = user.email;
             if (user.photoURL) {
@@ -162,93 +175,45 @@
             document.getElementById('user-name').textContent = userData.displayName || user.email.split('@')[0];
         }
         
-        // Helper function to render the main focus widget
         function renderFocusWidget(userData) {
             const focusContainer = document.getElementById('focus-widget-container');
             if (userData.role === 'instructor') {
                 focusContainer.innerHTML = `
                     <div class="widget-card bg-gradient-to-br from-indigo-500 to-purple-600 p-8 rounded-2xl shadow-xl text-center text-white transition">
-                        <h2 class="text-3xl font-bold">Manage Your Curriculum</h2>
-                        <p class="mt-2 text-lg text-indigo-100 max-w-xl mx-auto">Create lessons, build classes, and design quizzes to guide your students' learning journey.</p>
+                        <h2 class="text-3xl font-bold">Instructor Tools</h2>
+                        <p class="mt-2 text-lg text-indigo-100 max-w-xl mx-auto">Create lessons, build classes, and design quizzes for your students.</p>
                         <div class="mt-6 flex flex-wrap justify-center gap-4">
-                            <a href="lesson-builder.html" class="inline-block bg-white text-indigo-600 font-semibold px-8 py-3 rounded-lg shadow-sm hover:scale-105 transition-transform">Lesson Builder</a>
-                            <a href="class-builder.html" class="inline-block bg-white text-indigo-600 font-semibold px-8 py-3 rounded-lg shadow-sm hover:scale-105 transition-transform">Class Builder</a>
-                            <a href="quiz-maker.html" class="inline-block bg-white text-indigo-600 font-semibold px-8 py-3 rounded-lg shadow-sm hover:scale-105 transition-transform">Quiz Maker</a>
+                            <a href="lesson-builder.html" class="inline-block bg-white text-indigo-600 font-semibold px-6 py-3 rounded-lg shadow-sm hover:scale-105 transition-transform">Lesson Builder</a>
+                            <a href="class-builder.html" class="inline-block bg-white text-indigo-600 font-semibold px-6 py-3 rounded-lg shadow-sm hover:scale-105 transition-transform">Class Builder</a>
+                            <a href="quiz-maker.html" class="inline-block bg-white text-indigo-600 font-semibold px-6 py-3 rounded-lg shadow-sm hover:scale-105 transition-transform">Quiz Maker</a>
                         </div>
                     </div>
                 `;
-            } else if (userData.currentClassId) {
-                const classDocRef = doc(db, "classes", userData.currentClassId);
-                getDoc(classDocRef).then(classDocSnap => {
-                    if (classDocSnap.exists()) {
-                        const classData = classDocSnap.data();
-                        const lessonLevel = classData.cefrLevel || 'Unknown';
-                        const lessonTitle = classData.className || 'New Class';
-                        const lessonDesc = classData.description || 'Welcome to your new class!';
-                        const teacherName = classData.teacherName || 'Not specified';
-                        const classDay = classData.classDay || 'Not specified';
-                        const classTime = classData.classTime || 'Not specified';
-
-                        focusContainer.innerHTML = `
-                            <a href="class-page.html?classId=${userData.currentClassId}" class="widget-card block bg-gradient-to-br from-teal-500 to-emerald-600 dark:from-teal-600 dark:to-emerald-700 p-8 rounded-2xl shadow-xl border border-teal-400/50 dark:border-emerald-600/50 text-white transition">
-                                <h2 class="text-xl font-semibold mb-2">Your New Class</h2>
-                                <span class="text-xs font-bold px-3 py-1 rounded-full bg-yellow-100/30 text-white">${lessonLevel}</span>
-                                <h3 class="text-3xl font-bold mt-2">${lessonTitle}</h3>
-                                <p class="text-teal-100 mt-2 max-w-lg">${lessonDesc}</p>
-                                <div class="mt-4 text-sm space-y-1">
-                                    <p><strong>Teacher:</strong> ${teacherName}</p>
-                                    <p><strong>Schedule:</strong> ${classDay}, ${classTime}</p>
-                                </div>
-                                <span class="mt-6 inline-block bg-white text-teal-700 font-bold px-8 py-3 rounded-lg shadow-sm hover:scale-105 transition-transform">Enter Classroom →</span>
-                            </a>
-                        `;
-                    } else {
-                        updateDoc(doc(db, "users", auth.currentUser.uid), { currentClassId: null }).then(() => {
-                            renderDefaultFocusWidget(userData);
-                        });
-                    }
-                }).catch(error => {
-                    console.error("Error fetching class data:", error);
-                    renderDefaultFocusWidget(userData);
-                });
             } else {
                 renderDefaultFocusWidget(userData);
             }
         }
         
         function renderDefaultFocusWidget(userData) {
-            const focusContainer = document.getElementById('focus-widget-container');
-            if (userData.cefrLevel) {
-                focusContainer.innerHTML = `
-                    <div class="widget-card block bg-gradient-to-br from-teal-500 to-emerald-600 dark:from-teal-600 dark:to-emerald-700 p-8 rounded-2xl shadow-xl border border-teal-400/50 dark:border-emerald-600/50 text-white transition">
-                        <h2 class="text-xl font-semibold mb-2">This Week's Class</h2>
-                        <span class="text-xs font-bold px-3 py-1 rounded-full bg-yellow-100/30 text-white">B1</span>
-                        <h3 class="text-3xl font-bold mt-2">Giving Advice with Modals</h3>
-                        <p class="text-teal-100 mt-2 max-w-lg">Learn to use 'should', 'must', and 'have to' for clear recommendations.</p>
-                        <a href="class-page.html" class="mt-6 inline-block bg-white text-teal-700 font-bold px-8 py-3 rounded-lg shadow-sm hover:scale-105 transition-transform">Enter Classroom →</a>
-                    </div>
-                `;
-            } else {
-                focusContainer.innerHTML = `
-                    <div class="widget-card bg-gradient-to-br from-indigo-500 to-purple-600 p-8 rounded-2xl shadow-xl text-center text-white transition">
-                        <h2 class="text-3xl font-bold">Discover Your English Level</h2>
-                        <p class="mt-2 text-lg text-indigo-100 max-w-md mx-auto">Take our adaptive quiz to find your starting point.</p>
-                        <a href="level-finder.html" class="mt-6 inline-block bg-white text-indigo-600 font-semibold px-8 py-3 rounded-lg shadow-sm hover:scale-105 transition-transform">Take the Quiz Now</a>
-                    </div>
-                `;
-            }
+             const focusContainer = document.getElementById('focus-widget-container');
+             focusContainer.innerHTML = `
+                <div class="widget-card bg-gradient-to-br from-indigo-500 to-purple-600 p-8 rounded-2xl shadow-xl text-center text-white transition">
+                    <h2 class="text-3xl font-bold">Discover Your English Level</h2>
+                    <p class="mt-2 text-lg text-indigo-100 max-w-md mx-auto">Take our adaptive quiz to find your starting point.</p>
+                    <a href="level-finder.html" class="mt-6 inline-block bg-white text-indigo-600 font-semibold px-8 py-3 rounded-lg shadow-sm hover:scale-105 transition-transform">Take the Quiz Now</a>
+                </div>
+            `;
         }
 
         async function fetchInstructorClasses(instructorId) {
             const classesListEl = document.getElementById('instructor-classes-list');
-            classesListEl.innerHTML = '<p class="text-gray-500 text-center mt-8">Loading your classes...</p>';
-
+            classesListEl.innerHTML = '<p class="text-gray-500">Loading your classes...</p>';
             const q = query(collection(db, "classes"), where("instructorId", "==", instructorId), orderBy("createdAt", "desc"));
             const querySnapshot = await getDocs(q);
 
             classesListEl.innerHTML = '';
             if (querySnapshot.empty) {
-                classesListEl.innerHTML = '<p class="text-gray-500 text-center mt-8">You have not created any classes yet.</p>';
+                classesListEl.innerHTML = '<p class="text-gray-500">You have not created any classes yet.</p>';
             } else {
                 querySnapshot.forEach((doc) => {
                     const classData = doc.data();
@@ -257,11 +222,8 @@
                     classCard.className = 'widget-card block bg-white/80 dark:bg-slate-800/80 p-6 rounded-2xl shadow-md border border-stone-200/50 dark:border-slate-700/50 hover:shadow-xl transition';
                     classCard.innerHTML = `
                         <h3 class="text-xl font-bold">${classData.className}</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">${classData.cefrLevel ? `Level: ${classData.cefrLevel}` : 'No Level'}</p>
-                        <div class="mt-4 text-right">
-                             <span class="text-indigo-600 font-semibold text-sm hover:underline dark:text-indigo-400">Manage Class →</span>
-                        </div>
-                    `;
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Level: ${classData.cefrLevel || 'N/A'}</p>
+                        <div class="mt-4 text-right"><span class="text-indigo-600 font-semibold text-sm hover:underline dark:text-indigo-400">Manage Class →</span></div>`;
                     classesListEl.appendChild(classCard);
                 });
             }
@@ -269,12 +231,12 @@
         
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                let userData = { displayName: user.email.split('@')[0] };
+                let userData = { displayName: user.email.split('@')[0], role: 'student' }; // Default to student
                 try {
                     const userDocRef = doc(db, "users", user.uid);
                     const docSnap = await getDoc(userDocRef);
                     if (docSnap.exists()) {
-                        userData = docSnap.data();
+                        userData = { ...userData, ...docSnap.data() };
                     }
                 } catch (error) {
                     console.error("Error fetching user data:", error);
@@ -283,7 +245,6 @@
                 renderUserInfo(user, userData);
                 renderFocusWidget(userData);
                 
-                // Show/hide instructor-specific widgets
                 const instructorClassesWidget = document.getElementById('instructor-classes-widget');
                 if (userData.role === 'instructor') {
                     instructorClassesWidget.classList.remove('hidden');
