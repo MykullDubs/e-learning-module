@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Maker - Golden Fellows English</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Source Serif Pro', serif; background-color: #F7F5F2; }
+        .dark body { background-color: #0F172A; }
+        .font-brand { font-family: 'Source Serif Pro', serif; }
+        .drag-handle { cursor: grab; }
+        .drag-handle:active { cursor: grabbing; }
+        .drag-over { border: 2px dashed #6366f1; }
+        .question-option-label { display: flex; align-items: center; gap: 0.5rem; }
+    </style>
+</head>
+<body class="text-gray-900 dark:text-gray-200 antialiased">
+
+    <header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm shadow-sm border-b border-stone-200 dark:border-slate-800 sticky top-0 z-40">
+        <div class="container mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
+            <a href="dashboard.html" class="text-xl font-bold font-brand text-gray-900 dark:text-white">Golden Fellows English</a>
+            <div class="flex items-center gap-6">
+                 <a href="lesson-builder.html" class="text-sm font-semibold hover:text-indigo-600 dark:hover:text-indigo-400">Lesson Builder</a>
+                 <a href="dashboard.html" class="text-sm font-semibold hover:text-indigo-600 dark:hover:text-indigo-400">Dashboard</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl font-brand">
+        <header class="mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Quiz Maker</h1>
+            <p class="text-gray-600 dark:text-gray-400 mt-2 text-lg">Craft custom assessments with a variety of interactive question types.</p>
+        </header>
+
+        <div class="bg-white/50 dark:bg-slate-800/50 backdrop-blur-lg p-8 rounded-2xl shadow-xl border border-stone-200/50 dark:border-slate-700/50">
+            
+            <section class="space-y-4">
+                <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200">Quiz Details</h2>
+                <div>
+                    <label for="quiz-title" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Quiz Title</label>
+                    <input type="text" id="quiz-title" placeholder="e.g., Unit 5 Vocabulary Check" class="mt-1 block w-full p-2 border border-stone-300 dark:border-gray-600 rounded-md bg-transparent focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                     <div>
+                        <label for="quiz-topic" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Topic / Subject</label>
+                        <input type="text" id="quiz-topic" placeholder="e.g., Past Tense Verbs" class="mt-1 block w-full p-2 border border-stone-300 dark:border-gray-600 rounded-md bg-transparent focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                     <div>
+                        <label for="quiz-time-limit" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Time Limit (minutes)</label>
+                        <input type="number" id="quiz-time-limit" placeholder="e.g., 30" class="mt-1 block w-full p-2 border border-stone-300 dark:border-gray-600 rounded-md bg-transparent focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                </div>
+            </section>
+            
+            <hr class="my-8 border-stone-300 dark:border-slate-600">
+
+            <section>
+                <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Quiz Questions</h2>
+                <div id="questions-container" class="space-y-4">
+                    <p class="text-gray-500 text-center py-4">No questions added yet. Choose a question type below to begin.</p>
+                </div>
+
+                <div class="mt-6 text-center">
+                    <h3 class="font-semibold mb-3 text-gray-700 dark:text-gray-300">Add New Question</h3>
+                    <div id="add-question-buttons" class="flex justify-center gap-2 flex-wrap">
+                        <button data-type="multiple-choice" class="add-question-btn bg-stone-200 dark:bg-slate-700 text-sm font-semibold py-2 px-3 rounded-lg hover:bg-stone-300">Multiple Choice</button>
+                        <button data-type="fill-blank" class="add-question-btn bg-stone-200 dark:bg-slate-700 text-sm font-semibold py-2 px-3 rounded-lg hover:bg-stone-300">Fill-in-the-Blank</button>
+                        <button data-type="categorization" class="add-question-btn bg-stone-200 dark:bg-slate-700 text-sm font-semibold py-2 px-3 rounded-lg hover:bg-stone-300">Categorization</button>
+                        <button data-type="ordering" class="add-question-btn bg-stone-200 dark:bg-slate-700 text-sm font-semibold py-2 px-3 rounded-lg hover:bg-stone-300">Ordering</button>
+                        <button data-type="short-answer" class="add-question-btn bg-stone-200 dark:bg-slate-700 text-sm font-semibold py-2 px-3 rounded-lg hover:bg-stone-300">Short Answer</button>
+                    </div>
+                    <div id="add-question-form-container" class="mt-4 text-left"></div>
+                </div>
+            </section>
+            
+            <div class="mt-8 pt-6 border-t border-stone-300 dark:border-slate-600 text-right">
+                <p id="save-status" class="text-green-600 dark:text-green-400 font-semibold mr-4 h-6 inline-block"></p>
+                <button id="save-quiz-btn" class="bg-indigo-600 text-white font-semibold px-8 py-3 rounded-lg shadow-sm hover:bg-indigo-700 disabled:opacity-50">Save Quiz</button>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // --- Firebase Initialization ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
+            authDomain: "elearning-e83cb.firebaseapp.com",
+            projectId: "elearning-e83cb",
+            storageBucket: "elearning-e83cb.appspot.com",
+            messagingSenderId: "25473938624",
+            appId: "1:25473938624:web:5b56738933543f32a7e925",
+        };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // --- State Management ---
+        let currentUser = null;
+        let currentQuizId = null;
+        let quizQuestions = [];
+        let draggedIndex = null;
+
+        // --- DOM Elements ---
+        const questionsContainer = document.getElementById('questions-container');
+        const addQuestionFormContainer = document.getElementById('add-question-form-container');
+        const saveQuizBtn = document.getElementById('save-quiz-btn');
+        const saveStatus = document.getElementById('save-status');
+
+        // --- Rendering Logic ---
+        function renderQuestions() {
+            questionsContainer.innerHTML = '';
+            if (quizQuestions.length === 0) {
+                questionsContainer.innerHTML = `<p class="text-gray-500 text-center py-4">No questions added yet. Choose a question type below to begin.</p>`;
+                return;
+            }
+
+            quizQuestions.forEach((q, index) => {
+                const qEl = document.createElement('div');
+                qEl.className = 'bg-stone-50 dark:bg-slate-900/50 p-4 rounded-lg border border-stone-200 dark:border-slate-700 relative group';
+                qEl.dataset.index = index;
+                qEl.setAttribute('draggable', 'true');
+
+                let contentHTML = `<p class="font-semibold">${q.questionText}</p>`;
+                const headerHTML = `
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-bold text-sm text-gray-600 dark:text-gray-300">${index + 1}. ${q.type.replace('-', ' ').toUpperCase()}</span>
+                        <div class="flex items-center gap-4">
+                            <svg class="drag-handle h-5 w-5 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v2a1 1 0 11-2 0V4a1 1 0 011-1zM6 9a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 5a1 1 0 100 2h4a1 1 0 100-2H7z" clip-rule="evenodd" /></svg>
+                            <button class="remove-question-btn text-red-500 hover:text-red-700 text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity">REMOVE</button>
+                        </div>
+                    </div>`;
+
+                switch (q.type) {
+                    case 'multiple-choice':
+                        contentHTML += `<ul class="list-disc list-inside mt-2 text-sm">${q.options.map(opt => `<li class="${opt.correct ? 'font-bold text-green-600' : ''}">${opt.text}</li>`).join('')}</ul>`;
+                        break;
+                    case 'fill-blank':
+                        contentHTML += `<p class="text-sm mt-2 text-gray-500">Sentence: <em class="text-gray-700 dark:text-gray-300">"${q.sentence.replace('___', '<strong class="text-indigo-500">[blank]</strong>')}"</em></p><p class="text-sm text-green-600">Answer: ${q.correctAnswer}</p>`;
+                        break;
+                    case 'categorization':
+                        contentHTML += `<div class="grid grid-cols-2 gap-4 mt-2 text-sm">`;
+                        q.categories.forEach(cat => {
+                            contentHTML += `<div><strong class="text-indigo-500">${cat.name}</strong><ul class="list-disc list-inside">${cat.items.map(item => `<li>${item}</li>`).join('')}</ul></div>`;
+                        });
+                        contentHTML += `</div>`;
+                        break;
+                    case 'ordering':
+                         contentHTML += `<ol class="list-decimal list-inside mt-2 text-sm">${q.items.map(item => `<li>${item}</li>`).join('')}</ol>`;
+                        break;
+                    case 'short-answer':
+                         contentHTML += `<p class="text-sm mt-2 text-gray-500 dark:text-gray-400 italic">Requires manual grading.</p>`;
+                        break;
+                }
+                qEl.innerHTML = headerHTML + contentHTML;
+                questionsContainer.appendChild(qEl);
+            });
+        }
+
+        // --- Form Generation ---
+        function showAddQuestionForm(type) {
+            let formHTML = '';
+            const baseFormClasses = "p-4 bg-stone-100 dark:bg-slate-700 rounded-lg space-y-3 border border-stone-200 dark:border-slate-600";
+            const inputClasses = "w-full p-2 border rounded bg-transparent border-stone-300 dark:border-gray-600";
+            const labelClasses = "block text-sm font-semibold text-gray-700 dark:text-gray-300";
+            const buttonClasses = "mt-2 bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700";
+            
+            const questionTextHTML = `<div><label class="${labelClasses}">Question</label><input type="text" id="q-text" class="${inputClasses}"></div>`;
+
+            switch (type) {
+                case 'multiple-choice':
+                    formHTML = `
+                        ${questionTextHTML}
+                        <div><label class="${labelClasses}">Options</label>
+                            <div class="space-y-2 mt-1">
+                                <label class="question-option-label"><input type="radio" name="correct-answer" value="0" checked class="form-radio"> <input type="text" class="q-option ${inputClasses}" placeholder="Correct Answer"></label>
+                                <label class="question-option-label"><input type="radio" name="correct-answer" value="1" class="form-radio"> <input type="text" class="q-option ${inputClasses}" placeholder="Incorrect Answer"></label>
+                                <label class="question-option-label"><input type="radio" name="correct-answer" value="2" class="form-radio"> <input type="text" class="q-option ${inputClasses}" placeholder="Incorrect Answer"></label>
+                                <label class="question-option-label"><input type="radio" name="correct-answer" value="3" class="form-radio"> <input type="text" class="q-option ${inputClasses}" placeholder="Incorrect Answer"></label>
+                            </div>
+                        </div>`;
+                    break;
+                case 'fill-blank':
+                    formHTML = `
+                        <div><label class="${labelClasses}">Sentence (use ___ for the blank)</label><input type="text" id="q-sentence" placeholder="e.g., The capital of Mexico is ___." class="${inputClasses}"></div>
+                        <div><label class="${labelClasses}">Correct Answer</label><input type="text" id="q-answer" placeholder="e.g., Mexico City" class="${inputClasses}"></div>`;
+                    break;
+                case 'categorization':
+                     formHTML = `
+                        ${questionTextHTML}
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><label class="${labelClasses}">Category 1 Name</label><input type="text" id="q-cat-name-1" class="${inputClasses}"></div>
+                            <div><label class="${labelClasses}">Category 2 Name</label><input type="text" id="q-cat-name-2" class="${inputClasses}"></div>
+                        </div>
+                        <div><label class="${labelClasses}">Items for Category 1 (comma-separated)</label><input type="text" id="q-cat-items-1" class="${inputClasses}"></div>
+                        <div><label class="${labelClasses}">Items for Category 2 (comma-separated)</label><input type="text" id="q-cat-items-2" class="${inputClasses}"></div>
+                     `;
+                    break;
+                case 'ordering':
+                    formHTML = `
+                        ${questionTextHTML}
+                        <div><label class="${labelClasses}">Items in Correct Order (one per line)</label><textarea id="q-items" rows="5" class="${inputClasses}"></textarea></div>`;
+                    break;
+                case 'short-answer':
+                    formHTML = questionTextHTML;
+                    break;
+            }
+
+            addQuestionFormContainer.innerHTML = `<div class="${baseFormClasses}">${formHTML}<button id="save-question-btn" class="${buttonClasses}" data-type="${type}">Add Question</button></div>`;
+        }
+
+        // --- Event Listeners ---
+        document.getElementById('add-question-buttons').addEventListener('click', e => {
+            if (e.target.classList.contains('add-question-btn')) {
+                const type = e.target.dataset.type;
+                showAddQuestionForm(type);
+            }
+        });
+
+        addQuestionFormContainer.addEventListener('click', e => {
+            if (e.target.id !== 'save-question-btn') return;
+            
+            const type = e.target.dataset.type;
+            const newQuestion = { type: type };
+            
+            const questionText = document.getElementById('q-text')?.value.trim();
+            if (type !== 'fill-blank' && !questionText) { alert("Please enter the question text."); return; }
+
+            switch (type) {
+                case 'multiple-choice':
+                    newQuestion.questionText = questionText;
+                    const options = Array.from(document.querySelectorAll('.q-option')).map(input => input.value.trim());
+                    const correctIndex = document.querySelector('input[name="correct-answer"]:checked').value;
+                    if (options.some(opt => !opt)) { alert("Please fill out all option fields."); return; }
+                    newQuestion.options = options.map((opt, i) => ({ text: opt, correct: i == correctIndex }));
+                    break;
+                case 'fill-blank':
+                    newQuestion.sentence = document.getElementById('q-sentence').value.trim();
+                    newQuestion.correctAnswer = document.getElementById('q-answer').value.trim();
+                    if (!newQuestion.sentence || !newQuestion.correctAnswer || !newQuestion.sentence.includes('___')) { alert("Please provide a valid sentence with ___ and a correct answer."); return; }
+                    newQuestion.questionText = `Fill in the blank: ${newQuestion.sentence}`;
+                    break;
+                case 'categorization':
+                    newQuestion.questionText = questionText;
+                    const cat1Name = document.getElementById('q-cat-name-1').value.trim();
+                    const cat2Name = document.getElementById('q-cat-name-2').value.trim();
+                    const cat1Items = document.getElementById('q-cat-items-1').value.split(',').map(i => i.trim()).filter(Boolean);
+                    const cat2Items = document.getElementById('q-cat-items-2').value.split(',').map(i => i.trim()).filter(Boolean);
+                    if (!cat1Name || !cat2Name || cat1Items.length === 0 || cat2Items.length === 0) { alert("Please fill out all category fields."); return; }
+                    newQuestion.categories = [{ name: cat1Name, items: cat1Items }, { name: cat2Name, items: cat2Items }];
+                    break;
+                case 'ordering':
+                    newQuestion.questionText = questionText;
+                    newQuestion.items = document.getElementById('q-items').value.split('\n').map(i => i.trim()).filter(Boolean);
+                    if (newQuestion.items.length < 2) { alert("Please provide at least two items to order."); return; }
+                    break;
+                case 'short-answer':
+                    newQuestion.questionText = questionText;
+                    break;
+            }
+
+            quizQuestions.push(newQuestion);
+            renderQuestions();
+            addQuestionFormContainer.innerHTML = '';
+        });
+
+        questionsContainer.addEventListener('click', (e) => {
+            const btn = e.target.closest('.remove-question-btn');
+            if (btn) {
+                const qEl = btn.closest('[data-index]');
+                const index = parseInt(qEl.dataset.index);
+                quizQuestions.splice(index, 1);
+                renderQuestions();
+            }
+        });
+
+        // --- Drag and Drop Logic ---
+        questionsContainer.addEventListener('dragstart', (e) => {
+            draggedIndex = e.target.dataset.index;
+            e.dataTransfer.effectAllowed = 'move';
+        });
+
+        questionsContainer.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            const target = e.target.closest('[data-index]');
+            if (target) target.classList.add('drag-over');
+        });
+
+        questionsContainer.addEventListener('dragleave', (e) => {
+            const target = e.target.closest('[data-index]');
+            if (target) target.classList.remove('drag-over');
+        });
+
+        questionsContainer.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const droppedOn = e.target.closest('[data-index]');
+            if (droppedOn) {
+                const dropIndex = droppedOn.dataset.index;
+                const draggedItem = quizQuestions.splice(draggedIndex, 1)[0];
+                quizQuestions.splice(dropIndex, 0, draggedItem);
+                renderQuestions();
+            }
+            document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+        });
+
+        // --- Save Logic ---
+        saveQuizBtn.addEventListener('click', async () => {
+            if (!currentUser) { alert("You must be logged in."); return; }
+            saveQuizBtn.disabled = true;
+            saveStatus.textContent = "Saving...";
+
+            const quizData = {
+                title: document.getElementById('quiz-title').value.trim(),
+                topic: document.getElementById('quiz-topic').value.trim(),
+                timeLimit: parseInt(document.getElementById('quiz-time-limit').value) || 0,
+                questions: quizQuestions,
+                instructorId: currentUser.uid,
+                createdAt: serverTimestamp(),
+                updatedAt: serverTimestamp()
+            };
+
+            if (!quizData.title || quizQuestions.length === 0) {
+                alert("Please add a title and at least one question.");
+                saveQuizBtn.disabled = false;
+                saveStatus.textContent = "";
+                return;
+            }
+            
+            try {
+                const quizzesRef = collection(db, "quizzes");
+                if (currentQuizId) {
+                    await updateDoc(doc(db, "quizzes", currentQuizId), quizData);
+                    saveStatus.textContent = "✅ Quiz Updated!";
+                } else {
+                    const docRef = await addDoc(quizzesRef, quizData);
+                    currentQuizId = docRef.id;
+                    saveStatus.textContent = "✅ Quiz Saved!";
+                }
+                setTimeout(() => { saveStatus.textContent = ""; saveQuizBtn.disabled = false; }, 3000);
+            } catch (error) {
+                console.error("Error saving quiz:", error);
+                saveStatus.textContent = "Error saving quiz.";
+                saveQuizBtn.disabled = false;
+            }
+        });
+
+        // --- Auth & Initialization ---
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                // Logic to load an existing quiz for editing could go here
+                // For now, it starts a new quiz by default
+            } else {
+                window.location.href = 'Login.html';
+            }
+        });
+    </script>
+</body>
+</html>
