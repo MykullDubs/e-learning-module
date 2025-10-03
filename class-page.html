@@ -231,12 +231,44 @@
 
             lesson.contentBlocks.forEach((block) => {
                 switch(block.type) {
-                    case 'title': lessonTextHtml += `<h3 class="font-bold text-2xl mb-4">${block.text}</h3>`; break;
-                    case 'grammar': lessonTextHtml += `<div class="my-4 bg-indigo-50 dark:bg-indigo-900/50 p-4 rounded-lg"><p class="font-bold text-indigo-700 dark:text-indigo-200">${block.title}</p><p class="text-sm mt-1">${block.explanation}</p></div>`; break;
-                    case 'text': lessonTextHtml += `<div class="prose dark:prose-invert max-w-none mb-4"><p>${block.text}</p></div>`; break;
-                    case 'vocabulary': if (block.isFlashcard) { vocab.push({ word: block.word, definition: block.definition, example: block.example }); } else { lessonTextHtml += `<div class="my-4 p-4 bg-stone-50 dark:bg-slate-900/50 rounded-lg border border-stone-200 dark:border-slate-700"><p class="font-bold text-lg">${block.word}</p><p class="text-sm text-gray-500 dark:text-gray-400">Definition: ${block.definition}</p><p class="text-sm text-gray-500 dark:text-gray-400 italic">Example: ${block.example}</p></div>`; } break;
-                    case 'multiple-choice': exerciseHtml += `<div class="p-4 rounded-lg bg-white dark:bg-slate-700 shadow-sm" data-question-id="mc"><p class="font-semibold">${block.question}</p><div class="mt-2 space-y-2">${block.options.sort(() => Math.random() - 0.5).map(option => `<button onclick="checkMCAnswer(this, '${block.correctAnswer.replace(/'/g, "\\'")}')" class="w-full text-left p-2 border rounded-md hover:bg-stone-100 dark:hover:bg-slate-600 transition-colors">${option}</button>`).join('')}</div><div class="mt-2 text-sm font-semibold hidden"></div></div>`; break;
-                    case 'fill-in-the-blank': exerciseHtml += `<div class="p-4 rounded-lg bg-white dark:bg-slate-700 shadow-sm" data-question-id="fitb"><p class="font-semibold">Fill in the blank:</p><div class="mt-1">${block.sentence.replace(/_/g, `<input type="text" data-correct-answer="${block.correctAnswer.replace(/'/g, "\\'")}" class="inline-block w-32 p-1 text-base bg-transparent border-b-2 border-stone-300 dark:border-gray-600 focus:outline-none focus:border-indigo-500 mx-1">`)}</div><button onclick="checkFITBAnswer(this)" class="mt-4 bg-indigo-600 text-white font-semibold py-2 px-4 text-sm rounded-lg hover:bg-indigo-700">Check Answer</button><div class="mt-2 text-sm font-semibold hidden"></div></div>`; break;
+                    case 'title':
+                        lessonTextHtml += `<h3 class="font-bold text-2xl mb-4">${block.text}</h3>`;
+                        break;
+                    
+                    // --- FIXED 'text' BLOCK RENDERING ---
+                    case 'text':
+                        lessonTextHtml += `<div class="my-4 text-gray-700 dark:text-gray-300 leading-relaxed"><p>${block.text}</p></div>`;
+                        break;
+
+                    case 'grammar':
+                        lessonTextHtml += `<div class="my-4 bg-indigo-50 dark:bg-indigo-900/50 p-4 rounded-lg"><p class="font-bold text-indigo-700 dark:text-indigo-200">${block.title}</p><p class="text-sm mt-1">${block.explanation}</p></div>`;
+                        break;
+                        
+                    case 'vocabulary':
+                        if (block.isFlashcard) {
+                            vocab.push({ word: block.word, definition: block.definition, example: block.example });
+                        } else {
+                            lessonTextHtml += `<div class="my-4 p-4 bg-stone-50 dark:bg-slate-900/50 rounded-lg border border-stone-200 dark:border-slate-700"><p class="font-bold text-lg">${block.word}</p><p class="text-sm text-gray-500 dark:text-gray-400">Definition: ${block.definition}</p><p class="text-sm text-gray-500 dark:text-gray-400 italic">Example: ${block.example}</p></div>`;
+                        }
+                        break;
+
+                    // --- ADDED 'discussion-prompt' BLOCK RENDERING ---
+                    case 'discussion-prompt':
+                        lessonTextHtml += `
+                            <div class="my-6 p-4 border-l-4 border-teal-500 bg-teal-50 dark:bg-teal-900/30 rounded-r-lg">
+                                <p class="font-semibold text-teal-800 dark:text-teal-200">Discussion Prompt</p>
+                                <p class="mt-2 text-gray-700 dark:text-gray-300 italic">"${block.prompt}"</p>
+                            </div>
+                        `;
+                        break;
+
+                    case 'multiple-choice':
+                        exerciseHtml += `<div class="p-4 rounded-lg bg-white dark:bg-slate-700 shadow-sm" data-question-id="mc"><p class="font-semibold">${block.question}</p><div class="mt-2 space-y-2">${block.options.sort(() => Math.random() - 0.5).map(option => `<button onclick="checkMCAnswer(this, '${block.correctAnswer.replace(/'/g, "\\'")}')" class="w-full text-left p-2 border rounded-md hover:bg-stone-100 dark:hover:bg-slate-600 transition-colors">${option}</button>`).join('')}</div><div class="mt-2 text-sm font-semibold hidden"></div></div>`;
+                        break;
+
+                    case 'fill-in-the-blank':
+                        exerciseHtml += `<div class="p-4 rounded-lg bg-white dark:bg-slate-700 shadow-sm" data-question-id="fitb"><p class="font-semibold">Fill in the blank:</p><div class="mt-1">${block.sentence.replace(/_/g, `<input type="text" data-correct-answer="${block.correctAnswer.replace(/'/g, "\\'")}" class="inline-block w-32 p-1 text-base bg-transparent border-b-2 border-stone-300 dark:border-gray-600 focus:outline-none focus:border-indigo-500 mx-1">`)}</div><button onclick="checkFITBAnswer(this)" class="mt-4 bg-indigo-600 text-white font-semibold py-2 px-4 text-sm rounded-lg hover:bg-indigo-700">Check Answer</button><div class="mt-2 text-sm font-semibold hidden"></div></div>`;
+                        break;
                 }
             });
 
@@ -245,7 +277,7 @@
             currentCardIndex = 0;
             updateFlashcardUI();
         }
-        
+
         window.checkMCAnswer = (button, correctAnswer) => {
             const parent = button.closest('[data-question-id]');
             const feedbackEl = parent.querySelector('div:last-child');
