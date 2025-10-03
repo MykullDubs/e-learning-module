@@ -89,8 +89,7 @@
 
     <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-7xl font-brand">
 
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start pt-8">
             
             <div id="lesson-content-container" class="lg:col-span-2 space-y-8 bg-white/50 dark:bg-slate-800/50 backdrop-blur-lg p-8 rounded-2xl shadow-xl border border-stone-200/50 dark:border-slate-700/50">
                 <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-200 pb-4 border-b border-stone-200 dark:border-slate-700">Today's Lesson</h2>
@@ -175,7 +174,30 @@
         
         let currentUser, userData, classId, vocab = [], currentCardIndex = 0;
 
-function renderLessonContent(lesson) {
+        function updateFlashcardUI() {
+            const card = document.getElementById('flashcard');
+            const front = document.getElementById('flashcard-front');
+            const back = document.getElementById('flashcard-back');
+            const counter = document.getElementById('flashcard-counter');
+
+            if (vocab.length > 0) {
+                const currentWord = vocab[currentCardIndex];
+                front.innerHTML = `<p class="text-3xl font-bold">${currentWord.word}</p>`;
+                back.innerHTML = `<p class="text-xl font-semibold">${currentWord.definition}</p><p class="mt-2 text-sm italic opacity-80">${currentWord.example}</p>`;
+                counter.textContent = `${currentCardIndex + 1}/${vocab.length}`;
+            } else {
+                front.innerHTML = `<p class="text-lg font-semibold text-gray-700 dark:text-gray-300">No words to display.</p>`;
+                back.innerHTML = `<p class="text-base text-white">Definition & Example</p>`;
+                counter.textContent = `0/0`;
+            }
+            card.classList.remove('is-flipped');
+        }
+
+        document.getElementById('flashcard-container').addEventListener('click', () => { document.getElementById('flashcard').classList.toggle('is-flipped'); });
+        document.getElementById('next-card-btn').addEventListener('click', (e) => { e.stopPropagation(); if (currentCardIndex < vocab.length - 1) { currentCardIndex++; updateFlashcardUI(); } });
+        document.getElementById('prev-card-btn').addEventListener('click', (e) => { e.stopPropagation(); if (currentCardIndex > 0) { currentCardIndex--; updateFlashcardUI(); } });
+
+        function renderLessonContent(lesson) {
             const contentContainer = document.getElementById('unified-lesson-content');
             let lessonHtml = '';
             vocab = [];
@@ -219,29 +241,6 @@ function renderLessonContent(lesson) {
             currentCardIndex = 0;
             updateFlashcardUI();
         }
-
-        function updateFlashcardUI() {
-            const card = document.getElementById('flashcard');
-            const front = document.getElementById('flashcard-front');
-            const back = document.getElementById('flashcard-back');
-            const counter = document.getElementById('flashcard-counter');
-
-            if (vocab.length > 0) {
-                const currentWord = vocab[currentCardIndex];
-                front.innerHTML = `<p class="text-3xl font-bold">${currentWord.word}</p>`;
-                back.innerHTML = `<p class="text-xl font-semibold">${currentWord.definition}</p><p class="mt-2 text-sm italic opacity-80">${currentWord.example}</p>`;
-                counter.textContent = `${currentCardIndex + 1}/${vocab.length}`;
-            } else {
-                front.innerHTML = `<p class="text-lg font-semibold text-gray-700 dark:text-gray-300">No words to display.</p>`;
-                back.innerHTML = `<p class="text-base text-white">Definition & Example</p>`;
-                counter.textContent = `0/0`;
-            }
-            card.classList.remove('is-flipped');
-        }
-
-        document.getElementById('flashcard-container').addEventListener('click', () => { document.getElementById('flashcard').classList.toggle('is-flipped'); });
-        document.getElementById('next-card-btn').addEventListener('click', (e) => { e.stopPropagation(); if (currentCardIndex < vocab.length - 1) { currentCardIndex++; updateFlashcardUI(); } });
-        document.getElementById('prev-card-btn').addEventListener('click', (e) => { e.stopPropagation(); if (currentCardIndex > 0) { currentCardIndex--; updateFlashcardUI(); } });
         
         window.checkMCAnswer = (button, correctAnswer) => {
             const parent = button.closest('[data-question-id]');
@@ -258,8 +257,11 @@ function renderLessonContent(lesson) {
                 feedbackEl.className = 'mt-3 text-sm font-semibold text-red-500';
                  parent.querySelectorAll('button').forEach(btn => {
                     btn.disabled = true;
-                    if (btn.textContent.trim() === correctAnswer.trim()) btn.classList.add('bg-green-100', 'dark:bg-green-900/50', 'border-green-500');
-                    else btn.classList.add('opacity-50');
+                    if (btn.textContent.trim() === correctAnswer.trim()) {
+                        btn.classList.add('bg-green-100', 'dark:bg-green-900/50', 'border-green-500');
+                    } else {
+                        btn.classList.add('opacity-50');
+                    }
                 });
             }
         };
@@ -278,7 +280,7 @@ function renderLessonContent(lesson) {
             inputEl.disabled = true;
             button.disabled = true;
         };
-        
+
         async function fetchQuizzesForClass(classId) {
             const quizzesListEl = document.getElementById('quizzes-list');
             quizzesListEl.innerHTML = `<p class="text-sm text-gray-500">Loading quizzes...</p>`;
@@ -326,13 +328,15 @@ function renderLessonContent(lesson) {
                 let studentMap = new Map();
                 if (userData.role === 'instructor' && submissions.length > 0) {
                     const studentIds = [...new Set(submissions.map(s => s.studentId))];
-                    const studentPromises = studentIds.map(id => getDoc(doc(db, "users", id)));
-                    const studentDocs = await Promise.all(studentPromises);
-                    studentDocs.forEach(doc => {
-                        if (doc.exists()) {
-                            studentMap.set(doc.id, doc.data().displayName || doc.data().email);
-                        }
-                    });
+                    if (studentIds.length > 0) {
+                        const studentPromises = studentIds.map(id => getDoc(doc(db, "users", id)));
+                        const studentDocs = await Promise.all(studentPromises);
+                        studentDocs.forEach(doc => {
+                            if (doc.exists()) {
+                                studentMap.set(doc.id, doc.data().displayName || doc.data().email);
+                            }
+                        });
+                    }
                 }
 
                 widgetContent.innerHTML = '';
@@ -361,14 +365,11 @@ function renderLessonContent(lesson) {
 
             const classData = classDocSnap.data();
             
-            // --- MODIFIED: Populate the new header title ---
             const headerClassTitle = document.getElementById('header-class-title');
             let titleString = `- ${classData.className || 'Untitled Class'} `;
             if (classData.cefrLevel) titleString += `- ${classData.cefrLevel} `;
             if (classData.teacherName) titleString += `- Instructor: ${classData.teacherName}`;
             headerClassTitle.textContent = titleString;
-
-            document.getElementById('class-description').textContent = classData.description;
 
             const lessonsRef = collection(db, "classes", classId, "lessons");
             onSnapshot(query(lessonsRef), (snapshot) => {
