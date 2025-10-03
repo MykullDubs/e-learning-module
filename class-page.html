@@ -144,6 +144,15 @@
                     </div>
                 </section>
 
+                <section id="gradebook-widget">
+                    <div class="widget-card bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-stone-200 dark:border-slate-700">
+                        <h2 id="gradebook-widget-title" class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200"></h2>
+                        <div id="gradebook-widget-content" class="space-y-3 max-h-60 overflow-y-auto">
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Loading grades...</p>
+                        </div>
+                    </div>
+                </section>
+
                 <section>
                     <div class="widget-card bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-stone-200 dark:border-slate-700">
                         <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">Weekly Discussion</h2>
@@ -179,6 +188,7 @@
         const db = getFirestore(app);
         
         let currentUser = null;
+        let userData = null;
         let classId = null;
         let vocab = [];
         let currentCardIndex = 0;
@@ -266,38 +276,89 @@
 
         async function fetchQuizzesForClass(classId) {
             const quizzesListEl = document.getElementById('quizzes-list');
-            quizzesListEl.innerHTML = '<p class="text-sm text-gray-500 dark:text-gray-400">Loading quizzes...</p>';
+            quizzesListEl.innerHTML = `<p class="text-sm text-gray-500">Loading quizzes...</p>`;
+            const q = query(collection(db, "quizzes"), where("classId", "==", classId));
+            const querySnapshot = await getDocs(q);
 
-            try {
-                const q = query(collection(db, "quizzes"), where("classId", "==", classId));
-                const querySnapshot = await getDocs(q);
-
-                quizzesListEl.innerHTML = '';
-                if (querySnapshot.empty) {
-                    quizzesListEl.innerHTML = '<p class="text-sm text-gray-500 dark:text-gray-400">No quizzes are assigned to this class yet.</p>';
-                } else {
-                    querySnapshot.forEach((doc) => {
-                        const quizData = doc.data();
-                        const quizLink = document.createElement('a');
-                        quizLink.href = `quiz-player.html?quizId=${doc.id}`;
-                        quizLink.className = 'block p-4 rounded-lg bg-stone-50 dark:bg-slate-900/50 hover:bg-stone-100 dark:hover:bg-slate-700 transition';
-                        quizLink.innerHTML = `
-                            <p class="font-semibold text-gray-800 dark:text-gray-200">${quizData.title}</p>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-xs text-gray-500 dark:text-gray-400">${quizData.questions.length} Questions</span>
-                                <span class="text-sm font-semibold text-indigo-600 dark:text-indigo-400">Start Quiz →</span>
-                            </div>
-                        `;
-                        quizzesListEl.appendChild(quizLink);
-                    });
-                }
-            } catch (error) {
-                console.error("Error fetching quizzes: ", error);
-                quizzesListEl.innerHTML = '<p class="text-sm text-red-500">Could not load quizzes.</p>';
+            quizzesListEl.innerHTML = '';
+            if (querySnapshot.empty) {
+                quizzesListEl.innerHTML = `<p class="text-sm text-gray-500">No quizzes are assigned.</p>`;
+            } else {
+                querySnapshot.forEach((doc) => {
+                    const quizData = doc.data();
+                    const quizLink = document.createElement('a');
+                    quizLink.href = `quiz-player.html?quizId=${doc.id}&classId=${classId}`;
+                    quizLink.className = 'block p-4 rounded-lg bg-stone-50 dark:bg-slate-900/50 hover:bg-stone-100 dark:hover:bg-slate-700 transition';
+                    quizLink.innerHTML = `
+                        <p class="font-semibold text-gray-800 dark:text-gray-200">${quizData.title}</p>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="text-xs text-gray-500 dark:text-gray-400">${quizData.questions.length} Questions</span>
+                            <span class="text-sm font-semibold text-indigo-600 dark:text-indigo-400">Start Quiz →</span>
+                        </div>
+                    `;
+                    quizzesListEl.appendChild(quizLink);
+                });
             }
         }
         
-        async function loadClassContent(classId) {
+        async function fetchAndRenderGradebookWidget(classId, user, userData) {
+            const widgetContent = document.getElementById('gradebook-widget-content');
+            const widgetTitle = document.getElementById('gradebook-widget-title');
+            widgetContent.innerHTML = `<p class="text-sm text-gray-500">Loading grades...</p>`;
+            let submissionsQuery;
+
+            if (userData.role === 'instructor') {
+                widgetTitle.textContent = 'Class Gradebook';
+                submissionsQuery = query(collection(db, "submissions"), where("classId", "==", classId), orderBy("submittedAt", "desc"));
+            } else {
+                widgetTitle.textContent = 'My Grades for this Class';
+                submissionsQuery = query(collection(db, "submissions"), where("classId", "==", classId), where("studentId", "==", user.uid), orderBy("submittedAt", "desc"));
+            }
+
+            try {
+                const submissionSnap = await getDocs(submissionsQuery);
+                const submissions = submissionSnap.docs.map(d => d.data());
+
+                if (submissions.length === 0) {
+                    widgetContent.innerHTML = `<p class="text-sm text-gray-500">No submissions found.</p>`;
+                    return;
+                }
+                
+                let studentMap = new Map();
+                if (userData.role === 'instructor') {
+                    const studentIds = [...new Set(submissions.map(s => s.studentId))];
+                    const studentPromises = studentIds.map(id => getDoc(doc(db, "users", id)));
+                    const studentDocs = await Promise.all(studentPromises);
+                    studentDocs.forEach(doc => {
+                        if (doc.exists()) {
+                            studentMap.set(doc.id, doc.data().displayName || doc.data().email);
+                        }
+                    });
+                }
+
+                widgetContent.innerHTML = '';
+                submissions.forEach(sub => {
+                    const percentage = Math.round((sub.score / sub.totalQuestions) * 100);
+                    const studentName = studentMap.get(sub.studentId) || '';
+                    const gradeItem = document.createElement('div');
+                    gradeItem.className = 'p-3 rounded-lg bg-stone-50 dark:bg-slate-900/50';
+                    gradeItem.innerHTML = `
+                        <div class="flex justify-between items-center">
+                            <p class="font-semibold text-sm">${sub.quizTitle}</p>
+                            <p class="font-bold text-sm ${percentage >= 70 ? 'text-green-600' : 'text-red-500'}">${percentage}%</p>
+                        </div>
+                        ${userData.role === 'instructor' ? `<p class="text-xs text-gray-500">${studentName}</p>` : ''}
+                    `;
+                    widgetContent.appendChild(gradeItem);
+                });
+
+            } catch (error) {
+                console.error("Error fetching gradebook widget data: ", error);
+                widgetContent.innerHTML = `<p class="text-sm text-red-500">Could not load grades.</p>`;
+            }
+        }
+
+        async function loadClassContent(classId, user, userData) {
             const classDocRef = doc(db, "classes", classId);
             const classDocSnap = await getDoc(classDocRef);
             if (!classDocSnap.exists()) {
@@ -308,11 +369,7 @@
             const classData = classDocSnap.data();
             document.getElementById('class-title').textContent = classData.className;
             document.getElementById('class-description').textContent = classData.description;
-            document.getElementById('class-metadata').innerHTML = `
-                <span>Level: ${classData.cefrLevel || 'N/A'}</span> | 
-                <span>Teacher: ${classData.teacherName || 'N/A'}</span> | 
-                <span>Schedule: ${classData.classDay || ''}, ${classData.classTime || ''}</span>
-            `;
+            document.getElementById('class-metadata').innerHTML = `<span>Level: ${classData.cefrLevel || 'N/A'}</span> | <span>Teacher: ${classData.teacherName || 'N/A'}</span>`;
 
             const lessonsRef = collection(db, "classes", classId, "lessons");
             onSnapshot(query(lessonsRef), (snapshot) => {
@@ -325,17 +382,13 @@
                 const discussionBoardEl = document.getElementById('discussion-board');
                 discussionBoardEl.innerHTML = '';
                 if (snapshot.empty) {
-                    discussionBoardEl.innerHTML = `<p class="text-sm text-gray-500 dark:text-gray-400">No comments yet.</p>`;
+                    discussionBoardEl.innerHTML = `<p class="text-sm text-gray-500">No comments yet.</p>`;
                 } else {
                     snapshot.forEach(doc => {
                         const post = doc.data();
                         const postEl = document.createElement('div');
                         postEl.className = 'p-3 bg-stone-50 dark:bg-slate-900/50 rounded-lg';
-                        postEl.innerHTML = `
-                            <p class="font-semibold text-gray-800 dark:text-gray-200">${post.authorName}</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">${post.text}</p>
-                            <p class="text-xs text-gray-400 mt-1">${post.timestamp ? new Date(post.timestamp.toDate()).toLocaleString() : ''}</p>
-                        `;
+                        postEl.innerHTML = `<p class="font-semibold">${post.authorName}</p><p class="text-sm">${post.text}</p><p class="text-xs text-gray-400 mt-1">${post.timestamp ? new Date(post.timestamp.toDate()).toLocaleString() : ''}</p>`;
                         discussionBoardEl.appendChild(postEl);
                     });
                 }
@@ -344,21 +397,31 @@
             document.getElementById('post-comment-btn').addEventListener('click', async () => {
                 const commentInput = document.getElementById('comment-input');
                 if (commentInput.value.trim() && currentUser) {
-                    await addDoc(discussionsRef, { authorId: currentUser.uid, authorName: currentUser.displayName || currentUser.email, text: commentInput.value.trim(), timestamp: serverTimestamp() });
+                    await addDoc(discussionsRef, { authorId: currentUser.uid, authorName: userData.displayName || currentUser.email, text: commentInput.value.trim(), timestamp: serverTimestamp() });
                     commentInput.value = '';
                 }
             });
 
             await fetchQuizzesForClass(classId);
-}
+            await fetchAndRenderGradebookWidget(classId, user, userData);
+        }
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
+                try {
+                    const userDocRef = doc(db, "users", user.uid);
+                    const docSnap = await getDoc(userDocRef);
+                    userData = docSnap.exists() ? docSnap.data() : { role: 'student' };
+                } catch (error) {
+                    console.error("Error fetching user data:", error);
+                    userData = { role: 'student' };
+                }
+
                 const urlParams = new URLSearchParams(window.location.search);
                 classId = urlParams.get('classId');
                 if (classId) {
-                    await loadClassContent(classId);
+                    await loadClassContent(classId, currentUser, userData);
                 } else {
                     document.getElementById('class-title').textContent = "No Class Selected";
                     document.getElementById('lesson-content-container').innerHTML = "<p class='text-center'>Please select a class from your dashboard.</p>";
