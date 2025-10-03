@@ -270,7 +270,7 @@
             vocab = [];
 
             if (!lesson || !lesson.contentBlocks || lesson.contentBlocks.length === 0) {
-                lessonTextEl.innerHTML = `<p class="text-gray-500 dark:text-gray-400">No lesson content has been added to this class yet.</p>`;
+                lessonTextEl.innerHTML = `<p class="text-gray-500 dark:text-gray-400">No lessons assigned yet. Please contact your instructor.</p>`;
                 exerciseContentEl.innerHTML = `<p class="text-gray-500 dark:text-gray-400">No exercises assigned for this lesson.</p>`;
                 document.getElementById('start-game-btn').classList.add('hidden');
                 return;
