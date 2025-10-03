@@ -50,7 +50,7 @@
              <h1 class="text-4xl font-bold text-gray-900 dark:text-white">Quiz Complete!</h1>
              <p class="text-2xl mt-4">Your Score:</p>
              <p id="score-display" class="text-6xl font-bold text-indigo-600 dark:text-indigo-400 my-4"></p>
-             <a href="dashboard.html" class="mt-8 inline-block bg-indigo-600 text-white font-semibold px-8 py-3 rounded-lg shadow-sm hover:bg-indigo-700">Back to Dashboard</a>
+             <a id="back-to-class-btn" href="dashboard.html" class="mt-8 inline-block bg-indigo-600 text-white font-semibold px-8 py-3 rounded-lg shadow-sm hover:bg-indigo-700">Back to Class</a>
         </div>
 
     </main>
@@ -99,7 +99,7 @@
                 document.getElementById('start-quiz-btn').disabled = false;
             } else {
                 document.getElementById('quiz-title-display').textContent = "Quiz Not Found";
-                document.getElementById('quiz-meta-display').textContent = "The quiz you are looking for does not exist or may have been deleted.";
+                document.getElementById('quiz-meta-display').textContent = "This quiz may have been deleted.";
             }
         }
 
@@ -111,22 +111,19 @@
             switch(question.type) {
                 case 'multiple-choice':
                     html += `<div class="space-y-3">`;
-                    question.options.forEach((option, i) => {
+                    question.options.forEach((option) => {
                         const isChecked = userAnswers[index] === option.text;
                         html += `
                             <label class="flex items-center p-4 border rounded-lg cursor-pointer ${isChecked ? 'bg-indigo-100 dark:bg-indigo-900 border-indigo-500' : 'hover:bg-stone-50 dark:hover:bg-slate-700'}">
                                 <input type="radio" name="option" value="${option.text}" class="form-radio h-5 w-5 text-indigo-600" ${isChecked ? 'checked' : ''}>
                                 <span class="ml-4 text-lg">${option.text}</span>
-                            </label>
-                        `;
+                            </label>`;
                     });
                     html += `</div>`;
                     break;
                 case 'fill-blank':
                     const userAnswer = userAnswers[index] || '';
-                    html += `
-                        <p class="text-lg">${question.sentence.replace('___', `<input type="text" class="fill-blank-input w-48 p-2 text-lg bg-transparent border-b-2 border-stone-300 dark:border-gray-600 focus:outline-none focus:border-indigo-500" value="${userAnswer}">`)}</p>
-                    `;
+                    html += `<p class="text-lg">${question.sentence.replace('___', `<input type="text" class="fill-blank-input w-48 p-2 text-lg bg-transparent border-b-2 focus:outline-none focus:border-indigo-500" value="${userAnswer}">`)}</p>`;
                     break;
             }
             questionContainer.innerHTML = html;
@@ -172,7 +169,6 @@
             quizData.questions.forEach((question, index) => {
                 const userAnswer = userAnswers[index];
                 if (userAnswer === null) return;
-
                 if (question.type === 'multiple-choice') {
                     const correctAnswer = question.options.find(opt => opt.correct).text;
                     if (userAnswer === correctAnswer) score++;
@@ -186,13 +182,16 @@
         async function submitQuiz() {
             clearInterval(timerInterval);
             const score = calculateScore();
+            const urlParams = new URLSearchParams(window.location.search);
+            const classId = urlParams.get('classId');
             
             try {
                 await addDoc(collection(db, "submissions"), {
-                    quizId: new URLSearchParams(window.location.search).get('quizId'),
+                    quizId: urlParams.get('quizId'),
+                    classId: classId,
                     quizTitle: quizData.title,
                     studentId: currentUser.uid,
-                    instructorId: quizData.instructorId, // This line enables the gradebook
+                    instructorId: quizData.instructorId,
                     answers: userAnswers,
                     score: score,
                     totalQuestions: quizData.questions.length,
@@ -200,7 +199,11 @@
                 });
             } catch(error) {
                 console.error("Error saving submission:", error);
-                alert("There was an error saving your quiz results. Please try again.");
+                alert("There was an error saving your results.");
+            }
+
+            if (classId) {
+                document.getElementById('back-to-class-btn').href = `class-page.html?classId=${classId}`;
             }
 
             document.getElementById('score-display').textContent = `${score} / ${quizData.questions.length}`;
