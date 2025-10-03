@@ -91,7 +91,6 @@
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // --- Firebase Initialization ---
         const firebaseConfig = {
             apiKey: "AIzaSyDWpBbBLpq2fOnN5-EO3kmc0CHyG7DHXIM",
             authDomain: "elearning-e83cb.firebaseapp.com",
@@ -104,19 +103,16 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- State Management ---
         let currentUser = null;
         let currentQuizId = null;
         let quizQuestions = [];
         let draggedIndex = null;
 
-        // --- DOM Elements ---
         const questionsContainer = document.getElementById('questions-container');
         const addQuestionFormContainer = document.getElementById('add-question-form-container');
         const saveQuizBtn = document.getElementById('save-quiz-btn');
         const saveStatus = document.getElementById('save-status');
 
-        // --- Rendering Logic ---
         function renderQuestions() {
             questionsContainer.innerHTML = '';
             if (quizQuestions.length === 0) {
@@ -166,7 +162,6 @@
             });
         }
 
-        // --- Form Generation ---
         function showAddQuestionForm(type) {
             let formHTML = '';
             const baseFormClasses = "p-4 bg-stone-100 dark:bg-slate-700 rounded-lg space-y-3 border border-stone-200 dark:border-slate-600";
@@ -202,8 +197,7 @@
                             <div><label class="${labelClasses}">Category 2 Name</label><input type="text" id="q-cat-name-2" class="${inputClasses}"></div>
                         </div>
                         <div><label class="${labelClasses}">Items for Category 1 (comma-separated)</label><input type="text" id="q-cat-items-1" class="${inputClasses}"></div>
-                        <div><label class="${labelClasses}">Items for Category 2 (comma-separated)</label><input type="text" id="q-cat-items-2" class="${inputClasses}"></div>
-                     `;
+                        <div><label class="${labelClasses}">Items for Category 2 (comma-separated)</label><input type="text" id="q-cat-items-2" class="${inputClasses}"></div>`;
                     break;
                 case 'ordering':
                     formHTML = `
@@ -218,11 +212,9 @@
             addQuestionFormContainer.innerHTML = `<div class="${baseFormClasses}">${formHTML}<button id="save-question-btn" class="${buttonClasses}" data-type="${type}">Add Question</button></div>`;
         }
 
-        // --- Event Listeners ---
         document.getElementById('add-question-buttons').addEventListener('click', e => {
             if (e.target.classList.contains('add-question-btn')) {
-                const type = e.target.dataset.type;
-                showAddQuestionForm(type);
+                showAddQuestionForm(e.target.dataset.type);
             }
         });
 
@@ -230,76 +222,71 @@
             if (e.target.id !== 'save-question-btn') return;
             
             const type = e.target.dataset.type;
-            const newQuestion = { type: type };
-            
+            const newQuestion = { type };
             const questionText = document.getElementById('q-text')?.value.trim();
-            if (type !== 'fill-blank' && !questionText) { alert("Please enter the question text."); return; }
+            if (type !== 'fill-blank' && !questionText) { return alert("Please enter the question text."); }
 
-            switch (type) {
-                case 'multiple-choice':
-                    newQuestion.questionText = questionText;
-                    const options = Array.from(document.querySelectorAll('.q-option')).map(input => input.value.trim());
-                    const correctIndex = document.querySelector('input[name="correct-answer"]:checked').value;
-                    if (options.some(opt => !opt)) { alert("Please fill out all option fields."); return; }
-                    newQuestion.options = options.map((opt, i) => ({ text: opt, correct: i == correctIndex }));
-                    break;
-                case 'fill-blank':
-                    newQuestion.sentence = document.getElementById('q-sentence').value.trim();
-                    newQuestion.correctAnswer = document.getElementById('q-answer').value.trim();
-                    if (!newQuestion.sentence || !newQuestion.correctAnswer || !newQuestion.sentence.includes('___')) { alert("Please provide a valid sentence with ___ and a correct answer."); return; }
-                    newQuestion.questionText = `Fill in the blank: ${newQuestion.sentence}`;
-                    break;
-                case 'categorization':
-                    newQuestion.questionText = questionText;
-                    const cat1Name = document.getElementById('q-cat-name-1').value.trim();
-                    const cat2Name = document.getElementById('q-cat-name-2').value.trim();
-                    const cat1Items = document.getElementById('q-cat-items-1').value.split(',').map(i => i.trim()).filter(Boolean);
-                    const cat2Items = document.getElementById('q-cat-items-2').value.split(',').map(i => i.trim()).filter(Boolean);
-                    if (!cat1Name || !cat2Name || cat1Items.length === 0 || cat2Items.length === 0) { alert("Please fill out all category fields."); return; }
-                    newQuestion.categories = [{ name: cat1Name, items: cat1Items }, { name: cat2Name, items: cat2Items }];
-                    break;
-                case 'ordering':
-                    newQuestion.questionText = questionText;
-                    newQuestion.items = document.getElementById('q-items').value.split('\n').map(i => i.trim()).filter(Boolean);
-                    if (newQuestion.items.length < 2) { alert("Please provide at least two items to order."); return; }
-                    break;
-                case 'short-answer':
-                    newQuestion.questionText = questionText;
-                    break;
+            try {
+                switch (type) {
+                    case 'multiple-choice':
+                        newQuestion.questionText = questionText;
+                        const options = Array.from(document.querySelectorAll('.q-option')).map(input => input.value.trim());
+                        const correctIndex = document.querySelector('input[name="correct-answer"]:checked').value;
+                        if (options.some(opt => !opt)) throw new Error("Please fill out all option fields.");
+                        newQuestion.options = options.map((text, i) => ({ text, correct: i == correctIndex }));
+                        break;
+                    case 'fill-blank':
+                        newQuestion.sentence = document.getElementById('q-sentence').value.trim();
+                        newQuestion.correctAnswer = document.getElementById('q-answer').value.trim();
+                        if (!newQuestion.sentence || !newQuestion.correctAnswer || !newQuestion.sentence.includes('___')) throw new Error("Please provide a valid sentence with ___ and a correct answer.");
+                        newQuestion.questionText = `Fill in the blank: ${newQuestion.sentence}`;
+                        break;
+                    case 'categorization':
+                        newQuestion.questionText = questionText;
+                        const cat1Name = document.getElementById('q-cat-name-1').value.trim();
+                        const cat2Name = document.getElementById('q-cat-name-2').value.trim();
+                        const cat1Items = document.getElementById('q-cat-items-1').value.split(',').map(i => i.trim()).filter(Boolean);
+                        const cat2Items = document.getElementById('q-cat-items-2').value.split(',').map(i => i.trim()).filter(Boolean);
+                        if (!cat1Name || !cat2Name || cat1Items.length === 0 || cat2Items.length === 0) throw new Error("Please fill out all category fields.");
+                        newQuestion.categories = [{ name: cat1Name, items: cat1Items }, { name: cat2Name, items: cat2Items }];
+                        break;
+                    case 'ordering':
+                        newQuestion.questionText = questionText;
+                        newQuestion.items = document.getElementById('q-items').value.split('\n').map(i => i.trim()).filter(Boolean);
+                        if (newQuestion.items.length < 2) throw new Error("Please provide at least two items to order.");
+                        break;
+                    case 'short-answer':
+                        newQuestion.questionText = questionText;
+                        break;
+                }
+                quizQuestions.push(newQuestion);
+                renderQuestions();
+                addQuestionFormContainer.innerHTML = '';
+            } catch (error) {
+                alert(error.message);
             }
-
-            quizQuestions.push(newQuestion);
-            renderQuestions();
-            addQuestionFormContainer.innerHTML = '';
         });
 
         questionsContainer.addEventListener('click', (e) => {
-            const btn = e.target.closest('.remove-question-btn');
-            if (btn) {
-                const qEl = btn.closest('[data-index]');
-                const index = parseInt(qEl.dataset.index);
-                quizQuestions.splice(index, 1);
+            if (e.target.closest('.remove-question-btn')) {
+                const qEl = e.target.closest('[data-index]');
+                quizQuestions.splice(parseInt(qEl.dataset.index), 1);
                 renderQuestions();
             }
         });
 
-        // --- Drag and Drop Logic ---
         questionsContainer.addEventListener('dragstart', (e) => {
             draggedIndex = e.target.dataset.index;
             e.dataTransfer.effectAllowed = 'move';
         });
-
         questionsContainer.addEventListener('dragover', (e) => {
             e.preventDefault();
             const target = e.target.closest('[data-index]');
             if (target) target.classList.add('drag-over');
         });
-
         questionsContainer.addEventListener('dragleave', (e) => {
-            const target = e.target.closest('[data-index]');
-            if (target) target.classList.remove('drag-over');
+            e.target.closest('[data-index]')?.classList.remove('drag-over');
         });
-
         questionsContainer.addEventListener('drop', (e) => {
             e.preventDefault();
             const droppedOn = e.target.closest('[data-index]');
@@ -312,23 +299,20 @@
             document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
         });
 
-        // --- Save Logic ---
         saveQuizBtn.addEventListener('click', async () => {
-            if (!currentUser) { alert("You must be logged in."); return; }
+            if (!currentUser) return alert("You must be logged in.");
             saveQuizBtn.disabled = true;
             saveStatus.textContent = "Saving...";
 
-            const quizData = {
+            const quizDataForSave = {
                 title: document.getElementById('quiz-title').value.trim(),
                 topic: document.getElementById('quiz-topic').value.trim(),
                 timeLimit: parseInt(document.getElementById('quiz-time-limit').value) || 0,
                 questions: quizQuestions,
-                instructorId: currentUser.uid,
-                createdAt: serverTimestamp(),
-                updatedAt: serverTimestamp()
+                instructorId: currentUser.uid
             };
 
-            if (!quizData.title || quizQuestions.length === 0) {
+            if (!quizDataForSave.title || quizQuestions.length === 0) {
                 alert("Please add a title and at least one question.");
                 saveQuizBtn.disabled = false;
                 saveStatus.textContent = "";
@@ -336,12 +320,13 @@
             }
             
             try {
-                const quizzesRef = collection(db, "quizzes");
                 if (currentQuizId) {
-                    await updateDoc(doc(db, "quizzes", currentQuizId), quizData);
+                    const updateData = { ...quizDataForSave, updatedAt: serverTimestamp() };
+                    await updateDoc(doc(db, "quizzes", currentQuizId), updateData);
                     saveStatus.textContent = "✅ Quiz Updated!";
                 } else {
-                    const docRef = await addDoc(quizzesRef, quizData);
+                    const createData = { ...quizDataForSave, createdAt: serverTimestamp(), updatedAt: serverTimestamp() };
+                    const docRef = await addDoc(collection(db, "quizzes"), createData);
                     currentQuizId = docRef.id;
                     saveStatus.textContent = "✅ Quiz Saved!";
                 }
@@ -353,12 +338,14 @@
             }
         });
 
-        // --- Auth & Initialization ---
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
-                // Logic to load an existing quiz for editing could go here
-                // For now, it starts a new quiz by default
+                const urlParams = new URLSearchParams(window.location.search);
+                const quizIdToLoad = urlParams.get('quizId');
+                if (quizIdToLoad) {
+                    // Future logic to load an existing quiz for editing can be added here
+                }
             } else {
                 window.location.href = 'Login.html';
             }
