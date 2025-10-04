@@ -242,7 +242,7 @@
                     const student = studentDoc.data();
                     const li = document.createElement('li');
                     li.className = 'flex justify-between items-center bg-stone-50 dark:bg-slate-900/50 p-3 rounded-lg';
-                    li.innerHTML = `<div class="flex items-center gap-3"><img src="${student.photoURL || `https://ui-avatars.com/api/?name=${student.displayName}`}" class="w-8 h-8 rounded-full"><span>${student.displayName}</span></div><button class="unenroll-btn text-red-500 text-sm font-semibold">Unenroll</button></li>`;
+                    li.innerHTML = `<div class="flex items-center gap-3"><img src=\"${student.photoURL || `https://ui-avatars.com/api/?name=${student.displayName}`}\" class=\"w-8 h-8 rounded-full\"><span>${student.displayName}</span></div><button class=\"unenroll-btn text-red-500 text-sm font-semibold\">Unenroll</button></li>`;
                     li.querySelector('.unenroll-btn').addEventListener('click', () => {
                         if (confirm(`Are you sure you want to unenroll ${student.displayName}?`)) {
                             unenrollStudent(studentDoc.id);
