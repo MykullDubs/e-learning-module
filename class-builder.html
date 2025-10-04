@@ -104,7 +104,7 @@
                 <section>
                     <div>
                         <h3 class="text-2xl font-semibold mb-4 flex justify-between items-center">Assigned Lessons
-                            <a href="class-lesson-library.html" class="bg-indigo-600 text-white font-semibold px-4 py-1 text-sm rounded-lg shadow-sm hover:bg-indigo-700 transition">
+                            <a href="class-lessons-library.html" class="bg-indigo-600 text-white font-semibold px-4 py-1 text-sm rounded-lg shadow-sm hover:bg-indigo-700 transition">
                                 + Add
                             </a>
                         </h3>
@@ -165,6 +165,7 @@
                     window.location.href = 'dashboard.html';
                 } else {
                     fetchClasses(user.uid);
+                    // Check for classId in URL to pre-select it
                     const urlParams = new URLSearchParams(window.location.search);
                     const classIdFromUrl = urlParams.get('classId');
                     if (classIdFromUrl) {
@@ -334,7 +335,6 @@
                 return;
             }
             try {
-                // Delete subcollections first
                 const lessonsRef = collection(db, "classes", activeClassId, "lessons");
                 const lessonsSnap = await getDocs(lessonsRef);
                 const studentsRef = collection(db, "classes", activeClassId, "students");
@@ -348,28 +348,25 @@
                 studentsSnap.forEach(doc => batch.delete(doc.ref));
                 discussionsSnap.forEach(doc => batch.delete(doc.ref));
 
-                // Find all enrolled students and clear their currentClassId
                 const studentsInClassQuery = query(collection(db, "users"), where("currentClassId", "==", activeClassId));
                 const studentsInClassSnap = await getDocs(studentsInClassQuery);
                 studentsInClassSnap.forEach(doc => {
                     batch.update(doc.ref, { currentClassId: null });
                 });
 
-                // Finally, delete the class document itself
                 const classRef = doc(db, "classes", activeClassId);
                 batch.delete(classRef);
 
                 await batch.commit();
 
                 alert("Class deleted successfully!");
-                window.location.reload(); // Refresh the page to clear the editor
+                window.location.reload();
             } catch (error) {
                 console.error("Error deleting class:", error);
                 alert("An error occurred while deleting the class.");
             }
         }
         
-        // --- MODALS AND EVENT LISTENERS ---
         const enrollStudentModal = document.getElementById('enroll-student-modal');
         
         document.getElementById('class-form').addEventListener('submit', saveClass);
@@ -386,7 +383,7 @@
                 const student = doc.data();
                 const btn = document.createElement('button');
                 btn.className = 'w-full text-left p-2 rounded-md hover:bg-stone-100 dark:hover:bg-slate-700 flex items-center gap-3';
-                btn.innerHTML = `<img src="${student.photoURL || `https://ui-avatars.com/api/?name=${student.displayName}`}" class="w-8 h-8 rounded-full"><span>${student.displayName}</span>`;
+                btn.innerHTML = `<img src=\"${student.photoURL || `https://ui-avatars.com/api/?name=${student.displayName}`}\" class=\"w-8 h-8 rounded-full\"><span>${student.displayName}</span>`;
                 btn.onclick = () => { enrollStudentInClass(doc.id, student); enrollStudentModal.classList.add('hidden'); };
                 list.appendChild(btn);
             });
