@@ -6,7 +6,200 @@
     <title>Mastering Verb Perspective</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* A little extra style for smooth transitions and a modern feel */<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mastering Verb Perspective</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
         /* A little extra style for smooth transitions and a modern feel */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+        .feedback-correct {
+            color: #16a34a; /* green-600 */
+        }
+        .feedback-incorrect {
+            color: #dc2626; /* red-600 */
+        }
+        .quiz-option {
+            transition: all 0.2s ease-in-out;
+        }
+        .quiz-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <main class="max-w-4xl mx-auto p-6 md:p-12 space-y-16">
+
+        <header class="text-center space-y-4">
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-900">Mastering Verb Perspective</h1>
+            <p class="text-lg text-slate-600">Understanding Who's Telling the Story ✍️</p>
+        </header>
+
+        <section id="introduction" class="bg-white p-8 rounded-xl shadow-md space-y-4">
+            <h2 class="text-3xl font-bold text-sky-700">The Camera Lens of Language</h2>
+            <p class="text-base md:text-lg">Think of verb perspective, or "point of view," as the **camera lens** through which a story is told. Where the author places this camera determines who is speaking and how we, the reader, experience the events. Is the camera held by a character, pointed at you, or observing from a distance? Let's find out.</p>
+            <div class="flex justify-center pt-4">
+                
+            </div>
+        </section>
+
+        <section id="first-person" class="bg-white p-8 rounded-xl shadow-md space-y-4">
+            <h2 class="text-3xl font-bold text-sky-700">1. First-Person Perspective: "I Am the Story"</h2>
+            <p class="text-base md:text-lg">In the first person, the narrator is a character within the story. They are holding the camera themselves. You'll see this perspective used in memoirs, personal essays, and fiction where the author wants a close, personal connection with the reader.</p>
+            <div class="bg-sky-50 border-l-4 border-sky-500 text-sky-800 p-4 rounded-r-lg">
+                <p><strong class="font-semibold">Key Pronouns:</strong> I, me, my, we, us, our.</p>
+            </div>
+            <h3 class="text-xl font-semibold pt-2">Narrative Example:</h3>
+            <blockquote class="border-l-4 border-slate-300 pl-4 italic text-slate-600">
+                <p>"I walked through the quiet streets, feeling the cool night air on my face. We knew our journey was just beginning, and my heart was filled with a mix of excitement and fear."</p>
+            </blockquote>
+            
+            <div id="quiz1" class="pt-6">
+                <h3 class="text-xl font-semibold mb-2">🧠 Knowledge Check</h3>
+                <p class="mb-4">Which sentence is written in the first person?</p>
+                <div class="space-y-3">
+                    <button onclick="checkAnswer('q1', 'a')" class="quiz-option w-full text-left p-4 bg-slate-100 rounded-lg hover:bg-sky-100">A) I think it's going to rain later.</button>
+                    <button onclick="checkAnswer('q1', 'b')" class="quiz-option w-full text-left p-4 bg-slate-100 rounded-lg hover:bg-sky-100">B) You should probably bring an umbrella.</button>
+                    <button onclick="checkAnswer('q1', 'c')" class="quiz-option w-full text-left p-4 bg-slate-100 rounded-lg hover:bg-sky-100">C) He saw the dark clouds gathering.</button>
+                </div>
+                <p id="feedback-q1" class="mt-3 font-medium h-6"></p>
+            </div>
+        </section>
+
+        <section id="second-person" class="bg-white p-8 rounded-xl shadow-md space-y-4">
+            <h2 class="text-3xl font-bold text-teal-700">2. Second-Person Perspective: "You Are the Story"</h2>
+            <p class="text-base md:text-lg">The second person is less common in fiction but powerful. The narrator speaks directly to the reader, making **you** the character. The camera is pointed directly at you. This style is often used in advertisements, instructions, and "Choose Your Own Adventure" stories.</p>
+            <div class="bg-teal-50 border-l-4 border-teal-500 text-teal-800 p-4 rounded-r-lg">
+                <p><strong class="font-semibold">Key Pronouns:</strong> You, your.</p>
+            </div>
+            <h3 class="text-xl font-semibold pt-2">Narrative Example:</h3>
+            <blockquote class="border-l-4 border-slate-300 pl-4 italic text-slate-600">
+                <p>"You open the ancient door and step into the dusty library. Your heart pounds as you realize you are not alone. What do you do next?"</p>
+            </blockquote>
+
+            <div id="quiz2" class="pt-6">
+                <h3 class="text-xl font-semibold mb-2">🧠 Knowledge Check</h3>
+                <p class="mb-4">Which sentence is written in the second person?</p>
+                <div class="space-y-3">
+                    <button onclick="checkAnswer('q2', 'a')" class="quiz-option w-full text-left p-4 bg-slate-100 rounded-lg hover:bg-teal-100">A) She decided to take the scenic route.</button>
+                    <button onclick="checkAnswer('q2', 'b')" class="quiz-option w-full text-left p-4 bg-slate-100 rounded-lg hover:bg-teal-100">B) To start the car, you must first press the brake.</button>
+                    <button onclick="checkAnswer('q2', 'c')" class="quiz-option w-full text-left p-4 bg-slate-100 rounded-lg hover:bg-teal-100">C) We felt the warmth of the sun.</button>
+                </div>
+                <p id="feedback-q2" class="mt-3 font-medium h-6"></p>
+            </div>
+        </section>
+
+        <section id="third-person" class="bg-white p-8 rounded-xl shadow-md space-y-4">
+            <h2 class="text-3xl font-bold text-indigo-700">3. Third-Person Perspective: "They Are the Story"</h2>
+            <p class="text-base md:text-lg">This is the most common perspective in fiction. The narrator is outside the story, like a floating, invisible camera operator, describing the events and characters. The narrator can be "limited" (knowing the thoughts of only one character) or "omniscient" (knowing all characters' thoughts).</p>
+            <div class="bg-indigo-50 border-l-4 border-indigo-500 text-indigo-800 p-4 rounded-r-lg">
+                <p><strong class="font-semibold">Key Pronouns:</strong> He, she, it, they, him, her, them, their.</p>
+            </div>
+            <h3 class="text-xl font-semibold pt-2">Narrative Example:</h3>
+            <blockquote class="border-l-4 border-slate-300 pl-4 italic text-slate-600">
+                <p>"He adjusted his tie as he looked out the window. The city sprawled below him, a maze of lights and shadows. She, meanwhile, was miles away, wondering if he would ever call. They were on paths destined to cross."</p>
+            </blockquote>
+
+            <div id="quiz3" class="pt-6">
+                <h3 class="text-xl font-semibold mb-2">🧠 Knowledge Check</h3>
+                <p class="mb-4">Which sentence is written in the third person?</p>
+                <div class="space-y-3">
+                    <button onclick="checkAnswer('q3', 'a')" class="quiz-option w-full text-left p-4 bg-slate-100 rounded-lg hover:bg-indigo-100">A) My favorite food is pizza.</button>
+                    <button onclick="checkAnswer('q3', 'b')" class="quiz-option w-full text-left p-4 bg-slate-100 rounded-lg hover:bg-indigo-100">B) Your dog is very friendly.</button>
+                    <button onclick="checkAnswer('q3', 'c')" class="quiz-option w-full text-left p-4 bg-slate-100 rounded-lg hover:bg-indigo-100">C) The cat chased its tail in circles.</button>
+                </div>
+                <p id="feedback-q3" class="mt-3 font-medium h-6"></p>
+            </div>
+        </section>
+        
+        <section id="formality" class="bg-white p-8 rounded-xl shadow-md space-y-4">
+            <h2 class="text-3xl font-bold text-amber-700">Perspective & Formality: Choosing the Right Tone 🏛️</h2>
+            <p class="text-base md:text-lg">Your choice of perspective does more than just frame the story; it sets the **tone** and **formality**. Matching the perspective to your audience and purpose is a key writing skill.</p>
+            
+            <ul class="space-y-4 pt-2">
+                <li><strong class="font-semibold text-indigo-700">Third Person (Formal):</strong> The standard for academic, scientific, and journalistic writing. It creates an objective, authoritative tone by focusing on the subject, not the writer or reader.</li>
+                <li><strong class="font-semibold text-sky-700">First Person (Variable):</strong> Can be formal in specific contexts (e.g., "In this paper, I will argue...") but is generally more personal and subjective. Perfect for narratives, blogs, and reflective essays.</li>
+                <li><strong class="font-semibold text-teal-700">Second Person (Informal):</strong> Speaks directly to the reader ("you"), creating a casual, conversational feel. It's avoided in formal essays but is the correct choice for instructions, manuals, and advertisements.</li>
+            </ul>
+
+            <div id="quiz4" class="pt-6">
+                <h3 class="text-xl font-semibold mb-2">🧠 Knowledge Check</h3>
+                <p class="mb-4">You are writing a formal research paper. Which sentence has the most appropriate perspective?</p>
+                <div class="space-y-3">
+                    <button onclick="checkAnswer('q4', 'a')" class="quiz-option w-full text-left p-4 bg-slate-100 rounded-lg hover:bg-amber-100">A) I personally believe the results are fascinating.</button>
+                    <button onclick="checkAnswer('q4', 'b')" class="quiz-option w-full text-left p-4 bg-slate-100 rounded-lg hover:bg-amber-100">B) You can see that the data points to a conclusion.</button>
+                    <button onclick="checkAnswer('q4', 'c')" class="quiz-option w-full text-left p-4 bg-slate-100 rounded-lg hover:bg-amber-100">C) The research indicates a correlation between the variables.</button>
+                </div>
+                <p id="feedback-q4" class="mt-3 font-medium h-6"></p>
+            </div>
+        </section>
+
+        <footer class="text-center text-slate-500 pt-8">
+            <p>&copy; 2025 Instructional Design Group. All rights reserved.</p>
+        </footer>
+
+    </main>
+
+    <script>
+        const answers = {
+            q1: 'a',
+            q2: 'b',
+            q3: 'c',
+            q4: 'c'
+        };
+
+        const feedbackMessages = {
+            q1: {
+                correct: 'Correct! The pronoun "I" clearly signals the first-person perspective.',
+                incorrect: 'Not quite. Look for the pronoun that shows the narrator is talking about themselves ("I" or "we").'
+            },
+            q2: {
+                correct: 'Excellent! The pronoun "you" shows the narrator is speaking directly to the reader.',
+                incorrect: 'Try again. The second person addresses the reader directly using "you" or "your".'
+            },
+            q3: {
+                correct: 'That\'s it! The narrator is describing the cat ("it"), an external subject.',
+                incorrect: 'Almost! The third person refers to someone or something else, like "he," "she," or "it".'
+            },
+            q4: {
+                correct: 'Correct! This third-person sentence is objective and perfectly suited for a formal research paper.',
+                incorrect: 'Not quite. Formal academic writing typically uses the objective third-person to present findings.'
+            }
+        };
+
+        function checkAnswer(question, selectedAnswer) {
+            const feedbackEl = document.getElementById(`feedback-${question}`);
+            const isCorrect = answers[question] === selectedAnswer;
+
+            if (isCorrect) {
+                feedbackEl.textContent = feedbackMessages[question].correct;
+                feedbackEl.className = 'mt-3 font-medium h-6 feedback-correct';
+            } else {
+                feedbackEl.textContent = feedbackMessages[question].incorrect;
+                feedbackEl.className = 'mt-3 font-medium h-6 feedback-incorrect';
+            }
+
+            // Disable buttons after an answer is chosen for this quiz
+            const quizContainer = document.getElementById(`quiz${question.slice(1)}`);
+            const buttons = quizContainer.getElementsByTagName('button');
+            for (let button of buttons) {
+                button.disabled = true;
+                button.classList.add('opacity-50', 'cursor-not-allowed');
+                button.classList.remove('hover:bg-sky-100', 'hover:bg-teal-100', 'hover:bg-indigo-100', 'hover:bg-amber-100');
+            }
+        }
+    </script>
+
+</body>
+</html>
         body {
             font-family: 'Inter', sans-serif;
         }
