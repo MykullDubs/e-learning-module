@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GM Dashboard - Adventure English</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=Libre+Baskerville&display=swap');
+        body { font-family: 'Libre Baskerville', serif; }
+        h1, h2, h3, .font-title { font-family: 'IM Fell English SC', serif; }
+    </style>
+</head>
+<body class="bg-stone-800 text-stone-200">
+
+    <div class="container mx-auto p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-5xl font-title text-amber-400">GM Dashboard</h1>
+            <p class="text-stone-400">Oversee your party of adventurers.</p>
+        </header>
+
+        <main id="dashboard-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            </main>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+    <script type="module" src="gm.js"></script>
+</body>
+</html>
