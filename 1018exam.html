@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B1 Technology & Grammar Quiz</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4ff; /* Light indigo background */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+        .quiz-container {
+            width: 100%;
+            max-width: 768px;
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 15px 35px rgba(49, 46, 129, 0.1);
+            padding: 2rem;
+        }
+        .question-card {
+            border: 1px solid #e0e7ff;
+            background-color: #f8fafc; /* Sky-50 */
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        .answer-option {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border: 2px solid #cbd5e1; /* Slate-300 */
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            color: #1f2937; /* Gray-800 */
+        }
+        .answer-option:hover {
+            background-color: #e0e7ff; /* Indigo-100 */
+            border-color: #6366f1; /* Indigo-500 */
+        }
+        .answer-option.selected {
+            background-color: #c7d2fe; /* Indigo-200 */
+            border-color: #4f46e5; /* Indigo-600 */
+        }
+        .answer-option.correct {
+            background-color: #d1fae5; /* Green-100 */
+            border-color: #10b981; /* Green-500 */
+            pointer-events: none;
+        }
+        .answer-option.incorrect {
+            background-color: #fee2e2; /* Red-100 */
+            border-color: #ef4444; /* Red-500 */
+            pointer-events: none;
+        }
+        .rationale {
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            border-left: 4px solid;
+            display: none; /* Hidden until reviewed */
+        }
+        .rationale.correct {
+            border-color: #10b981; /* Green-500 */
+            background-color: #f0fdf4; /* Green-50 */
+            color: #065f46; /* Green-700 */
+        }
+        .rationale.incorrect {
+            border-color: #ef4444; /* Red-500 */
+            background-color: #fff7f7; /* Red-50 */
+            color: #b91c1c; /* Red-700 */
+        }
+        #results-screen {
+            display: none;
+            text-align: center;
+        }
+        .score-box {
+            display: inline-block;
+            padding: 2rem 3rem;
+            border-radius: 1rem;
+            background-color: #e0e7ff;
+            margin-top: 1rem;
+        }
+        .restart-button {
+            background-color: #4f46e5;
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 0.75rem;
+            transition: background-color 0.2s;
+        }
+        .restart-button:hover {
+            background-color: #4338ca;
+        }
+    </style>
+</head>
+<body class="selection:bg-indigo-200">
+
+    <div class="quiz-container">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-extrabold text-indigo-700">B1 Technology Challenge</h1>
+            <p class="text-lg text-gray-500 mt-2">Vocabulary, Comparatives, and Third Conditional</p>
+            <div id="progress" class="mt-4 text-sm font-semibold text-gray-600">Question 1 of 20</div>
+        </header>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen">
+            <div id="questions-container">
+                <!-- Questions will be injected here -->
+            </div>
+            
+            <div class="flex justify-between mt-6">
+                <button id="check-button" onclick="checkAnswer()" disabled class="px-8 py-3 bg-indigo-500 text-white font-bold rounded-xl shadow-md transition duration-200 hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed">
+                    Check Answer
+                </button>
+                <button id="next-button" onclick="nextQuestion()" disabled class="px-8 py-3 bg-green-500 text-white font-bold rounded-xl shadow-md transition duration-200 hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed">
+                    Next Question
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen">
+            <h2 class="text-3xl font-bold text-indigo-700">Quiz Complete!</h2>
+            <div class="score-box">
+                <p class="text-xl text-gray-700">Your Final Score is:</p>
+                <p id="final-score" class="text-6xl font-extrabold text-indigo-800 mt-2">0 / 20</p>
+            </div>
+            <p id="feedback-message" class="text-xl mt-4 font-semibold text-gray-700"></p>
+            <button onclick="initializeQuiz()" class="restart-button mt-8">
+                Restart Quiz
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = {
+            "questions": [
+                {
+                    "questionNumber": 1,
+                    "question": "Which word best describes a small machine, like a smartphone or tablet, designed for a specific task?",
+                    "answerOptions": [
+                        {"text": "Interface", "isCorrect": false, "rationale": "An interface is the point of interaction, not the device itself."},
+                        {"text": "Device", "isCorrect": true, "rationale": "A **device** is an electronic or mechanical machine made for a particular purpose."},
+                        {"text": "Network", "isCorrect": false, "rationale": "A network is a group of connected devices or people, not a single piece of equipment."},
+                        {"text": "Stream", "isCorrect": false, "rationale": "Stream is a verb that means to transmit or receive data, not the noun for the physical item."}
+                    ]
+                },
+                {
+                    "questionNumber": 2,
+                    "question": "Which adjective means 'the very latest and most advanced'?",
+                    "answerOptions": [
+                        {"text": "Obsolete", "isCorrect": false, "rationale": "Obsolete means something is no longer produced or useful, which is the opposite meaning."},
+                        {"text": "Addictive", "isCorrect": false, "rationale": "Addictive describes something you cannot stop using, not its level of newness or advancement."},
+                        {"text": "Cutting-Edge", "isCorrect": true, "rationale": "**Cutting-edge** is used to describe technology that is at the forefront of development; it is the newest and most advanced."},
+                        {"text": "Wireless", "isCorrect": false, "rationale": "Wireless describes the lack of physical wires, not the sophistication or newness of the technology."}
+                    ]
+                },
+                {
+                    "questionNumber": 3,
+                    "question": "The dial-up internet modem is now considered ___ because it has been replaced by faster technology.",
+                    "answerOptions": [
+                        {"text": "addictive", "isCorrect": false, "rationale": "While it may have been used frequently, addictive refers to compulsive use, not lack of relevance."},
+                        {"text": "cutting-edge", "isCorrect": false, "rationale": "The technology is old, and 'cutting-edge' means new and advanced."},
+                        {"text": "obsolete", "isCorrect": true, "rationale": "**Obsolete** is the correct word for something that is no longer in use or useful because something newer exists."},
+                        {"text": "browsing", "isCorrect": false, "rationale": "Browsing is a verb related to searching, not an adjective to describe the technology itself."}
+                    ]
+                },
+                {
+                    "questionNumber": 4,
+                    "question": "What is the best definition for the verb 'to stream'?",
+                    "answerOptions": [
+                        {"text": "To remove data from a physical disc.", "isCorrect": false, "rationale": "This definition refers to ripping or copying data, which is a different action."},
+                        {"text": "To send a file from your computer to the internet.", "isCorrect": false, "rationale": "This describes 'uploading' a file, not streaming content."},
+                        {"text": "To listen to or watch audio/video content directly over the internet without downloading it completely.", "isCorrect": true, "rationale": "**Streaming** involves the simultaneous transfer of data and playback, allowing immediate consumption without full download."},
+                        {"text": "To fix a problem with a computer program.", "isCorrect": false, "rationale": "This describes debugging or troubleshooting, which is unrelated to data transfer."}
+                    ]
+                },
+                {
+                    "questionNumber": 5,
+                    "question": "If you are 'browsing' the internet, what are you doing?",
+                    "answerOptions": [
+                        {"text": "You are closing all of your apps and turning off your device.", "isCorrect": false, "rationale": "This describes shutting down or logging out, which is not browsing."},
+                        {"text": "You are installing a new program onto your computer.", "isCorrect": false, "rationale": "This is the action of installing software, not generally browsing."},
+                        {"text": "You are looking through information or websites in a casual way, without a specific, urgent goal.", "isCorrect": true, "rationale": "To **browse** means to look around at different things casually, often used when referring to shopping or surfing the web."},
+                        {"text": "You are sending a private message to a colleague.", "isCorrect": false, "rationale": "This describes sending an email or text message, which is a specific communication task."}
+                    ]
+                },
+                {
+                    "questionNumber": 6,
+                    "question": "Many social media platforms are considered 'addictive' because users find them difficult to stop using. Which synonym is closest in meaning to 'addictive' in this context?",
+                    "answerOptions": [
+                        {"text": "User-friendly", "isCorrect": false, "rationale": "User-friendly means easy to use, not difficult to stop using."},
+                        {"text": "Compelling", "isCorrect": true, "rationale": "**Compelling** means powerfully interesting or attractive, which relates well to the quality of being difficult to stop using."},
+                        {"text": "Cutting-edge", "isCorrect": false, "rationale": "Cutting-edge means new and advanced, which is unrelated to the tendency to over-use something."},
+                        {"text": "Obsolete", "isCorrect": false, "rationale": "Obsolete means out of date, which is the opposite of the current, actively used platforms."}
+                    ]
+                },
+                {
+                    "questionNumber": 7,
+                    "question": "A keyboard that connects to a computer using Bluetooth is an example of what type of technology?",
+                    "answerOptions": [
+                        {"text": "Wired", "isCorrect": false, "rationale": "A wired connection requires a physical cable, which is not the case with Bluetooth."},
+                        {"text": "Mechanical", "isCorrect": false, "rationale": "Mechanical describes the internal workings, but does not describe the method of connection."},
+                        {"text": "Networked", "isCorrect": false, "rationale": "While it is part of a network, the most specific adjective describing its connection type is different."},
+                        {"text": "Wireless", "isCorrect": true, "rationale": "**Wireless** technology, like Bluetooth, communicates without the use of physical cables."}
+                    ]
+                },
+                {
+                    "questionNumber": 8,
+                    "question": "If you move a photo from your phone's memory to a cloud storage service, you ___ it; if you move a song from the internet to your phone, you ___ it.",
+                    "answerOptions": [
+                        {"text": "download / upload", "isCorrect": false, "rationale": "This order is incorrect: downloading means taking from the server, and uploading means sending to the server."},
+                        {"text": "upload / download", "isCorrect": true, "rationale": "You **upload** from a local device to a server (cloud) and **download** from a server (internet) to a local device."},
+                        {"text": "stream / browse", "isCorrect": false, "rationale": "These words are related to content consumption, not file transfer to/from storage."},
+                        {"text": "connect / install", "isCorrect": false, "rationale": "These words relate to setting up a network and setting up software, not file transfer."}
+                    ]
+                },
+                {
+                    "questionNumber": 9,
+                    "question": "Compared to a bulky desktop computer, a new tablet is often much ___.",
+                    "answerOptions": [
+                        {"text": "light than", "isCorrect": false, "rationale": "The comparative form for 'light' is 'lighter', and the structure 'than' is needed."},
+                        {"text": "more light", "isCorrect": false, "rationale": "For single-syllable adjectives like 'light', we use the -er suffix, not 'more'."},
+                        {"text": "lighter", "isCorrect": true, "rationale": "The comparative form for the one-syllable adjective 'light' is **lighter**."},
+                        {"text": "the lightest", "isCorrect": false, "rationale": "This is the superlative form, used when comparing three or more things."}
+                    ]
+                },
+                {
+                    "questionNumber": 10,
+                    "question": "Using a physical map is ___ navigating with a modern GPS device.",
+                    "answerOptions": [
+                        {"text": "more slowly than", "isCorrect": false, "rationale": "Slowly is an adverb, not an adjective. The adjective 'slow' or adverb 'slowly' would need correct comparative forms."},
+                        {"text": "more complicated than", "isCorrect": true, "rationale": "For adjectives with three or more syllables (like 'complicated'), the comparative is formed using **more...than**."},
+                        {"text": "most complicated", "isCorrect": false, "rationale": "This is the superlative form, used when comparing three or more things, not just two."},
+                        {"text": "complicateder than", "isCorrect": false, "rationale": "The -er suffix is only used for short adjectives; 'complicated' requires 'more'."}
+                    ]
+                },
+                {
+                    "questionNumber": 11,
+                    "question": "Which of these sentences correctly uses a superlative adjective?",
+                    "answerOptions": [
+                        {"text": "The fastest phone is more expensive.", "isCorrect": false, "rationale": "This uses the superlative in the first part, but the second part uses a comparative, and the full comparison is incomplete."},
+                        {"text": "For me, the most useful invention of the 20th century was the internet.", "isCorrect": true, "rationale": "The superlative **the most useful** is used correctly to compare the internet to all other 20th-century inventions."},
+                        {"text": "I think the better way to communicate is by calling.", "isCorrect": false, "rationale": "'Better' is a comparative form; the superlative 'best' is needed to describe the ultimate choice."},
+                        {"text": "That is the bigger screen I have ever seen.", "isCorrect": false, "rationale": "'Bigger' is comparative; the superlative 'biggest' is needed for the ultimate comparison."}
+                    ]
+                },
+                {
+                    "questionNumber": 12,
+                    "question": "The newest smart watch is ___ than the previous model.",
+                    "answerOptions": [
+                        {"text": "more better", "isCorrect": false, "rationale": "'Better' is already the comparative form of 'good,' so 'more better' is an incorrect double comparative."},
+                        {"text": "gooder", "isCorrect": false, "rationale": "'Good' has an irregular comparative form, which is 'better,' not 'gooder.'"},
+                        {"text": "best", "isCorrect": false, "rationale": "This is the superlative form, which is used when comparing three or more things."},
+                        {"text": "better", "isCorrect": true, "rationale": "**Better** is the correct irregular comparative form of 'good' and is used here to compare two items (the new watch and the old model)."}
+                    ]
+                },
+                {
+                    "questionNumber": 13,
+                    "question": "My old laptop is ___ computer I have ever owned; it is always freezing.",
+                    "answerOptions": [
+                        {"text": "worse", "isCorrect": false, "rationale": "'Worse' is the comparative form, used for comparing two things."},
+                        {"text": "baddest", "isCorrect": false, "rationale": "'Bad' has an irregular superlative form, which is 'worst,' not 'baddest.'"},
+                        {"text": "the worst", "isCorrect": true, "rationale": "The superlative form **the worst** is correctly used to compare the old laptop to all the computers the speaker has owned."},
+                        {"text": "the more bad", "isCorrect": false, "rationale": "This is an incorrect, non-standard form for the superlative of 'bad'."}
+                    ]
+                },
+                {
+                    "questionNumber": 14,
+                    "question": "Compared to sending an email, making a phone call, and sending a letter, the letter is generally considered ___.",
+                    "answerOptions": [
+                        {"text": "the slow", "isCorrect": false, "rationale": "The superlative form for a short adjective must end in '-est' (slowest)."},
+                        {"text": "the most slow", "isCorrect": false, "rationale": "Since 'slow' is a short adjective, it should take the '-est' suffix."},
+                        {"text": "slower than", "isCorrect": false, "rationale": "This is the comparative form, but three items are being compared, so a superlative is required."},
+                        {"text": "the slowest", "isCorrect": true, "rationale": "The superlative **the slowest** is correctly used to identify the one item that stands out in a group of three (or more) communication methods."}
+                    ]
+                },
+                {
+                    "questionNumber": 15,
+                    "question": "If I ___ the price of the new gadget, I ___ it immediately.",
+                    "answerOptions": [
+                        {"text": "had known / would have bought", "isCorrect": true, "rationale": "This correctly uses the Past Perfect (had known) in the IF clause and 'would have + P.P.' in the result clause, forming the **Third Conditional**."},
+                        {"text": "knew / would buy", "isCorrect": false, "rationale": "This is the structure of the Second Conditional, used for improbable present/future situations, not past regrets."},
+                        {"text": "would know / bought", "isCorrect": false, "rationale": "The modal 'would' cannot be used in the 'if' clause of a conditional sentence."},
+                        {"text": "have known / will buy", "isCorrect": false, "rationale": "This mixes present and future tenses, which is not the structure for the Third Conditional."}
+                    ]
+                },
+                {
+                    "questionNumber": 16,
+                    "question": "If my phone hadn't been in silent mode, I ___ the call from my boss.",
+                    "answerOptions": [
+                        {"text": "would answer", "isCorrect": false, "rationale": "The result clause of the Third Conditional requires 'would have' followed by the past participle."},
+                        {"text": "would have answered", "isCorrect": true, "rationale": "The result clause of the **Third Conditional** is correctly formed with **would have answered** (Past Participle)."},
+                        {"text": "will answer", "isCorrect": false, "rationale": "This uses the Simple Future, which is part of the First Conditional, not the Third Conditional."},
+                        {"text": "had answered", "isCorrect": false, "rationale": "The Past Perfect is reserved for the 'if' clause, not the main result clause."}
+                    ]
+                },
+                {
+                    "questionNumber": 17,
+                    "question": "Choose the sentence that correctly expresses a regret about a past technology purchase using the Third Conditional.",
+                    "answerOptions": [
+                        {"text": "If I save my money, I can buy the new tablet.", "isCorrect": false, "rationale": "This is the First Conditional (real future possibility), not a past regret."},
+                        {"text": "If I had waited one more month, I would have bought the better model.", "isCorrect": true, "rationale": "This correctly uses the **Third Conditional** to express an unreal past situation and its hypothetical result (a regret/missed opportunity)."},
+                        {"text": "If I waited, I would buy the better model.", "isCorrect": false, "rationale": "This is the Second Conditional (unreal present/future), not a past regret."},
+                        {"text": "I will buy the better model if I knew about it.", "isCorrect": false, "rationale": "The tenses are incorrectly mixed ('will buy' and 'knew')."}
+                    ]
+                },
+                {
+                    "questionNumber": 18,
+                    "question": "If she ___ the warning about the virus, she ___ her files.",
+                    "answerOptions": [
+                        {"text": "listened / wouldn't lose", "isCorrect": false, "rationale": "This uses the Second Conditional structure, which is incorrect for a past event."},
+                        {"text": "had listened / wouldn't have lost", "isCorrect": true, "rationale": "This correctly uses the **Third Conditional** to describe an unreal past condition and its unreal past result."},
+                        {"text": "listens / won't lose", "isCorrect": false, "rationale": "This uses the First Conditional structure, which is incorrect for a past event."},
+                        {"text": "would listen / hadn't lost", "isCorrect": false, "rationale": "The tenses are incorrectly placed; the main clause should contain 'would have' and the 'if' clause should contain the Past Perfect."}
+                    ]
+                },
+                {
+                    "questionNumber": 19,
+                    "question": "I ___ my new laptop if I ___ how complicated the software was.",
+                    "answerOptions": [
+                        {"text": "wouldn't have bought / had known", "isCorrect": true, "rationale": "This correctly uses **wouldn't have bought** (result) and **had known** (condition) in the Third Conditional to express regret."},
+                        {"text": "didn't buy / knew", "isCorrect": false, "rationale": "This uses Simple Past, which only states facts and doesn't express a past hypothetical."},
+                        {"text": "wouldn't buy / had known", "isCorrect": false, "rationale": "The main clause must use 'have + P.P.' to express a past result."},
+                        {"text": "wouldn't have buy / had know", "isCorrect": false, "rationale": "The past participles 'bought' and 'known' are required, not the base forms 'buy' and 'know'."}
+                    ]
+                },
+                {
+                    "questionNumber": 20,
+                    "question": "If they ___ a stronger security system, the company ___ their customer data.",
+                    "answerOptions": [
+                        {"text": "have installed / wouldn't lose", "isCorrect": false, "rationale": "This mixes Present Perfect and Simple Conditional, which is incorrect for a past hypothetical."},
+                        {"text": "had installed / wouldn't have lost", "isCorrect": true, "rationale": "This correctly uses the Past Perfect (**had installed**) and **wouldn't have lost** to describe an unreal past situation and its result."},
+                        {"text": "install / won't lose", "isCorrect": false, "rationale": "This is the First Conditional, which is used for real situations in the future or present."},
+                        {"text": "installed / wouldn't lose", "isCorrect": false, "rationale": "This uses the Second Conditional structure, which refers to hypothetical present/future, not the past."}
+                    ]
+                }
+            ]
+        };
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let userAnswers = new Array(quizData.questions.length).fill(null);
+        let hasChecked = false;
+
+        const questionsContainer = document.getElementById('questions-container');
+        const progressElement = document.getElementById('progress');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        const finalScoreElement = document.getElementById('final-score');
+        const feedbackMessageElement = document.getElementById('feedback-message');
+        const checkButton = document.getElementById('check-button');
+        const nextButton = document.getElementById('next-button');
+
+        function initializeQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers.fill(null);
+            hasChecked = false;
+            quizScreen.style.display = 'block';
+            resultsScreen.style.display = 'none';
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const questionData = quizData.questions[currentQuestionIndex];
+            questionsContainer.innerHTML = '';
+            
+            // Create question card
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            
+            // Question text
+            const qText = document.createElement('p');
+            qText.className = 'text-xl font-semibold text-gray-800 mb-4';
+            qText.textContent = `${questionData.questionNumber}. ${questionData.question}`;
+            card.appendChild(qText);
+
+            // Options container
+            const optionsContainer = document.createElement('div');
+            optionsContainer.id = 'options-container';
+
+            questionData.answerOptions.forEach((option, index) => {
+                const optionButton = document.createElement('button');
+                optionButton.className = 'answer-option';
+                optionButton.textContent = option.text;
+                optionButton.dataset.index = index;
+                optionButton.onclick = () => selectAnswer(index);
+                optionsContainer.appendChild(optionButton);
+
+                // Rationale container (initially hidden)
+                const rationaleDiv = document.createElement('div');
+                rationaleDiv.className = 'rationale';
+                rationaleDiv.dataset.index = index;
+                rationaleDiv.textContent = option.rationale;
+                optionsContainer.appendChild(rationaleDiv);
+            });
+
+            card.appendChild(optionsContainer);
+            questionsContainer.appendChild(card);
+
+            // Update progress and buttons
+            progressElement.textContent = `Question ${currentQuestionIndex + 1} of ${quizData.questions.length}`;
+            checkButton.disabled = userAnswers[currentQuestionIndex] === null;
+            nextButton.disabled = true;
+            hasChecked = false;
+        }
+
+        function selectAnswer(selectedIndex) {
+            if (hasChecked) return; // Cannot change answer after checking
+            
+            userAnswers[currentQuestionIndex] = selectedIndex;
+            
+            const options = questionsContainer.querySelectorAll('.answer-option');
+            options.forEach(option => {
+                option.classList.remove('selected');
+            });
+            options[selectedIndex].classList.add('selected');
+            
+            checkButton.disabled = false;
+        }
+
+        function checkAnswer() {
+            if (hasChecked || userAnswers[currentQuestionIndex] === null) return;
+            
+            hasChecked = true;
+            checkButton.disabled = true;
+            nextButton.disabled = false;
+
+            const questionData = quizData.questions[currentQuestionIndex];
+            const selectedIndex = userAnswers[currentQuestionIndex];
+            const options = questionsContainer.querySelectorAll('.answer-option');
+            const rationales = questionsContainer.querySelectorAll('.rationale');
+
+            // 1. Mark the selected option
+            options[selectedIndex].classList.remove('selected');
+            
+            // 2. Determine correctness and update score
+            const isCorrect = questionData.answerOptions[selectedIndex].isCorrect;
+            
+            if (isCorrect) {
+                options[selectedIndex].classList.add('correct');
+                score++;
+            } else {
+                options[selectedIndex].classList.add('incorrect');
+            }
+
+            // 3. Show all rationales and highlight correct answer
+            questionData.answerOptions.forEach((option, index) => {
+                const optionButton = options[index];
+                const rationaleDiv = rationales[index];
+                
+                // Show Rationale
+                rationaleDiv.style.display = 'block';
+
+                if (option.isCorrect) {
+                    optionButton.classList.add('correct');
+                    rationaleDiv.classList.add('correct');
+                } else {
+                    rationaleDiv.classList.add('incorrect');
+                }
+                
+                // Disable all future clicks on options
+                optionButton.onclick = null;
+            });
+        }
+
+        function nextQuestion() {
+            if (!hasChecked) return; // Must check before going to next
+
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.questions.length) {
+                renderQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            quizScreen.style.display = 'none';
+            resultsScreen.style.display = 'block';
+            finalScoreElement.textContent = `${score} / ${quizData.questions.length}`;
+
+            let message = '';
+            const percentage = (score / quizData.questions.length) * 100;
+
+            if (percentage === 100) {
+                message = "Excellent job! You mastered all the topics. Time for B2!";
+            } else if (percentage >= 75) {
+                message = "Great work! You have a strong grasp of the B1 technology vocabulary and grammar.";
+            } else if (percentage >= 50) {
+                message = "You did well, but keep reviewing! Focus on the Third Conditional and the new vocabulary.";
+            } else {
+                message = "Don't worry, keep practicing! Review the grammar notes and try the quiz again.";
+            }
+            
+            feedbackMessageElement.textContent = message;
+        }
+
+        // Initialize the quiz when the page loads
+        window.onload = initializeQuiz;
+    </script>
+</body>
+</html>
