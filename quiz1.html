@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Politeness & Suggestions Exam</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #quiz-container {
+            width: 100%;
+            max-width: 700px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        #question-header {
+            padding: 20px 25px;
+            background-color: #005a9c;
+            color: white;
+        }
+
+        #question-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        #question-header p {
+            margin: 5px 0 0;
+            font-style: italic;
+            opacity: 0.9;
+        }
+        
+        #question-body {
+            padding: 25px;
+        }
+
+        #answer-options {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .answer-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            font-size: 1rem;
+            text-align: left;
+            background-color: #f8f8f8;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .answer-btn:hover {
+            background-color: #eef5fb;
+            border-color: #0073e6;
+        }
+
+        .answer-btn.selected {
+            background-color: #e0eaf1;
+            border-color: #005a9c;
+            font-weight: bold;
+        }
+        
+        #quiz-footer {
+            padding: 20px 25px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            background-color: #0073e6;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #005a9c;
+        }
+
+        .btn.hide {
+            display: none;
+        }
+
+        /* Results Page Styling */
+        #results-container {
+            padding: 30px;
+        }
+        
+        #results-summary {
+            text-align: center;
+            padding: 20px;
+            background: #e3f2fd;
+            border: 1px solid #0073e6;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        #results-summary h2 {
+            margin: 0 0 10px;
+            color: #005a9c;
+            font-size: 2rem;
+        }
+
+        #results-summary p {
+            margin: 0;
+            font-size: 1.2rem;
+            color: #333;
+        }
+        
+        #results-breakdown h3 {
+            border-bottom: 2px solid #005a9c;
+            padding-bottom: 5px;
+            color: #005a9c;
+        }
+
+        #results-breakdown ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        #results-breakdown li {
+            background: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .review-question {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .review-answer-user {
+            color: #D32F2F; /* Red for incorrect */
+            font-style: italic;
+        }
+        
+        .review-answer-correct {
+            color: #388E3C; /* Green for correct */
+            font-weight: bold;
+        }
+        
+        .hide {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="quiz-container">
+        <div id="question-section">
+            <div id="question-header">
+                <p id="question-counter">Question 1 of 20</p>
+                <h2 id="question-text">Loading question...</h2>
+            </div>
+            
+            <div id="question-body">
+                <ul id="answer-options">
+                    </ul>
+            </div>
+
+            <div id="quiz-footer">
+                <button class="btn hide" id="next-btn">Next</button>
+                <button class="btn hide" id="submit-btn">Submit</button>
+            </div>
+        </div>
+        
+        <div id="results-container" class="hide">
+            <div id="results-summary">
+                <h2>Your Score</h2>
+                <p id="score-text">15 / 20 (75%)</p>
+            </div>
+            
+            <div id="results-breakdown">
+                <h3>Analysis: Areas for Improvement</h3>
+                <ul id="analysis-list">
+                    </ul>
+            </div>
+            
+            <div id="results-review">
+                <h3>Detailed Review</h3>
+                <ul id="review-list">
+                    </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "You are speaking to your new boss for the first time. Which phrase is the MOST appropriate?",
+                options: [
+                    "I want to know more about the project.",
+                    "Tell me about the project.",
+                    "Could you tell me a little more about the project?",
+                    "Gimme the details on the project."
+                ],
+                answer: "Could you tell me a little more about the project?",
+                category: "Making Formal Requests"
+            },
+            {
+                question: "Your best friend is talking. You want to ask a question. Which phrase is appropriate?",
+                options: [
+                    "Can I ask something real quick?",
+                    "I was wondering if I might be permitted to interject.",
+                    "I require clarification.",
+                    "Be quiet, I have a question."
+                ],
+                answer: "Can I ask something real quick?",
+                category: "Making Informal Requests"
+            },
+            {
+                question: "Which of these is NOT a common way to make a suggestion?",
+                options: [
+                    "Let's go to the park.",
+                    "Why don't we go to the park?",
+                    "How about going to the park?",
+                    "May I be going to the park?"
+                ],
+                answer: "May I be going to the park?",
+                category: "Making Suggestions (Grammar)"
+            },
+            {
+                question: "Complete the sentence: \"How about ___ pizza for dinner?\"",
+                options: [
+                    "order",
+                    "to order",
+                    "ordering",
+                    "we ordering"
+                ],
+                answer: "ordering",
+                category: "Making Suggestions (Grammar)"
+            },
+            {
+                question: "Your co-worker asks you for help, but you are very busy. What is the most POLITE way to say \"no\"?",
+                options: [
+                    "No, I can't. I'm busy.",
+                    "I'm afraid I'm in the middle of something right now. Can it wait?",
+                    "That's not my problem.",
+                    "You have to ask someone else."
+                ],
+                answer: "I'm afraid I'm in the middle of something right now. Can it wait?",
+                category: "Polite Declining & Disagreeing"
+            },
+            {
+                question: "Which request is the MOST FORMAL?",
+                options: [
+                    "Can I have some water?",
+                    "Could I have some water?",
+                    "I need some water.",
+                    "I was wondering if I could possibly have some water."
+                ],
+                answer: "I was wondering if I could possibly have some water.",
+                category: "Making Formal Requests"
+            },
+            {
+                question: "You want to ask your professor for an extension on your homework. What is the BEST way to ask?",
+                options: [
+                    "Professor, I need an extension.",
+                    "Professor, would it be possible to get an extension on the homework?",
+                    "Hey, can I get an extension?",
+                    "Professor, you should give me an extension."
+                ],
+                answer: "Professor, would it be possible to get an extension on the homework?",
+                category: "Making Formal Requests"
+            },
+            {
+                question: "In Spanish, formality is shown with 'tú' vs. 'usted.' How is formality MAINLY shown in English?",
+                options: [
+                    "By speaking very loudly and slowly.",
+                    "By using different verb conjugations, like in Spanish.",
+                    "By using modal verbs (like 'could,' 'may') and indirect phrases.",
+                    "By never saying 'no.'"
+                ],
+                answer: "By using modal verbs (like 'could,' 'may') and indirect phrases.",
+                category: "Register (General Concept)"
+            },
+            {
+                question: "Complete the suggestion: \"Why don't we ___ a movie tonight?\"",
+                options: [
+                    "watch",
+                    "watching",
+                    "to watch",
+                    "watched"
+                ],
+                answer: "watch",
+                category: "Making Suggestions (Grammar)"
+            },
+            {
+                question: "A friend says, \"I'm bored.\" Which is NOT a good suggestion?",
+                options: [
+                    "Let's play a game.",
+                    "We could go for a walk.",
+                    "How about watching a video?",
+                    "You must find something to do."
+                ],
+                answer: "You must find something to do.",
+                category: "Making Suggestions (Grammar)"
+            },
+            {
+                question: "Which phrase is a polite way to DISAGREE with someone in a meeting?",
+                options: [
+                    "That's a stupid idea.",
+                    "You're wrong.",
+                    "I see what you mean, but I have a different perspective.",
+                    "I don't agree. Just listen to me."
+                ],
+                answer: "I see what you mean, but I have a different perspective.",
+                category: "Polite Declining & Disagreeing"
+            },
+            {
+                question: "What is the best 'softener' to use when you have to give someone bad news?",
+                options: [
+                    "Listen up...",
+                    "I'm afraid...",
+                    "First of all...",
+                    "No offense, but..."
+                ],
+                answer: "I'm afraid...",
+                category: "Polite Declining & Disagreeing"
+            },
+            {
+                question: "A situation where you would use formal language (like 'May I...' or 'Would it be possible...') is:",
+                options: [
+                    "Asking your brother to pass the salt.",
+                    "Texting your best friend.",
+                    "Asking a stranger for directions.",
+                    "Telling your dog to sit."
+                ],
+                answer: "Asking a stranger for directions.",
+                category: "Register (General Concept)"
+            },
+            {
+                question: "Your friend suggests a movie you have already seen. How can you politely decline the suggestion?",
+                options: [
+                    "No, I already saw it. Bad idea.",
+                    "That's a boring movie. Let's do something else.",
+                    "Oh, I've actually seen that one already. How about we look for something else?",
+                    "I refuse to see that movie again."
+                ],
+                answer: "Oh, I've actually seen that one already. How about we look for something else?",
+                category: "Polite Declining & Disagreeing"
+            },
+            {
+                question: "Which modal verb makes a request sound MORE polite than 'Can'?",
+                options: [
+                    "Will",
+                    "Could",
+                    "Should",
+                    "Must"
+                ],
+                answer: "Could",
+                category: "Making Formal Requests"
+            },
+            {
+                question: "What is the main problem with this request: \"I want an extension.\"",
+                options: [
+                    "The grammar is incorrect.",
+                    "The vocabulary is too advanced.",
+                    "It is too direct and informal for a formal situation.",
+                    "It is too long and confusing."
+                ],
+                answer: "It is too direct and informal for a formal situation.",
+                category: "Register (General Concept)"
+            },
+            {
+                question: "Complete the suggestion: \"Let's ___ for a walk.\"",
+                options: [
+                    "to go",
+                    "go",
+                    "going",
+                    "went"
+                ],
+                answer: "go",
+                category: "Making Suggestions (Grammar)"
+            },
+            {
+                question: "Which phrase is NOT a polite 'softener' for saying 'no'?",
+                options: [
+                    "Unfortunately...",
+                    "I'm sorry, but...",
+                    "I'm afraid...",
+                    "Actually..."
+                ],
+                answer: "Actually...",
+                category: "Polite Declining & Disagreeing"
+            },
+            {
+                question: "A situation where you would use informal language (like 'Can I...' or 'I want...') is:",
+                options: [
+                    "In a job interview.",
+                    "Talking to your partner or a close family member.",
+                    "Emailing a client you don't know well.",
+                    "Asking a police officer for help."
+                ],
+                answer: "Talking to your partner or a close family member.",
+                category: "Making Informal Requests"
+            },
+            {
+                question: "You are in a group. You want to suggest an idea. What is a good, neutral phrase to use?",
+                options: [
+                    "My idea is the best, so let's do it.",
+                    "We must do this.",
+                    "We could try to contact the supplier directly.",
+                    "Are you going to contact the supplier?"
+                ],
+                answer: "We could try to contact the supplier directly.",
+                category: "Making Suggestions (Grammar)"
+            }
+        ];
+
+        // Quiz State
+        let currentQuestionIndex = 0;
+        let userAnswers = {};
+        let selectedAnswer = null;
+
+        // Element Selectors
+        const questionSection = document.getElementById('question-section');
+        const questionCounterEl = document.getElementById('question-counter');
+        const questionTextEl = document.getElementById('question-text');
+        const answerOptionsEl = document.getElementById('answer-options');
+        const nextBtn = document.getElementById('next-btn');
+        const submitBtn = document.getElementById('submit-btn');
+        
+        const resultsContainer = document.getElementById('results-container');
+        const scoreTextEl = document.getElementById('score-text');
+        const analysisListEl = document.getElementById('analysis-list');
+        const reviewListEl = document.getElementById('review-list');
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            userAnswers = {};
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            selectedAnswer = null;
+            const currentQuestion = quizData[currentQuestionIndex];
+            
+            questionCounterEl.innerText = `Question ${currentQuestionIndex + 1} of ${quizData.length}`;
+            questionTextEl.innerText = currentQuestion.question;
+            
+            answerOptionsEl.innerHTML = '';
+            
+            currentQuestion.options.forEach(option => {
+                const button = document.createElement('button');
+                button.innerText = option;
+                button.classList.add('answer-btn');
+                button.addEventListener('click', () => selectAnswer(button, option));
+                answerOptionsEl.appendChild(button);
+            });
+            
+            nextBtn.classList.add('hide');
+        }
+
+        function selectAnswer(selectedButton, answer) {
+            // Remove 'selected' class from all buttons
+            Array.from(answerOptionsEl.children).forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // Add 'selected' class to the clicked button
+            selectedButton.classList.add('selected');
+            selectedAnswer = answer;
+            
+            // Store the answer
+            userAnswers[currentQuestionIndex] = answer;
+            
+            // Show the next button
+            nextBtn.classList.remove('hide');
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (selectedAnswer === null) return; // Don't advance if no answer
+            
+            currentQuestionIndex++;
+            
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                nextBtn.classList.add('hide');
+                submitBtn.classList.remove('hide');
+            }
+        });
+
+        submitBtn.addEventListener('click', () => {
+            showResults();
+        });
+
+        function showResults() {
+            // Hide quiz, show results
+            questionSection.classList.add('hide');
+            resultsContainer.classList.remove('hide');
+            
+            let score = 0;
+            let categoryErrors = {};
+
+            quizData.forEach((question, index) => {
+                const isCorrect = userAnswers[index] === question.answer;
+                const category = question.category;
+
+                if (isCorrect) {
+                    score++;
+                } else {
+                    // Track errors by category
+                    if (categoryErrors[category]) {
+                        categoryErrors[category]++;
+                    } else {
+                        categoryErrors[category] = 1;
+                    }
+                    
+                    // Build review for incorrect answers
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <p class="review-question">Q${index + 1}: ${question.question}</p>
+                        <p class="review-answer-user"><strong>Your answer:</strong> ${userAnswers[index] || "No answer"}</p>
+                        <p class="review-answer-correct"><strong>Correct answer:</strong> ${question.answer}</p>
+                    `;
+                    reviewListEl.appendChild(li);
+                }
+            });
+            
+            // Display score
+            const percentage = Math.round((score / quizData.length) * 100);
+            scoreTextEl.innerText = `${score} / ${quizData.length} (${percentage}%)`;
+            
+            // Display analysis
+            analysisListEl.innerHTML = ''; // Clear previous
+            if (Object.keys(categoryErrors).length === 0) {
+                analysisListEl.innerHTML = "<li>🎉 <strong>Excellent! You got 100%!</strong></li>";
+            } else {
+                for (const [category, count] of Object.entries(categoryErrors)) {
+                    const li = document.createElement('li');
+                    li.innerHTML = `You missed <strong>${count}</strong> question(s) in: <strong>${category}</strong>`;
+                    analysisListEl.appendChild(li);
+                }
+            }
+            
+            if(reviewListEl.innerHTML === '') {
+                reviewListEl.innerHTML = '<li>You got all questions correct!</li>';
+            }
+        }
+
+        // Start the quiz on page load
+        startQuiz();
+    </script>
+
+</body>
+</html>
