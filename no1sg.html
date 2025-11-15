@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviewer's Guide</title>
+    <style>
+        :root {
+            --primary-color: #003366; /* Deep Navy */
+            --secondary-color: #FFD700; /* Gold */
+            --bg-color: #f7f7f7; /* Light Gray Background */
+            --card-bg: #ffffff; /* White Cards */
+            --text-color: #333333;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+            margin: 0;
+            padding: 15px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 1.9em;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 1em;
+            color: #555;
+            font-style: italic;
+        }
+
+        .content-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.5em;
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 8px;
+            margin-top: 0;
+        }
+        
+        h3 {
+            color: #34495e;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        p, li {
+            font-size: 1em;
+        }
+        
+        ul {
+            padding-left: 20px;
+            list-style-type: disc;
+        }
+
+        .example {
+            background-color: #fdfdfd;
+            border-left: 5px solid var(--secondary-color);
+            padding: 12px;
+            margin: 15px 0;
+            font-style: italic;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .example b {
+            color: var(--primary-color);
+            font-style: normal;
+        }
+
+        /* --- NEW VOCABULARY STYLES --- */
+        .vocab-list {
+            padding: 0;
+            list-style-type: none;
+        }
+        
+        .vocab-item {
+            margin-bottom: 10px;
+        }
+
+        .vocab-header {
+            background-color: #fffbe6; /* Light Gold */
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+        
+        .vocab-header b {
+            color: #333;
+            font-weight: 700;
+        }
+        
+        .toggle-icon {
+            font-size: 1.2em;
+            font-weight: <b>bold</b>;
+            color: var(--primary-color);
+            transition: transform 0.2s ease-in-out;
+        }
+        
+        .vocab-header.active .toggle-icon {
+            transform: rotate(45deg);
+        }
+
+        .example-sentence {
+            display: none; /* Hidden by default */
+            padding: 10px 15px;
+            margin-top: -5px;
+            background-color: #fafafa;
+            border: 1px solid #eee;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            font-style: italic;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>My Reviewer's Guide</h1>
+        <p class="subtitle">Build perfect sentences for your reviews!</p>
+    </div>
+
+    <div class="content-card">
+        <h2>1. Comparatives (A vs. B)</h2>
+        <p>Use comparatives to compare <b>two</b> things.</p>
+        
+        <h3>Rule 1: Short Adjectives (+er)</h3>
+        <p>For most short adjectives (1 syllable), add <b>-er</b>.</p>
+        <div class="example">
+            "The Terra backpack is <b>heavier than</b> the Aero."<br>
+            "The Aero is <b>cheaper than</b> the new model."
+        </div>
+        
+        <h3>Rule 2: Long Adjectives (more...)</h3>
+        <p>For long adjectives (2+ syllables), use <b>more</b>.</p>
+        <div class="example">
+            "The Aero is <b>more practical</b> for school."<br>
+            "The Terra is <b>more durable</b>."
+        </div>
+
+        <h3>Rule 3: Irregular Adjectives</h3>
+        <p>These are special! You must memorize them.</p>
+        <ul style="list-style-type: none; padding: 0;">
+            <li>Good → <b>Better</b></li>
+            <li>Bad → <b>Worse</b></li>
+        </ul>
+        <div class="example">
+            "The Aero has <b>better</b> pockets for a laptop."
+        </div>
+    </div>
+
+    <div class="content-card">
+        <h2>2. Superlatives (The Best)</h2>
+        <p>Use superlatives to compare <b>three or more</b> things and find the #1.</p>
+        
+        <h3>Rule 1: Short Adjectives (+est)</h3>
+        <p>For short adjectives, use <b>the</b> + <b>-est</b>.</p>
+        <div class="example">
+            "The Terra is <b>the heaviest</b> bag in the store."<br>
+            "The Aero is <b>the cheapest</b> option."
+        </div>
+        
+        <h3>Rule 2: Long Adjectives (most...)</h3>
+        <p>For long adjectives, use <b>the most</b>.</p>
+        <div class="example">
+            "This is <b>the most expensive</b> backpack."<br>
+            "It is <b>the most comfortable</b> for long trips."
+        </div>
+
+        <h3>Rule 3: Irregular Adjectives</h3>
+        <ul style="list-style-type: none; padding: 0;">
+            <li>Good → <b>The Best</b></li>
+            <li>Bad → <b>The Worst</b></li>
+        </ul>
+        <div class="example">
+            "For city travel, the Aero is <b>the best</b>."
+        </div>
+    </div>
+    
+    <div class="content-card">
+        <h2>3. Contrast Connectors</h2>
+        <p>Use these words to connect one good point (pro) and one bad point (con).</p>
+
+        <h3><b>but</b> (Simple Contrast)</h3>
+        <p>Use <b>but</b> to join two simple ideas. Use a comma before it.</p>
+        <div class="example">
+            "The Terra is durable, <b>but</b> it is very heavy."
+        </div>
+
+        <h3><b>even though</b> (Surprising Contrast)</h3>
+        <p>Use <b>even though</b> to show a surprising contrast. It can start the sentence.</p>
+        <div class="example">
+            "<b>Even though</b> the Aero is expensive, I will buy it."<br>
+            "I like the Aero, <b>even though</b> it costs more."
+        </div>
+        
+        <h3><b>however</b> (Formal Contrast)</h3>
+        <p>Use <b>however</b> to separate two full sentences. It is more formal.</p>
+        <div class="example">
+            "The Terra is very durable. <b>However</b>, it is not waterproof."
+        </div>
+    </div>
+
+    <div class="content-card">
+        <h2>4. Key Vocabulary</h2>
+        <p>Tap each word to see an example sentence.</p>
+        
+        <ul class="vocab-list">
+            <li class="vocab-item">
+                <div class="vocab-header">
+                    <span><b>durable</b> (strong, hard to break)</span>
+                    <span class="toggle-icon">+</span>
+                </div>
+                <div class="example-sentence">
+                    "The Terra backpack is very <b>durable</b>; it's made of strong canvas."
+                </div>
+            </li>
+            <li class="vocab-item">
+                <div class="vocab-header">
+                    <span><b>practical</b> (useful, good for a situation)</span>
+                    <span class="toggle-icon">+</span>
+                </div>
+                <div class="example-sentence">
+                    "The Aero bag is more <b>practical</b> for students because it has a laptop pocket."
+                </div>
+            </li>
+            <li class="vocab-item">
+                <div class="vocab-header">
+                    <span><b>lightweight</b> (not heavy)</span>
+                    <span class="toggle-icon">+</span>
+                </div>
+                <div class="example-sentence">
+                    "I prefer <b>lightweight</b> bags, so I chose the Aero (0.9 kg)."
+                </div>
+            </li>
+            <li class="vocab-item">
+                <div class="vocab-header">
+                    <span><b>heavy</b> (not light)</span>
+                    <span class="toggle-icon">+</span>
+                </div>
+                <div class="example-sentence">
+                    "The Terra bag is <b>heavy</b>, even when it is empty."
+                </div>
+            </li>
+            <li class="vocab-item">
+                <div class="vocab-header">
+                    <span><b>waterproof</b> (water cannot get inside)</span>
+                    <span class="toggle-icon">+</span>
+                </div>
+                <div class="example-sentence">
+                    "Living in a rainy city, a <b>waterproof</b> bag is the most practical."
+                </div>
+            </li>
+            <li class="vocab-item">
+                <div class="vocab-header">
+                    <span><b>expensive</b> (costs a lot of money)</span>
+                    <span class="toggle-icon">+</span>
+                </div>
+                <div class="example-sentence">
+                    "The Aero is <b>more expensive</b> ($75) than the Terra ($45)."
+                </div>
+            </li>
+            <li class="vocab-item">
+                <div class="vocab-header">
+                    <span><b>cheap</b> (costs little money)</span>
+                    <span class="toggle-icon">+</span>
+                </div>
+                <div class="example-sentence">
+                    "The Terra is <b>the cheapest</b> option, but it is not waterproof."
+                </div>
+            </li>
+            <li class="vocab-item">
+                <div class="vocab-header">
+                    <span><b>comfortable</b> (feels good to use/wear)</span>
+                    <span class="toggle-icon">+</span>
+                </div>
+                <div class="example-sentence">
+                    "A good backpack must be <b>comfortable</b> if you walk all day."
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const vocabHeaders = document.querySelectorAll('.vocab-header');
+            
+            vocabHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    // This is the item clicked
+                    this.classList.toggle('active');
+                    
+                    // This is the example sentence div below the header
+                    const content = this.nextElementSibling;
+                    
+                    // This is the +/- icon
+                    const icon = this.querySelector('.toggle-icon');
+                    
+                    if (content.style.display === 'block') {
+                        // If open, close it
+                        content.style.display = 'none';
+                        icon.textContent = '+';
+                    } else {
+                        // If closed, open it
+                        content.style.display = 'block';
+                        icon.textContent = '−'; // This is a minus sign, not a hyphen
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
