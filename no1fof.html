@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviewer's Fact or Fiction</title>
+    <style>
+        :root {
+            --primary-color: #003366; /* Deep Navy */
+            --secondary-color: #FFD700; /* Gold */
+            --text-color: #333333;
+            --bg-color: #f7f7f7;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+        body {
+            font-family: var(--font-family);
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            text-align: center;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        
+        /* Data Cards */
+        .product-card-container {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            text-align: left;
+        }
+        .product-card {
+            flex: 1 1 300px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #fcfcfc;
+        }
+        .card-header {
+            font-size: 1.3em;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+            font-weight: <b>bold</b>;
+        }
+        .card-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .card-table td {
+            padding: 6px 0;
+            border-bottom: 1px dotted #eee;
+        }
+
+        /* Game Area */
+        #game-area {
+            background-color: #f9f9f9;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            padding: 30px;
+            min-height: 200px;
+        }
+        #question-text {
+            font-size: 1.5em;
+            font-weight: 500;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .game-btn {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            font-weight: <b>bold</b>;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+        .game-btn:active {
+            transform: scale(0.95);
+        }
+        #fact-btn {
+            background-color: var(--success-color);
+            color: white;
+        }
+        #fiction-btn {
+            background-color: var(--error-color);
+            color: white;
+        }
+        
+        #feedback-text {
+            font-size: 1.2em;
+            font-weight: <b>bold</b>;
+            margin-top: 20px;
+            height: 30px;
+        }
+        
+        #score-text {
+            font-size: 1.1em;
+            margin-top: 15px;
+            color: #555;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Reviewer's Fact or Fiction</h1>
+        <p class="subtitle">Read the sentence. Look at the data. Is it <b>Fact</b> (True) or <b>Fiction</b> (False)?</p>
+
+        <div class="product-card-container">
+            <div class="product-card">
+                <div class="card-header">The "Terra" Classic Backpack</div>
+                <table class="card-table">
+                    <tr><td><b>Material</b></td><td>Heavy canvas (durable)</td></tr>
+                    <tr><td><b>Weight</b></td><td>1.8 kg</td></tr>
+                    <tr><td><b>Pockets</b></td><td>3 pockets total</td></tr>
+                    <tr><td><b>Waterproof</b></td><td>No</td></tr>
+                    <tr><td><b>Cost</b></td><td>$45 USD</td></tr>
+                </table>
+            </div>
+            <div class="product-card">
+                <div class="card-header">The "Aero" Ultra Backpack</div>
+                <table class="card-table">
+                    <tr><td><b>Material</b></td><td>Light synthetic (durable)</td></tr>
+                    <tr><td><b>Weight</b></td><td>0.9 kg</td></tr>
+                    <tr><td><b>Pockets</b></td><td>6 pockets total (with laptop space)</td></tr>
+                    <tr><td><b>Waterproof</b></td><td>Yes</td></tr>
+                    <tr><td><b>Cost</b></td><td>$75 USD</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <div id="game-area">
+            <div id="question-text">Loading question...</div>
+            <div class="button-container">
+                <button class="game-btn" id="fact-btn">Fact</button>
+                <button class="game-btn" id="fiction-btn">Fiction</button>
+            </div>
+            <div id="feedback-text"></div>
+            <div id="score-text">Score: 0 / 0</div>
+        </div>
+    </div>
+
+    <script>
+        // --- JAVASCRIPT GAME LOGIC ---
+        
+        const questions = [
+            { sentence: "The Aero backpack is <b>heavier than</b> the Terra backpack.", isTrue: false },
+            { sentence: "The Terra backpack is <b>cheaper than</b> the Aero backpack.", isTrue: true },
+            { sentence: "The Aero backpack has <b>more pockets than</b> the Terra backpack.", isTrue: true },
+            { sentence: "The Terra is <b>the most expensive</b> backpack.", isTrue: false },
+            { sentence: "The Aero is <b>waterproof</b>, <b>but</b> the Terra is not.", isTrue: true },
+            { sentence: "The Terra backpack is <b>better for</b> carrying a laptop.", isTrue: false },
+            { sentence: "The Aero backpack is <b>the lightest</b> of the two.", isTrue: true },
+            { sentence: "<b>Even though</b> the Terra is cheap, it is <b>not</b> waterproof.", isTrue: true },
+            { sentence: "The Terra backpack is <b>more practical than</b> the Aero.", isTrue: false }, // Subjective, but data implies Aero is more practical
+            { sentence: "The Aero backpack (0.9 kg) is <b>lighter than</b> the Terra (1.8 kg).", isTrue: true }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let totalQuestions = questions.length;
+
+        const questionText = document.getElementById('question-text');
+        const factBtn = document.getElementById('fact-btn');
+        const fictionBtn = document.getElementById('fiction-btn');
+        const feedbackText = document.getElementById('feedback-text');
+        const scoreText = document.getElementById('score-text');
+
+        document.addEventListener('DOMContentLoaded', startGame);
+
+        function startGame() {
+            // Shuffle questions
+            questions.sort(() => Math.random() - 0.5);
+            currentQuestionIndex = 0;
+            score = 0;
+            loadQuestion();
+            updateScore();
+        }
+
+        function loadQuestion() {
+            if (currentQuestionIndex < totalQuestions) {
+                questionText.innerHTML = questions[currentQuestionIndex].sentence;
+                feedbackText.innerHTML = "";
+                factBtn.disabled = false;
+                fictionBtn.disabled = false;
+            } else {
+                // Game over
+                questionText.innerHTML = `Game Over! Your final score is ${score} / ${totalQuestions}.`;
+                feedbackText.innerHTML = "Well done!";
+                factBtn.style.display = 'none';
+                fictionBtn.style.display = 'none';
+            }
+        }
+
+        function selectAnswer(userChoice) {
+            factBtn.disabled = true;
+            fictionBtn.disabled = true;
+
+            const correctChoice = questions[currentQuestionIndex].isTrue;
+            
+            if (userChoice === correctChoice) {
+                // Correct
+                score++;
+                feedbackText.innerHTML = "Correct!";
+                feedbackText.style.color = "var(--success-color)";
+            } else {
+                // Incorrect
+                feedbackText.innerHTML = `Incorrect! The correct answer was <b>${correctChoice ? 'Fact' : 'Fiction'}</b>.`;
+                feedbackText.style.color = "var(--error-color)";
+            }
+            
+            updateScore();
+            
+            // Wait 2 seconds, then load next question
+            setTimeout(() => {
+                currentQuestionIndex++;
+                loadQuestion();
+            }, 2000);
+        }
+        
+        function updateScore() {
+            scoreText.innerHTML = `Score: ${score} / ${totalQuestions}`;
+        }
+
+        // Add event listeners
+        factBtn.addEventListener('click', () => selectAnswer(true));
+        fictionBtn.addEventListener('click', () => selectAnswer(false));
+
+    </script>
+</body>
+</html>
