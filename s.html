@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Advanced Lesson: Justice and Society</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f3f4f6; }
+        .vocab-card { transition: transform 0.2s; }
+        .vocab-card:hover { transform: translateY(-5px); }
+        .reading-text { line-height: 1.8; text-align: justify; }
+        .correct-answer { background-color: #d1fae5; border-color: #10b981; color: #065f46; }
+        .wrong-answer { background-color: #fee2e2; border-color: #ef4444; color: #991b1b; }
+        /* Custom scrollbar for reading passage if needed on small screens */
+        .passage-container::-webkit-scrollbar { width: 8px; }
+        .passage-container::-webkit-scrollbar-track { background: #f1f1f1; }
+        .passage-container::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+        .passage-container::-webkit-scrollbar-thumb:hover { background: #555; }
+        .reveal-content { display: none; }
+        .reveal-content.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Header -->
+    <header class="bg-blue-900 text-white p-6 shadow-lg sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold">IELTS Advanced Lesson</h1>
+                <p class="text-blue-200 text-sm">Theme: Justice and Society</p>
+            </div>
+            <div class="hidden sm:block text-right text-xs text-blue-300">
+                Target Band: 7.0+
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto p-4 space-y-8 pb-20">
+
+        <!-- SECTION 1: VOCABULARY -->
+        <section id="vocabulary" class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-bold text-blue-900 border-b-2 border-blue-100 pb-2 mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                1. Advanced Vocabulary Builder
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Card 1 -->
+                <div class="vocab-card bg-blue-50 p-4 rounded-lg border border-blue-100">
+                    <h3 class="font-bold text-lg text-blue-800">Recidivism (n)</h3>
+                    <p class="text-sm text-gray-600 mb-2">The tendency of a convicted criminal to reoffend.</p>
+                    <p class="text-xs italic text-gray-500">"High rates of <strong class="text-blue-700">recidivism</strong> suggest the prison system is failing."</p>
+                </div>
+                <!-- Card 2 -->
+                <div class="vocab-card bg-blue-50 p-4 rounded-lg border border-blue-100">
+                    <h3 class="font-bold text-lg text-blue-800">Deterrent (n)</h3>
+                    <p class="text-sm text-gray-600 mb-2">Something that discourages someone from doing something.</p>
+                    <p class="text-xs italic text-gray-500">"Strict sentencing is seen as a <strong class="text-blue-700">deterrent</strong> against crime."</p>
+                </div>
+                <!-- Card 3 -->
+                <div class="vocab-card bg-blue-50 p-4 rounded-lg border border-blue-100">
+                    <h3 class="font-bold text-lg text-blue-800">Reintegration (n)</h3>
+                    <p class="text-sm text-gray-600 mb-2">The process of re-joining society.</p>
+                    <p class="text-xs italic text-gray-500">"Jobs are crucial for the <strong class="text-blue-700">reintegration</strong> of ex-convicts."</p>
+                </div>
+                <!-- Card 4 -->
+                <div class="vocab-card bg-blue-50 p-4 rounded-lg border border-blue-100">
+                    <h3 class="font-bold text-lg text-blue-800">Mitigating circumstances</h3>
+                    <p class="text-sm text-gray-600 mb-2">Factors that lessen the severity/culpability of a crime.</p>
+                    <p class="text-xs italic text-gray-500">"The judge reduced the sentence due to <strong class="text-blue-700">mitigating circumstances</strong>."</p>
+                </div>
+                <!-- Card 5 -->
+                <div class="vocab-card bg-blue-50 p-4 rounded-lg border border-blue-100">
+                    <h3 class="font-bold text-lg text-blue-800">Corporal punishment</h3>
+                    <p class="text-sm text-gray-600 mb-2">Physical punishment (e.g., caning).</p>
+                    <p class="text-xs italic text-gray-500">"Most societies have abolished <strong class="text-blue-700">corporal punishment</strong>."</p>
+                </div>
+                <!-- Card 6 -->
+                <div class="vocab-card bg-blue-50 p-4 rounded-lg border border-blue-100">
+                    <h3 class="font-bold text-lg text-blue-800">Law-abiding (adj)</h3>
+                    <p class="text-sm text-gray-600 mb-2">Obedient to the laws of society.</p>
+                    <p class="text-xs italic text-gray-500">"It is unfair that <strong class="text-blue-700">law-abiding</strong> citizens live in fear."</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: READING PASSAGE -->
+        <section id="reading-passage" class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-bold text-blue-900 border-b-2 border-blue-100 pb-2 mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                2. Reading Passage: The Shift from Retribution to Restoration
+            </h2>
+            <div class="passage-container bg-gray-50 p-6 rounded border border-gray-200 reading-text text-gray-700 text-sm md:text-base">
+                <p class="mb-4">
+                    <strong>(A)</strong> For centuries, the dominant philosophy regarding criminal justice in many societies has been retributive. This model posits that the primary purpose of the legal system is to dispense punishment proportional to the crime committed. The underlying logic is one of moral balance; an offender disturbs the social order, and punishment restores it. However, in recent decades, criminologists and sociologists have increasingly questioned the efficacy of this approach, noting that while it satisfies a societal need for vengeance, it often fails to address the root causes of crime or aid the victims in a meaningful way.
+                </p>
+                <p class="mb-4">
+                    <strong>(B)</strong> Enter the concept of Restorative Justice. Unlike the retributive model, which focuses on the law that was broken and the punishment required, restorative justice focuses on the harm caused to people and relationships. It is a process that involves all stakeholders—the offender, the victim, and the community—in a search for solutions which promote repair, reconciliation, and reassurance. The most common form of this is victim-offender mediation, where the two parties meet in a controlled environment to discuss the impact of the crime.
+                </p>
+                <p class="mb-4">
+                    <strong>(C)</strong> Proponents argue that this method offers significant psychological benefits. For victims, the court process can often feel impersonal and bureaucratic, leaving them feeling marginalized in their own tragedy. Restorative justice gives them a voice, allowing them to ask questions only the offender can answer (such as "Why me?"). This can be a vital step in achieving closure. Furthermore, statistics from pilot programs in Europe suggest that victims who participate in these sessions report higher satisfaction rates with the justice system than those who go through traditional court proceedings.
+                </p>
+                <p class="mb-4">
+                    <strong>(D)</strong> For the offender, the process is equally transformative. In a traditional courtroom, the accused is often encouraged by legal counsel to remain silent or deny responsibility to minimize sentencing. In contrast, restorative justice requires an admission of guilt and a confrontation with the human cost of their actions. Facing the distress of a victim can induce genuine remorse, which is a far more powerful catalyst for behavioral change than the abstract fear of a prison sentence. Consequently, several studies have linked restorative justice initiatives to a marked decrease in recidivism rates among juvenile offenders.
+                </p>
+                <p>
+                    <strong>(E)</strong> However, the approach is not without its critics. Skeptics argue that restorative justice is "soft on crime," potentially leading to lenient outcomes for serious offenses. There are also concerns regarding power dynamics; if a victim is intimidated by an offender, a face-to-face meeting could be re-traumatizing rather than healing. Therefore, legal experts suggest that while restorative justice is highly effective for property crimes and minor assaults, it may be inappropriate for cases involving extreme violence or domestic abuse, where the safety of the victim is paramount.
+                </p>
+            </div>
+        </section>
+
+        <!-- SECTION 3: QUIZ -->
+        <section id="quiz" class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-bold text-blue-900 border-b-2 border-blue-100 pb-2 mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                3. Reading Comprehension Check
+            </h2>
+
+            <form id="ielts-quiz">
+                <!-- Part 1: Matching Headings -->
+                <div class="mb-8">
+                    <h3 class="font-bold text-lg mb-4 text-gray-800">Questions 1-5: Matching Headings</h3>
+                    <p class="text-sm text-gray-600 mb-4">Choose the correct heading for paragraphs A-E from the list below.</p>
+                    
+                    <div class="bg-gray-50 p-4 rounded mb-6 text-sm border border-gray-200">
+                        <ul class="list-none space-y-1">
+                            <li><strong>i.</strong> The limitations and risks of the new approach</li>
+                            <li><strong>ii.</strong> A historical overview of prison architecture</li>
+                            <li><strong>iii.</strong> How the victim benefits from involvement</li>
+                            <li><strong>iv.</strong> The definition and mechanism of Restorative Justice</li>
+                            <li><strong>v.</strong> The traditional approach to crime and its flaws</li>
+                            <li><strong>vi.</strong> Financial costs of legal proceedings</li>
+                            <li><strong>vii.</strong> The impact on the criminal's mindset and future behavior</li>
+                            <li><strong>viii.</strong> Why governments refuse to change laws</li>
+                        </ul>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                            <label class="w-32 font-semibold">1. Paragraph A</label>
+                            <select id="q1" class="border border-gray-300 rounded p-2 flex-grow bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+                                <option value="">Select heading...</option>
+                                <option value="i">i</option> <option value="ii">ii</option> <option value="iii">iii</option>
+                                <option value="iv">iv</option> <option value="v">v</option> <option value="vi">vi</option>
+                                <option value="vii">vii</option> <option value="viii">viii</option>
+                            </select>
+                            <span id="feedback-q1" class="hidden font-bold text-sm"></span>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                            <label class="w-32 font-semibold">2. Paragraph B</label>
+                            <select id="q2" class="border border-gray-300 rounded p-2 flex-grow bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+                                <option value="">Select heading...</option>
+                                <option value="i">i</option> <option value="ii">ii</option> <option value="iii">iii</option>
+                                <option value="iv">iv</option> <option value="v">v</option> <option value="vi">vi</option>
+                                <option value="vii">vii</option> <option value="viii">viii</option>
+                            </select>
+                            <span id="feedback-q2" class="hidden font-bold text-sm"></span>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                            <label class="w-32 font-semibold">3. Paragraph C</label>
+                            <select id="q3" class="border border-gray-300 rounded p-2 flex-grow bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+                                <option value="">Select heading...</option>
+                                <option value="i">i</option> <option value="ii">ii</option> <option value="iii">iii</option>
+                                <option value="iv">iv</option> <option value="v">v</option> <option value="vi">vi</option>
+                                <option value="vii">vii</option> <option value="viii">viii</option>
+                            </select>
+                            <span id="feedback-q3" class="hidden font-bold text-sm"></span>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                            <label class="w-32 font-semibold">4. Paragraph D</label>
+                            <select id="q4" class="border border-gray-300 rounded p-2 flex-grow bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+                                <option value="">Select heading...</option>
+                                <option value="i">i</option> <option value="ii">ii</option> <option value="iii">iii</option>
+                                <option value="iv">iv</option> <option value="v">v</option> <option value="vi">vi</option>
+                                <option value="vii">vii</option> <option value="viii">viii</option>
+                            </select>
+                            <span id="feedback-q4" class="hidden font-bold text-sm"></span>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                            <label class="w-32 font-semibold">5. Paragraph E</label>
+                            <select id="q5" class="border border-gray-300 rounded p-2 flex-grow bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+                                <option value="">Select heading...</option>
+                                <option value="i">i</option> <option value="ii">ii</option> <option value="iii">iii</option>
+                                <option value="iv">iv</option> <option value="v">v</option> <option value="vi">vi</option>
+                                <option value="vii">vii</option> <option value="viii">viii</option>
+                            </select>
+                            <span id="feedback-q5" class="hidden font-bold text-sm"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="my-8 border-gray-200">
+
+                <!-- Part 2: T/F/NG -->
+                <div class="mb-8">
+                    <h3 class="font-bold text-lg mb-4 text-gray-800">Questions 6-9: True / False / Not Given</h3>
+                    
+                    <div class="space-y-6">
+                        <!-- Q6 -->
+                        <div class="q-container rounded p-3 transition-colors" id="container-q6">
+                            <p class="mb-2 font-medium">6. The retributive justice model is primarily concerned with rehabilitating the offender.</p>
+                            <div class="flex space-x-4 text-sm">
+                                <label class="flex items-center cursor-pointer"><input type="radio" name="q6" value="TRUE" class="mr-2"> TRUE</label>
+                                <label class="flex items-center cursor-pointer"><input type="radio" name="q6" value="FALSE" class="mr-2"> FALSE</label>
+                                <label class="flex items-center cursor-pointer"><input type="radio" name="q6" value="NOT GIVEN" class="mr-2"> NOT GIVEN</label>
+                            </div>
+                            <div id="feedback-q6" class="hidden mt-2 text-sm font-bold"></div>
+                        </div>
+
+                        <!-- Q7 -->
+                        <div class="q-container rounded p-3 transition-colors" id="container-q7">
+                            <p class="mb-2 font-medium">7. Victims often feel ignored or sidelined during standard court trials.</p>
+                            <div class="flex space-x-4 text-sm">
+                                <label class="flex items-center cursor-pointer"><input type="radio" name="q7" value="TRUE" class="mr-2"> TRUE</label>
+                                <label class="flex items-center cursor-pointer"><input type="radio" name="q7" value="FALSE" class="mr-2"> FALSE</label>
+                                <label class="flex items-center cursor-pointer"><input type="radio" name="q7" value="NOT GIVEN" class="mr-2"> NOT GIVEN</label>
+                            </div>
+                            <div id="feedback-q7" class="hidden mt-2 text-sm font-bold"></div>
+                        </div>
+
+                        <!-- Q8 -->
+                        <div class="q-container rounded p-3 transition-colors" id="container-q8">
+                            <p class="mb-2 font-medium">8. Restorative justice has been proven to be cheaper to implement than traditional jail time.</p>
+                            <div class="flex space-x-4 text-sm">
+                                <label class="flex items-center cursor-pointer"><input type="radio" name="q8" value="TRUE" class="mr-2"> TRUE</label>
+                                <label class="flex items-center cursor-pointer"><input type="radio" name="q8" value="FALSE" class="mr-2"> FALSE</label>
+                                <label class="flex items-center cursor-pointer"><input type="radio" name="q8" value="NOT GIVEN" class="mr-2"> NOT GIVEN</label>
+                            </div>
+                            <div id="feedback-q8" class="hidden mt-2 text-sm font-bold"></div>
+                        </div>
+
+                        <!-- Q9 -->
+                        <div class="q-container rounded p-3 transition-colors" id="container-q9">
+                            <p class="mb-2 font-medium">9. Critics believe restorative justice is suitable for every type of crime, including violent ones.</p>
+                            <div class="flex space-x-4 text-sm">
+                                <label class="flex items-center cursor-pointer"><input type="radio" name="q9" value="TRUE" class="mr-2"> TRUE</label>
+                                <label class="flex items-center cursor-pointer"><input type="radio" name="q9" value="FALSE" class="mr-2"> FALSE</label>
+                                <label class="flex items-center cursor-pointer"><input type="radio" name="q9" value="NOT GIVEN" class="mr-2"> NOT GIVEN</label>
+                            </div>
+                            <div id="feedback-q9" class="hidden mt-2 text-sm font-bold"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="flex items-center space-x-4">
+                    <button type="button" onclick="checkAnswers()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded shadow transition duration-200">
+                        Check Answers
+                    </button>
+                    <button type="button" onclick="resetQuiz()" class="text-gray-500 hover:text-gray-700 font-medium py-2 px-4 rounded transition duration-200">
+                        Reset
+                    </button>
+                    <div id="score-display" class="text-xl font-bold text-gray-800 ml-auto hidden">
+                        Score: <span id="score-value">0</span>/9
+                    </div>
+                </div>
+
+            </form>
+        </section>
+
+        <!-- SECTION 4: SPEAKING PRACTICE (NEW) -->
+        <section id="speaking" class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-bold text-blue-900 border-b-2 border-blue-100 pb-2 mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                4. Speaking Practice
+            </h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Part 1 -->
+                <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                    <h3 class="font-bold text-lg text-blue-800 mb-3">Part 1: Short Answers</h3>
+                    <p class="text-sm text-gray-600 mb-2 italic">Answer in 1-2 sentences.</p>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        <li>Do you generally feel safe walking alone in your neighborhood?</li>
+                        <li>Did you have many rules to follow at school when you were younger?</li>
+                        <li>Do you think you are a very disciplined person?</li>
+                        <li>Are you interested in reading news about crime?</li>
+                    </ul>
+                </div>
+
+                <!-- Part 2 -->
+                <div class="bg-orange-50 p-4 rounded-lg border border-orange-100">
+                    <h3 class="font-bold text-lg text-orange-800 mb-3">Part 2: The Cue Card</h3>
+                    <p class="text-sm text-gray-600 mb-2 italic">Speak for 1-2 minutes.</p>
+                    <div class="bg-white p-3 rounded border border-orange-200 shadow-sm">
+                        <p class="font-semibold mb-2">Describe a law in your country that you think is good.</p>
+                        <p class="text-sm text-gray-600 mb-1">You should say:</p>
+                        <ul class="list-disc list-inside text-sm text-gray-700 ml-2">
+                            <li>What the law is</li>
+                            <li>How it is enforced</li>
+                            <li>Who benefits from it</li>
+                            <li>And explain why you think it is a good law.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Part 3 -->
+            <div class="mt-6">
+                <h3 class="font-bold text-lg text-purple-800 mb-3">Part 3: Discussion (Deep Dive)</h3>
+                <div class="space-y-4">
+                    <!-- Q1 -->
+                    <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                        <div class="flex justify-between items-center cursor-pointer" onclick="toggleReveal('ans1')">
+                            <p class="font-semibold text-gray-800">Q1: Should the age of criminal responsibility be raised or lowered?</p>
+                            <span class="text-blue-600 text-sm font-bold select-none">Show/Hide Model Answer</span>
+                        </div>
+                        <div id="ans1" class="reveal-content mt-3 text-sm text-gray-700 border-t pt-3">
+                            <p class="mb-2"><strong>Model Answer Strategy:</strong> Use comparative language and conditionals.</p>
+                            <p>"It's a delicate balance. On one hand, keeping the age low ensures that young offenders face <strong class="text-purple-700">consequences</strong> early, potentially preventing future crimes. However, neurologists argue that a teenager's brain isn't fully developed, particularly regarding impulse control. Therefore, treating them exactly like adults might be unjust. I believe the focus should be on <strong class="text-purple-700">rehabilitation</strong> centers for youth rather than traditional prison, regardless of the specific age limit."</p>
+                        </div>
+                    </div>
+
+                    <!-- Q2 -->
+                    <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                        <div class="flex justify-between items-center cursor-pointer" onclick="toggleReveal('ans2')">
+                            <p class="font-semibold text-gray-800">Q2: Do you think that technology has made it easier to commit crimes?</p>
+                            <span class="text-blue-600 text-sm font-bold select-none">Show/Hide Model Answer</span>
+                        </div>
+                        <div id="ans2" class="reveal-content mt-3 text-sm text-gray-700 border-t pt-3">
+                            <p class="mb-2"><strong>Model Answer Strategy:</strong> Contrast past and present.</p>
+                            <p>"Undoubtedly. While technology has improved surveillance, it has also given rise to entirely new categories of crime, like cyber-theft and identity fraud, which can be committed anonymously from anywhere in the world. It’s much harder to <strong class="text-purple-700">deter</strong> a criminal you can't see. That said, forensics and DNA profiling have made physical crimes much harder to get away with, so it cuts both ways."</p>
+                        </div>
+                    </div>
+
+                    <!-- Q3 -->
+                    <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                        <div class="flex justify-between items-center cursor-pointer" onclick="toggleReveal('ans3')">
+                            <p class="font-semibold text-gray-800">Q3: Is poverty the main cause of crime?</p>
+                            <span class="text-blue-600 text-sm font-bold select-none">Show/Hide Model Answer</span>
+                        </div>
+                        <div id="ans3" class="reveal-content mt-3 text-sm text-gray-700 border-t pt-3">
+                            <p class="mb-2"><strong>Model Answer Strategy:</strong> Avoid absolute statements (Use "significant factor" instead of "only reason").</p>
+                            <p>"It is certainly a significant contributing factor. Poverty often limits opportunities, leading people to desperation. However, it isn't the sole explanation; if it were, we wouldn't see 'white-collar crime' committed by wealthy individuals. This suggests that greed and a lack of moral compass are also powerful drivers, irrespective of one's financial status."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-gray-400 py-6 text-center text-sm">
+        <p>&copy; 2025 IELTS Preparation. Content designed for Band 7.0+ practice.</p>
+    </footer>
+
+    <script>
+        const answers = {
+            q1: "v",    // Paragraph A
+            q2: "iv",   // Paragraph B
+            q3: "iii",  // Paragraph C
+            q4: "vii",  // Paragraph D
+            q5: "i",    // Paragraph E
+            q6: "FALSE",
+            q7: "TRUE",
+            q8: "NOT GIVEN",
+            q9: "FALSE"
+        };
+
+        function checkAnswers() {
+            let score = 0;
+            let total = 9;
+
+            // Check Headings (Q1-Q5)
+            for (let i = 1; i <= 5; i++) {
+                const select = document.getElementById(`q1`); // Just dummy to get type
+                const el = document.getElementById(`q${i}`);
+                const feedback = document.getElementById(`feedback-q${i}`);
+                const userVal = el.value;
+
+                if (userVal === answers[`q${i}`]) {
+                    score++;
+                    el.classList.add("bg-green-50", "border-green-500", "text-green-700");
+                    el.classList.remove("border-gray-300", "bg-white");
+                    feedback.textContent = "✓ Correct";
+                    feedback.className = "text-green-600 ml-2 text-sm font-bold";
+                    feedback.classList.remove("hidden");
+                } else {
+                    el.classList.add("bg-red-50", "border-red-500", "text-red-700");
+                    el.classList.remove("border-gray-300", "bg-white");
+                    feedback.innerHTML = `✗ Incorrect. Answer: <span class="text-gray-800">${answers[`q${i}`]}</span>`;
+                    feedback.className = "text-red-600 ml-2 text-sm font-bold";
+                    feedback.classList.remove("hidden");
+                }
+            }
+
+            // Check T/F/NG (Q6-Q9)
+            for (let i = 6; i <= 9; i++) {
+                const radios = document.getElementsByName(`q${i}`);
+                let selectedVal = null;
+                for (const radio of radios) {
+                    if (radio.checked) selectedVal = radio.value;
+                }
+
+                const feedback = document.getElementById(`feedback-q${i}`);
+                const container = document.getElementById(`container-q${i}`);
+
+                // Reset styles first
+                container.classList.remove("correct-answer", "wrong-answer");
+
+                if (selectedVal === answers[`q${i}`]) {
+                    score++;
+                    container.classList.add("correct-answer");
+                    feedback.textContent = "✓ Correct";
+                    feedback.className = "text-green-800 mt-2 text-sm font-bold";
+                    feedback.classList.remove("hidden");
+                } else {
+                    container.classList.add("wrong-answer");
+                    feedback.innerHTML = `✗ Incorrect. Answer: ${answers[`q${i}`]}`;
+                    feedback.className = "text-red-800 mt-2 text-sm font-bold";
+                    feedback.classList.remove("hidden");
+                }
+            }
+
+            // Show Score
+            const scoreDisplay = document.getElementById("score-display");
+            const scoreValue = document.getElementById("score-value");
+            scoreValue.textContent = score;
+            scoreDisplay.classList.remove("hidden");
+        }
+
+        function resetQuiz() {
+            // Reset form
+            document.getElementById("ielts-quiz").reset();
+            
+            // Hide feedback and remove styles for Q1-Q5
+            for (let i = 1; i <= 5; i++) {
+                const el = document.getElementById(`q${i}`);
+                const feedback = document.getElementById(`feedback-q${i}`);
+                
+                el.classList.remove("bg-green-50", "border-green-500", "text-green-700", "bg-red-50", "border-red-500", "text-red-700");
+                el.classList.add("border-gray-300", "bg-white");
+                feedback.classList.add("hidden");
+            }
+
+            // Hide feedback and remove styles for Q6-Q9
+            for (let i = 6; i <= 9; i++) {
+                const container = document.getElementById(`container-q${i}`);
+                const feedback = document.getElementById(`feedback-q${i}`);
+                
+                container.classList.remove("correct-answer", "wrong-answer");
+                feedback.classList.add("hidden");
+            }
+
+            // Hide Score
+            document.getElementById("score-display").classList.add("hidden");
+        }
+
+        function toggleReveal(id) {
+            const el = document.getElementById(id);
+            if (el.classList.contains('active')) {
+                el.classList.remove('active');
+            } else {
+                el.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
